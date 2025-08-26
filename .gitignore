@@ -17,6 +17,9 @@ claude/.claude/statsig/
 claude/.claude/downloads/
 # Removed duplicate patterns - using simple filename patterns below
 
+# Kitty - Session and temporary files
+kitty/.config/kitty/sessions/
+
 # General exclusions
 *.log
 *.tmp
