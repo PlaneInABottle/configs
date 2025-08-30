@@ -139,19 +139,16 @@
 
 - **Code Reviewer (Sonnet)** - Use for any code changes (security, performance, architecture)
 - **Research Assistant (Sonnet)** - Use proactively when choosing libraries or evaluating patterns
-- **Refactoring Specialist (Haiku)** - Use proactively for code cleanup and modernization
+- **Code Improvement Specialist (Sonnet)** - Use proactively for code cleanup, performance optimization, and modernization
 - **Documentation Generator (Haiku)** - Use proactively after PR merge or code review approval
 - **Debugger (Sonnet)** - Use proactively for errors, unexpected behavior, test failures, build issues
+- **TDD Test Generator (Sonnet)** - Use proactively BEFORE implementing features for test-driven development
   
   **MANDATORY Zen MCP Usage:**
 
 - `codereview` - Use after code changes
 - `debug` - Use for errors/unexpected behavior
-- `thinkdeep` - Complex problem analysis
-- `analyze` - Strategic code/architecture assessment
-- `testgen` - Test planning and generation
-- `refactor` - Code improvement
-- `secaudit` - Security review
+- `chat` - Complex problem analysis and strategic assessment
 - `precommit` - Pre-commit validation and checks
 - `tracer` - Code execution flow and dependency mapping
   
@@ -275,12 +272,12 @@ Before completing tasks:
 - **Focus**: Technology evaluation, best practices
 - **Tools**: Context7, WebSearch, mcp__zen__chat
 
-### Refactoring Specialist
+### Code Improvement Specialist
 
-- **Model**: Haiku
-- **When**: Use proactively for code cleanup, modernization
-- **Focus**: Quick, safe improvements
-- **Tools**: mcp__zen__chat, code analysis
+- **Model**: Sonnet
+- **When**: Use proactively for code cleanup, performance optimization, modernization
+- **Focus**: Comprehensive code quality and performance improvements
+- **Tools**: Zen debug/tracer/chat, Context7, Serena code analysis
 
 ### Documentation Generator
 
@@ -295,6 +292,13 @@ Before completing tasks:
 - **When**: Use proactively for errors, unexpected behavior, test failures, build issues
 - **Focus**: Root cause analysis, execution flow tracing, rapid issue resolution
 - **Tools**: Zen debug tools, tracer, Context7, WebSearch
+
+### TDD Test Generator
+
+- **Model**: Sonnet
+- **When**: Use BEFORE implementing features for test-driven development
+- **Focus**: Generating comprehensive failing tests that guide implementation
+- **Tools**: Context7, WebSearch, Zen chat, Serena code analysis
 
 ## Usage Guidelines
 
