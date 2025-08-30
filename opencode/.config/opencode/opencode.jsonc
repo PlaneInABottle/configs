@@ -17,6 +17,33 @@
       ],
       "enabled": true,
       "environment": {}
+    },
+    "serena": {
+      "type": "local",
+      "command": [
+        "/home/mirza/.local/bin/uvx",
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--enable-web-dashboard",
+        "False"
+      ],
+      "enabled": true,
+      "environment": {}
+    },
+    "zen": {
+      "type": "local",
+      "command": [
+        "sh",
+        "-c",
+        "exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"
+      ],
+      "enabled": true,
+      "environment": {
+        "DISABLED_TOOLS": "analyze,refactor,testgen,secaudit,docgen,thinkdeep,planner,consensus",
+        "GEMINI_API_KEY": "{env:GEMINI_API_KEY}"
+      }
     }
   }
 }

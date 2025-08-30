@@ -28,3 +28,6 @@ kitty/.config/kitty/sessions/
 .DS_Store
 .credentials.json
 .update.lock
+
+# Environment variables
+.env
