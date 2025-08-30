@@ -33,7 +33,7 @@
 
 ## Implementation Approval Protocol
 
-  **MANDATORY FOR SUBSTANTIAL CHANGES** (schema, architecture, major features, external integrations):
+  **MANDATORY FOR SUBSTANTIAL CHANGES** (e.g., database schema changes, new services, major library additions, external integrations):
 
 ### Approval Process
 
@@ -266,21 +266,21 @@ Before completing tasks:
 - **Model**: Sonnet
 - **When**: Use for any code changes
 - **Focus**: Security, performance, architecture
-- **Tools**: Zen MCP review tools, Context7, WebSearch
+- **Tools**: mcp__zen__codereview, mcp__zen__debug, Context7, WebSearch
 
 ### Research Assistant  
 
 - **Model**: Sonnet
 - **When**: Use proactively when choosing libraries, evaluating patterns
 - **Focus**: Technology evaluation, best practices
-- **Tools**: Context7, WebSearch, Zen analysis
+- **Tools**: Context7, WebSearch, mcp__zen__chat
 
 ### Refactoring Specialist
 
 - **Model**: Haiku
 - **When**: Use proactively for code cleanup, modernization
 - **Focus**: Quick, safe improvements
-- **Tools**: Zen refactor, code analysis
+- **Tools**: mcp__zen__chat, code analysis
 
 ### Documentation Generator
 
