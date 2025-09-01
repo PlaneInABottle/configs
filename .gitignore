@@ -31,3 +31,6 @@ kitty/.config/kitty/sessions/
 
 # Environment variables
 .env
+
+# Backup Files
+backups
