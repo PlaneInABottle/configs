@@ -75,16 +75,14 @@
 
   **MANDATORY: Leverage MCP servers for enhanced capabilities:**
 
-- **Serena MCP**: Semantic code analysis and intelligent navigation
 - **Zen MCP**: Multi-model AI analysis for complex problem solving
 - **Context7 MCP**: Up-to-date library documentation and examples
 
-  **Serena-First Approach (Code Intelligence):**
+  **Code Intelligence Approach:**
 
-- **Code exploration**: Use `mcp__serena__get_symbols_overview` over basic file reading
-- **Code navigation**: Use `mcp__serena__find_symbol` + `find_referencing_symbols` for impact analysis
-- **Code search**: Use `mcp__serena__search_for_pattern` with code file restriction
-- **Project memory**: Use `mcp__serena__read_memory` and `write_memory` for context persistence
+- **Code exploration**: Use Glob and Read tools for understanding file structure
+- **Code navigation**: Use Grep with targeted patterns for finding implementations
+- **Code search**: Use Grep with appropriate glob patterns and context
 
   **Context7 for Library Research (MANDATORY):**
 
@@ -111,9 +109,9 @@
 
   **File Management Best Practices:**
 
-- **Code exploration:** Use Serena MCP for semantic understanding, fallback to Read/Glob
+- **Code exploration:** Use Read/Glob for understanding file structure and patterns
 - **Code modifications:** Use Edit for targeted changes, MultiEdit for batch operations
-- **Code search:** Use Serena's semantic search, fallback to Grep with appropriate patterns
+- **Code search:** Use Grep with appropriate glob patterns and context
 - **Safe operations:** Always read before writing, understand impact before editing
 
 ## Error Handling Protocol
@@ -131,14 +129,13 @@
 - **@code-reviewer** - Security, performance, architecture review (uses Zen MCP for comprehensive analysis)
 - **@research-assistant** - Technology evaluation, library research (uses Context7 MCP for up-to-date docs)
 - **@code-improvement-specialist** - Refactoring, performance optimization (uses Zen debug/tracer)
-- **@documentation-generator** - Knowledge management, docs creation (uses Serena memory system)
+- **@documentation-generator** - Knowledge management, docs creation
 - **@debugger** - Root cause analysis, error investigation (uses Zen debug + tracer)
 - **@tdd-test-generator** - Test-driven development, failing test creation (uses Context7 for framework patterns)
 
   **MCP-Enhanced Collaboration:**
 
 - **Zen MCP Tools**: Available for debug, tracer, chat, codereview, precommit
-- **Serena MCP Tools**: Available for semantic code analysis, symbol navigation, project memory
 - **Context7 MCP Tools**: Available for library documentation and modern patterns
 
   **Collaboration Guidelines:**
@@ -146,7 +143,6 @@
 - Mention other agents when their expertise is needed
 - Don't duplicate specialized work - delegate appropriately
 - Leverage MCP tools for enhanced capabilities across agents
-- Use Serena memory system for shared context and learning
 - Provide context when handing off to other agents
 - Build upon other agents' recommendations
 
@@ -165,7 +161,7 @@
     
     **Research-First Development:**
     - Use Context7 MCP to research libraries and patterns before implementing
-    - Check existing codebase patterns using Serena MCP semantic analysis
+    - Check existing codebase patterns using code exploration tools
     - Look for similar implementations in the project via symbol search
     - Follow established conventions and naming patterns
     - Use existing utilities and libraries
@@ -261,7 +257,7 @@ Before completing tasks:
 
 - [ ] Applied Implementation Approval for substantial changes
 - [ ] Used Context7 MCP for library research when applicable
-- [ ] Leveraged Serena MCP for semantic code analysis
+- [ ] Used appropriate code analysis tools for understanding structure
 - [ ] Applied Zen MCP for complex problem analysis
 - [ ] Provided structured analysis for user proposals  
 - [ ] Followed project conventions and patterns

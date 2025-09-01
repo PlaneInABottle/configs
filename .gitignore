@@ -32,5 +32,8 @@ kitty/.config/kitty/sessions/
 # Environment variables
 .env
 
+# Serena MCP local state
+.serena/
+
 # Backup Files
 backups
