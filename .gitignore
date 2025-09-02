@@ -35,5 +35,12 @@ kitty/.config/kitty/sessions/
 # Serena MCP local state
 .serena/
 
+# Qwen CLI - Exclude runtime files and sensitive configuration
+qwen/.qwen/installation_id
+qwen/.qwen/oauth_creds.json
+qwen/.qwen/settings.json
+qwen/.qwen/tmp/
+qwen/.qwen/history/
+
 # Backup Files
 backups

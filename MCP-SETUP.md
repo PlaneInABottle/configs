@@ -27,6 +27,36 @@ claude mcp add-json playwright '{"type":"stdio","command":"npx","args":["@playwr
 claude mcp add-json maestro '{"type":"stdio","command":"maestro","args":["mcp"]}' --scope user
 ```
 
+## Qwen Code Configuration
+
+Add to your `qwen/.qwen/settings.json` file:
+
+```json
+{
+  "selectedAuthType": "qwen-oauth",
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"],
+      "timeout": 30000,
+      "trust": false
+    },
+    "zen": {
+      "command": "sh",
+      "args": ["-c", "exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"],
+      "env": {
+        "DISABLED_TOOLS": "analyze,refactor,testgen,secaudit,docgen,thinkdeep,planner,consensus",
+        "GEMINI_API_KEY": "$GEMINI_API_KEY"
+      },
+      "timeout": 30000,
+      "trust": false
+    }
+  }
+}
+```
+
+**Note**: Qwen does not support Serena MCP server due to architectural differences. Use standard Qwen tools for code exploration.
+
 ## OpenCode Configuration
 
 Add to your `opencode.jsonc` file:
@@ -69,7 +99,14 @@ Add to your `opencode.jsonc` file:
 
 ### API Keys
 
-Create a `.env` file in your OpenCode configuration directory:
+**Qwen Code**: Create a `.env` file in your `qwen/.qwen/` directory:
+
+```bash
+# Qwen Code Environment Variables
+GEMINI_API_KEY=your-gemini-api-key-here
+```
+
+**OpenCode**: Create a `.env` file in your OpenCode configuration directory:
 
 ```bash
 # OpenCode Environment Variables
