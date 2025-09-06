@@ -7,6 +7,10 @@
     "edit": "ask",
     "bash": "ask"
   },
+  "keybinds": {
+    "messages_half_page_up": "ctrl+u",
+    "messages_half_page_down": "ctrl+d"
+  },
   "mcp": {
     "context7": {
       "type": "local",
@@ -17,19 +21,6 @@
       ],
       "enabled": true,
       "environment": {}
-    },
-    "zen": {
-      "type": "local",
-      "command": [
-        "sh",
-        "-c",
-        "exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"
-      ],
-      "enabled": true,
-      "environment": {
-        "DISABLED_TOOLS": "analyze,refactor,testgen,secaudit,docgen,thinkdeep,planner,consensus",
-        "GEMINI_API_KEY": "{env:GEMINI_API_KEY}"
-      }
     }
   }
 }
