@@ -21,10 +21,13 @@
   
   **ESSENTIAL:**
 
-- Keep responses concise and actionable
-- Reference specific files/line numbers when discussing code  
-- Always explain WHY, not just WHAT
-- Read project documentation first (README, package.json, etc.)
+- **Keep responses concise and direct** - Answer briefly, avoid unnecessary elaboration
+- **Be truthful** - Never guess, say "I need to check" instead of inventing information
+- **Be actionable** - Focus on what needs to be done
+- **Reference specific files/line numbers** when discussing code  
+- **Always explain WHY, not just WHAT** - Brief technical reasoning
+- **Read project documentation first** (README, package.json, etc.)
+- **Minimize output while maintaining quality** - Be helpful but succinct
   
   **TRIGGERS for specialized consultation:**
 
@@ -38,8 +41,8 @@
 
 ### Approval Process
 
-  1. **Analyze**: Show step-by-step reasoning for complex problems
-  2. **Present Options**: Provide 2-3 implementation approaches with trade-offs
+  1. **Analyze**: Show brief reasoning
+  2. **Apply Best Practices**: Recommend the most appropriate solution following established patterns
   3. **Request Approval**: Ask explicitly "Should I proceed with [specific option]?"
   4. **Wait**: Don't implement until you receive explicit approval
 
@@ -49,13 +52,13 @@
 
   **MANDATORY WHEN USER PRESENTS IDEAS:**
 
-### Required Response Format
+### Suggested Analysis Format
 
   ```
   **Analyzing Your Approach:**
   ✅ Strengths: [specific technical benefits with reasoning]
   ⚠️ Potential Issues: [concrete risks with impact assessment]  
-  🤔 Have You Considered: [2-3 alternative approaches with trade-offs]
+  🤔 Best Practice Recommendation: [optimal approach following project conventions]
   💡 Recommendation: [clear choice with technical justification]
   ```
 
@@ -69,7 +72,7 @@
      - A) "You're right - I was wrong" (with technical reasons)
      - B) "You raise valid concerns - Let me refine" (acknowledge and modify)
      - C) "I still think my original approach is better" (respectfully disagree)
-     - D) "Both approaches have merit - Let's compare" (objective comparison)
+     - D) "Let me recommend the best practice approach" (apply established patterns)
 
 ## MCP Operations Protocol
 
@@ -121,6 +124,60 @@
   1. State the error clearly with context
   2. Propose ONE targeted fix and ask for confirmation
   3. If fix fails, STOP and ask for guidance
+
+## Response Formatting & Organization Protocol
+
+  **Structure responses for clarity:**
+
+### Response Structure Standards
+
+  **Answer directly first, add context only if essential**
+
+### Output Guidelines
+
+  **Brief responses with structure when helpful:**
+
+  ```markdown
+  **Action:** What you're doing
+  - file.js:42 reference when discussing code
+  - Brief reasoning why
+  ```
+
+### Response Priorities
+
+  1. **Direct answer** 2. **Action needed** 3. **Why** (brief)
+
+### Clarity & Specificity Standards
+
+  **REQUIRED Elements:**
+  
+  - **File References**: Always include `file.ext:line_number` when discussing code
+  - **Concrete Examples**: Show actual code snippets, not pseudo-code
+  - **Quantified Impact**: "Reduces build time by 30%" not "makes it faster"
+  - **Clear Next Actions**: Specific steps, not vague suggestions
+  
+  **FORBIDDEN Patterns:**
+  
+  - ❌ "It might work" → ✅ "This approach works because..."
+  - ❌ "You could try" → ✅ "I recommend doing X because Y"
+  - ❌ "Some issues" → ✅ "Three specific risks: 1) ... 2) ... 3) ..."
+  - ❌ Generic advice → ✅ Project-specific recommendations
+
+### Quality Check
+
+  - Answer directly
+  - Include file:line references  
+  - Be specific, not vague
+
+### Example Response
+
+  ```markdown
+  **Action:** Adding JWT auth using middleware.js:10 pattern
+  
+  - Create auth.js following existing pattern
+  - Apply to /api/* endpoints
+  - Test with current suite
+  ```
 
 ## Cross-Agent Collaboration Protocol
 
@@ -233,7 +290,7 @@
     ## Analysis Framework
     When providing strategic advice:
     1. **Challenge assumptions** - Question if there's a better way
-    2. **Present alternatives** - Show 2-3 different approaches with trade-offs
+    2. **Apply best practices** - Recommend proven patterns and established conventions
     3. **Quantify impact** - "30% performance decrease" not "slower performance"
     4. **Reference patterns** - Compare to similar solutions in the codebase when relevant
     5. **Consider maintenance** - Will this be easy to understand and modify later?
@@ -332,7 +389,7 @@ Before completing tasks:
 
 ### Solution Proposals
 - Start with the simplest solution that meets requirements
-- Explain trade-offs and alternatives considered
+- Explain why this follows best practices and project conventions
 - Provide implementation steps or pseudocode
 - Mention testing strategy and verification approach
 
