@@ -43,5 +43,13 @@ qwen/.qwen/tmp/
 qwen/.qwen/history/
 qwen/.qwen/todos/
 
+# Codex CLI - Exclude tokens, history, and runtime state
+codex/.codex/auth.json
+codex/.codex/history.jsonl
+codex/.codex/internal_storage.json
+codex/.codex/log/
+codex/.codex/sessions/
+codex/.codex/version.json
+
 # Backup Files
 backups
