@@ -10,3 +10,6 @@ trust_level = "untrusted"
 
 [projects."/Users/Y_ALTAY1/Documents/configs"]
 trust_level = "trusted"
+
+[projects."/Users/Y_ALTAY1/Documents/comisTestMCP"]
+trust_level = "trusted"
