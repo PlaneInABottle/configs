@@ -4,15 +4,8 @@ model = "gpt-5-codex"
 command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
 
-[mcp_servers.serena]
-command = "sh"
-args = [
-  "-c",
-  "exec $(which uvx || echo uvx) --from git+https://github.com/oraios/serena serena start-mcp-server --enable-web-dashboard False",
-]
-
 [projects."/home/mirza/configs"]
 trust_level = "untrusted"
 
 [projects."/Users/Y_ALTAY1/Documents/configs"]
-trust_level = "untrusted"
+trust_level = "trusted"
