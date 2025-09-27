@@ -7,7 +7,7 @@ argument-hint:
 Analyze the current development session and suggest minimal documentation improvements:
 
 1. **Read Current State:**
-   - Check Serena memories with `mcp__serena__list_memories` and read relevant ones
+   - Review existing project documentation or notes for recent decisions
    - Read current TodoRead status
    - Check recent git commits with `git log --oneline -5`
 
@@ -19,7 +19,7 @@ Analyze the current development session and suggest minimal documentation improv
 3. **Suggest Minimal Improvements:**
    - **Global CLAUDE.md**: Only add if it's a universal principle (not project-specific)
    - **Local CLAUDE.md**: Add project-specific patterns that would prevent future mistakes
-   - **Serena Memories**: Write memories for key decisions and lessons learned
+   - **Team Notes/Docs**: Capture key decisions and lessons learned in shared documentation
 
 4. **Anti-Overengineering Rules:**
    - Skip suggestions if similar guidance already exists
@@ -35,7 +35,7 @@ Analyze the current development session and suggest minimal documentation improv
    ## Suggested Improvements
    ### Global CLAUDE.md: [None needed] OR [1 universal principle]
    ### Local CLAUDE.md: [None needed] OR [1-2 project patterns]
-   ### Serena Memories: [Write memories for decisions made]
+   ### Team Notes/Docs: [Capture decisions for future reference]
    
    ## Why These Changes
    [Specific problems these would prevent]

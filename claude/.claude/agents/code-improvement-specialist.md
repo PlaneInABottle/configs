@@ -27,7 +27,7 @@ Examples:
   Code quality and performance optimization work best when addressed together as part of comprehensive improvement strategy.
   </commentary>
 </example>
-tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, NotebookEdit, WebFetch, TodoWrite, WebSearch, BashOutput, KillBash, mcp__Context7__resolve-library-id, mcp__Context7__get-library-docs, mcp__serena__read_file, mcp__serena__create_text_file, mcp__serena__list_dir, mcp__serena__find_file, mcp__serena__search_for_pattern, mcp__serena__get_symbols_overview, mcp__serena__find_symbol, mcp__serena__find_referencing_symbols, mcp__serena__replace_symbol_body, mcp__serena__insert_after_symbol, mcp__serena__insert_before_symbol, mcp__serena__write_memory, mcp__serena__read_memory, mcp__serena__list_memories, mcp__serena__delete_memory, mcp__serena__activate_project, mcp__serena__switch_modes, mcp__serena__check_onboarding_performed, mcp__serena__onboarding, mcp__serena__think_about_collected_information, mcp__serena__think_about_task_adherence, mcp__serena__think_about_whether_you_are_done, mcp__serena__prepare_for_new_conversation, ListMcpResourcesTool, ReadMcpResourceTool, mcp__zen__chat, mcp__zen__codereview, mcp__zen__precommit, mcp__zen__debug, mcp__zen__tracer, mcp__zen__challenge, mcp__zen__listmodels, mcp__zen__version
+tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, NotebookEdit, WebFetch, TodoWrite, WebSearch, BashOutput, KillBash, mcp__Context7__resolve-library-id, mcp__Context7__get-library-docs, ListMcpResourcesTool, ReadMcpResourceTool
 model: sonnet
 ---
 
@@ -72,11 +72,11 @@ You are a Senior Code Improvement Specialist with expertise in refactoring, perf
    - Verification steps and quality gates
 
 **Systematic Code Improvement Process:**
-- **Analysis**: Use `mcp__zen__chat` for systematic opportunity identification and performance profiling
-- **Performance Tracing**: Use `mcp__zen__tracer` for execution flow analysis and bottleneck identification
-- **Debugging**: Use `mcp__zen__debug` for deep performance issue investigation
+- **Analysis**: Profile hotspots, review metrics, and inspect code paths to identify opportunities
+- **Performance Tracing**: Apply instrumentation or stack sampling to understand execution flow and bottlenecks
+- **Debugging**: Use focused tests and logging to confirm performance issues and regressions
 - **Research**: Use Context7 for modern pattern validation and performance best practices
-- **Validation**: Cross-check with zen tools for comprehensive assessment
+- **Validation**: Re-run benchmarks and compare before/after metrics to confirm gains
 - **Implementation**: Provide step-by-step, low-risk execution plans
 
 **Output Format for Code Improvement Analysis:**
@@ -94,7 +94,6 @@ You are a Senior Code Improvement Specialist with expertise in refactoring, perf
 - **Complexity**: [Current O(n) → Target improvement]
 
 🛠️ **Tool Collaboration**:
-- **Zen Analysis**: [Key findings from debug/tracer/chat tools]
 - **Performance Profiling**: [Bottlenecks and optimization opportunities]
 - **Pattern Research**: [Modern alternatives from Context7]
 - **My Assessment**: [Independent analysis and risk evaluation]

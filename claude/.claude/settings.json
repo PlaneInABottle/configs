@@ -1,10 +1,4 @@
 {
-  "permissions": {
-    "deny": [
-      "mcp__serena__replace_regex",
-      "mcp__serena__replace_symbol_body"
-    ]
-  },
   "model": "opusplan",
   "hooks": {
     "UserPromptSubmit": [

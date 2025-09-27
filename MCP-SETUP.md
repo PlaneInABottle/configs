@@ -7,19 +7,19 @@ Comprehensive setup instructions for MCP servers across different AI development
 ### Core MCP Servers
 
 ```bash
+# Context7 MCP Server (Library documentation)
+claude mcp add-json Context7 '{"type":"stdio","command":"npx","args":["-y","@upstash/context7-mcp"]}' --scope user
+```
+
+### Optional MCP Servers (Add as needed)
+
+```bash
 # Zen MCP Server (Multi-model AI analysis with optimized tools)
 claude mcp add-json zen '{"type":"stdio","command":"sh","args":["-c","exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"],"env":{"GEMINI_API_KEY":"YOUR_GEMINI_API_KEY","DISABLED_TOOLS":"analyze,refactor,testgen,secaudit,docgen,thinkdeep,planner,consensus"}}' --scope user
 
 # Serena MCP Server (Semantic code analysis)
 claude mcp add-json serena '{"type":"stdio","command":"sh","args":["-c","exec $(which uvx || echo uvx) --from git+https://github.com/oraios/serena serena start-mcp-server --enable-web-dashboard False"]}' --scope user
 
-# Context7 MCP Server (Library documentation)
-claude mcp add-json Context7 '{"type":"stdio","command":"npx","args":["-y","@upstash/context7-mcp"]}' --scope user
-```
-
-### Optional MCP Servers
-
-```bash
 # Playwright MCP Server (Browser automation)
 claude mcp add-json playwright '{"type":"stdio","command":"npx","args":["@playwright/mcp@latest"]}' --scope user
 
@@ -40,22 +40,12 @@ Add to your `qwen/.qwen/settings.json` file:
       "args": ["-y", "@upstash/context7-mcp"],
       "timeout": 30000,
       "trust": false
-    },
-    "zen": {
-      "command": "sh",
-      "args": ["-c", "exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"],
-      "env": {
-        "DISABLED_TOOLS": "analyze,refactor,testgen,secaudit,docgen,thinkdeep,planner,consensus",
-        "GEMINI_API_KEY": "$GEMINI_API_KEY"
-      },
-      "timeout": 30000,
-      "trust": false
     }
   }
 }
 ```
 
-**Note**: Qwen does not support Serena MCP server due to architectural differences. Use standard Qwen tools for code exploration.
+**Optional additions**: Zen and Serena MCP servers can be added using the commands above when you need their advanced capabilities. Qwen does not support Serena MCP due to architectural differences, so rely on native tools for semantic exploration.
 
 ## OpenCode Configuration
 
@@ -70,30 +60,12 @@ Add to your `opencode.jsonc` file:
       "enabled": true,
       "environment": {}
     },
-    "serena": {
-      "type": "local",
-      "command": [
-        "sh", "-c",
-        "exec $(which uvx || echo uvx) --from git+https://github.com/oraios/serena serena start-mcp-server --enable-web-dashboard False"
-      ],
-      "enabled": true,
-      "environment": {}
-    },
-    "zen": {
-      "type": "local",
-      "command": [
-        "sh", "-c",
-        "exec $(which uvx || echo uvx) --from git+https://github.com/BeehiveInnovations/zen-mcp-server.git zen-mcp-server"
-      ],
-      "enabled": true,
-      "environment": {
-        "DISABLED_TOOLS": "analyze,refactor,testgen,secaudit,docgen,thinkdeep,planner,consensus",
-        "GEMINI_API_KEY": "{env:GEMINI_API_KEY}"
-      }
     }
   }
 }
 ```
+
+To enable Zen or Serena in OpenCode, copy the relevant `mcp` block from the optional commands above into your configuration when needed.
 
 ## Environment Setup
 
@@ -127,6 +99,12 @@ which uvx || echo "Add ~/.local/bin to your PATH"
 
 ### Core Servers
 
+- **Context7**: Up-to-date library documentation and examples
+  - Tools: Library resolution, documentation retrieval
+  - Coverage: Popular frameworks, APIs, and development tools
+
+### Optional Servers
+
 - **Zen**: Multi-model AI analysis, debugging, code review, and systematic problem-solving
   - Tools: `chat`, `codereview`, `debug`, `tracer`, `precommit`
   - Model: Gemini 2.5 Pro with thinking mode
@@ -135,12 +113,6 @@ which uvx || echo "Add ~/.local/bin to your PATH"
 - **Serena**: Semantic code analysis and intelligent navigation
   - Tools: Symbol search, reference finding, code editing, memory management
   - Features: Project onboarding, architectural understanding
-
-- **Context7**: Up-to-date library documentation and examples
-  - Tools: Library resolution, documentation retrieval
-  - Coverage: Popular frameworks, APIs, and development tools
-
-### Optional Servers
 
 - **Playwright**: Browser automation and end-to-end testing
 - **Maestro**: Mobile app testing and automation
@@ -158,6 +130,6 @@ which uvx || echo "Add ~/.local/bin to your PATH"
 - User-scoped installations for isolation
 
 ### Performance
-- Zen tools optimized by disabling unused functionality
-- Serena web dashboard disabled for faster startup
+- Optional Zen tools can be configured to disable unused functionality
+- Optional Serena web dashboard can remain disabled for faster startup
 - Context7 uses `-y` flag for non-interactive installation

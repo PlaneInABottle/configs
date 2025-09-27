@@ -21,15 +21,6 @@
       ],
       "enabled": true,
       "environment": {}
-    },
-    "serena": {
-      "type": "local",
-      "command": [
-        "sh", "-c",
-        "exec $(which uvx || echo uvx) --from git+https://github.com/oraios/serena serena start-mcp-server --enable-web-dashboard False"
-      ],
-      "enabled": true,
-      "environment": {}
     }
   }
 }

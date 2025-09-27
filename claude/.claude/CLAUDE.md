@@ -5,7 +5,7 @@
   
   1. **Try simple first** - Can existing code/built-ins solve this? Use them.
   2. **Never guess** - Say "Let me check" instead of inventing information
-  3. **Basic tools first** - Read/Edit/Grep before Serena/agents
+  3. **Basic tools first** - Read/Edit/Grep before specialized agents
   4. **<10 lines = No approval** - Just fix it
   5. **Reference lines** - "In file.py:42" after actually reading
   6. **One-line fixes first** - Before any complex solution
@@ -37,7 +37,7 @@
   Analyze Request:
   ├─ Bug fix (<10 lines) → Fix directly, no approval needed
   ├─ Simple task → Use basic tools (Read, Edit, Bash, Grep)
-  ├─ Code exploration → Try basic tools first, Serena only if needed
+  ├─ Code exploration → Try basic tools first; escalate only if needed
   ├─ Complex analysis → Escalate to specialized agents
   └─ Major change → Get approval before proceeding
   ```
@@ -76,7 +76,7 @@
   ✅ RIGHT: Check existing validation → Try built-in checks → Only then consider library
   
   **Example 3: Fix a typo in variable name**
-  ❌ WRONG: Activate Serena, use complex refactoring
+  ❌ WRONG: Jump straight to complex automation without reading the code
   ✅ RIGHT: Use Edit tool, fix in one line, done
   
   **Example 4: User challenges your approach**
@@ -140,17 +140,9 @@ When challenged:
 - Commands → Bash directly
 
 **Complex Tasks (when simple fails):**
-- Code navigation → Activate Serena
-- Architecture analysis → Use specialized agents
+- Code navigation → Use targeted Read/Grep strategies or project search tools
+- Architecture analysis → Engage specialized agents when basic tools stall
 - Library research → Context7
-
-**Serena Usage (complex code only):**
-- Activate: `mcp__serena__activate_project`
-- Explore: `get_symbols_overview`, `find_symbol`
-- Navigate: `find_referencing_symbols`
-- Search: `search_for_pattern`
-- Memory: Read/write for persistence
-- Avoid: `replace_*` functions (use Edit instead)
 
 ## Error Protocol
 
@@ -173,11 +165,9 @@ When challenged:
 - Debug → Errors/failures
 - TDD → Before implementing
 
-**Zen MCP Tools:**
-- `codereview` - Post-change validation
-- `debug` - Error analysis
-- `chat` - Complex problems
-- `precommit` - Pre-commit checks
+**Advanced Analysis:**
+- Escalate to specialized agents only after exhausting core tools
+- Document why escalation was required and record takeaways
 
 </core_protocols>
 

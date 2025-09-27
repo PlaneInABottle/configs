@@ -76,9 +76,8 @@
 
 ## MCP Operations Protocol
 
-  **MANDATORY: Leverage MCP servers for enhanced capabilities:**
+  **Available MCP servers for this workspace:**
 
-- **Zen MCP**: Multi-model AI analysis for complex problem solving
 - **Context7 MCP**: Up-to-date library documentation and examples
 
   **Code Intelligence Approach:**
@@ -93,13 +92,10 @@
 - Use before: choosing libraries, implementing patterns, debugging third-party code
 - Workflow: Research → Official docs → Implement
 
-  **Zen MCP for Complex Analysis:**
+  **Advanced Analysis (when Context7 isn't enough):**
 
-- `mcp__zen__debug` for systematic issue investigation
-- `mcp__zen__tracer` for execution flow analysis
-- `mcp__zen__chat` for complex problem analysis and strategic assessment
-- `mcp__zen__codereview` for comprehensive code review
-- `mcp__zen__precommit` for pre-commit validation
+- Use targeted profiling, logging, and project-specific scripts for deep debugging
+- Engage specialized agents when manual analysis requires additional perspectives
 
 ## File Operations Protocol
 
