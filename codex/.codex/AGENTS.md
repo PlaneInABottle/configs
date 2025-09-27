@@ -3,7 +3,7 @@
 <quick_start>
   ## 90% Task Playbook – Follow These 10 Rules
   
-  1. **Plan first** – Outline a clear plan before making edits.
+  1. **Plan first** – Outline a clear plan before making edits (skip only when the entire change stays under 10 lines, per Rule 7).
   2. **Obey sandbox** – Every shell command must respect the injected policy.
   3. **Stay local** – Never touch files outside the workspace or writable roots.
   4. **Reference reality** – Cite paths/lines only after reading them.
@@ -35,7 +35,7 @@
   - Draft or update plans for multi-step work; skip only when the change stays under ten lines.
   - Edit with Codex's native write/edit capabilities and keep diffs scoped to the requirement.
   - Consult Context7 documentation when APIs are unclear, and cite model/version alongside takeaways.
-  - After multiple reads or searches, run the collected-information check to confirm the evidence set.
+  - After multiple reads or searches, run the collected-information check: list the files/lines consulted, confirm gaps are closed, and state whether more context is required before editing.
   - Summaries must mention touched files, decisions made, and any outstanding follow-ups.
 </tools_and_workflow>
 
