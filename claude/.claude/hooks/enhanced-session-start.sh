@@ -13,26 +13,13 @@ if command -v jq >/dev/null 2>&1; then
     echo "  🆕 Fresh session started"
     echo "  📚 RECOMMENDED STARTUP CHECKLIST:"
     echo "     □ Review project structure before coding"
-    echo "     □ Read memory-navigation-index for organized knowledge access"
-    echo "     □ Review project CLAUDE.md for patterns"
     echo "     □ Use Context7 for library documentation"
     ;;
   "resume")
     echo "  🔄 Session resumed from summary"
     echo "  🎯 RESUMPTION CHECKLIST:"
-    echo "     □ Read memory-navigation-index for organized knowledge access"
-    echo "     □ Check TODO list for pending tasks"
     echo "     □ Review recent git status for changes"
-    echo "     □ Continue with specialized tools/subagents"
-    echo "     □ Validate previous decisions still apply"
-    ;;
-  "clear")
-    echo "  🧹 Context cleared - starting fresh"
-    echo "  🗂️ FRESH START CHECKLIST:"
-    echo "     □ Previous session context has been reset"
-    echo "     □ Re-establish project context if needed"
-    echo "     □ Check for any pending tasks or issues"
-    echo "     □ Read memory-navigation-index for organized knowledge access"
+    echo "     □ Review project structure before coding"
     ;;
   esac
 fi
@@ -42,22 +29,13 @@ echo "🧠 PROACTIVE INTELLIGENCE REMINDERS:"
 echo "  🎯 SYSTEMATIC APPROACH:"
 echo "     □ Ask clarifying questions before assuming"
 echo "     □ Use specialized tools for complex tasks"
-    echo "     □ Engage expert subagents proactively"
-    echo "     □ Research with Context7/WebSearch when needed"
+echo "     □ Engage expert subagents proactively"
+echo "     □ Research with Context7/WebSearch when needed"
 echo ""
 
 echo "  🛠️ TOOL SELECTION PRIORITIES:"
-echo "     □ Start with Read/Edit/Grep for exploration"
-echo "     □ Use built-in analyzers for complex cases"
 echo "     □ Context7 for library research"
 echo "     □ Subagents for specialized expertise"
-echo ""
-
-echo "  📋 QUALITY ASSURANCE:"
-echo "     □ Provide multiple options with trade-offs"
-echo "     □ Validate assumptions with questions"
-echo "     □ Use appropriate complexity tools"
-echo "     □ Document decisions in memories"
 echo ""
 
 # Git context if in a git repository
