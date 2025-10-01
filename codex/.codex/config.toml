@@ -6,7 +6,7 @@ command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
 
 [projects."/home/mirza/configs"]
-trust_level = "untrusted"
+trust_level = "trusted"
 
 [projects."/Users/Y_ALTAY1/Documents/configs"]
 trust_level = "trusted"
