@@ -51,5 +51,10 @@ codex/.codex/log/
 codex/.codex/sessions/
 codex/.codex/version.json
 
+# Copilot CLI - Exclude runtime state and logs
+copilot/.copilot/command-history-state.json
+copilot/.copilot/history-session-state/
+copilot/.copilot/logs/
+
 # Backup Files
 backups
