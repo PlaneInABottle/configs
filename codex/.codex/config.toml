@@ -1,10 +1,6 @@
 model = "gpt-5-codex"
 tools.web_search = true
 
-[mcp_servers.context7]
-command = "npx"
-args = ["-y", "@upstash/context7-mcp"]
-
 [projects."/home/mirza/configs"]
 trust_level = "trusted"
 
@@ -13,3 +9,17 @@ trust_level = "trusted"
 
 [projects."/Users/Y_ALTAY1/Documents/comisTestMCP"]
 trust_level = "trusted"
+
+[projects."/home/mirza/Documents/Projects/measureApp"]
+trust_level = "trusted"
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+
+
+[mcp_servers.supabase]
+command = "npx"
+args = ["-y", "@supabase/mcp-server-supabase@latest", "--project-ref=kxtmkvxkbmtnaamtlxeu"]
+env = { SUPABASE_ACCESS_TOKEN = "" } 
+startup_timeout_ms = 20_000 
