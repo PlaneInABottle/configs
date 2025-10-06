@@ -1,14 +1,24 @@
 {
   "mcpServers": {
     "Context7": {
+      "tools": [
+        "*"
+      ],
+      "type": "local",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "chrome-devtools": {
       "type": "local",
       "command": "npx",
       "tools": [
         "*"
       ],
       "args": [
-        "-y",
-        "@upstash/context7-mcp"
+        "chrome-devtools-mcp@latest"
       ]
     }
   }
