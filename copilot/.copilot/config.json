@@ -20,6 +20,9 @@
     "/home/mirza/Documents/Projects/measureApp",
     "/home/mirza/Documents/Projects/openwebui",
     "/home/mirza/Documents/Projects/purrsuitApp",
-    "/home/mirza/Documents/Projects"
-  ]
+    "/home/mirza/Documents/Projects",
+    "/home/mirza/Documents/Projects/measureApp"
+  ],
+  "screen_reader": false,
+  "render_markdown": true
 }
