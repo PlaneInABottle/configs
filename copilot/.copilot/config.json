@@ -11,6 +11,8 @@
     }
   ],
   "model": "claude-sonnet-4.5",
+  "render_markdown": true,
+  "screen_reader": false,
   "theme": "auto",
   "trusted_folders": [
     "/Users/Y_ALTAY1/Documents/configs",
@@ -22,7 +24,5 @@
     "/home/mirza/Documents/Projects/purrsuitApp",
     "/home/mirza/Documents/Projects",
     "/home/mirza/Documents/Projects/measureApp"
-  ],
-  "screen_reader": false,
-  "render_markdown": true
+  ]
 }
