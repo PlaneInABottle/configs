@@ -21,6 +21,15 @@
       ],
       "enabled": true,
       "environment": {}
+    },
+    "chrome-devtools": {
+      "type": "local",
+      "command": [
+        "npx",
+        "chrome-devtools-mcp@latest"
+      ],
+      "enabled": true,
+      "environment": {}
     }
   }
 }
