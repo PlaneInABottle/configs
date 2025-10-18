@@ -17,6 +17,8 @@ claude/.claude/statsig/
 claude/.claude/downloads/
 claude/.claude/debug/
 claude/.claude/history.jsonl
+claude/.claude/file-history/
+
 # Removed duplicate patterns - using simple filename patterns below
 
 # Kitty - Session and temporary files
