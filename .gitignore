@@ -59,6 +59,7 @@ codex/.codex/version.json
 copilot/.copilot/command-history-state.json
 copilot/.copilot/history-session-state/
 copilot/.copilot/logs/
+copilot/.copilot/session-state/
 
 # Backup Files
 backups
