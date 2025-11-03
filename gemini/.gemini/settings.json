@@ -24,7 +24,7 @@
     "useFullWidth": true
   },
   "general": {
-    "vimMode": true
+    "vimMode": false
   },
   "output": {
     "format": "text"
