@@ -1,0 +1,37 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    }
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "ui": {
+    "theme": "ANSI",
+    "footer": {
+      "hideContextPercentage": false
+    },
+    "showMemoryUsage": true,
+    "showLineNumbers": true,
+    "showCitations": true,
+    "useFullWidth": true
+  },
+  "general": {
+    "vimMode": true
+  },
+  "output": {
+    "format": "text"
+  },
+  "tools": {
+    "shell": {
+      "showColor": true
+    }
+  }
+}
