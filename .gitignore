@@ -46,6 +46,7 @@ qwen/.qwen/settings.json
 qwen/.qwen/tmp/
 qwen/.qwen/history/
 qwen/.qwen/todos/
+qwen/.qwen/settings.json.orig
 
 # Codex CLI - Exclude tokens, history, and runtime state
 codex/.codex/auth.json
