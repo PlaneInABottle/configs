@@ -1,6 +1,8 @@
 model = "gpt-5-codex"
-tools.web_search = true
 model_reasoning_effort = "medium"
+
+[features]
+web_search_request = true
 
 [projects."/home/mirza/configs"]
 trust_level = "trusted"
