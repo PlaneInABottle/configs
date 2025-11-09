@@ -46,8 +46,11 @@ cd ~/configs
 Update mode will:
 1. Load existing project values from current files
 2. Show current values and ask if you want to keep them
-3. Allow you to confirm overwrite for each file
-4. Preserve your existing content if you choose to keep it
+3. Regenerate ALL 4 files (including AGENTS.md)
+4. Ask to overwrite each file individually
+5. Skip files where you choose 'n'
+
+**Important:** AGENTS.md is included in updates and will be regenerated like other files.
 
 ### 3. Available Presets (Optional)
 
@@ -197,10 +200,49 @@ code AGENTS.md          # Update for Copilot/OpenCode
 ~/configs/setup-agent-instructions.sh --update .
 
 # The script will:
-# - Show current values
-# - Ask if you want to keep them
-# - Allow selective overwrites
+# - Load existing values from .claude/CLAUDE.md
+# - Show current values (name, type, language, stack)
+# - Ask if you want to keep them (Y/n)
+# - Regenerate all 4 files with those values
+# - Ask to overwrite each file (y/N)
+#   • Claude, Gemini, Qwen (from PROJECT_TEMPLATE)
+#   • AGENTS.md (from AGENTS_COMPREHENSIVE_TEMPLATE)
 ```
+
+### Update Mode Use Cases
+
+**1. Refresh all files (update structure, keep content)**
+```bash
+./setup-agent-instructions.sh --update .
+Keep values: Y
+Overwrite Claude: y
+Overwrite Gemini: y
+Overwrite Qwen: y
+Overwrite AGENTS: y
+# All files regenerated with same content
+```
+
+**2. Change project details (e.g., migrated tech stack)**
+```bash
+./setup-agent-instructions.sh --update .
+Keep values: n
+# Enter new values (TypeScript → Go, React → Fiber)
+Overwrite all: y
+# All files updated with new stack
+```
+
+**3. Selective update (only some files)**
+```bash
+./setup-agent-instructions.sh --update .
+Keep values: Y
+Overwrite Claude: n  # Skip
+Overwrite Gemini: n  # Skip
+Overwrite Qwen: y    # Update
+Overwrite AGENTS: y  # Update
+# Only Qwen and AGENTS updated
+```
+
+**⚠️ Important:** Manual edits will be lost if you overwrite. Use version control or answer 'n' to skip files you've customized.
 
 ### Add Custom Presets
 
