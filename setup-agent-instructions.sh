@@ -24,6 +24,22 @@ PRESETS_FILE="$TEMPLATES_DIR/presets.json"
 # Global variables
 TARGET_DIR=""
 UPDATE_MODE=false
+FORCE_MODE=false
+ONLY_FILES="all"
+
+# Override variables for --set-* flags
+OVERRIDE_NAME=""
+OVERRIDE_TYPE=""
+OVERRIDE_LANGUAGE=""
+OVERRIDE_STACK=""
+OVERRIDE_DESCRIPTION=""
+OVERRIDE_TECHNOLOGIES=""
+OVERRIDE_ARCHITECTURE=""
+OVERRIDE_CODE_STYLE=""
+OVERRIDE_FILE_ORG=""
+OVERRIDE_TESTING=""
+OVERRIDE_DEPENDENCIES=""
+OVERRIDE_NOTES=""
 
 # Usage function
 usage() {
@@ -32,8 +48,24 @@ usage() {
     echo "Creates or updates AI agent instruction files in the specified project directory."
     echo ""
     echo "Options:"
-    echo "  --update, -u    Update existing project instructions (prompts for new values)"
-    echo "  --help, -h      Show this help message"
+    echo "  --update, -u              Update existing project instructions"
+    echo "  --force, -f               Overwrite files without prompting"
+    echo "  --only=FILE               Update only specific files (claude|gemini|qwen|agents|all)"
+    echo "  --help, -h                Show this help message"
+    echo ""
+    echo "Value Override Flags (use with --update):"
+    echo "  --set-name=VALUE          Set project name"
+    echo "  --set-type=VALUE          Set project type (frontend|backend|fullstack|cli|library)"
+    echo "  --set-language=VALUE      Set primary language"
+    echo "  --set-stack=VALUE         Set tech stack"
+    echo "  --set-description=VALUE   Set project description"
+    echo "  --set-technologies=VALUE  Set key technologies"
+    echo "  --set-architecture=VALUE  Set architecture patterns"
+    echo "  --set-code-style=VALUE    Set code style guide"
+    echo "  --set-file-org=VALUE      Set file organization"
+    echo "  --set-testing=VALUE       Set testing strategy"
+    echo "  --set-dependencies=VALUE  Set dependency guidelines"
+    echo "  --set-notes=VALUE         Set project notes"
     echo ""
     echo "Generated files:"
     echo "  • .claude/CLAUDE.md       - Claude Code (project-specific)"
@@ -42,9 +74,10 @@ usage() {
     echo "  • AGENTS.md               - GitHub Copilot + OpenCode (comprehensive)"
     echo ""
     echo "Examples:"
-    echo "  $0 ~/projects/my-new-project              # Create new"
-    echo "  $0 --update ~/projects/my-new-project     # Update existing"
-    echo "  $0 -u .                                   # Update current directory"
+    echo "  $0 ~/projects/my-new-project"
+    echo "  $0 --update ~/projects/my-new-project"
+    echo "  $0 --update --force --set-stack=\"Vue, TypeScript, Vite\" ."
+    echo "  $0 --update --force --only=agents --set-stack=\"Go, Gin\" ."
     exit 1
 }
 
@@ -185,6 +218,22 @@ load_existing_values() {
     return 0
 }
 
+apply_overrides() {
+    # Apply flag overrides if provided
+    [[ -n "$OVERRIDE_NAME" ]] && PROJECT_NAME="$OVERRIDE_NAME" || true
+    [[ -n "$OVERRIDE_TYPE" ]] && PROJECT_TYPE="$OVERRIDE_TYPE" || true
+    [[ -n "$OVERRIDE_LANGUAGE" ]] && PRIMARY_LANGUAGE="$OVERRIDE_LANGUAGE" || true
+    [[ -n "$OVERRIDE_STACK" ]] && TECH_STACK="$OVERRIDE_STACK" || true
+    [[ -n "$OVERRIDE_DESCRIPTION" ]] && PROJECT_DESCRIPTION="$OVERRIDE_DESCRIPTION" || true
+    [[ -n "$OVERRIDE_TECHNOLOGIES" ]] && KEY_TECHNOLOGIES="$OVERRIDE_TECHNOLOGIES" || true
+    [[ -n "$OVERRIDE_ARCHITECTURE" ]] && ARCHITECTURE_PATTERNS="$OVERRIDE_ARCHITECTURE" || true
+    [[ -n "$OVERRIDE_CODE_STYLE" ]] && CODE_STYLE_GUIDE="$OVERRIDE_CODE_STYLE" || true
+    [[ -n "$OVERRIDE_FILE_ORG" ]] && FILE_ORGANIZATION="$OVERRIDE_FILE_ORG" || true
+    [[ -n "$OVERRIDE_TESTING" ]] && TESTING_STRATEGY="$OVERRIDE_TESTING" || true
+    [[ -n "$OVERRIDE_DEPENDENCIES" ]] && DEPENDENCY_GUIDELINES="$OVERRIDE_DEPENDENCIES" || true
+    [[ -n "$OVERRIDE_NOTES" ]] && PROJECT_NOTES="$OVERRIDE_NOTES" || true
+}
+
 prompt_for_details() {
     local detected_preset="$1"
     local use_preset=false
@@ -193,22 +242,35 @@ prompt_for_details() {
     # If in update mode, try to load existing values
     if [[ "$UPDATE_MODE" = true ]]; then
         if load_existing_values; then
-            print_info "Current values:"
-            echo "  Project: $PROJECT_NAME"
-            echo "  Type: $PROJECT_TYPE"
-            echo "  Language: $PRIMARY_LANGUAGE"
-            echo "  Stack: $TECH_STACK"
-            echo ""
-            read -p "Keep existing values? (Y/n): " -r
-            if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-                # Load remaining values from existing file or use defaults
-                KEY_TECHNOLOGIES="$(sed -n '/<project_identity>/,/<\/project_identity>/p' "$TARGET_DIR/.claude/CLAUDE.md" | sed -n '/^### Key Technologies$/,/^<\/project_identity>/p' | grep -v "^###" | grep -v "^<" | grep -v "^$" || echo "Add key technologies here.")"
-                ARCHITECTURE_PATTERNS="$(sed -n '/<architecture>/,/<\/architecture>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add architecture patterns here.")"
-                CODE_STYLE_GUIDE="$(sed -n '/<code_style>/,/<\/code_style>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add code style guidelines here.")"
-                FILE_ORGANIZATION="$(sed -n '/<file_organization>/,/<\/file_organization>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add file organization details here.")"
-                TESTING_STRATEGY="$(sed -n '/<testing>/,/<\/testing>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add testing strategy here.")"
-                DEPENDENCY_GUIDELINES="$(sed -n '/<dependencies>/,/<\/dependencies>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add dependency guidelines here.")"
-                PROJECT_NOTES="$(sed -n '/<project_notes>/,/<\/project_notes>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add project-specific notes here.")"
+            # Load remaining values from existing file or use defaults (disable pipefail for these)
+            set +e
+            KEY_TECHNOLOGIES="$(sed -n '/<project_identity>/,/<\/project_identity>/p' "$TARGET_DIR/.claude/CLAUDE.md" | sed -n '/^### Key Technologies$/,/^<\/project_identity>/p' | grep -v "^###" | grep -v "^<" | grep -v "^$" || echo "Add key technologies here.")"
+            ARCHITECTURE_PATTERNS="$(sed -n '/<architecture>/,/<\/architecture>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add architecture patterns here.")"
+            CODE_STYLE_GUIDE="$(sed -n '/<code_style>/,/<\/code_style>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add code style guidelines here.")"
+            FILE_ORGANIZATION="$(sed -n '/<file_organization>/,/<\/file_organization>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add file organization details here.")"
+            TESTING_STRATEGY="$(sed -n '/<testing>/,/<\/testing>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add testing strategy here.")"
+            DEPENDENCY_GUIDELINES="$(sed -n '/<dependencies>/,/<\/dependencies>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add dependency guidelines here.")"
+            PROJECT_NOTES="$(sed -n '/<project_notes>/,/<\/project_notes>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add project-specific notes here.")"
+            set -e
+            
+            # Apply any flag overrides
+            apply_overrides
+
+            # Show current values (after overrides) if not in force mode
+            if [[ "$FORCE_MODE" = false ]]; then
+                print_info "Current values:"
+                echo "  Project: $PROJECT_NAME"
+                echo "  Type: $PROJECT_TYPE"
+                echo "  Language: $PRIMARY_LANGUAGE"
+                echo "  Stack: $TECH_STACK"
+                echo ""
+                read -p "Keep existing values? (Y/n): " -r
+                if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+                    TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+                    return 0
+                fi
+            else
+                # Force mode: just use the values (with overrides applied)
                 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
                 return 0
             fi
@@ -221,27 +283,40 @@ prompt_for_details() {
     if [[ "$detected_preset" != "unknown" ]]; then
         echo ""
         print_step "Detected project type: ${CYAN}$detected_preset${NC}"
-        read -p "Use preset '$detected_preset'? (Y/n): " -r
-        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+
+        if [[ "$FORCE_MODE" = true ]]; then
+            # Force mode: auto-accept detected preset
             use_preset=true
             preset_name="$detected_preset"
+            print_info "Auto-using preset: $preset_name"
+        else
+            read -p "Use preset '$detected_preset'? (Y/n): " -r
+            if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+                use_preset=true
+                preset_name="$detected_preset"
+            fi
         fi
     fi
-    
+
     # If no preset selected, ask if they want to choose one
     if [[ "$use_preset" = false ]]; then
-        echo ""
-        read -p "Would you like to use a preset? (y/N): " -r
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            list_presets
-            read -p "Enter preset name (or press Enter to skip): " preset_name
-            if [[ -n "$preset_name" ]]; then
-                # Check if preset exists
-                if jq -e ".\"$preset_name\"" "$PRESETS_FILE" > /dev/null 2>&1; then
-                    use_preset=true
-                else
-                    print_warning "Preset '$preset_name' not found. Using manual input."
-                    use_preset=false
+        if [[ "$FORCE_MODE" = true ]]; then
+            # Force mode without detected preset: use minimal defaults
+            print_warning "Force mode: No preset detected, using minimal defaults"
+        else
+            echo ""
+            read -p "Would you like to use a preset? (y/N): " -r
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                list_presets
+                read -p "Enter preset name (or press Enter to skip): " preset_name
+                if [[ -n "$preset_name" ]]; then
+                    # Check if preset exists
+                    if jq -e ".\"$preset_name\"" "$PRESETS_FILE" > /dev/null 2>&1; then
+                        use_preset=true
+                    else
+                        print_warning "Preset '$preset_name' not found. Using manual input."
+                        use_preset=false
+                    fi
                 fi
             fi
         fi
@@ -327,47 +402,93 @@ create_agent_files() {
     print_step "Generating agent instructions..."
     echo ""
     
+    local should_create_file
+    
     # Create .claude/CLAUDE.md
-    mkdir -p "$TARGET_DIR/.claude"
-    if [[ -f "$TARGET_DIR/.claude/CLAUDE.md" ]]; then
-        print_warning "Claude instructions already exist"
-        read -p "Overwrite? (y/N): " -r
-        [[ $REPLY =~ ^[Yy]$ ]] && replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.claude/CLAUDE.md" && print_info "Created .claude/CLAUDE.md"
-    else
-        replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.claude/CLAUDE.md"
-        print_info "Created .claude/CLAUDE.md"
+    if [[ "$ONLY_FILES" == "all" || "$ONLY_FILES" == "claude" ]]; then
+        mkdir -p "$TARGET_DIR/.claude"
+        should_create_file=false
+        if [[ -f "$TARGET_DIR/.claude/CLAUDE.md" ]]; then
+            if [[ "$FORCE_MODE" = true ]]; then
+                should_create_file=true
+            else
+                print_warning "Claude instructions already exist"
+                read -p "Overwrite? (y/N): " -r
+                [[ $REPLY =~ ^[Yy]$ ]] && should_create_file=true
+            fi
+        else
+            should_create_file=true
+        fi
+        
+        if [[ "$should_create_file" = true ]]; then
+            replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.claude/CLAUDE.md"
+            print_info "Created .claude/CLAUDE.md"
+        fi
     fi
     
     # Create .gemini/GEMINI.md
-    mkdir -p "$TARGET_DIR/.gemini"
-    if [[ -f "$TARGET_DIR/.gemini/GEMINI.md" ]]; then
-        print_warning "Gemini instructions already exist"
-        read -p "Overwrite? (y/N): " -r
-        [[ $REPLY =~ ^[Yy]$ ]] && replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.gemini/GEMINI.md" && print_info "Created .gemini/GEMINI.md"
-    else
-        replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.gemini/GEMINI.md"
-        print_info "Created .gemini/GEMINI.md"
+    if [[ "$ONLY_FILES" == "all" || "$ONLY_FILES" == "gemini" ]]; then
+        mkdir -p "$TARGET_DIR/.gemini"
+        should_create_file=false
+        if [[ -f "$TARGET_DIR/.gemini/GEMINI.md" ]]; then
+            if [[ "$FORCE_MODE" = true ]]; then
+                should_create_file=true
+            else
+                print_warning "Gemini instructions already exist"
+                read -p "Overwrite? (y/N): " -r
+                [[ $REPLY =~ ^[Yy]$ ]] && should_create_file=true
+            fi
+        else
+            should_create_file=true
+        fi
+        
+        if [[ "$should_create_file" = true ]]; then
+            replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.gemini/GEMINI.md"
+            print_info "Created .gemini/GEMINI.md"
+        fi
     fi
     
     # Create .qwen/QWEN.md
-    mkdir -p "$TARGET_DIR/.qwen"
-    if [[ -f "$TARGET_DIR/.qwen/QWEN.md" ]]; then
-        print_warning "Qwen instructions already exist"
-        read -p "Overwrite? (y/N): " -r
-        [[ $REPLY =~ ^[Yy]$ ]] && replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.qwen/QWEN.md" && print_info "Created .qwen/QWEN.md"
-    else
-        replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.qwen/QWEN.md"
-        print_info "Created .qwen/QWEN.md"
+    if [[ "$ONLY_FILES" == "all" || "$ONLY_FILES" == "qwen" ]]; then
+        mkdir -p "$TARGET_DIR/.qwen"
+        should_create_file=false
+        if [[ -f "$TARGET_DIR/.qwen/QWEN.md" ]]; then
+            if [[ "$FORCE_MODE" = true ]]; then
+                should_create_file=true
+            else
+                print_warning "Qwen instructions already exist"
+                read -p "Overwrite? (y/N): " -r
+                [[ $REPLY =~ ^[Yy]$ ]] && should_create_file=true
+            fi
+        else
+            should_create_file=true
+        fi
+        
+        if [[ "$should_create_file" = true ]]; then
+            replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.qwen/QWEN.md"
+            print_info "Created .qwen/QWEN.md"
+        fi
     fi
     
     # Create AGENTS.md (comprehensive for Copilot + OpenCode)
-    if [[ -f "$TARGET_DIR/AGENTS.md" ]]; then
-        print_warning "AGENTS.md already exists"
-        read -p "Overwrite? (y/N): " -r
-        [[ $REPLY =~ ^[Yy]$ ]] && replace_placeholders "$AGENTS_TEMPLATE" "$TARGET_DIR/AGENTS.md" && print_info "Created AGENTS.md"
-    else
-        replace_placeholders "$AGENTS_TEMPLATE" "$TARGET_DIR/AGENTS.md"
-        print_info "Created AGENTS.md"
+    if [[ "$ONLY_FILES" == "all" || "$ONLY_FILES" == "agents" ]]; then
+        should_create_file=false
+        if [[ -f "$TARGET_DIR/AGENTS.md" ]]; then
+            if [[ "$FORCE_MODE" = true ]]; then
+                should_create_file=true
+            else
+                print_warning "AGENTS.md already exists"
+                read -p "Overwrite? (y/N): " -r
+                [[ $REPLY =~ ^[Yy]$ ]] && should_create_file=true
+            fi
+        else
+            should_create_file=true
+        fi
+        
+        if [[ "$should_create_file" = true ]]; then
+            replace_placeholders "$AGENTS_TEMPLATE" "$TARGET_DIR/AGENTS.md"
+            print_info "Created AGENTS.md"
+        fi
     fi
 }
 
@@ -434,6 +555,62 @@ parse_args() {
         case $1 in
             --update|-u)
                 UPDATE_MODE=true
+                shift
+                ;;
+            --force|-f)
+                FORCE_MODE=true
+                shift
+                ;;
+            --only=*)
+                ONLY_FILES="${1#*=}"
+                shift
+                ;;
+            --set-name=*)
+                OVERRIDE_NAME="${1#*=}"
+                shift
+                ;;
+            --set-type=*)
+                OVERRIDE_TYPE="${1#*=}"
+                shift
+                ;;
+            --set-language=*)
+                OVERRIDE_LANGUAGE="${1#*=}"
+                shift
+                ;;
+            --set-stack=*)
+                OVERRIDE_STACK="${1#*=}"
+                shift
+                ;;
+            --set-description=*)
+                OVERRIDE_DESCRIPTION="${1#*=}"
+                shift
+                ;;
+            --set-technologies=*)
+                OVERRIDE_TECHNOLOGIES="${1#*=}"
+                shift
+                ;;
+            --set-architecture=*)
+                OVERRIDE_ARCHITECTURE="${1#*=}"
+                shift
+                ;;
+            --set-code-style=*)
+                OVERRIDE_CODE_STYLE="${1#*=}"
+                shift
+                ;;
+            --set-file-org=*)
+                OVERRIDE_FILE_ORG="${1#*=}"
+                shift
+                ;;
+            --set-testing=*)
+                OVERRIDE_TESTING="${1#*=}"
+                shift
+                ;;
+            --set-dependencies=*)
+                OVERRIDE_DEPENDENCIES="${1#*=}"
+                shift
+                ;;
+            --set-notes=*)
+                OVERRIDE_NOTES="${1#*=}"
                 shift
                 ;;
             --help|-h)
