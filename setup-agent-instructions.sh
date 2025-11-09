@@ -367,7 +367,10 @@ prompt_for_details() {
         DEPENDENCY_GUIDELINES="Add dependency guidelines here."
         PROJECT_NOTES="Add project-specific notes here."
     fi
-    
+
+    # Apply overrides after loading preset or manual input
+    apply_overrides
+
     TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 }
 
