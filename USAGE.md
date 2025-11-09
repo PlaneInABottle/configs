@@ -49,14 +49,17 @@ Update mode will:
 3. Allow you to confirm overwrite for each file
 4. Preserve your existing content if you choose to keep it
 
-### 3. Available Presets
+### 3. Available Presets (Optional)
 
+**6 Built-in Presets:**
 - **frontend-react** - React + TypeScript + Vite
 - **backend-node** - Node.js + Express + PostgreSQL
 - **fullstack-nextjs** - Next.js + React + Prisma
 - **python-fastapi** - Python + FastAPI + PostgreSQL
 - **cli-tool** - Node.js/Go/Rust CLI application
 - **library** - Reusable TypeScript library
+
+**Note:** Presets are convenient but **optional**. You can always use manual input for custom tech stacks.
 
 ### 4. Example Usage
 
@@ -85,16 +88,86 @@ The script detects it's a React project and offers the preset!
 ./setup-agent-instructions.sh -u /path/to/project
 ```
 
-## Manual Setup
+## Manual Setup (Without Presets)
 
-If you prefer to enter details manually:
+### When to Use Manual Mode
+
+Use manual input when:
+- Your tech stack isn't covered by the 6 presets
+- You have a custom or unique project setup
+- You want minimal defaults and will customize later
+- Working with mixed or experimental technologies
+
+### How to Use Manual Mode
+
+**Option 1: No detection (project with no markers)**
+```bash
+# For a project with no package.json, requirements.txt, etc.
+./setup-agent-instructions.sh /path/to/custom-project
+
+# Script will prompt for manual input:
+Project name [custom-project]: MyCustomApp
+Project type (frontend/backend/fullstack/cli/library): backend
+Primary language: Rust
+Tech stack (comma-separated): Actix, PostgreSQL, Redis
+Project description (press Enter twice to finish):
+A high-performance API server built with Rust
+```
+
+**Option 2: Decline detected preset**
+```bash
+./setup-agent-instructions.sh /path/to/react-project
+
+# When prompted:
+► Detected project type: frontend-react
+Use preset 'frontend-react'? (Y/n): n
+
+# Then choose manual:
+Would you like to use a preset? (y/N): n
+
+# Then enter your custom details
+```
+
+### What Gets Generated (Manual Mode)
+
+Files are created with:
+- ✅ Your provided details (name, type, language, stack, description)
+- ✅ Placeholder sections for you to fill in:
+  - `Add architecture patterns here.`
+  - `Add code style guidelines here.`
+  - `Add file organization details here.`
+  - `Add testing strategy here.`
+  - `Add dependency guidelines here.`
+  - `Add project-specific notes here.`
+
+### Customize After Generation
 
 ```bash
-./setup-agent-instructions.sh /path/to/project
-# When prompted:
-# - Choose "n" to skip preset
-# - Enter project details manually
-# - Files will be generated with your custom values
+cd your-project
+
+# Edit and fill in the placeholder sections
+code .claude/CLAUDE.md
+code .gemini/GEMINI.md
+code .qwen/QWEN.md
+code AGENTS.md
+
+# Or update using the script
+~/configs/setup-agent-instructions.sh --update .
+```
+
+### Example: Custom Rust Project
+
+```bash
+./setup-agent-instructions.sh /path/to/rust-api
+
+# Input:
+Project name: rust-actix-api
+Project type: backend
+Primary language: Rust
+Tech stack: Actix Web, PostgreSQL, Redis
+Description: High-performance REST API with WebSocket support
+
+# Generated files have your details + placeholders to fill
 ```
 
 ## Customization
@@ -129,19 +202,29 @@ code AGENTS.md          # Update for Copilot/OpenCode
 # - Allow selective overwrites
 ```
 
-### Add New Presets
+### Add Custom Presets
 
-Edit `~/configs/templates/presets.json`:
+Want to add your own preset for reuse? Edit `~/configs/templates/presets.json`:
+
 ```json
 {
   "your-preset-name": {
     "PROJECT_TYPE": "backend",
     "PRIMARY_LANGUAGE": "Go",
     "TECH_STACK": "Go, Gin, PostgreSQL",
-    ...
+    "PROJECT_DESCRIPTION": "A REST API built with Go and Gin framework",
+    "KEY_TECHNOLOGIES": "- Go 1.21+\n- Gin web framework\n- GORM for ORM",
+    "ARCHITECTURE_PATTERNS": "- MVC architecture\n- Repository pattern\n- Middleware for auth",
+    "CODE_STYLE_GUIDE": "- Use gofmt for formatting\n- Follow Go best practices\n- Write table-driven tests",
+    "FILE_ORGANIZATION": "```\ncmd/\ninternal/\npkg/\n```",
+    "TESTING_STRATEGY": "- Unit tests with testing package\n- Integration tests\n- Aim for >80% coverage",
+    "DEPENDENCY_GUIDELINES": "- Use Go modules\n- Keep dependencies minimal\n- Pin versions",
+    "PROJECT_NOTES": "Add project-specific notes here."
   }
 }
 ```
+
+After adding, the script will detect and offer your custom preset automatically!
 
 ## File Structure
 
@@ -170,6 +253,42 @@ Tests verify:
 - JSON syntax is correct
 - Placeholders are present
 - Project detection works
+
+## Flexibility: Presets vs Manual
+
+### When to Use Presets
+
+✅ **Use a preset when:**
+- Your project matches a common tech stack
+- You want best practices out-of-the-box
+- Quick setup is the priority
+- Working on a standard React/Node/Python project
+
+### When to Use Manual Input
+
+✅ **Use manual mode when:**
+- Custom tech stack (Rust, Elixir, Go, etc.)
+- Unique project requirements
+- Want to start minimal and customize later
+- Experimental or learning projects
+- Mixed technologies not covered by presets
+
+### Hybrid Approach
+
+You can also:
+1. Start with a preset (for structure)
+2. Run `--update` mode later
+3. Choose "n" to keep existing and customize manually
+
+```bash
+# Initial setup with preset
+./setup-agent-instructions.sh my-project
+
+# Later, update with custom details
+./setup-agent-instructions.sh --update my-project
+```
+
+---
 
 ## Tips
 
