@@ -30,8 +30,8 @@
 
 ### Code Verification (Per Step)
 **After EACH incremental change:**
-- **Search dependencies** for the specific change made using GrepTool
-- **Run tests** for the modified component only via ShellTool
+- **Search dependencies** for the specific change made using available search tools
+- **Run tests** for the modified component only
 - **Verify build** still works
 - **Check one change at a time** - Don't batch multiple verifications
 
@@ -154,7 +154,7 @@ grep -r "TODO" . | head -20
 
 ### Search & Discovery
 - Use GlobTool to find files matching patterns
-- Use GrepTool for searching code references
+- Use available search tools for finding code references
 - Always use ReadFileTool before editing with EditTool
 
 ### Sub-Agent Workflow
@@ -199,11 +199,11 @@ EditTool - In-place file modifications
 GlobTool - Find files matching patterns
 
 # Search and analysis
-GrepTool - Search for patterns in files
+Code Search - Search for patterns in files
 ReadManyFilesTool - Read multiple files at once
 
 # Execution and web
-ShellTool - Execute shell commands (with confirmation)
+Command Execution - Execute shell commands (with confirmation)
 WebFetchTool - Retrieve content from URLs
 WebSearchTool - Perform web searches
 MemoryTool - Interact with AI memory
@@ -228,8 +228,8 @@ MemoryTool - Interact with AI memory
 - [ ] Implement one step at a time
 
 ### After Each Incremental Change
-- [ ] Use GrepTool to search dependencies for this specific change
-- [ ] Update/run tests for modified component only via ShellTool
+- [ ] Use search tools to find dependencies for this specific change
+- [ ] Update/run tests for modified component only
 - [ ] Verify build succeeds
 - [ ] Commit checkpoint if tests pass
 - [ ] Confirm change works before next step

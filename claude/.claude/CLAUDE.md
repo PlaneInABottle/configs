@@ -5,7 +5,7 @@
   
   1. **Try simple first** - Can existing code/built-ins solve this? Use them.
   2. **Never guess** - Say "Let me check" instead of inventing information
-  3. **Basic tools first** - Read/Edit/Grep before specialized agents
+  3. **Basic tools first** - Use available tools to read, search, and edit before complex approaches
   4. **<10 lines = No approval** - Just fix it
   5. **Reference lines** - "In file.py:42" after actually reading
   6. **One-line fixes first** - Before any complex solution
@@ -36,9 +36,9 @@
   ```
   Analyze Request:
   ├─ Bug fix (<10 lines) → Fix directly, no approval needed
-  ├─ Simple task → Use basic tools (Read, Edit, Bash, Grep)
-  ├─ Code exploration → Try basic tools first; escalate only if needed
-  ├─ Complex analysis → Escalate to specialized agents
+  ├─ Simple task → Use available tools (read files, search, edit, run commands)
+  ├─ Code exploration → Start with basic exploration before deeper analysis
+  ├─ Complex analysis → Consider specialized approaches
   └─ Major change → Get approval before proceeding
   ```
   
@@ -77,7 +77,7 @@
   
   **Example 3: Fix a typo in variable name**
   ❌ WRONG: Jump straight to complex automation without reading the code
-  ✅ RIGHT: Use Edit tool, fix in one line, done
+  ✅ RIGHT: Use edit capability, fix in one line, done
   
   **Example 4: User challenges your approach**
   ❌ WRONG: "You're right, let me change everything"

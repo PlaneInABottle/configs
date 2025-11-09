@@ -76,7 +76,7 @@
 
   **Standard Tools Approach:**
 
-- **Code exploration:** Use ReadFileTool and GlobTool for understanding file structure
+- **Code exploration:** Use available tools for reading files and understanding structure
 - **Code modifications:** Use standard edit tools for function/class changes
 - **Code navigation:** Use find and grep operations for locating implementations
 - **Code search:** Use pattern matching tools for finding specific constructs
@@ -205,27 +205,6 @@ Before completing tasks:
 
 ---
 
-## Configuration Repository Context
-
-This is a dotfiles/configuration management repository using GNU Stow for symlink management. Key directories:
-
-- **claude/**: Claude Code configuration and agents
-- **opencode/**: OpenCode configuration and agents  
-- **qwen/**: Qwen Code configuration (this CLI)
-- **kitty/**: Terminal emulator configuration
-- **nvim/**: Neovim editor configuration
-
-**Stow Management:**
-- Use `stow <package>` to create symlinks
-- Use `stow -D <package>` to remove symlinks
-- Each package directory mirrors the target structure
-
-**Best Practices:**
-- Test configurations before committing
-- Use portable paths (avoid hardcoded home directories)
-- Keep sensitive data in .env files (excluded from git)
-- Document significant changes and their reasoning
-
 ---
 
-*Configuration management for productive AI-assisted development.*
+*Universal configuration for productive AI-assisted development.*

@@ -82,9 +82,9 @@
 
   **Code Intelligence Approach:**
 
-- **Code exploration**: Use Glob and Read tools for understanding file structure
-- **Code navigation**: Use Grep with targeted patterns for finding implementations
-- **Code search**: Use Grep with appropriate glob patterns and context
+- **Code exploration**: Use available tools for understanding file structure
+- **Code navigation**: Use search capabilities with targeted patterns for finding implementations
+- **Code search**: Use search tools with appropriate patterns and context
 
   **Context7 for Library Research (MANDATORY):**
 
@@ -108,9 +108,9 @@
 
   **File Management Best Practices:**
 
-- **Code exploration:** Use Read/Glob for understanding file structure and patterns
-- **Code modifications:** Use Edit for targeted changes, MultiEdit for batch operations
-- **Code search:** Use Grep with appropriate glob patterns and context
+- **Code exploration:** Use available tools for understanding file structure and patterns
+- **Code modifications:** Use editing capabilities for targeted changes
+- **Code search:** Use search tools with appropriate patterns and context
 - **Safe operations:** Always read before writing, understand impact before editing
 
 ## Error Handling Protocol
