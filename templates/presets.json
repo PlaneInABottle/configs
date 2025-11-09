@@ -1,0 +1,85 @@
+{
+  "frontend-react": {
+    "PROJECT_TYPE": "frontend",
+    "PRIMARY_LANGUAGE": "TypeScript",
+    "TECH_STACK": "React, TypeScript, Vite",
+    "PROJECT_DESCRIPTION": "A modern React application built with TypeScript and Vite for fast development and optimized production builds.",
+    "KEY_TECHNOLOGIES": "- React 18+ with hooks\n- TypeScript for type safety\n- Vite for build tooling\n- React Router for navigation\n- TailwindCSS or CSS modules for styling",
+    "ARCHITECTURE_PATTERNS": "- Component-based architecture with functional components\n- Custom hooks for shared logic and state\n- Context API or state management library (Redux/Zustand)\n- Feature-based folder structure\n- Separation of concerns (components, hooks, utils, types)",
+    "CODE_STYLE_GUIDE": "- Use functional components with hooks exclusively\n- Prefer named exports over default exports\n- Use TypeScript strict mode\n- Follow ESLint and Prettier configuration\n- Props destructuring in component signatures\n- Avoid prop drilling (use context or state management)",
+    "FILE_ORGANIZATION": "```\nsrc/\n├── components/     # Reusable UI components\n├── features/       # Feature-specific modules\n├── hooks/          # Custom React hooks\n├── utils/          # Utility functions\n├── types/          # TypeScript type definitions\n├── styles/         # Global styles\n└── App.tsx         # Root component\n```",
+    "TESTING_STRATEGY": "- Unit tests with Vitest or Jest\n- Component tests with React Testing Library\n- E2E tests with Playwright (for critical flows)\n- Aim for >80% coverage on business logic\n- Test user interactions, not implementation details",
+    "DEPENDENCY_GUIDELINES": "- Prefer lightweight libraries to minimize bundle size\n- Check bundle impact with tools like bundlephobia\n- Avoid duplicate dependencies\n- Keep dependencies up to date\n- Document reason for major dependencies",
+    "PROJECT_NOTES": "Add project-specific notes here."
+  },
+  
+  "backend-node": {
+    "PROJECT_TYPE": "backend",
+    "PRIMARY_LANGUAGE": "TypeScript",
+    "TECH_STACK": "Node.js, Express, PostgreSQL",
+    "PROJECT_DESCRIPTION": "A RESTful API server built with Node.js, Express, and PostgreSQL for robust backend functionality.",
+    "KEY_TECHNOLOGIES": "- Node.js with Express framework\n- TypeScript for type safety\n- PostgreSQL with Prisma ORM\n- JWT for authentication\n- Jest for testing",
+    "ARCHITECTURE_PATTERNS": "- Layered architecture (routes → controllers → services → repositories)\n- Dependency injection for testability\n- Repository pattern for database access\n- Middleware for cross-cutting concerns (auth, logging, error handling)\n- Separate business logic from HTTP layer",
+    "CODE_STYLE_GUIDE": "- Use async/await for all asynchronous operations\n- Proper error handling with custom error classes\n- Follow RESTful API conventions\n- Use TypeScript strict mode\n- Consistent naming: camelCase for variables, PascalCase for classes\n- Avoid callback hell, use promises",
+    "FILE_ORGANIZATION": "```\nsrc/\n├── controllers/    # Request handlers\n├── services/       # Business logic\n├── repositories/   # Database access layer\n├── middleware/     # Express middleware\n├── routes/         # API route definitions\n├── models/         # Data models and types\n├── utils/          # Utility functions\n└── config/         # Configuration files\n```",
+    "TESTING_STRATEGY": "- Unit tests for services and utilities\n- Integration tests for API endpoints\n- Use test database for integration tests\n- Mock external dependencies\n- Aim for >80% coverage\n- Test error scenarios and edge cases",
+    "DEPENDENCY_GUIDELINES": "- Audit security vulnerabilities regularly (npm audit)\n- Pin major versions, allow minor/patch updates\n- Minimize production dependencies\n- Document why each dependency is needed\n- Keep dev dependencies separate",
+    "PROJECT_NOTES": "Add project-specific notes here."
+  },
+  
+  "fullstack-nextjs": {
+    "PROJECT_TYPE": "fullstack",
+    "PRIMARY_LANGUAGE": "TypeScript",
+    "TECH_STACK": "Next.js, React, TypeScript, Prisma",
+    "PROJECT_DESCRIPTION": "A full-stack application built with Next.js, leveraging Server Components and Server Actions for optimal performance.",
+    "KEY_TECHNOLOGIES": "- Next.js 14+ with App Router\n- React Server Components\n- TypeScript for type safety\n- Prisma for database access\n- TailwindCSS for styling\n- Server Actions for mutations",
+    "ARCHITECTURE_PATTERNS": "- Server-first architecture\n- Server Components by default, Client Components when needed\n- Server Actions for data mutations\n- API routes for external integrations only\n- Colocate components with routes when possible\n- Use layouts for shared UI",
+    "CODE_STYLE_GUIDE": "- Prefer Server Components over Client Components\n- Use 'use client' directive only when necessary\n- Follow Next.js data fetching patterns\n- Use TypeScript strict mode\n- Consistent file naming: kebab-case for routes\n- Use server actions over API routes for mutations",
+    "FILE_ORGANIZATION": "```\napp/\n├── (routes)/       # Route groups\n│   ├── page.tsx    # Route pages\n│   └── layout.tsx  # Route layouts\n├── api/            # API routes (external only)\n└── _components/    # Private route components\ncomponents/         # Shared components\nlib/                # Utilities and helpers\nprisma/             # Database schema and migrations\n```",
+    "TESTING_STRATEGY": "- Unit tests for utilities and helpers\n- Component tests with React Testing Library\n- Integration tests for Server Actions\n- E2E tests with Playwright for critical flows\n- Test both server and client components",
+    "DEPENDENCY_GUIDELINES": "- Leverage Next.js built-in features first\n- Check client bundle size impact\n- Prefer server-side dependencies when possible\n- Keep dependencies minimal\n- Document why each client-side library is needed",
+    "PROJECT_NOTES": "Add project-specific notes here."
+  },
+  
+  "python-fastapi": {
+    "PROJECT_TYPE": "backend",
+    "PRIMARY_LANGUAGE": "Python",
+    "TECH_STACK": "Python, FastAPI, PostgreSQL",
+    "PROJECT_DESCRIPTION": "A high-performance API built with FastAPI, featuring automatic OpenAPI documentation and async support.",
+    "KEY_TECHNOLOGIES": "- Python 3.11+\n- FastAPI for web framework\n- SQLAlchemy 2.0 for ORM\n- Pydantic v2 for data validation\n- Pytest for testing\n- Alembic for migrations",
+    "ARCHITECTURE_PATTERNS": "- Layered architecture (routes → services → repositories)\n- Dependency injection with FastAPI Depends\n- Pydantic models for validation and serialization\n- Async/await for I/O operations\n- Repository pattern for database access\n- Separate schemas from database models",
+    "CODE_STYLE_GUIDE": "- Follow PEP 8 style guide\n- Use type hints for all functions\n- Write docstrings for public functions (Google style)\n- Use black for formatting\n- Use ruff for linting\n- Async functions for I/O, sync for CPU-bound",
+    "FILE_ORGANIZATION": "```\napp/\n├── api/            # API route definitions\n│   └── v1/         # API version\n├── services/       # Business logic\n├── repositories/   # Database access\n├── models/         # SQLAlchemy models\n├── schemas/        # Pydantic schemas\n├── core/           # Config, deps, security\n└── utils/          # Utility functions\n```",
+    "TESTING_STRATEGY": "- Pytest for all tests\n- Unit tests for services and utilities\n- Integration tests for API endpoints with TestClient\n- Use test database with fixtures\n- Mock external services\n- Aim for >80% coverage",
+    "DEPENDENCY_GUIDELINES": "- Use poetry or uv for dependency management\n- Pin exact versions in production\n- Separate dev and prod dependencies\n- Keep requirements minimal\n- Document why each dependency is needed",
+    "PROJECT_NOTES": "Add project-specific notes here."
+  },
+  
+  "cli-tool": {
+    "PROJECT_TYPE": "cli",
+    "PRIMARY_LANGUAGE": "TypeScript",
+    "TECH_STACK": "Node.js, TypeScript, Commander.js",
+    "PROJECT_DESCRIPTION": "A command-line tool built with Node.js, providing an intuitive interface for common tasks.",
+    "KEY_TECHNOLOGIES": "- Node.js for runtime\n- Commander.js for CLI framework\n- TypeScript for type safety\n- Inquirer for interactive prompts\n- Chalk for colored output\n- Ora for spinners",
+    "ARCHITECTURE_PATTERNS": "- Command pattern for CLI commands\n- Separation of CLI logic and business logic\n- Configuration file support (JSON/YAML)\n- Plugin architecture (if extensible)\n- Proper exit codes and error handling",
+    "CODE_STYLE_GUIDE": "- Clear, descriptive command naming\n- Helpful error messages with suggestions\n- Progress indicators for long operations\n- Proper exit codes (0 = success, non-zero = error)\n- Follow POSIX conventions for flags\n- Support --help and --version",
+    "FILE_ORGANIZATION": "```\nsrc/\n├── commands/       # CLI command implementations\n│   ├── init.ts\n│   └── build.ts\n├── utils/          # Utility functions\n├── config/         # Configuration handling\n├── types/          # Type definitions\n└── index.ts        # Entry point and CLI setup\n```",
+    "TESTING_STRATEGY": "- Unit tests for business logic\n- Integration tests for commands\n- Test error scenarios and edge cases\n- Test with different configurations\n- Mock file system operations\n- Test interactive prompts",
+    "DEPENDENCY_GUIDELINES": "- Keep dependencies minimal for fast installs\n- Consider package size (npx usage)\n- Avoid native dependencies when possible\n- Pin dependencies for reproducibility\n- Document why each dependency is needed",
+    "PROJECT_NOTES": "Add project-specific notes here."
+  },
+  
+  "library": {
+    "PROJECT_TYPE": "library",
+    "PRIMARY_LANGUAGE": "TypeScript",
+    "TECH_STACK": "TypeScript, Rollup, Vitest",
+    "PROJECT_DESCRIPTION": "A reusable library providing well-tested, documented functionality for other projects.",
+    "KEY_TECHNOLOGIES": "- TypeScript for type safety\n- Rollup for bundling (ESM + CJS)\n- Vitest for testing\n- TSDoc for documentation\n- Semantic versioning",
+    "ARCHITECTURE_PATTERNS": "- Clean, minimal public API surface\n- Internal utilities kept private\n- Tree-shakeable exports (ESM)\n- Zero runtime dependencies (preferred)\n- Composition over inheritance\n- Single responsibility principle",
+    "CODE_STYLE_GUIDE": "- Clear, documented public API\n- Use TypeScript strict mode\n- Provide complete type definitions\n- Follow semantic versioning strictly\n- Document breaking changes\n- Keep public API stable",
+    "FILE_ORGANIZATION": "```\nsrc/\n├── index.ts        # Public API exports only\n├── core/           # Core functionality\n├── utils/          # Internal utilities (not exported)\n└── types/          # Type definitions\ntests/              # Test files (mirror src structure)\n```",
+    "TESTING_STRATEGY": "- High test coverage (>90%)\n- Test public API thoroughly\n- Test edge cases and error conditions\n- Integration tests for main workflows\n- Performance benchmarks for critical code\n- No implementation details in tests",
+    "DEPENDENCY_GUIDELINES": "- Minimize dependencies (zero runtime preferred)\n- Document peer dependencies clearly\n- Consider bundle size impact\n- Use devDependencies for build tools\n- Support wide version ranges for peer deps",
+    "PROJECT_NOTES": "Add project-specific notes here."
+  }
+}
