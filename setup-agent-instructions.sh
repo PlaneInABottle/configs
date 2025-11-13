@@ -18,7 +18,6 @@ TEMPLATES_DIR="$CONFIG_DIR/templates"
 
 # Template files
 PROJECT_TEMPLATE="$TEMPLATES_DIR/PROJECT_INSTRUCTIONS.template.md"
-AGENTS_TEMPLATE="$TEMPLATES_DIR/AGENTS_COMPREHENSIVE.template.md"
 PRESETS_FILE="$TEMPLATES_DIR/presets.json"
 
 # Global variables
@@ -71,7 +70,7 @@ usage() {
     echo "  • .claude/CLAUDE.md       - Claude Code (project-specific)"
     echo "  • .gemini/GEMINI.md       - Gemini Code (project-specific)"
     echo "  • .qwen/QWEN.md           - Qwen Code (project-specific)"
-    echo "  • AGENTS.md               - GitHub Copilot + OpenCode (comprehensive)"
+    echo "  • AGENTS.md               - GitHub Copilot + OpenCode (project-specific)"
     echo ""
     echo "Examples:"
     echo "  $0 ~/projects/my-new-project"
@@ -116,11 +115,6 @@ check_templates() {
     
     if [[ ! -f "$PROJECT_TEMPLATE" ]]; then
         print_error "Project template not found: $PROJECT_TEMPLATE"
-        all_exist=false
-    fi
-    
-    if [[ ! -f "$AGENTS_TEMPLATE" ]]; then
-        print_error "Agents template not found: $AGENTS_TEMPLATE"
         all_exist=false
     fi
     
@@ -473,7 +467,7 @@ create_agent_files() {
         fi
     fi
     
-    # Create AGENTS.md (comprehensive for Copilot + OpenCode)
+    # Create AGENTS.md (project-specific for Copilot + OpenCode)
     if [[ "$ONLY_FILES" == "all" || "$ONLY_FILES" == "agents" ]]; then
         should_create_file=false
         if [[ -f "$TARGET_DIR/AGENTS.md" ]]; then
@@ -489,7 +483,7 @@ create_agent_files() {
         fi
         
         if [[ "$should_create_file" = true ]]; then
-            replace_placeholders "$AGENTS_TEMPLATE" "$TARGET_DIR/AGENTS.md"
+            replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/AGENTS.md"
             print_info "Created AGENTS.md"
         fi
     fi
@@ -500,15 +494,14 @@ show_summary() {
     print_info "Setup complete!"
     echo ""
     echo -e "${BLUE}Files created in $TARGET_DIR:${NC}"
-    echo "  • .claude/CLAUDE.md       - Claude Code (references ~/.claude/CLAUDE.md)"
-    echo "  • .gemini/GEMINI.md       - Gemini Code (references ~/.gemini/GEMINI.md)"
-    echo "  • .qwen/QWEN.md           - Qwen Code (references ~/.qwen/QWEN.md)"
-    echo "  • AGENTS.md               - GitHub Copilot + OpenCode (comprehensive)"
+    echo "  • .claude/CLAUDE.md       - Claude Code (project-specific)"
+    echo "  • .gemini/GEMINI.md       - Gemini Code (project-specific)"
+    echo "  • .qwen/QWEN.md           - Qwen Code (project-specific)"
+    echo "  • AGENTS.md               - GitHub Copilot + OpenCode (project-specific)"
     echo ""
     echo -e "${YELLOW}Next steps:${NC}"
     echo "  1. Review and customize files for your specific project needs"
     echo "  2. Add to version control to share with your team"
-    echo "  3. Global rules are managed in ~/configs/{agent}/"
     echo ""
 }
 

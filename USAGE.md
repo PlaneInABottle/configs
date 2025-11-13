@@ -2,25 +2,16 @@
 
 ## Overview
 
-This system provides a streamlined way to set up AI coding agent instructions for new projects. It separates **global rules** (universal best practices) from **project-specific context** (your project details).
+This system provides a streamlined way to set up AI coding agent instructions for new projects. All agent instruction files are **project-specific** and contain complete guidance tailored to your project.
 
 ## Architecture
 
-### Global Configs (User-Wide)
-Located in `~/configs/`, these contain universal development rules:
-- `~/configs/claude/.claude/CLAUDE.md` - Claude Code global rules
-- `~/configs/gemini/.gemini/GEMINI.md` - Gemini Code global rules
-- `~/configs/qwen/.qwen/QWEN.md` - Qwen Code global rules
-- `~/configs/opencode/.config/opencode/AGENTS.md` - OpenCode global rules
-
-**Note:** GitHub Copilot has NO global config support.
-
 ### Project-Specific Files
-Generated per project, containing only project context:
-- `.claude/CLAUDE.md` - Claude project context
-- `.gemini/GEMINI.md` - Gemini project context
-- `.qwen/QWEN.md` - Qwen project context
-- `AGENTS.md` - Comprehensive (for Copilot + OpenCode)
+Generated per project, containing complete project-specific instructions:
+- `.claude/CLAUDE.md` - Claude Code instructions
+- `.gemini/GEMINI.md` - Gemini Code instructions
+- `.qwen/QWEN.md` - Qwen Code instructions
+- `AGENTS.md` - GitHub Copilot + OpenCode instructions
 
 ## Quick Start
 
@@ -175,22 +166,12 @@ Description: High-performance REST API with WebSocket support
 
 ## Customization
 
-### Update Global Rules
-
-Edit the global configs directly:
-```bash
-# Update Claude global rules
-code ~/configs/claude/.claude/CLAUDE.md
-
-# Changes affect ALL projects automatically
-```
-
-### Update Project-Specific Context
+### Update Project Instructions
 
 **Option 1: Edit files directly**
 ```bash
 cd your-project
-code .claude/CLAUDE.md  # Update project context
+code .claude/CLAUDE.md  # Update project instructions
 code AGENTS.md          # Update for Copilot/OpenCode
 ```
 
@@ -205,8 +186,6 @@ code AGENTS.md          # Update for Copilot/OpenCode
 # - Ask if you want to keep them (Y/n)
 # - Regenerate all 4 files with those values
 # - Ask to overwrite each file (y/N)
-#   • Claude, Gemini, Qwen (from PROJECT_TEMPLATE)
-#   • AGENTS.md (from AGENTS_COMPREHENSIVE_TEMPLATE)
 ```
 
 ### Update Mode Use Cases
@@ -273,12 +252,12 @@ After adding, the script will detect and offer your custom preset automatically!
 ```
 your-project/
 ├── .claude/
-│   └── CLAUDE.md          # Project context (references global)
+│   └── CLAUDE.md          # Project-specific instructions
 ├── .gemini/
-│   └── GEMINI.md          # Project context (references global)
+│   └── GEMINI.md          # Project-specific instructions
 ├── .qwen/
-│   └── QWEN.md            # Project context (references global)
-└── AGENTS.md              # Comprehensive (Copilot + OpenCode)
+│   └── QWEN.md            # Project-specific instructions
+└── AGENTS.md              # Project-specific instructions (Copilot + OpenCode)
 ```
 
 ## Testing
@@ -350,15 +329,6 @@ echo ".qwen/" >> .gitignore
 echo "AGENTS.md" >> .gitignore
 ```
 
-### Keeping Global Rules Updated
-
-Use GNU Stow to manage your configs:
-```bash
-cd ~/configs
-git pull  # Get latest global rules
-stow claude gemini qwen opencode  # Symlink to home directory
-```
-
 ### Quick Project Setup
 
 Create an alias:
@@ -389,7 +359,7 @@ sudo pacman -S jq
 ```bash
 # Make sure you're in the configs directory
 cd ~/configs
-ls templates/  # Should show: PROJECT_INSTRUCTIONS.template.md, AGENTS_COMPREHENSIVE.template.md, presets.json
+ls templates/  # Should show: PROJECT_INSTRUCTIONS.template.md, presets.json
 ```
 
 ### Files Already Exist
@@ -418,12 +388,12 @@ done
 
 ## Benefits
 
-✅ **Single source of truth** - Global rules in one place  
-✅ **Minimal duplication** - Project files only have project context  
-✅ **Easy maintenance** - Update global rules once, affects all projects  
+✅ **Project-specific** - All instructions tailored to your project  
+✅ **Complete guidance** - No need for separate global configs  
 ✅ **Quick setup** - Auto-detection + presets = fast project initialization  
 ✅ **Flexible** - Use presets or manual input  
 ✅ **Team-friendly** - Commit and share with your team  
+✅ **Self-contained** - Each project has everything it needs  
 
 ## Support
 

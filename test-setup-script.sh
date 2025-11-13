@@ -56,7 +56,6 @@ test_templates_exist() {
     
     local templates=(
         "$SCRIPT_DIR/templates/PROJECT_INSTRUCTIONS.template.md"
-        "$SCRIPT_DIR/templates/AGENTS_COMPREHENSIVE.template.md"
         "$SCRIPT_DIR/templates/presets.json"
     )
     
@@ -124,7 +123,6 @@ test_template_placeholders() {
     print_test "Checking template placeholders"
     
     local project_template="$SCRIPT_DIR/templates/PROJECT_INSTRUCTIONS.template.md"
-    local agents_template="$SCRIPT_DIR/templates/AGENTS_COMPREHENSIVE.template.md"
     
     # Check for required placeholders in project template
     local required_placeholders=(
