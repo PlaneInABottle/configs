@@ -4,6 +4,39 @@
 
 This system provides a streamlined way to set up AI coding agent instructions for new projects. All agent instruction files are **project-specific** and contain complete guidance tailored to your project.
 
+## Installation
+
+### Option 1: Global Command (Recommended)
+
+Create a symlink to make the command available system-wide:
+
+```bash
+# Linux/macOS - Add to ~/.local/bin (no sudo needed)
+mkdir -p ~/.local/bin
+ln -sf /path/to/your/configs/repo/setup-agent-instructions.sh ~/.local/bin/setup-agent-instructions
+
+# Verify ~/.local/bin is in PATH (usually is by default)
+echo $PATH | grep -q "$HOME/.local/bin" && echo "✓ Already in PATH" || echo "Add to PATH"
+
+# Optional: Add alias for convenience (add to ~/.bashrc or ~/.zshrc)
+echo "alias setup-agents='setup-agent-instructions'" >> ~/.zshrc  # or ~/.bashrc
+```
+
+Then use from anywhere:
+```bash
+setup-agent-instructions /path/to/project
+# or the shorter alias:
+setup-agents /path/to/project
+```
+
+### Option 2: Direct Script Execution
+
+Call the script directly from your configs repository:
+
+```bash
+/path/to/your/configs/repo/setup-agent-instructions.sh /path/to/project
+```
+
 ## Architecture
 
 ### Project-Specific Files
@@ -18,8 +51,11 @@ Generated per project, containing complete project-specific instructions:
 ### 1. Set Up a New Project
 
 ```bash
-cd ~/configs
-./setup-agent-instructions.sh /path/to/your/project
+# If installed globally:
+setup-agent-instructions /path/to/your/project
+
+# Or call script directly:
+/path/to/configs/setup-agent-instructions.sh /path/to/your/project
 ```
 
 The script will:
@@ -30,18 +66,17 @@ The script will:
 ### 2. Update an Existing Project
 
 ```bash
-cd ~/configs
-./setup-agent-instructions.sh --update /path/to/your/project
+setup-agent-instructions --update /path/to/your/project
 ```
 
 Update mode will:
-1. Load existing project values from current files
-2. Show current values and ask if you want to keep them
-3. Regenerate ALL 4 files (including AGENTS.md)
-4. Ask to overwrite each file individually
-5. Skip files where you choose 'n'
+1. **Load existing values** from `.claude/CLAUDE.md` (name, type, language, stack, etc.)
+2. **Ask if you want to keep them** or enter new values
+3. **Regenerate ALL 4 files** with the same project-specific template
+4. **Ask to overwrite** each file individually (or use `--force` to skip prompts)
+5. **Skip files** where you choose 'n'
 
-**Important:** AGENTS.md is included in updates and will be regenerated like other files.
+**Important:** All files use the same template now, so updates are consistent across all agents.
 
 ### 3. Available Presets (Optional)
 
@@ -63,7 +98,12 @@ cd ~/projects
 mkdir my-react-app
 cd my-react-app
 npm create vite@latest . -- --template react-ts
-~/configs/setup-agent-instructions.sh .
+
+# Use the command (if installed globally)
+setup-agents .
+
+# Or call script directly
+/path/to/configs/setup-agent-instructions.sh .
 ```
 
 The script detects it's a React project and offers the preset!
@@ -72,15 +112,33 @@ The script detects it's a React project and offers the preset!
 
 ```bash
 # Show help
-./setup-agent-instructions.sh --help
+setup-agent-instructions --help
 
 # Create new project (default)
-./setup-agent-instructions.sh /path/to/project
+setup-agent-instructions /path/to/project
 
 # Update existing project
-./setup-agent-instructions.sh --update /path/to/project
-./setup-agent-instructions.sh -u /path/to/project
+setup-agent-instructions --update /path/to/project
+setup-agent-instructions -u /path/to/project
+
+# Force mode (no prompts, overwrites all files)
+setup-agent-instructions --force --update /path/to/project
+
+# Update specific files only
+setup-agent-instructions --only=agents --update /path/to/project
+setup-agent-instructions --only=claude --update /path/to/project
+
+# Set values directly (useful for automation)
+setup-agent-instructions --update --force --set-stack="Go, Gin, PostgreSQL" .
+setup-agent-instructions --update --force --set-type=backend --set-language=Go .
 ```
+
+### Available --only Options:
+- `claude` - Only .claude/CLAUDE.md
+- `gemini` - Only .gemini/GEMINI.md
+- `qwen` - Only .qwen/QWEN.md
+- `agents` - Only AGENTS.md
+- `all` - All files (default)
 
 ## Manual Setup (Without Presets)
 
@@ -146,13 +204,13 @@ code .qwen/QWEN.md
 code AGENTS.md
 
 # Or update using the script
-~/configs/setup-agent-instructions.sh --update .
+setup-agent-instructions --update .
 ```
 
 ### Example: Custom Rust Project
 
 ```bash
-./setup-agent-instructions.sh /path/to/rust-api
+setup-agent-instructions /path/to/rust-api
 
 # Input:
 Project name: rust-actix-api
@@ -178,7 +236,7 @@ code AGENTS.md          # Update for Copilot/OpenCode
 **Option 2: Use the update command**
 ```bash
 # Updates all files, loading existing values as defaults
-~/configs/setup-agent-instructions.sh --update .
+setup-agent-instructions --update .
 
 # The script will:
 # - Load existing values from .claude/CLAUDE.md
@@ -225,7 +283,12 @@ Overwrite AGENTS: y  # Update
 
 ### Add Custom Presets
 
-Want to add your own preset for reuse? Edit `~/configs/templates/presets.json`:
+Want to add your own preset for reuse? Edit the presets file in your configs repo:
+
+```bash
+# Edit presets.json in your configs repository
+cd /path/to/your/configs/repo
+code templates/presets.json
 
 ```json
 {
@@ -264,7 +327,7 @@ your-project/
 
 Run the test suite:
 ```bash
-cd ~/configs
+cd /path/to/configs/repo
 ./test-setup-script.sh
 ```
 
@@ -331,14 +394,14 @@ echo "AGENTS.md" >> .gitignore
 
 ### Quick Project Setup
 
-Create an alias:
+The command is available globally (if you created the symlink):
 ```bash
-# Add to ~/.bashrc or ~/.zshrc
-alias setup-agents='~/configs/setup-agent-instructions.sh'
-
-# Usage:
+# Just use it from anywhere:
 cd my-new-project
 setup-agents .
+
+# Or call the script directly from your configs repo:
+/path/to/configs/setup-agent-instructions.sh .
 ```
 
 ## Troubleshooting
@@ -373,7 +436,8 @@ The script will prompt you to overwrite. Choose:
 
 Create your own template:
 ```bash
-cp ~/configs/templates/PROJECT_INSTRUCTIONS.template.md my-custom-template.md
+cd /path/to/configs/repo
+cp templates/PROJECT_INSTRUCTIONS.template.md my-custom-template.md
 # Edit placeholders as needed
 ```
 
@@ -382,7 +446,7 @@ cp ~/configs/templates/PROJECT_INSTRUCTIONS.template.md my-custom-template.md
 Set up multiple projects at once:
 ```bash
 for project in project1 project2 project3; do
-    ~/configs/setup-agent-instructions.sh ~/projects/$project
+    setup-agent-instructions ~/projects/$project
 done
 ```
 
