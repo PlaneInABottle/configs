@@ -178,19 +178,29 @@ get_tools_to_process() {
 # Replace placeholders in template
 replace_placeholders() {
     local template_content="$1"
-    local content_escaped="$CONTENT"
 
-    # Escape special characters in content for sed
-    content_escaped="${content_escaped//\\/\\\\}"
-    content_escaped="${content_escaped//&/\\&}"
-    content_escaped=$(printf '%s\n' "$content_escaped" | sed 's/\n/\\n/g')
+    # Create a temporary file for content to avoid sed escaping issues
+    local temp_content=$(mktemp)
+    printf '%s' "$CONTENT" > "$temp_content"
 
-    # Replace placeholders
+    # Replace DESCRIPTION using sed
     template_content=$(printf '%s\n' "$template_content" | sed "s|{{DESCRIPTION}}|${DESCRIPTION}|g")
-    template_content=$(printf '%s\n' "$template_content" | sed "s|{{CONTENT}}|${content_escaped}|g")
 
-    # Convert escaped newlines to actual newlines
-    printf '%s\n' "$template_content" | sed 's/\\n/\n/g'
+    # Replace CONTENT by reading from temp file and inserting
+    # Use a different approach: read entire content and replace as a block
+    local content_file=$(mktemp)
+    cat "$temp_content" > "$content_file"
+
+    # Use awk to handle content replacement safely
+    awk -v file="$content_file" '
+    /\{\{CONTENT\}\}/ {
+        while ((getline line < file) > 0) print line
+        next
+    }
+    { print }
+    ' <<< "$template_content"
+
+    rm -f "$temp_content" "$content_file"
 }
 
 # Get output path for tool
@@ -211,7 +221,7 @@ get_output_path() {
             echo "${CONFIG_DIR}/qwen/.qwen/QWEN.md"
             ;;
         opencode)
-            echo "${CONFIG_DIR}/opencode/.opencode/OPENCODE.md"
+            echo "${CONFIG_DIR}/opencode/.config/opencode/OPENCODE.md"
             ;;
     esac
 }
