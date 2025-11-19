@@ -34,5 +34,8 @@
     "shell": {
       "showColor": true
     }
+  },
+  "experimental": {
+    "useModelRouter": true
   }
 }

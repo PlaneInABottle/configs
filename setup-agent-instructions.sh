@@ -18,13 +18,27 @@ TEMPLATES_DIR="$CONFIG_DIR/templates"
 
 # Template files
 PROJECT_TEMPLATE="$TEMPLATES_DIR/PROJECT_INSTRUCTIONS.template.md"
-PRESETS_FILE="$TEMPLATES_DIR/presets.json"
 
 # Global variables
 TARGET_DIR=""
 UPDATE_MODE=false
 FORCE_MODE=false
 ONLY_FILES="all"
+
+# Project variables (initialized with defaults)
+PROJECT_NAME=""
+PROJECT_TYPE=""
+PRIMARY_LANGUAGE=""
+TECH_STACK=""
+PROJECT_DESCRIPTION=""
+KEY_TECHNOLOGIES=""
+ARCHITECTURE_PATTERNS=""
+CODE_STYLE_GUIDE=""
+FILE_ORGANIZATION=""
+TESTING_STRATEGY=""
+DEPENDENCY_GUIDELINES=""
+PROJECT_NOTES=""
+TIMESTAMP=""
 
 # Override variables for --set-* flags
 OVERRIDE_NAME=""
@@ -104,92 +118,19 @@ print_step() {
 }
 
 check_dependencies() {
-    if ! command -v jq &> /dev/null; then
-        print_error "jq is required but not installed. Please install jq first."
-        exit 1
-    fi
+    # No external dependencies required (removed jq requirement with presets)
+    return 0
 }
 
 check_templates() {
-    local all_exist=true
-    
     if [[ ! -f "$PROJECT_TEMPLATE" ]]; then
         print_error "Project template not found: $PROJECT_TEMPLATE"
-        all_exist=false
-    fi
-    
-    if [[ ! -f "$PRESETS_FILE" ]]; then
-        print_error "Presets file not found: $PRESETS_FILE"
-        all_exist=false
-    fi
-    
-    if [[ "$all_exist" = false ]]; then
         echo ""
         print_error "Template files are missing. Please ensure configs are properly set up."
         exit 1
     fi
 }
 
-detect_project_type() {
-    local dir="$1"
-    
-    # Check for package.json (Node.js projects)
-    if [[ -f "$dir/package.json" ]]; then
-        # Try to determine if it's React, Next.js, or generic Node
-        if grep -q '"next"' "$dir/package.json" 2>/dev/null; then
-            echo "fullstack-nextjs"
-            return
-        elif grep -q '"react"' "$dir/package.json" 2>/dev/null; then
-            echo "frontend-react"
-            return
-        else
-            echo "backend-node"
-            return
-        fi
-    fi
-    
-    # Check for requirements.txt or pyproject.toml (Python projects)
-    if [[ -f "$dir/requirements.txt" ]] || [[ -f "$dir/pyproject.toml" ]]; then
-        if [[ -f "$dir/pyproject.toml" ]] && grep -q 'fastapi' "$dir/pyproject.toml" 2>/dev/null; then
-            echo "python-fastapi"
-            return
-        fi
-        # Could add more Python framework detection here
-        echo "python-fastapi"
-        return
-    fi
-    
-    # Check for go.mod (Go projects)
-    if [[ -f "$dir/go.mod" ]]; then
-        echo "cli-tool"
-        return
-    fi
-    
-    # Check for Cargo.toml (Rust projects)
-    if [[ -f "$dir/Cargo.toml" ]]; then
-        echo "cli-tool"
-        return
-    fi
-    
-    # Default: unknown
-    echo "unknown"
-}
-
-get_preset_value() {
-    local preset="$1"
-    local key="$2"
-    jq -r ".\"$preset\".\"$key\" // empty" "$PRESETS_FILE"
-}
-
-list_presets() {
-    echo ""
-    echo "Available presets:"
-    jq -r 'keys[]' "$PRESETS_FILE" | while read -r preset; do
-        local desc=$(jq -r ".\"$preset\".PROJECT_DESCRIPTION" "$PRESETS_FILE")
-        echo "  • $preset"
-    done
-    echo ""
-}
 
 load_existing_values() {
     local project_file="$TARGET_DIR/.claude/CLAUDE.md"
@@ -229,25 +170,24 @@ apply_overrides() {
 }
 
 prompt_for_details() {
-    local detected_preset="$1"
-    local use_preset=false
-    local preset_name=""
-    
+    # First, apply any --set-* flag overrides
+    apply_overrides
+
     # If in update mode, try to load existing values
     if [[ "$UPDATE_MODE" = true ]]; then
         if load_existing_values; then
-            # Load remaining values from existing file or use defaults (disable pipefail for these)
+            # Load remaining values from existing file (disable pipefail for these)
             set +e
-            KEY_TECHNOLOGIES="$(sed -n '/<project_identity>/,/<\/project_identity>/p' "$TARGET_DIR/.claude/CLAUDE.md" | sed -n '/^### Key Technologies$/,/^<\/project_identity>/p' | grep -v "^###" | grep -v "^<" | grep -v "^$" || echo "Add key technologies here.")"
-            ARCHITECTURE_PATTERNS="$(sed -n '/<architecture>/,/<\/architecture>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add architecture patterns here.")"
-            CODE_STYLE_GUIDE="$(sed -n '/<code_style>/,/<\/code_style>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add code style guidelines here.")"
-            FILE_ORGANIZATION="$(sed -n '/<file_organization>/,/<\/file_organization>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add file organization details here.")"
-            TESTING_STRATEGY="$(sed -n '/<testing>/,/<\/testing>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add testing strategy here.")"
-            DEPENDENCY_GUIDELINES="$(sed -n '/<dependencies>/,/<\/dependencies>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add dependency guidelines here.")"
-            PROJECT_NOTES="$(sed -n '/<project_notes>/,/<\/project_notes>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "Add project-specific notes here.")"
+            [[ -z "$KEY_TECHNOLOGIES" ]] && KEY_TECHNOLOGIES="$(sed -n '/<project_identity>/,/<\/project_identity>/p' "$TARGET_DIR/.claude/CLAUDE.md" | sed -n '/^### Key Technologies$/,/^<\/project_identity>/p' | grep -v "^###" | grep -v "^<" | grep -v "^$" || echo "")"
+            [[ -z "$ARCHITECTURE_PATTERNS" ]] && ARCHITECTURE_PATTERNS="$(sed -n '/<architecture>/,/<\/architecture>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
+            [[ -z "$CODE_STYLE_GUIDE" ]] && CODE_STYLE_GUIDE="$(sed -n '/<code_style>/,/<\/code_style>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
+            [[ -z "$FILE_ORGANIZATION" ]] && FILE_ORGANIZATION="$(sed -n '/<file_organization>/,/<\/file_organization>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
+            [[ -z "$TESTING_STRATEGY" ]] && TESTING_STRATEGY="$(sed -n '/<testing>/,/<\/testing>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
+            [[ -z "$DEPENDENCY_GUIDELINES" ]] && DEPENDENCY_GUIDELINES="$(sed -n '/<dependencies>/,/<\/dependencies>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
+            [[ -z "$PROJECT_NOTES" ]] && PROJECT_NOTES="$(sed -n '/<project_notes>/,/<\/project_notes>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
             set -e
-            
-            # Apply any flag overrides
+
+            # Apply any flag overrides again (to override loaded values)
             apply_overrides
 
             # Show current values (after overrides) if not in force mode
@@ -272,98 +212,30 @@ prompt_for_details() {
             print_warning "No existing project files found. Creating new..."
         fi
     fi
-    
-    # If we detected a project type, offer to use that preset
-    if [[ "$detected_preset" != "unknown" ]]; then
-        echo ""
-        print_step "Detected project type: ${CYAN}$detected_preset${NC}"
 
-        if [[ "$FORCE_MODE" = true ]]; then
-            # Force mode: auto-accept detected preset
-            use_preset=true
-            preset_name="$detected_preset"
-            print_info "Auto-using preset: $preset_name"
-        else
-            read -p "Use preset '$detected_preset'? (Y/n): " -r
-            if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-                use_preset=true
-                preset_name="$detected_preset"
-            fi
-        fi
-    fi
+    # Check if all required values are provided
+    if [[ -z "$PROJECT_NAME" ]] || [[ -z "$PROJECT_TYPE" ]] || [[ -z "$PRIMARY_LANGUAGE" ]] || \
+       [[ -z "$TECH_STACK" ]] || [[ -z "$PROJECT_DESCRIPTION" ]] || [[ -z "$KEY_TECHNOLOGIES" ]] || \
+       [[ -z "$ARCHITECTURE_PATTERNS" ]] || [[ -z "$CODE_STYLE_GUIDE" ]] || [[ -z "$FILE_ORGANIZATION" ]] || \
+       [[ -z "$TESTING_STRATEGY" ]] || [[ -z "$DEPENDENCY_GUIDELINES" ]] || [[ -z "$PROJECT_NOTES" ]]; then
 
-    # If no preset selected, ask if they want to choose one
-    if [[ "$use_preset" = false ]]; then
-        if [[ "$FORCE_MODE" = true ]]; then
-            # Force mode without detected preset: use minimal defaults
-            print_warning "Force mode: No preset detected, using minimal defaults"
-        else
-            echo ""
-            read -p "Would you like to use a preset? (y/N): " -r
-            if [[ $REPLY =~ ^[Yy]$ ]]; then
-                list_presets
-                read -p "Enter preset name (or press Enter to skip): " preset_name
-                if [[ -n "$preset_name" ]]; then
-                    # Check if preset exists
-                    if jq -e ".\"$preset_name\"" "$PRESETS_FILE" > /dev/null 2>&1; then
-                        use_preset=true
-                    else
-                        print_warning "Preset '$preset_name' not found. Using manual input."
-                        use_preset=false
-                    fi
-                fi
-            fi
-        fi
+        print_error "Missing required values. All values must be provided via --set-* flags."
+        echo ""
+        echo "Required flags:"
+        echo "  --set-name=VALUE"
+        echo "  --set-type=VALUE"
+        echo "  --set-language=VALUE"
+        echo "  --set-stack=VALUE"
+        echo "  --set-description=VALUE"
+        echo "  --set-technologies=VALUE"
+        echo "  --set-architecture=VALUE"
+        echo "  --set-code-style=VALUE"
+        echo "  --set-file-org=VALUE"
+        echo "  --set-testing=VALUE"
+        echo "  --set-dependencies=VALUE"
+        echo "  --set-notes=VALUE"
+        exit 1
     fi
-    
-    # Load values from preset or prompt manually
-    if [[ "$use_preset" = true ]]; then
-        print_info "Using preset: $preset_name"
-        PROJECT_NAME=$(basename "$TARGET_DIR")
-        PROJECT_TYPE=$(get_preset_value "$preset_name" "PROJECT_TYPE")
-        PRIMARY_LANGUAGE=$(get_preset_value "$preset_name" "PRIMARY_LANGUAGE")
-        TECH_STACK=$(get_preset_value "$preset_name" "TECH_STACK")
-        PROJECT_DESCRIPTION=$(get_preset_value "$preset_name" "PROJECT_DESCRIPTION")
-        KEY_TECHNOLOGIES=$(get_preset_value "$preset_name" "KEY_TECHNOLOGIES")
-        ARCHITECTURE_PATTERNS=$(get_preset_value "$preset_name" "ARCHITECTURE_PATTERNS")
-        CODE_STYLE_GUIDE=$(get_preset_value "$preset_name" "CODE_STYLE_GUIDE")
-        FILE_ORGANIZATION=$(get_preset_value "$preset_name" "FILE_ORGANIZATION")
-        TESTING_STRATEGY=$(get_preset_value "$preset_name" "TESTING_STRATEGY")
-        DEPENDENCY_GUIDELINES=$(get_preset_value "$preset_name" "DEPENDENCY_GUIDELINES")
-        PROJECT_NOTES=$(get_preset_value "$preset_name" "PROJECT_NOTES")
-    else
-        # Manual input
-        echo ""
-        print_step "Please provide project details:"
-        echo ""
-        
-        read -p "Project name [$(basename "$TARGET_DIR")]: " PROJECT_NAME
-        PROJECT_NAME=${PROJECT_NAME:-$(basename "$TARGET_DIR")}
-        
-        read -p "Project type (frontend/backend/fullstack/cli/library): " PROJECT_TYPE
-        read -p "Primary language: " PRIMARY_LANGUAGE
-        read -p "Tech stack (comma-separated): " TECH_STACK
-        
-        echo ""
-        echo "Project description (press Enter twice to finish):"
-        PROJECT_DESCRIPTION=""
-        while IFS= read -r line; do
-            [[ -z "$line" ]] && break
-            PROJECT_DESCRIPTION+="$line"$'\n'
-        done
-        
-        # Set defaults for other fields
-        KEY_TECHNOLOGIES="Add key technologies here."
-        ARCHITECTURE_PATTERNS="Add architecture patterns here."
-        CODE_STYLE_GUIDE="Add code style guidelines here."
-        FILE_ORGANIZATION="Add file organization details here."
-        TESTING_STRATEGY="Add testing strategy here."
-        DEPENDENCY_GUIDELINES="Add dependency guidelines here."
-        PROJECT_NOTES="Add project-specific notes here."
-    fi
-
-    # Apply overrides after loading preset or manual input
-    apply_overrides
 
     TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 }
@@ -371,27 +243,35 @@ prompt_for_details() {
 replace_placeholders() {
     local template_file="$1"
     local output_file="$2"
-    
+
     # Read template
     local content=$(<"$template_file")
-    
-    # Replace all placeholders
+
+    # Replace all placeholders (handling literal \n characters as newlines)
     content="${content//\{\{PROJECT_NAME\}\}/$PROJECT_NAME}"
     content="${content//\{\{PROJECT_TYPE\}\}/$PROJECT_TYPE}"
     content="${content//\{\{PRIMARY_LANGUAGE\}\}/$PRIMARY_LANGUAGE}"
     content="${content//\{\{TECH_STACK\}\}/$TECH_STACK}"
     content="${content//\{\{PROJECT_DESCRIPTION\}\}/$PROJECT_DESCRIPTION}"
-    content="${content//\{\{KEY_TECHNOLOGIES\}\}/$KEY_TECHNOLOGIES}"
-    content="${content//\{\{ARCHITECTURE_PATTERNS\}\}/$ARCHITECTURE_PATTERNS}"
-    content="${content//\{\{CODE_STYLE_GUIDE\}\}/$CODE_STYLE_GUIDE}"
-    content="${content//\{\{FILE_ORGANIZATION\}\}/$FILE_ORGANIZATION}"
-    content="${content//\{\{TESTING_STRATEGY\}\}/$TESTING_STRATEGY}"
-    content="${content//\{\{DEPENDENCY_GUIDELINES\}\}/$DEPENDENCY_GUIDELINES}"
-    content="${content//\{\{PROJECT_NOTES\}\}/$PROJECT_NOTES}"
+    # For multiline values, replace \n with actual newlines
+    KEY_TECHNOLOGIES_NEWLINE=$(printf '%s\n' "$KEY_TECHNOLOGIES" | sed 's/\\n/\n/g')
+    content="${content//\{\{KEY_TECHNOLOGIES\}\}/$KEY_TECHNOLOGIES_NEWLINE}"
+    ARCHITECTURE_PATTERNS_NEWLINE=$(printf '%s\n' "$ARCHITECTURE_PATTERNS" | sed 's/\\n/\n/g')
+    content="${content//\{\{ARCHITECTURE_PATTERNS\}\}/$ARCHITECTURE_PATTERNS_NEWLINE}"
+    CODE_STYLE_GUIDE_NEWLINE=$(printf '%s\n' "$CODE_STYLE_GUIDE" | sed 's/\\n/\n/g')
+    content="${content//\{\{CODE_STYLE_GUIDE\}\}/$CODE_STYLE_GUIDE_NEWLINE}"
+    FILE_ORGANIZATION_NEWLINE=$(printf '%s\n' "$FILE_ORGANIZATION" | sed 's/\\n/\n/g')
+    content="${content//\{\{FILE_ORGANIZATION\}\}/$FILE_ORGANIZATION_NEWLINE}"
+    TESTING_STRATEGY_NEWLINE=$(printf '%s\n' "$TESTING_STRATEGY" | sed 's/\\n/\n/g')
+    content="${content//\{\{TESTING_STRATEGY\}\}/$TESTING_STRATEGY_NEWLINE}"
+    DEPENDENCY_GUIDELINES_NEWLINE=$(printf '%s\n' "$DEPENDENCY_GUIDELINES" | sed 's/\\n/\n/g')
+    content="${content//\{\{DEPENDENCY_GUIDELINES\}\}/$DEPENDENCY_GUIDELINES_NEWLINE}"
+    PROJECT_NOTES_NEWLINE=$(printf '%s\n' "$PROJECT_NOTES" | sed 's/\\n/\n/g')
+    content="${content//\{\{PROJECT_NOTES\}\}/$PROJECT_NOTES_NEWLINE}"
     content="${content//\{\{TIMESTAMP\}\}/$TIMESTAMP}"
-    
-    # Write output
-    echo "$content" > "$output_file"
+
+    # Write output with proper newline handling
+    printf '%b\n' "$content" > "$output_file"
 }
 
 create_agent_files() {
@@ -531,12 +411,8 @@ main() {
     check_dependencies
     check_templates
     
-    # Detect project type
-    print_step "Detecting project type..."
-    local detected_type=$(detect_project_type "$TARGET_DIR")
-    
     # Prompt for project details
-    prompt_for_details "$detected_type"
+    prompt_for_details
     
     # Create agent instruction files
     create_agent_files

@@ -4,6 +4,8 @@
 
 This system provides a streamlined way to set up AI coding agent instructions for new projects. All agent instruction files are **project-specific** and contain complete guidance tailored to your project.
 
+**Key Philosophy:** The script acts as a template filler. **AI agents analyze projects and provide values**, then the script generates the final instruction files.
+
 ## Installation
 
 ### Option 1: Global Command (Recommended)
@@ -78,67 +80,148 @@ Update mode will:
 
 **Important:** All files use the same template now, so updates are consistent across all agents.
 
-### 3. Available Presets (Optional)
+### 3. AI-Powered Setup
 
-**6 Built-in Presets:**
-- **frontend-react** - React + TypeScript + Vite
-- **backend-node** - Node.js + Express + PostgreSQL
-- **fullstack-nextjs** - Next.js + React + Prisma
-- **python-fastapi** - Python + FastAPI + PostgreSQL
-- **cli-tool** - Node.js/Go/Rust CLI application
-- **library** - Reusable TypeScript library
+The script is designed to be called by AI agents with all project details provided via `--set-*` flags:
 
-**Note:** Presets are convenient but **optional**. You can always use manual input for custom tech stacks.
+```bash
+setup-agent-instructions --force \
+  --set-name="ProjectName" \
+  --set-type="mobile" \
+  --set-language="TypeScript" \
+  --set-stack="React Native, Expo, MobX" \
+  --set-description="Project description..." \
+  --set-technologies="- Technology 1\n- Technology 2" \
+  --set-architecture="- Pattern 1\n- Pattern 2" \
+  --set-code-style="- Style guideline 1\n- Style guideline 2" \
+  --set-file-org="Folder structure here" \
+  --set-testing="Testing strategy here" \
+  --set-dependencies="Dependency guidelines here" \
+  --set-notes="Project-specific notes" \
+  /path/to/project
+```
+
+**AI agents:** Analyze the project, extract all necessary information, and call the script with populated flags.
 
 ### 4. Example Usage
 
+**Manual Mode (for quick testing):**
 ```bash
-# For a new React project
-cd ~/projects
-mkdir my-react-app
-cd my-react-app
-npm create vite@latest . -- --template react-ts
-
-# Use the command (if installed globally)
-setup-agents .
-
-# Or call script directly
+cd ~/projects/my-project
 /path/to/configs/setup-agent-instructions.sh .
+# Script will prompt for: name, type, language, stack, description
+# Other fields get default placeholders
 ```
 
-The script detects it's a React project and offers the preset!
+**AI Mode (recommended):**
+```bash
+# AI analyzes project and calls script with all details
+/path/to/configs/setup-agent-instructions.sh --force \
+  --set-name="MyProject" \
+  --set-type="frontend" \
+  --set-language="TypeScript" \
+  --set-stack="React, Vite, TailwindCSS" \
+  --set-description="A modern web application" \
+  --set-technologies="- React 18\n- Vite 5\n- TailwindCSS 3" \
+  --set-architecture="- Component-based\n- Feature folders" \
+  --set-code-style="- TypeScript strict mode\n- ESLint + Prettier" \
+  --set-file-org="src/\n├── components/\n├── features/\n├── utils/" \
+  --set-testing="- Vitest for unit tests\n- React Testing Library for components" \
+  --set-dependencies="- Minimize dependencies\n- Document major deps" \
+  --set-notes="Production-ready app" \
+  .
+```
 
 ## Command Line Options
 
+### Help & Information
 ```bash
-# Show help
-setup-agent-instructions --help
+setup-agent-instructions --help    # Show help message
+setup-agent-instructions -h         # Short form
+```
 
-# Create new project (default)
-setup-agent-instructions /path/to/project
+### Basic Usage
+```bash
+# Create new project (requires all --set-* flags)
+setup-agent-instructions --force --set-name="..." --set-type="..." [...] /path/to/project
 
 # Update existing project
 setup-agent-instructions --update /path/to/project
 setup-agent-instructions -u /path/to/project
 
-# Force mode (no prompts, overwrites all files)
-setup-agent-instructions --force --update /path/to/project
-
-# Update specific files only
-setup-agent-instructions --only=agents --update /path/to/project
-setup-agent-instructions --only=claude --update /path/to/project
-
-# Set values directly (useful for automation)
-setup-agent-instructions --update --force --set-stack="Go, Gin, PostgreSQL" .
-setup-agent-instructions --update --force --set-type=backend --set-language=Go .
+# Update with overrides
+setup-agent-instructions --update --force --set-stack="Go, Gin" /path/to/project
 ```
 
-### Available --only Options:
-- `claude` - Only .claude/CLAUDE.md
-- `gemini` - Only .gemini/GEMINI.md
-- `qwen` - Only .qwen/QWEN.md
-- `agents` - Only AGENTS.md
+### Core Flags
+
+| Flag | Short | Purpose |
+|------|-------|---------|
+| `--help` | `-h` | Show help message |
+| `--update` | `-u` | Load and update existing project |
+| `--force` | `-f` | Overwrite files without prompting |
+| `--only=FILE` | - | Update only specific files |
+
+### File Selection (`--only` options)
+- `claude` - Only `.claude/CLAUDE.md`
+- `gemini` - Only `.gemini/GEMINI.md`
+- `qwen` - Only `.qwen/QWEN.md`
+- `agents` - Only `AGENTS.md`
 - `all` - All files (default)
+
+### Set Value Flags (Required for AI Agents)
+All these flags must be provided to generate complete instructions:
+
+```bash
+--set-name=VALUE              # Project name (e.g., "MyApp")
+--set-type=VALUE              # Type: frontend|backend|fullstack|mobile|cli|library
+--set-language=VALUE          # Primary language (e.g., "TypeScript")
+--set-stack=VALUE             # Tech stack (e.g., "React, Node, PostgreSQL")
+--set-description=VALUE       # Project description
+--set-technologies=VALUE      # Key technologies (multiline with \n)
+--set-architecture=VALUE      # Architecture patterns (multiline with \n)
+--set-code-style=VALUE        # Code style guidelines (multiline with \n)
+--set-file-org=VALUE          # File organization (multiline with \n)
+--set-testing=VALUE           # Testing strategy (multiline with \n)
+--set-dependencies=VALUE      # Dependency guidelines (multiline with \n)
+--set-notes=VALUE             # Project-specific notes
+```
+
+### Examples
+
+**AI Mode (Recommended):**
+```bash
+setup-agent-instructions --force \
+  --set-name="PurrsuitApp" \
+  --set-type="mobile" \
+  --set-language="TypeScript" \
+  --set-stack="React Native, Expo" \
+  --set-description="Pet tracking app" \
+  --set-technologies="- React Native\n- Expo 54" \
+  --set-architecture="- MobX State Tree\n- Feature-based" \
+  --set-code-style="- ESLint\n- Prettier" \
+  --set-file-org="app/\n├── screens/\n├── components/" \
+  --set-testing="- Jest\n- React Testing Library" \
+  --set-dependencies="- Use Expo libs\n- Minimize natives" \
+  --set-notes="Expo dev client" \
+  .
+```
+
+**Update Mode with Overrides:**
+```bash
+setup-agent-instructions --update --force \
+  --set-name="UpdatedName" \
+  --set-stack="New, Stack, Here" \
+  .
+```
+
+**Generate Only Claude Instructions:**
+```bash
+setup-agent-instructions --force --only=claude \
+  --set-name="Project" \
+  [all other required flags] \
+  .
+```
 
 ## Manual Setup (Without Presets)
 
@@ -281,34 +364,6 @@ Overwrite AGENTS: y  # Update
 
 **⚠️ Important:** Manual edits will be lost if you overwrite. Use version control or answer 'n' to skip files you've customized.
 
-### Add Custom Presets
-
-Want to add your own preset for reuse? Edit the presets file in your configs repo:
-
-```bash
-# Edit presets.json in your configs repository
-cd /path/to/your/configs/repo
-code templates/presets.json
-
-```json
-{
-  "your-preset-name": {
-    "PROJECT_TYPE": "backend",
-    "PRIMARY_LANGUAGE": "Go",
-    "TECH_STACK": "Go, Gin, PostgreSQL",
-    "PROJECT_DESCRIPTION": "A REST API built with Go and Gin framework",
-    "KEY_TECHNOLOGIES": "- Go 1.21+\n- Gin web framework\n- GORM for ORM",
-    "ARCHITECTURE_PATTERNS": "- MVC architecture\n- Repository pattern\n- Middleware for auth",
-    "CODE_STYLE_GUIDE": "- Use gofmt for formatting\n- Follow Go best practices\n- Write table-driven tests",
-    "FILE_ORGANIZATION": "```\ncmd/\ninternal/\npkg/\n```",
-    "TESTING_STRATEGY": "- Unit tests with testing package\n- Integration tests\n- Aim for >80% coverage",
-    "DEPENDENCY_GUIDELINES": "- Use Go modules\n- Keep dependencies minimal\n- Pin versions",
-    "PROJECT_NOTES": "Add project-specific notes here."
-  }
-}
-```
-
-After adding, the script will detect and offer your custom preset automatically!
 
 ## File Structure
 
@@ -338,39 +393,22 @@ Tests verify:
 - Placeholders are present
 - Project detection works
 
-## Flexibility: Presets vs Manual
+## AI Agent Integration
 
-### When to Use Presets
+### How AI Agents Should Use This Script
 
-✅ **Use a preset when:**
-- Your project matches a common tech stack
-- You want best practices out-of-the-box
-- Quick setup is the priority
-- Working on a standard React/Node/Python project
+1. **Analyze Project:** Read package.json, app.json, source files, etc.
+2. **Extract Information:** Determine type, language, stack, architecture
+3. **Generate Documentation:** Create values for all template placeholders
+4. **Call Script:** Use `--set-*` flags to pass all values
+5. **Result:** AI agent generates 4 instruction files tailored to project
 
-### When to Use Manual Input
+### Key Principles
 
-✅ **Use manual mode when:**
-- Custom tech stack (Rust, Elixir, Go, etc.)
-- Unique project requirements
-- Want to start minimal and customize later
-- Experimental or learning projects
-- Mixed technologies not covered by presets
-
-### Hybrid Approach
-
-You can also:
-1. Start with a preset (for structure)
-2. Run `--update` mode later
-3. Choose "n" to keep existing and customize manually
-
-```bash
-# Initial setup with preset
-./setup-agent-instructions.sh my-project
-
-# Later, update with custom details
-./setup-agent-instructions.sh --update my-project
-```
+- **No Presets:** Every project gets custom analysis
+- **Complete Information:** All `--set-*` flags should be populated
+- **Consistent Structure:** Template ensures files have same structure across all projects
+- **AI-Driven:** AI agents do the smart analysis, script just fills template
 
 ---
 
@@ -406,23 +444,11 @@ setup-agents .
 
 ## Troubleshooting
 
-### "jq is required but not installed"
-```bash
-# Ubuntu/Debian
-sudo apt install jq
-
-# macOS
-brew install jq
-
-# Arch
-sudo pacman -S jq
-```
-
 ### "Template files are missing"
 ```bash
 # Make sure you're in the configs directory
 cd ~/configs
-ls templates/  # Should show: PROJECT_INSTRUCTIONS.template.md, presets.json
+ls templates/  # Should show: PROJECT_INSTRUCTIONS.template.md
 ```
 
 ### Files Already Exist
