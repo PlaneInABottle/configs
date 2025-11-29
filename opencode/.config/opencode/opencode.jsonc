@@ -22,11 +22,11 @@
       "enabled": true,
       "environment": {}
     },
-    "chrome-devtools": {
+    "playwright": {
       "type": "local",
       "command": [
         "npx",
-        "chrome-devtools-mcp@latest"
+        "@playwright/mcp@latest"
       ],
       "enabled": true,
       "environment": {}
