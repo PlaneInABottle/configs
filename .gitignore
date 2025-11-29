@@ -9,10 +9,11 @@ nvim/.config/nvim/.repro
 nvim/.config/nvim/foo.*
 nvim/.config/nvim/data
 
-# Claude - Session and temporary files  
+# Claude - Session and temporary files
 claude/.claude/projects/
 claude/.claude/shell-snapshots/
 claude/.claude/todos/
+claude/.claude/plans/
 claude/.claude/statsig/
 claude/.claude/downloads/
 claude/.claude/debug/
