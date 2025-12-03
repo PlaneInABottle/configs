@@ -12,8 +12,9 @@ RED='\033[0;31m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Config directory
-CONFIG_DIR="$HOME/configs"
+# Config directory - auto-detect script location
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_DIR="$SCRIPT_DIR"
 TEMPLATES_DIR="$CONFIG_DIR/templates"
 
 # Template files
