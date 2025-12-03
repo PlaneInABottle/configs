@@ -11,8 +11,15 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Config directory
-CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Config directory - auto-detect script location (resolve symlinks)
+SCRIPT_PATH="${BASH_SOURCE[0]}"
+# Resolve symlinks to get actual script location
+while [ -L "$SCRIPT_PATH" ]; do
+    SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+    SCRIPT_PATH="$(readlink "$SCRIPT_PATH")"
+    [[ $SCRIPT_PATH != /* ]] && SCRIPT_PATH="$SCRIPT_DIR/$SCRIPT_PATH"
+done
+CONFIG_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
 TEMPLATES_DIR="$CONFIG_DIR/templates"
 
 # Template file
@@ -297,7 +304,11 @@ main() {
 
     # Get tools to process
     local tools
-    mapfile -t tools < <(get_tools_to_process)
+    tools=()
+    # Use read loop instead of mapfile for bash 3.x compatibility
+    while IFS= read -r tool; do
+        tools+=("$tool")
+    done < <(get_tools_to_process)
 
     if [[ ${#tools[@]} -eq 0 ]]; then
         print_error "No valid tools specified"
