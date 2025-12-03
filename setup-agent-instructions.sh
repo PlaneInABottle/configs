@@ -45,6 +45,10 @@ CODE_STYLE_GUIDE=""
 FILE_ORGANIZATION=""
 TESTING_STRATEGY=""
 DEPENDENCY_GUIDELINES=""
+DEVELOPMENT_WORKFLOW=""
+IMPLEMENTATION_GUIDELINES=""
+COMMON_PATTERNS=""
+TROUBLESHOOTING=""
 PROJECT_NOTES=""
 TIMESTAMP=""
 
@@ -60,6 +64,10 @@ OVERRIDE_CODE_STYLE=""
 OVERRIDE_FILE_ORG=""
 OVERRIDE_TESTING=""
 OVERRIDE_DEPENDENCIES=""
+OVERRIDE_WORKFLOW=""
+OVERRIDE_IMPLEMENTATION=""
+OVERRIDE_PATTERNS=""
+OVERRIDE_TROUBLESHOOTING=""
 OVERRIDE_NOTES=""
 
 # Usage function
@@ -75,18 +83,22 @@ usage() {
     echo "  --help, -h                Show this help message"
     echo ""
     echo "Value Override Flags (use with --update):"
-    echo "  --set-name=VALUE          Set project name"
-    echo "  --set-type=VALUE          Set project type (frontend|backend|fullstack|cli|library)"
-    echo "  --set-language=VALUE      Set primary language"
-    echo "  --set-stack=VALUE         Set tech stack"
-    echo "  --set-description=VALUE   Set project description"
-    echo "  --set-technologies=VALUE  Set key technologies"
-    echo "  --set-architecture=VALUE  Set architecture patterns"
-    echo "  --set-code-style=VALUE    Set code style guide"
-    echo "  --set-file-org=VALUE      Set file organization"
-    echo "  --set-testing=VALUE       Set testing strategy"
-    echo "  --set-dependencies=VALUE  Set dependency guidelines"
-    echo "  --set-notes=VALUE         Set project notes"
+    echo "  --set-name=VALUE              Set project name"
+    echo "  --set-type=VALUE              Set project type (frontend|backend|fullstack|cli|library)"
+    echo "  --set-language=VALUE          Set primary language"
+    echo "  --set-stack=VALUE             Set tech stack"
+    echo "  --set-description=VALUE       Set project description"
+    echo "  --set-technologies=VALUE      Set key technologies"
+    echo "  --set-architecture=VALUE      Set architecture patterns"
+    echo "  --set-code-style=VALUE        Set code style guide"
+    echo "  --set-file-org=VALUE          Set file organization"
+    echo "  --set-testing=VALUE           Set testing strategy"
+    echo "  --set-dependencies=VALUE      Set dependency guidelines"
+    echo "  --set-workflow=VALUE          Set development workflow"
+    echo "  --set-implementation=VALUE    Set implementation guidelines"
+    echo "  --set-patterns=VALUE          Set common code patterns"
+    echo "  --set-troubleshooting=VALUE   Set troubleshooting guide"
+    echo "  --set-notes=VALUE             Set project notes"
     echo ""
     echo "Generated files:"
     echo "  • .claude/CLAUDE.md       - Claude Code (project-specific)"
@@ -174,6 +186,10 @@ apply_overrides() {
     [[ -n "$OVERRIDE_FILE_ORG" ]] && FILE_ORGANIZATION="$OVERRIDE_FILE_ORG" || true
     [[ -n "$OVERRIDE_TESTING" ]] && TESTING_STRATEGY="$OVERRIDE_TESTING" || true
     [[ -n "$OVERRIDE_DEPENDENCIES" ]] && DEPENDENCY_GUIDELINES="$OVERRIDE_DEPENDENCIES" || true
+    [[ -n "$OVERRIDE_WORKFLOW" ]] && DEVELOPMENT_WORKFLOW="$OVERRIDE_WORKFLOW" || true
+    [[ -n "$OVERRIDE_IMPLEMENTATION" ]] && IMPLEMENTATION_GUIDELINES="$OVERRIDE_IMPLEMENTATION" || true
+    [[ -n "$OVERRIDE_PATTERNS" ]] && COMMON_PATTERNS="$OVERRIDE_PATTERNS" || true
+    [[ -n "$OVERRIDE_TROUBLESHOOTING" ]] && TROUBLESHOOTING="$OVERRIDE_TROUBLESHOOTING" || true
     [[ -n "$OVERRIDE_NOTES" ]] && PROJECT_NOTES="$OVERRIDE_NOTES" || true
 }
 
@@ -274,6 +290,14 @@ replace_placeholders() {
     content="${content//\{\{TESTING_STRATEGY\}\}/$TESTING_STRATEGY_NEWLINE}"
     DEPENDENCY_GUIDELINES_NEWLINE=$(printf '%s\n' "$DEPENDENCY_GUIDELINES" | sed 's/\\n/\n/g')
     content="${content//\{\{DEPENDENCY_GUIDELINES\}\}/$DEPENDENCY_GUIDELINES_NEWLINE}"
+    DEVELOPMENT_WORKFLOW_NEWLINE=$(printf '%s\n' "$DEVELOPMENT_WORKFLOW" | sed 's/\\n/\n/g')
+    content="${content//\{\{DEVELOPMENT_WORKFLOW\}\}/$DEVELOPMENT_WORKFLOW_NEWLINE}"
+    IMPLEMENTATION_GUIDELINES_NEWLINE=$(printf '%s\n' "$IMPLEMENTATION_GUIDELINES" | sed 's/\\n/\n/g')
+    content="${content//\{\{IMPLEMENTATION_GUIDELINES\}\}/$IMPLEMENTATION_GUIDELINES_NEWLINE}"
+    COMMON_PATTERNS_NEWLINE=$(printf '%s\n' "$COMMON_PATTERNS" | sed 's/\\n/\n/g')
+    content="${content//\{\{COMMON_PATTERNS\}\}/$COMMON_PATTERNS_NEWLINE}"
+    TROUBLESHOOTING_NEWLINE=$(printf '%s\n' "$TROUBLESHOOTING" | sed 's/\\n/\n/g')
+    content="${content//\{\{TROUBLESHOOTING\}\}/$TROUBLESHOOTING_NEWLINE}"
     PROJECT_NOTES_NEWLINE=$(printf '%s\n' "$PROJECT_NOTES" | sed 's/\\n/\n/g')
     content="${content//\{\{PROJECT_NOTES\}\}/$PROJECT_NOTES_NEWLINE}"
     content="${content//\{\{TIMESTAMP\}\}/$TIMESTAMP}"
@@ -487,6 +511,22 @@ parse_args() {
                 ;;
             --set-dependencies=*)
                 OVERRIDE_DEPENDENCIES="${1#*=}"
+                shift
+                ;;
+            --set-workflow=*)
+                OVERRIDE_WORKFLOW="${1#*=}"
+                shift
+                ;;
+            --set-implementation=*)
+                OVERRIDE_IMPLEMENTATION="${1#*=}"
+                shift
+                ;;
+            --set-patterns=*)
+                OVERRIDE_PATTERNS="${1#*=}"
+                shift
+                ;;
+            --set-troubleshooting=*)
+                OVERRIDE_TROUBLESHOOTING="${1#*=}"
                 shift
                 ;;
             --set-notes=*)

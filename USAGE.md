@@ -97,6 +97,10 @@ setup-agent-instructions --force \
   --set-file-org="Folder structure here" \
   --set-testing="Testing strategy here" \
   --set-dependencies="Dependency guidelines here" \
+  --set-workflow="Development workflow details" \
+  --set-implementation="Implementation guidelines" \
+  --set-patterns="Common code patterns" \
+  --set-troubleshooting="Troubleshooting guide" \
   --set-notes="Project-specific notes" \
   /path/to/project
 ```
@@ -184,6 +188,10 @@ All these flags must be provided to generate complete instructions:
 --set-file-org=VALUE          # File organization (multiline with \n)
 --set-testing=VALUE           # Testing strategy (multiline with \n)
 --set-dependencies=VALUE      # Dependency guidelines (multiline with \n)
+--set-workflow=VALUE          # Development workflow (multiline with \n) [optional]
+--set-implementation=VALUE    # Implementation guidelines (multiline with \n) [optional]
+--set-patterns=VALUE          # Common code patterns (multiline with \n) [optional]
+--set-troubleshooting=VALUE   # Troubleshooting guide (multiline with \n) [optional]
 --set-notes=VALUE             # Project-specific notes
 ```
 

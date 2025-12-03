@@ -1,6 +1,6 @@
 # {{PROJECT_NAME}} - Project Context
 
-<!-- Generated: {{TIMESTAMP}} | Template Version: 1.0.0 -->
+<!-- Generated: {{TIMESTAMP}} | Template Version: 2.0.0 -->
 
 <project_identity>
 ## Project Information
@@ -56,6 +56,38 @@
 
 {{DEPENDENCY_GUIDELINES}}
 </dependencies>
+
+---
+
+<development_workflow>
+## Development Workflow
+
+{{DEVELOPMENT_WORKFLOW}}
+</development_workflow>
+
+---
+
+<implementation_guidelines>
+## Implementation Guidelines
+
+{{IMPLEMENTATION_GUIDELINES}}
+</implementation_guidelines>
+
+---
+
+<common_patterns>
+## Common Code Patterns
+
+{{COMMON_PATTERNS}}
+</common_patterns>
+
+---
+
+<troubleshooting>
+## Troubleshooting Guide
+
+{{TROUBLESHOOTING}}
+</troubleshooting>
 
 ---
 
