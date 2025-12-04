@@ -3,17 +3,17 @@
 <!-- Generated: {{TIMESTAMP}} | Template Version: 2.0.0 -->
 
 <project_identity>
+
 ## Project Information
 
 **Name:** {{PROJECT_NAME}}  
-**Type:** {{PROJECT_TYPE}}  
-**Language:** {{PRIMARY_LANGUAGE}}  
-**Stack:** {{TECH_STACK}}
 
 ### Description
+
 {{PROJECT_DESCRIPTION}}
 
 ### Key Technologies
+
 {{KEY_TECHNOLOGIES}}
 </project_identity>
 
@@ -28,6 +28,7 @@
 ---
 
 <code_style>
+
 ## Code Style Guidelines
 
 {{CODE_STYLE_GUIDE}}
@@ -36,6 +37,7 @@
 ---
 
 <file_organization>
+
 ## File Organization
 
 {{FILE_ORGANIZATION}}
@@ -60,6 +62,7 @@
 ---
 
 <development_workflow>
+
 ## Development Workflow
 
 {{DEVELOPMENT_WORKFLOW}}
@@ -68,6 +71,7 @@
 ---
 
 <implementation_guidelines>
+
 ## Implementation Guidelines
 
 {{IMPLEMENTATION_GUIDELINES}}
@@ -76,6 +80,7 @@
 ---
 
 <common_patterns>
+
 ## Common Code Patterns
 
 {{COMMON_PATTERNS}}
@@ -92,6 +97,7 @@
 ---
 
 <project_notes>
+
 ## Project-Specific Notes
 
 {{PROJECT_NOTES}}
