@@ -75,7 +75,7 @@ usage() {
     echo "Options:"
     echo "  --update, -u              Update existing project instructions"
     echo "  --force, -f               Overwrite files without prompting"
-    echo "  --only=FILE               Update only specific files (claude|gemini|qwen|agents|github|all)"
+    echo "  --only=FILE               Update only specific files (claude|gemini|qwen|agents|all)"
     echo "  --help, -h                Show this help message"
     echo ""
     echo "Value Override Flags (use with --update):"
@@ -379,28 +379,6 @@ create_agent_files() {
             print_info "Created AGENTS.md"
         fi
     fi
-
-    # Create .github/copilot-instructions.md (GitHub Copilot)
-    if [[ "$ONLY_FILES" == "all" || "$ONLY_FILES" == "github" ]]; then
-        mkdir -p "$TARGET_DIR/.github"
-        should_create_file=false
-        if [[ -f "$TARGET_DIR/.github/copilot-instructions.md" ]]; then
-            if [[ "$FORCE_MODE" = true ]]; then
-                should_create_file=true
-            else
-                print_warning "GitHub Copilot instructions already exist"
-                read -p "Overwrite? (y/N): " -r
-                [[ $REPLY =~ ^[Yy]$ ]] && should_create_file=true
-            fi
-        else
-            should_create_file=true
-        fi
-
-        if [[ "$should_create_file" = true ]]; then
-            replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.github/copilot-instructions.md"
-            print_info "Created .github/copilot-instructions.md"
-        fi
-    fi
 }
 
 show_summary() {
@@ -408,11 +386,10 @@ show_summary() {
     print_info "Setup complete!"
     echo ""
     echo -e "${BLUE}Files created in $TARGET_DIR:${NC}"
-    echo "  • .claude/CLAUDE.md                    - Claude Code (project-specific)"
-    echo "  • .gemini/GEMINI.md                    - Gemini Code (project-specific)"
-    echo "  • .qwen/QWEN.md                        - Qwen Code (project-specific)"
-    echo "  • AGENTS.md                            - GitHub Copilot + OpenCode (project-specific)"
-    echo "  • .github/copilot-instructions.md      - GitHub Copilot (workspace)"
+    echo "  • .claude/CLAUDE.md       - Claude Code (project-specific)"
+    echo "  • .gemini/GEMINI.md       - Gemini Code (project-specific)"
+    echo "  • .qwen/QWEN.md           - Qwen Code (project-specific)"
+    echo "  • AGENTS.md               - GitHub Copilot + OpenCode (project-specific)"
     echo ""
     echo -e "${YELLOW}Next steps:${NC}"
     echo "  1. Review and customize files for your specific project needs"
