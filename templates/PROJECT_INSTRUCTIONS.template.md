@@ -109,3 +109,10 @@
 
 {{PROJECT_NOTES}}
 </project_notes>
+
+---
+
+<specialized_agents>
+
+{{SPECIALIZED_AGENTS}}
+</specialized_agents>

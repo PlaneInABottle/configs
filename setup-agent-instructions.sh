@@ -37,6 +37,7 @@ ONLY_FILES="all"
 PROJECT_DESCRIPTION=""
 KEY_TECHNOLOGIES=""
 FEW_SHOT_EXAMPLES=""
+SPECIALIZED_AGENTS=""
 ARCHITECTURE_PATTERNS=""
 CODE_STYLE_GUIDE=""
 FILE_ORGANIZATION=""
@@ -53,6 +54,7 @@ TIMESTAMP=""
 OVERRIDE_DESCRIPTION=""
 OVERRIDE_TECHNOLOGIES=""
 OVERRIDE_FEW_SHOT=""
+OVERRIDE_SPECIALIZED_AGENTS=""
 OVERRIDE_ARCHITECTURE=""
 OVERRIDE_CODE_STYLE=""
 OVERRIDE_FILE_ORG=""
@@ -73,13 +75,14 @@ usage() {
     echo "Options:"
     echo "  --update, -u              Update existing project instructions"
     echo "  --force, -f               Overwrite files without prompting"
-    echo "  --only=FILE               Update only specific files (claude|gemini|qwen|agents|all)"
+    echo "  --only=FILE               Update only specific files (claude|gemini|qwen|agents|github|all)"
     echo "  --help, -h                Show this help message"
     echo ""
     echo "Value Override Flags (use with --update):"
     echo "  --set-description=VALUE       Set project description"
     echo "  --set-technologies=VALUE      Set key technologies"
     echo "  --set-few-shot=VALUE          Set few-shot examples"
+    echo "  --set-specialized-agents=VALUE Set specialized agents"
     echo "  --set-architecture=VALUE      Set architecture patterns"
     echo "  --set-code-style=VALUE        Set code style guide"
     echo "  --set-file-org=VALUE          Set file organization"
@@ -163,6 +166,7 @@ apply_overrides() {
     [[ -n "$OVERRIDE_DESCRIPTION" ]] && PROJECT_DESCRIPTION="$OVERRIDE_DESCRIPTION" || true
     [[ -n "$OVERRIDE_TECHNOLOGIES" ]] && KEY_TECHNOLOGIES="$OVERRIDE_TECHNOLOGIES" || true
     [[ -n "$OVERRIDE_FEW_SHOT" ]] && FEW_SHOT_EXAMPLES="$OVERRIDE_FEW_SHOT" || true
+    [[ -n "$OVERRIDE_SPECIALIZED_AGENTS" ]] && SPECIALIZED_AGENTS="$OVERRIDE_SPECIALIZED_AGENTS" || true
     [[ -n "$OVERRIDE_ARCHITECTURE" ]] && ARCHITECTURE_PATTERNS="$OVERRIDE_ARCHITECTURE" || true
     [[ -n "$OVERRIDE_CODE_STYLE" ]] && CODE_STYLE_GUIDE="$OVERRIDE_CODE_STYLE" || true
     [[ -n "$OVERRIDE_FILE_ORG" ]] && FILE_ORGANIZATION="$OVERRIDE_FILE_ORG" || true
@@ -186,6 +190,7 @@ prompt_for_details() {
             set +e
             [[ -z "$KEY_TECHNOLOGIES" ]] && KEY_TECHNOLOGIES="$(sed -n '/<project_identity>/,/<\/project_identity>/p' "$TARGET_DIR/.claude/CLAUDE.md" | sed -n '/^### Key Technologies$/,/^<\/project_identity>/p' | grep -v "^###" | grep -v "^<" | grep -v "^$" || echo "")"
             [[ -z "$FEW_SHOT_EXAMPLES" ]] && FEW_SHOT_EXAMPLES="$(sed -n '/<few_shot_examples>/,/<\/few_shot_examples>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
+            [[ -z "$SPECIALIZED_AGENTS" ]] && SPECIALIZED_AGENTS="$(sed -n '/<specialized_agents>/,/<\/specialized_agents>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
             [[ -z "$ARCHITECTURE_PATTERNS" ]] && ARCHITECTURE_PATTERNS="$(sed -n '/<architecture>/,/<\/architecture>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
             [[ -z "$CODE_STYLE_GUIDE" ]] && CODE_STYLE_GUIDE="$(sed -n '/<code_style>/,/<\/code_style>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
             [[ -z "$FILE_ORGANIZATION" ]] && FILE_ORGANIZATION="$(sed -n '/<file_organization>/,/<\/file_organization>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
@@ -253,6 +258,8 @@ replace_placeholders() {
     content="${content//\{\{KEY_TECHNOLOGIES\}\}/$KEY_TECHNOLOGIES_NEWLINE}"
     FEW_SHOT_EXAMPLES_NEWLINE=$(printf '%s\n' "$FEW_SHOT_EXAMPLES" | sed 's/\\n/\n/g')
     content="${content//\{\{FEW_SHOT_EXAMPLES\}\}/$FEW_SHOT_EXAMPLES_NEWLINE}"
+    SPECIALIZED_AGENTS_NEWLINE=$(printf '%s\n' "$SPECIALIZED_AGENTS" | sed 's/\\n/\n/g')
+    content="${content//\{\{SPECIALIZED_AGENTS\}\}/$SPECIALIZED_AGENTS_NEWLINE}"
     ARCHITECTURE_PATTERNS_NEWLINE=$(printf '%s\n' "$ARCHITECTURE_PATTERNS" | sed 's/\\n/\n/g')
     content="${content//\{\{ARCHITECTURE_PATTERNS\}\}/$ARCHITECTURE_PATTERNS_NEWLINE}"
     CODE_STYLE_GUIDE_NEWLINE=$(printf '%s\n' "$CODE_STYLE_GUIDE" | sed 's/\\n/\n/g')
@@ -366,10 +373,32 @@ create_agent_files() {
         else
             should_create_file=true
         fi
-        
+
         if [[ "$should_create_file" = true ]]; then
             replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/AGENTS.md"
             print_info "Created AGENTS.md"
+        fi
+    fi
+
+    # Create .github/copilot-instructions.md (GitHub Copilot)
+    if [[ "$ONLY_FILES" == "all" || "$ONLY_FILES" == "github" ]]; then
+        mkdir -p "$TARGET_DIR/.github"
+        should_create_file=false
+        if [[ -f "$TARGET_DIR/.github/copilot-instructions.md" ]]; then
+            if [[ "$FORCE_MODE" = true ]]; then
+                should_create_file=true
+            else
+                print_warning "GitHub Copilot instructions already exist"
+                read -p "Overwrite? (y/N): " -r
+                [[ $REPLY =~ ^[Yy]$ ]] && should_create_file=true
+            fi
+        else
+            should_create_file=true
+        fi
+
+        if [[ "$should_create_file" = true ]]; then
+            replace_placeholders "$PROJECT_TEMPLATE" "$TARGET_DIR/.github/copilot-instructions.md"
+            print_info "Created .github/copilot-instructions.md"
         fi
     fi
 }
@@ -379,10 +408,11 @@ show_summary() {
     print_info "Setup complete!"
     echo ""
     echo -e "${BLUE}Files created in $TARGET_DIR:${NC}"
-    echo "  • .claude/CLAUDE.md       - Claude Code (project-specific)"
-    echo "  • .gemini/GEMINI.md       - Gemini Code (project-specific)"
-    echo "  • .qwen/QWEN.md           - Qwen Code (project-specific)"
-    echo "  • AGENTS.md               - GitHub Copilot + OpenCode (project-specific)"
+    echo "  • .claude/CLAUDE.md                    - Claude Code (project-specific)"
+    echo "  • .gemini/GEMINI.md                    - Gemini Code (project-specific)"
+    echo "  • .qwen/QWEN.md                        - Qwen Code (project-specific)"
+    echo "  • AGENTS.md                            - GitHub Copilot + OpenCode (project-specific)"
+    echo "  • .github/copilot-instructions.md      - GitHub Copilot (workspace)"
     echo ""
     echo -e "${YELLOW}Next steps:${NC}"
     echo "  1. Review and customize files for your specific project needs"
@@ -452,6 +482,10 @@ parse_args() {
                 ;;
             --set-few-shot=*)
                 OVERRIDE_FEW_SHOT="${1#*=}"
+                shift
+                ;;
+            --set-specialized-agents=*)
+                OVERRIDE_SPECIALIZED_AGENTS="${1#*=}"
                 shift
                 ;;
             --set-architecture=*)
