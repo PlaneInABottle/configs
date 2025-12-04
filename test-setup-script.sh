@@ -56,7 +56,6 @@ test_templates_exist() {
     
     local templates=(
         "$SCRIPT_DIR/templates/PROJECT_INSTRUCTIONS.template.md"
-        "$SCRIPT_DIR/templates/presets.json"
     )
     
     for template in "${templates[@]}"; do
@@ -93,32 +92,7 @@ EOF
     print_pass "Fresh project test setup complete (manual verification needed)"
 }
 
-# Test 4: Check JSON syntax of presets
-test_presets_json() {
-    print_test "Validating presets.json syntax"
-    
-    if ! jq empty "$SCRIPT_DIR/templates/presets.json" 2>/dev/null; then
-        print_fail "presets.json has invalid JSON syntax"
-        return 1
-    fi
-    
-    # Check that each preset has required fields
-    local required_fields=("PROJECT_TYPE" "PRIMARY_LANGUAGE" "TECH_STACK")
-    local presets=$(jq -r 'keys[]' "$SCRIPT_DIR/templates/presets.json")
-    
-    for preset in $presets; do
-        for field in "${required_fields[@]}"; do
-            if ! jq -e ".\"$preset\".\"$field\"" "$SCRIPT_DIR/templates/presets.json" > /dev/null 2>&1; then
-                print_fail "Preset '$preset' missing required field: $field"
-                return 1
-            fi
-        done
-    done
-    
-    print_pass "presets.json is valid and well-formed"
-}
-
-# Test 5: Check template placeholders
+# Test 4: Check template placeholders
 test_template_placeholders() {
     print_test "Checking template placeholders"
     
@@ -126,10 +100,9 @@ test_template_placeholders() {
     
     # Check for required placeholders in project template
     local required_placeholders=(
-        "{{PROJECT_NAME}}"
-        "{{PROJECT_TYPE}}"
-        "{{PRIMARY_LANGUAGE}}"
-        "{{TECH_STACK}}"
+        "{{PROJECT_DESCRIPTION}}"
+        "{{KEY_TECHNOLOGIES}}"
+        "{{FEW_SHOT_EXAMPLES}}"
     )
     
     for placeholder in "${required_placeholders[@]}"; do
@@ -142,7 +115,7 @@ test_template_placeholders() {
     print_pass "Template placeholders are present"
 }
 
-# Test 6: Detect project type from package.json
+# Test 5: Detect project type from package.json
 test_project_detection() {
     print_test "Testing project type detection"
     
@@ -191,14 +164,7 @@ main() {
     else
         ((tests_failed++))
     fi
-    
-    test_presets_json
-    if [[ $? -eq 0 ]]; then
-        ((tests_passed++))
-    else
-        ((tests_failed++))
-    fi
-    
+
     test_template_placeholders
     if [[ $? -eq 0 ]]; then
         ((tests_passed++))

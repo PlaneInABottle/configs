@@ -1,12 +1,10 @@
-# {{PROJECT_NAME}} - Project Context
+# Project Context
 
 <!-- Generated: {{TIMESTAMP}} | Template Version: 2.0.0 -->
 
 <project_identity>
 
 ## Project Information
-
-**Name:** {{PROJECT_NAME}}  
 
 ### Description
 
@@ -16,6 +14,15 @@
 
 {{KEY_TECHNOLOGIES}}
 </project_identity>
+
+---
+
+<few_shot_examples>
+
+## Project-Specific Examples
+
+{{FEW_SHOT_EXAMPLES}}
+</few_shot_examples>
 
 ---
 

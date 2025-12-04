@@ -34,12 +34,9 @@ FORCE_MODE=false
 ONLY_FILES="all"
 
 # Project variables (initialized with defaults)
-PROJECT_NAME=""
-PROJECT_TYPE=""
-PRIMARY_LANGUAGE=""
-TECH_STACK=""
 PROJECT_DESCRIPTION=""
 KEY_TECHNOLOGIES=""
+FEW_SHOT_EXAMPLES=""
 ARCHITECTURE_PATTERNS=""
 CODE_STYLE_GUIDE=""
 FILE_ORGANIZATION=""
@@ -53,12 +50,9 @@ PROJECT_NOTES=""
 TIMESTAMP=""
 
 # Override variables for --set-* flags
-OVERRIDE_NAME=""
-OVERRIDE_TYPE=""
-OVERRIDE_LANGUAGE=""
-OVERRIDE_STACK=""
 OVERRIDE_DESCRIPTION=""
 OVERRIDE_TECHNOLOGIES=""
+OVERRIDE_FEW_SHOT=""
 OVERRIDE_ARCHITECTURE=""
 OVERRIDE_CODE_STYLE=""
 OVERRIDE_FILE_ORG=""
@@ -83,12 +77,9 @@ usage() {
     echo "  --help, -h                Show this help message"
     echo ""
     echo "Value Override Flags (use with --update):"
-    echo "  --set-name=VALUE              Set project name"
-    echo "  --set-type=VALUE              Set project type (frontend|backend|fullstack|cli|library)"
-    echo "  --set-language=VALUE          Set primary language"
-    echo "  --set-stack=VALUE             Set tech stack"
     echo "  --set-description=VALUE       Set project description"
     echo "  --set-technologies=VALUE      Set key technologies"
+    echo "  --set-few-shot=VALUE          Set few-shot examples"
     echo "  --set-architecture=VALUE      Set architecture patterns"
     echo "  --set-code-style=VALUE        Set code style guide"
     echo "  --set-file-org=VALUE          Set file organization"
@@ -109,8 +100,8 @@ usage() {
     echo "Examples:"
     echo "  $0 ~/projects/my-new-project"
     echo "  $0 --update ~/projects/my-new-project"
-    echo "  $0 --update --force --set-stack=\"Vue, TypeScript, Vite\" ."
-    echo "  $0 --update --force --only=agents --set-stack=\"Go, Gin\" ."
+    echo "  $0 --update --force --set-technologies=\"Vue, TypeScript, Vite\" ."
+    echo "  $0 --update --force --only=agents --set-technologies=\"Go, Gin\" ."
     exit 1
 }
 
@@ -160,13 +151,7 @@ load_existing_values() {
     fi
     
     print_info "Loading existing project values..."
-    
-    # Extract values from existing file
-    PROJECT_NAME=$(grep -oP '^# \K.*(?= - Project Context)' "$project_file" || basename "$TARGET_DIR")
-    PROJECT_TYPE=$(grep -oP '^\*\*Type:\*\* \K.*' "$project_file" || echo "")
-    PRIMARY_LANGUAGE=$(grep -oP '^\*\*Language:\*\* \K.*' "$project_file" || echo "")
-    TECH_STACK=$(grep -oP '^\*\*Stack:\*\* \K.*' "$project_file" || echo "")
-    
+
     # Extract multi-line sections (simplified)
     PROJECT_DESCRIPTION=$(sed -n '/^### Description$/,/^###/p' "$project_file" | grep -v "^###" | grep -v "^$" || echo "")
     
@@ -175,12 +160,9 @@ load_existing_values() {
 
 apply_overrides() {
     # Apply flag overrides if provided
-    [[ -n "$OVERRIDE_NAME" ]] && PROJECT_NAME="$OVERRIDE_NAME" || true
-    [[ -n "$OVERRIDE_TYPE" ]] && PROJECT_TYPE="$OVERRIDE_TYPE" || true
-    [[ -n "$OVERRIDE_LANGUAGE" ]] && PRIMARY_LANGUAGE="$OVERRIDE_LANGUAGE" || true
-    [[ -n "$OVERRIDE_STACK" ]] && TECH_STACK="$OVERRIDE_STACK" || true
     [[ -n "$OVERRIDE_DESCRIPTION" ]] && PROJECT_DESCRIPTION="$OVERRIDE_DESCRIPTION" || true
     [[ -n "$OVERRIDE_TECHNOLOGIES" ]] && KEY_TECHNOLOGIES="$OVERRIDE_TECHNOLOGIES" || true
+    [[ -n "$OVERRIDE_FEW_SHOT" ]] && FEW_SHOT_EXAMPLES="$OVERRIDE_FEW_SHOT" || true
     [[ -n "$OVERRIDE_ARCHITECTURE" ]] && ARCHITECTURE_PATTERNS="$OVERRIDE_ARCHITECTURE" || true
     [[ -n "$OVERRIDE_CODE_STYLE" ]] && CODE_STYLE_GUIDE="$OVERRIDE_CODE_STYLE" || true
     [[ -n "$OVERRIDE_FILE_ORG" ]] && FILE_ORGANIZATION="$OVERRIDE_FILE_ORG" || true
@@ -203,6 +185,7 @@ prompt_for_details() {
             # Load remaining values from existing file (disable pipefail for these)
             set +e
             [[ -z "$KEY_TECHNOLOGIES" ]] && KEY_TECHNOLOGIES="$(sed -n '/<project_identity>/,/<\/project_identity>/p' "$TARGET_DIR/.claude/CLAUDE.md" | sed -n '/^### Key Technologies$/,/^<\/project_identity>/p' | grep -v "^###" | grep -v "^<" | grep -v "^$" || echo "")"
+            [[ -z "$FEW_SHOT_EXAMPLES" ]] && FEW_SHOT_EXAMPLES="$(sed -n '/<few_shot_examples>/,/<\/few_shot_examples>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
             [[ -z "$ARCHITECTURE_PATTERNS" ]] && ARCHITECTURE_PATTERNS="$(sed -n '/<architecture>/,/<\/architecture>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
             [[ -z "$CODE_STYLE_GUIDE" ]] && CODE_STYLE_GUIDE="$(sed -n '/<code_style>/,/<\/code_style>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
             [[ -z "$FILE_ORGANIZATION" ]] && FILE_ORGANIZATION="$(sed -n '/<file_organization>/,/<\/file_organization>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
@@ -216,11 +199,7 @@ prompt_for_details() {
 
             # Show current values (after overrides) if not in force mode
             if [[ "$FORCE_MODE" = false ]]; then
-                print_info "Current values:"
-                echo "  Project: $PROJECT_NAME"
-                echo "  Type: $PROJECT_TYPE"
-                echo "  Language: $PRIMARY_LANGUAGE"
-                echo "  Stack: $TECH_STACK"
+                print_info "Current values loaded from existing file"
                 echo ""
                 read -p "Keep existing values? (Y/n): " -r
                 if [[ ! $REPLY =~ ^[Nn]$ ]]; then
@@ -238,20 +217,16 @@ prompt_for_details() {
     fi
 
     # Check if all required values are provided
-    if [[ -z "$PROJECT_NAME" ]] || [[ -z "$PROJECT_TYPE" ]] || [[ -z "$PRIMARY_LANGUAGE" ]] || \
-       [[ -z "$TECH_STACK" ]] || [[ -z "$PROJECT_DESCRIPTION" ]] || [[ -z "$KEY_TECHNOLOGIES" ]] || \
+    if [[ -z "$PROJECT_DESCRIPTION" ]] || [[ -z "$KEY_TECHNOLOGIES" ]] || [[ -z "$FEW_SHOT_EXAMPLES" ]] || \
        [[ -z "$ARCHITECTURE_PATTERNS" ]] || [[ -z "$CODE_STYLE_GUIDE" ]] || [[ -z "$FILE_ORGANIZATION" ]] || \
        [[ -z "$TESTING_STRATEGY" ]] || [[ -z "$DEPENDENCY_GUIDELINES" ]] || [[ -z "$PROJECT_NOTES" ]]; then
 
         print_error "Missing required values. All values must be provided via --set-* flags."
         echo ""
         echo "Required flags:"
-        echo "  --set-name=VALUE"
-        echo "  --set-type=VALUE"
-        echo "  --set-language=VALUE"
-        echo "  --set-stack=VALUE"
         echo "  --set-description=VALUE"
         echo "  --set-technologies=VALUE"
+        echo "  --set-few-shot=VALUE"
         echo "  --set-architecture=VALUE"
         echo "  --set-code-style=VALUE"
         echo "  --set-file-org=VALUE"
@@ -272,14 +247,12 @@ replace_placeholders() {
     local content=$(<"$template_file")
 
     # Replace all placeholders (handling literal \n characters as newlines)
-    content="${content//\{\{PROJECT_NAME\}\}/$PROJECT_NAME}"
-    content="${content//\{\{PROJECT_TYPE\}\}/$PROJECT_TYPE}"
-    content="${content//\{\{PRIMARY_LANGUAGE\}\}/$PRIMARY_LANGUAGE}"
-    content="${content//\{\{TECH_STACK\}\}/$TECH_STACK}"
     content="${content//\{\{PROJECT_DESCRIPTION\}\}/$PROJECT_DESCRIPTION}"
     # For multiline values, replace \n with actual newlines
     KEY_TECHNOLOGIES_NEWLINE=$(printf '%s\n' "$KEY_TECHNOLOGIES" | sed 's/\\n/\n/g')
     content="${content//\{\{KEY_TECHNOLOGIES\}\}/$KEY_TECHNOLOGIES_NEWLINE}"
+    FEW_SHOT_EXAMPLES_NEWLINE=$(printf '%s\n' "$FEW_SHOT_EXAMPLES" | sed 's/\\n/\n/g')
+    content="${content//\{\{FEW_SHOT_EXAMPLES\}\}/$FEW_SHOT_EXAMPLES_NEWLINE}"
     ARCHITECTURE_PATTERNS_NEWLINE=$(printf '%s\n' "$ARCHITECTURE_PATTERNS" | sed 's/\\n/\n/g')
     content="${content//\{\{ARCHITECTURE_PATTERNS\}\}/$ARCHITECTURE_PATTERNS_NEWLINE}"
     CODE_STYLE_GUIDE_NEWLINE=$(printf '%s\n' "$CODE_STYLE_GUIDE" | sed 's/\\n/\n/g')
@@ -469,28 +442,16 @@ parse_args() {
                 ONLY_FILES="${1#*=}"
                 shift
                 ;;
-            --set-name=*)
-                OVERRIDE_NAME="${1#*=}"
-                shift
-                ;;
-            --set-type=*)
-                OVERRIDE_TYPE="${1#*=}"
-                shift
-                ;;
-            --set-language=*)
-                OVERRIDE_LANGUAGE="${1#*=}"
-                shift
-                ;;
-            --set-stack=*)
-                OVERRIDE_STACK="${1#*=}"
-                shift
-                ;;
             --set-description=*)
                 OVERRIDE_DESCRIPTION="${1#*=}"
                 shift
                 ;;
             --set-technologies=*)
                 OVERRIDE_TECHNOLOGIES="${1#*=}"
+                shift
+                ;;
+            --set-few-shot=*)
+                OVERRIDE_FEW_SHOT="${1#*=}"
                 shift
                 ;;
             --set-architecture=*)
