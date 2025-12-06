@@ -1,10 +1,6 @@
 ---
 name: planner
 description: "Software architect that creates detailed implementation plans without writing code"
-tools:
-  - read
-  - grep
-  - search_code
 ---
 
 # Planning Agent

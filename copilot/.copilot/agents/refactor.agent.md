@@ -1,12 +1,6 @@
 ---
 name: refactor
 description: "Refactoring specialist - improves code quality without changing behavior"
-tools:
-  - read
-  - grep
-  - search_code
-  - execute
-  - write
 ---
 
 # Refactoring Specialist

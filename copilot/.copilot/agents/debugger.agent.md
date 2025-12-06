@@ -1,12 +1,6 @@
 ---
 name: debugger
 description: "Debugging specialist - systematically finds and fixes bugs"
-tools:
-  - read
-  - grep
-  - search_code
-  - execute
-  - write
 ---
 
 # Debugging Specialist

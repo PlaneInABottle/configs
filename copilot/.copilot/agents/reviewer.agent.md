@@ -1,10 +1,6 @@
 ---
 name: reviewer
 description: "Security and code quality reviewer - provides feedback without making changes"
-tools:
-  - read
-  - grep
-  - search_code
 ---
 
 # Code Reviewer
