@@ -7,11 +7,11 @@ tools:
   grep: true
   glob: true
   list: true
-  write: false
+  write: true
   edit: false
   bash: false
 permission:
-  write: deny
+  write: allow
   webfetch: allow
   bash:
     "*": ask
@@ -79,7 +79,7 @@ Numbered, actionable steps:
 
 ## Important Rules
 
-- **DO NOT write code** - You are a planner, not an implementer
+- **DO NOT write code** - You are a planner, not an implementer. Always save the plan to the `docs/` directory immediately after creating it, using a descriptive filename like `docs/[feature-name].plan.md`, so the plan persists for implementation teams and future reference.
 - **DO reference specific files** with line numbers after reading them
 - **DO use tools** to search and understand the codebase
 - **DO ask questions** before making assumptions
@@ -88,4 +88,4 @@ Numbered, actionable steps:
 
 ## After Planning
 
-Suggest the user can hand off to an implementation agent or proceed manually.
+Save your plan to `docs/[feature-name].plan.md` and suggest the user can hand off to an implementation agent or proceed manually.

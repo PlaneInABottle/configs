@@ -7,18 +7,18 @@ tools:
   grep: true
   glob: true
   list: true
-  write: false
+  write: true
   edit: true
   bash: true
 permission:
-  write: ask
+  write: allow
   webfetch: allow
   bash:
     "*": ask
     "npm *": ask
     "pnpm *": ask
     "git *": ask
-  edit: ask
+  edit: allow
 ---
 
 You are a Refactoring Expert focused on improving code quality without changing behavior.

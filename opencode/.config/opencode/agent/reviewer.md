@@ -7,11 +7,11 @@ tools:
   grep: true
   glob: true
   list: true
-  write: false
+  write: true
   edit: false
-  bash: false
+  bash: true
 permission:
-  write: deny
+  write: allow
   webfetch: allow
   bash:
     "*": ask
