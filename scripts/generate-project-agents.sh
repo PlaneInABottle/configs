@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Setup script for AI agent instruction files
-# Creates project-specific agent instructions with auto-detection and presets
+# Generate Project-Specific AI Agents
+# Creates customized agent instructions for individual projects
+# Supports auto-detection and presets for different project types
 
 set -euo pipefail
 
@@ -13,15 +14,22 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Config directory - auto-detect script location (resolve symlinks)
+# Works on both Linux and macOS
 SCRIPT_PATH="${BASH_SOURCE[0]}"
+
 # Resolve symlinks to get actual script location
 while [ -L "$SCRIPT_PATH" ]; do
     SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
     SCRIPT_PATH="$(readlink "$SCRIPT_PATH")"
+    # Handle relative symlink paths
     [[ $SCRIPT_PATH != /* ]] && SCRIPT_PATH="$SCRIPT_DIR/$SCRIPT_PATH"
 done
+
+# Get the directory containing the script
 SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
-CONFIG_DIR="$SCRIPT_DIR"
+
+# Config directory is the parent of the scripts directory
+CONFIG_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 TEMPLATES_DIR="$CONFIG_DIR/templates"
 
 # Template files

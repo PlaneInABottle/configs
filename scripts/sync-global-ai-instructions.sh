@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Setup script for global AI instruction files
-# Manages instruction files for Claude, Copilot, Gemini, Qwen, and OpenCode
-# AI provides the full instruction content via --set-content flag
+# Sync Global AI Instructions
+# Synchronizes global instruction files across all AI systems (Claude, Copilot, Gemini, Qwen, OpenCode)
+# Updates system-wide behavior, coding standards, and decision protocols
 
 # Colors for output
 RED='\033[0;31m'
@@ -65,10 +65,10 @@ print_warning() {
 # Usage function
 show_help() {
     cat << 'EOF'
-Usage: setup-ai-instructions.sh [OPTIONS]
+Usage: sync-global-ai-instructions.sh [OPTIONS]
 
-Generate global AI instruction files for Claude, Copilot, Gemini, Qwen, and OpenCode.
-Requires AI to analyze and provide the instruction content.
+Synchronize global AI instruction files across Claude, Copilot, Gemini, Qwen, and OpenCode.
+Updates system-wide behavior, coding standards, and decision protocols.
 
 OPTIONS:
   -h, --help                              Show this help message
@@ -80,17 +80,17 @@ OPTIONS:
   --set-content="TEXT"                    Set instruction content (multiline, use \n for newlines)
 
 EXAMPLES:
-  # Generate Claude instructions (AI provides full content via --set-content)
-  ./setup-ai-instructions.sh \
-    --set-description="Global AI standards" \
+  # Sync all AI systems with new instructions
+  ./sync-global-ai-instructions.sh \
+    --set-description="Global AI standards with Context7 integration" \
     --set-content="# Quick Start\n\n1. Try simple first\n2. Never guess\n..."
 
   # Update only Copilot with new content
-  ./setup-ai-instructions.sh --update --only=copilot \
+  ./sync-global-ai-instructions.sh --update --only=copilot \
     --set-content="..."
 
-  # Generate all tools with same content
-  ./setup-ai-instructions.sh --force \
+  # Force overwrite all AI systems
+  ./sync-global-ai-instructions.sh --force \
     --set-content="..."
 
 EOF

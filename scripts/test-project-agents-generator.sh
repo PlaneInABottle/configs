@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Test script for setup-agent-instructions.sh
+# Test Suite for Project Agents Generator
+# Tests the generate-project-agents.sh script functionality
 
 set -euo pipefail
 
@@ -9,7 +10,9 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SETUP_SCRIPT="$SCRIPT_DIR/setup-agent-instructions.sh"
+CONFIG_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+SETUP_SCRIPT="$SCRIPT_DIR/generate-project-agents.sh"
+TEMPLATES_DIR="$CONFIG_DIR/templates"
 TEST_DIR="/tmp/agent-setup-test-$$"
 
 print_test() {
@@ -53,9 +56,9 @@ test_script_exists() {
 # Test 2: Templates exist
 test_templates_exist() {
     print_test "Checking if template files exist"
-    
+
     local templates=(
-        "$SCRIPT_DIR/templates/PROJECT_INSTRUCTIONS.template.md"
+        "$TEMPLATES_DIR/PROJECT_INSTRUCTIONS.template.md"
     )
     
     for template in "${templates[@]}"; do
@@ -95,8 +98,8 @@ EOF
 # Test 4: Check template placeholders
 test_template_placeholders() {
     print_test "Checking template placeholders"
-    
-    local project_template="$SCRIPT_DIR/templates/PROJECT_INSTRUCTIONS.template.md"
+
+    local project_template="$TEMPLATES_DIR/PROJECT_INSTRUCTIONS.template.md"
     
     # Check for required placeholders in project template
     local required_placeholders=(
