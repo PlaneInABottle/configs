@@ -2,21 +2,15 @@
 description: "Feature implementation specialist - builds new functionality and adds features"
 mode: subagent
 tools:
-  read: true
-  grep: true
-  glob: true
-  list: true
   write: true
   edit: true
   bash: true
 permission:
-  write: ask
   webfetch: allow
   bash:
+    "git diff": allow
+    "git log*": allow
     "*": ask
-    "npm *": ask
-    "pnpm *": ask
-    "git *": ask
   edit: ask
 ---
 
