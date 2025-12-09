@@ -1,7 +1,6 @@
 ---
 description: "Feature implementation specialist - builds new functionality and adds features"
 mode: subagent
-model: github-copilot/gpt-4o
 tools:
   read: true
   grep: true

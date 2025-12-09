@@ -1,7 +1,6 @@
 ---
 description: "Refactoring specialist - improves code quality without changing behavior"
 mode: subagent
-model: github-copilot/gpt-4o
 tools:
   read: true
   grep: true

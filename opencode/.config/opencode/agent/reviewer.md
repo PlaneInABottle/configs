@@ -1,7 +1,6 @@
 ---
 description: "Security and code quality reviewer - provides feedback without making changes"
 mode: subagent
-model: github-copilot/gpt-4o
 tools:
   read: true
   grep: true

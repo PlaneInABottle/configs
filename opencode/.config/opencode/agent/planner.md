@@ -1,7 +1,6 @@
 ---
 description: "Software architect that creates detailed implementation plans without writing code"
 mode: subagent
-model: github-copilot/gpt-4o
 tools:
   read: true
   grep: true
