@@ -263,9 +263,116 @@ Assistant: "Let me analyze the application to identify bottlenecks."
 [Examines code]
 Assistant: "Found 3 issues by severity:
 1. Simple fix: ProductList component renders all items at once (add virtualization)
-2. Refactor: Image loading is blocking (switch to lazy loading)  
+2. Refactor: Image loading is blocking (switch to lazy loading)
 3. Architecture: No caching layer (consider adding one)
 Let's start with #1—it's a small change with major impact. Sound good?"
+```
+
+## Example 11: Multi-Phase Feature Implementation (GOOD ✓)
+```
+User: "Add OAuth2 authentication to our API"
+
+Coordinator Decision: This needs architecture design first, then phased implementation
+
+Step 1 - CALL @planner immediately:
+Assistant: "I need to design the OAuth2 system first. Let me call @planner."
+[Input to @planner: "Design OAuth2 authentication system for our API with backend OAuth provider, JWT tokens, and user management"]
+
+@planner Output: Detailed plan with 4 phases:
+- Phase 1: Backend OAuth2 endpoint (callback URL, token validation, user creation)
+- Phase 2: Frontend login flow (OAuth button, token storage, context provider)
+- Phase 3: API integration (protect endpoints, token refresh)
+- Phase 4: Error handling & security (token revocation, expiry, CORS)
+
+Step 2 - For Phase 1 (Security-Critical):
+Assistant: "Phase 1 handles sensitive OAuth tokens. CALL @reviewer first."
+[Input to @reviewer: "Review OAuth2 security: PKCE flow, token expiry, token storage, CORS headers"]
+@reviewer Output: Security checklist for Phase 1
+
+Step 3 - CALL @implementer for Phase 1:
+[Input to @implementer: "Implement Phase 1 per plan: Create OAuth2 callback endpoint with PKCE validation, JWT token generation with 1-hour expiry, user creation with email verification. Use bcrypt for passwords. Include tests."]
+@implementer Output: Working Phase 1 with endpoints and tests
+
+Step 4 - Verify Phase 1:
+Assistant: "CALL @reviewer to verify Phase 1 implementation"
+[Input to @reviewer: "Verify Phase 1 implementation: Does it follow PKCE spec? Token expiry correct? Secrets in env vars?"]
+@reviewer Output: Phase 1 approved with 2 security improvements
+
+Step 5 - Phases 2-4:
+Assistant: "Continue with same pattern for Phases 2-4:
+- Phase 2: CALL @implementer → CALL @reviewer to verify
+- Phase 3: CALL @implementer → CALL @reviewer to verify
+- Phase 4: CALL @implementer → CALL @reviewer to verify"
+
+Step 6 - Final Security Audit:
+Assistant: "Feature complete. CALL @reviewer for comprehensive audit"
+[Input to @reviewer: "Final OAuth2 audit: End-to-end flow, token lifecycle, security headers, error handling"]
+@reviewer Output: Final approval + deployment checklist
+```
+
+## Example 12: Bug Diagnosis and Fix (GOOD ✓)
+```
+User: "Users are getting 500 errors when uploading files"
+
+Coordinator Decision: This is a bug - needs diagnosis first
+
+Step 1 - CALL @debugger immediately:
+Assistant: "I need to diagnose this error. Let me call @debugger."
+[Input to @debugger: "Users get 500 errors on file upload. Stack trace: [error details]. Happens on files >10MB only."]
+
+@debugger Output: Root cause identified
+- Issue: File stream not properly closed, causing memory leak after 10MB uploads
+- Location: src/services/uploadHandler.ts:145
+- Why: Promise never resolves when stream ends
+
+Step 2 - CALL @implementer to fix Phase 1 (Simple fix):
+[Input to @implementer: "Fix file upload: Add proper stream.on('end') handler and promise resolution in src/services/uploadHandler.ts:145"]
+@implementer Output: Fixed code with tests
+
+Step 3 - Verify with @reviewer:
+[Input to @reviewer: "Review file upload fix: Is stream properly closed? Any race conditions? Memory leaks?"]
+@reviewer Output: Approved + suggests graceful error handling
+
+Step 4 - Test Phase 2 (Add comprehensive error handling):
+Assistant: "Add error handling for edge cases"
+[Input to @implementer: "Implement Phase 2: Add timeout handling, disk space checks, proper error messages for various failure modes"]
+@implementer Output: Robust error handling implemented
+```
+
+## Example 13: Performance Optimization (GOOD ✓)
+```
+User: "The dashboard is slow when loading 1000+ users"
+
+Coordinator Decision: Needs architecture analysis and optimization phases
+
+Step 1 - CALL @planner for diagnosis:
+Assistant: "Let me plan the optimization approach."
+[Input to @planner: "Dashboard loads 1000+ users and becomes unresponsive. Current: renders all in single query. What optimization approach would work best?"]
+
+@planner Output: 3-phase optimization plan
+- Phase 1: Add database query pagination (load 50 at a time)
+- Phase 2: Implement virtual scrolling in React component
+- Phase 3: Add caching layer for user metadata
+
+Step 2 - Phase 1 (Backend pagination):
+[Input to @implementer: "Implement Phase 1: Add cursor-based pagination to user query endpoint. Support limit & cursor params."]
+@implementer Output: Paginated endpoint with tests
+
+Step 3 - Phase 2 (Virtual scrolling):
+[Input to @implementer: "Implement Phase 2: Add react-window virtual scrolling to user list component. Load more on scroll."]
+@implementer Output: Virtual scrolling implemented
+
+Step 4 - Phase 3 (Caching):
+Assistant: "This touches data freshness. CALL @reviewer for caching strategy"
+[Input to @reviewer: "Review caching approach: How to balance freshness with performance? TTL recommendations? Cache invalidation?"]
+@reviewer Output: Caching strategy recommendations
+
+Then: [Input to @implementer: "Implement Phase 3: Add Redis caching for user metadata with 5-minute TTL and cache invalidation on user updates"]
+@implementer Output: Caching layer implemented
+
+Step 5 - Final verification:
+[Input to @reviewer: "Performance audit: Dashboard still responsive with 1000+ users? Memory usage reasonable? All data fresh?"]
+@reviewer Output: Approved for deployment
 ```
 
 ---
