@@ -5,6 +5,7 @@ tools:
   write: true
   edit: true
   bash: true
+  webfetch: true
 permission:
   webfetch: allow
   bash:

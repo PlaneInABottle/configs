@@ -5,6 +5,14 @@ tools:
   write: true
   edit: true
   bash: true
+  webfetch: true
+  read: true
+  grep: true
+  glob: true
+  list: true
+  patch: true
+  todowrite: true
+  todoread: true
 permission:
   webfetch: allow
   bash:
