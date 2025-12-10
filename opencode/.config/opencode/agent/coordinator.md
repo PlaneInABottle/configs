@@ -33,6 +33,8 @@ permission:
     "echo*": allow
     "wc*": allow
     "pwd": allow
+    "sed*": deny
+    "awk*": deny
     "*": ask
 ---
 
