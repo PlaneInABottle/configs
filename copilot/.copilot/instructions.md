@@ -69,6 +69,7 @@ Bug/Error Reported:
 Feature Requested:
 ├─ Small enhancement (<10 lines)? → Implement directly
 ├─ Moderate (single module)? → Verbal plan → @implementer
+├─ Large multi-phase project? → @coordinator
 └─ Large (multi-file/architectural)? → @planner → Phased implementation
 ```
 
@@ -110,6 +111,13 @@ Feature Requested:
 **When to use:** Module refactoring, performance optimization
 **Input:** Module to refactor, optimization goals
 **Output:** Refactored module, same behavior, improved quality
+
+### @coordinator
+**Purpose:** Multi-phase project orchestration
+**When to use:** Complex projects requiring systematic phase-by-phase coordination (large refactorings, multi-phase implementations, compliance integration)
+**Input:** Project requirements, success criteria, project commands (test, lint, format)
+**Output:** Fully executed multi-phase project with all phases validated and documented
+**Special:** Orchestrates other subagents (planner → implementer/refactor → reviewer) in loops, handles error recovery with @debugger, manages documentation updates
 
 ---
 
@@ -381,6 +389,88 @@ Then: [Input to @implementer: "Implement Phase 3: Add Redis caching for user met
 Step 5 - Final verification:
 [Input to @reviewer: "Performance audit: Dashboard still responsive with 1000+ users? Memory usage reasonable? All data fresh?"]
 @reviewer Output: Approved for deployment
+```
+
+## Example 14: Multi-Phase Refactoring with Coordinator (GOOD ✓)
+```
+User: "Refactor these massive files into modules <500 lines:
+- flight_selector.py (2,515 lines)
+- booking_creation_tools.py (2,127 lines)
+Test each phase, remove dead code, write tests.
+Test command: uv run pytest -m 'not (integration or agent_llm)'"
+
+Coordinator Decision: This is a multi-phase refactoring requiring systematic orchestration
+
+Step 1 - Analyze and decompose:
+Coordinator: "I'll break this into focused phases for each file, with each phase targeting one extraction."
+
+Phase breakdown created:
+- Phase 1-4: Refactor flight_selector.py in 4 extraction phases
+- Phase 5-8: Refactor booking_creation_tools.py in 4 extraction phases
+- Phase 9: Update all tests
+- Phase 10: Update documentation
+
+Step 2 - Execute Phase 1:
+Coordinator: "CALL @planner for Phase 1 design"
+[Input to @planner: "Design extraction of flight filtering logic from flight_selector.py.
+Project commands: test=`uv run pytest -m 'not (integration or agent_llm)'`, lint=`uv run ruff check`, format=`uv run ruff format`
+Goal: Extract ~400 lines to flight_filters.py"]
+@planner Output: Detailed extraction plan
+
+Coordinator: "Plan approved. CALL @refactor for implementation"
+[Input to @refactor: "Execute Phase 1: Extract flight filtering per plan. Write tests."]
+@refactor Output: flight_filters.py created, flight_selector.py updated
+
+Coordinator: "Running tests..."
+[Runs: uv run pytest -m 'not (integration or agent_llm)']
+Tests: PASSED
+
+Coordinator: "CALL @reviewer for Phase 1 validation"
+@reviewer Output: Approved, no issues
+
+Coordinator: "Phase 1 complete ✓"
+
+Step 3 - Execute Phase 2-10:
+[Same pattern for each phase]
+
+Step 4 - Phase 6 encounters test failures:
+Coordinator: "Tests failed in Phase 6. CALL @debugger"
+[Input to @debugger: "Test failures after booking module extraction: [error output]"]
+@debugger Output: Root cause - circular import issue
+
+Coordinator: "CALL @refactor with debugger findings"
+[Input to @refactor: "Fix circular import identified by @debugger: [specific fix]"]
+@refactor Output: Fixed
+
+Coordinator: "Re-running tests..."
+Tests: PASSED
+
+Coordinator: "CALL @reviewer for Phase 6"
+@reviewer Output: Approved
+
+Step 5 - Documentation phase:
+Coordinator: "All code phases complete. CALL @implementer for documentation"
+[Input to @implementer: "Update docs to reflect new module structure: flight_filters.py, pricing_calculator.py, etc."]
+@implementer Output: README and architecture docs updated
+
+Step 6 - Final summary to terminal:
+Coordinator outputs:
+```
+## Multi-Phase Refactoring Complete
+
+### Phases Executed: 10
+
+Files Refactored:
+- flight_selector.py: 2,515 → 450 lines (5 modules extracted)
+- booking_creation_tools.py: 2,127 → 380 lines (4 modules extracted)
+
+New Modules Created: 9
+Tests: All passing
+Dead Code Removed: Yes
+Documentation: Updated
+
+All phases validated by @reviewer
+```
 ```
 
 ---
