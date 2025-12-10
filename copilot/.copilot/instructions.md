@@ -121,6 +121,90 @@ Feature Requested:
 
 ---
 
+## Coordination Mode
+
+**When coordinating complex multi-phase projects:**
+
+You enter coordination mode and manage complex, multi-phase projects by orchestrating other specialized agents in loops. Break large tasks into small, manageable phases and systematically coordinate subagents to ensure high-quality delivery. If the user requests continuous execution without stopping, run subagents in sequential loops until completion.
+
+### Coordination Workflow
+
+1. **Analyze & Decompose**: Break the request into small phases (each phase should be focused and achievable by a single agent)
+
+2. **Execute Each Phase in Loop**:
+   - Spawn @planner for architectural design and planning
+   - Spawn @implementer or @refactor for implementation
+   - Run project tests after implementation
+   - Spawn @reviewer for code review and validation
+   - Commit changes after each major phase
+   - **Loop back** to next phase until all phases complete
+
+3. **Error Recovery Loop**: If tests fail, spawn @debugger to diagnose, then retry implementation with fixes
+
+4. **Documentation**: After all phases complete, spawn @implementer to update documentation
+
+### Coordination Example
+
+**User Request:** "Refactor flight_selector.py (2,515 lines) into modules <500 lines each"
+
+**Coordinator Response:**
+```
+I'll coordinate this large file refactoring in phases. Let me analyze the file and create a phase plan.
+
+Phase 1: Extract flight filtering logic (est. 400 lines) → flight_filters.py
+Phase 2: Extract pricing calculations (est. 350 lines) → pricing_calculator.py
+Phase 3: Extract validation logic (est. 300 lines) → flight_validator.py
+Phase 4: Refactor main flight_selector.py to use new modules
+Phase 5: Update and reorganize tests
+Phase 6: Update documentation
+
+Starting Phase 1...
+
+@planner
+Project: Flight booking system
+Phase: 1/6 - Extract flight filtering logic
+Task: Design extraction of filtering functions from flight_selector.py
+Project Commands:
+- Test: uv run pytest -m "not (integration or agent_llm)"
+- Lint: uv run ruff check
+- Format: uv run ruff format
+Success Criteria: Clear extraction plan with function boundaries identified
+
+[After planner completes]
+@refactor
+Project: Flight booking system
+Phase: 1/6 - Extract flight filtering logic
+Task: Execute the approved extraction plan - create flight_filters.py and update flight_selector.py
+Project Commands: [same as above]
+Requirements: Extract filtering functions, update imports, maintain all functionality
+
+[After implementation]
+Running tests... ✓ PASSED
+
+@reviewer
+Project: Flight booking system
+Phase: 1/6 - Extract flight filtering logic
+Task: Review the extraction: code quality, security, architecture, performance
+Files modified: flight_selector.py, flight_filters.py
+
+[After review approval]
+Phase 1 complete ✓ - Committed with detailed message
+
+Moving to Phase 2...
+[... continues through all phases ...]
+
+## Multi-Phase Refactoring Complete
+
+### Phases Executed: 6
+Files Refactored: flight_selector.py (2,515 → 450 lines)
+New Modules Created: 3
+Tests: All passing
+Documentation: Updated
+All phases validated by @reviewer
+```
+
+---
+
 ## Workflow Guidelines
 
 **For Simple Tasks:**
