@@ -23,6 +23,16 @@ permission:
     "pytest*": allow
     "npm test*": allow
     "uv run*": allow
+    "head*": allow
+    "tail*": allow
+    "cat*": allow
+    "ls*": allow
+    "tree*": allow
+    "find*": allow
+    "grep*": allow
+    "echo*": allow
+    "wc*": allow
+    "pwd": allow
     "*": ask
 ---
 
