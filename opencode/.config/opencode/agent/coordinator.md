@@ -1,6 +1,6 @@
 ---
 description: "Multi-phase project orchestrator that manages complex workflows by coordinating planner, implementer, refactor, reviewer, and debugger agents"
-mode: agent
+mode: all
 tools:
   write: false
   edit: false
