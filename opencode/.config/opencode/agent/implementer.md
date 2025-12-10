@@ -18,6 +18,10 @@ permission:
   bash:
     "git diff": allow
     "git log*": allow
+    "git status": allow
+    "pytest*": allow
+    "npm test*": allow
+    "uv run*": allow
     "*": ask
   edit: ask
 ---

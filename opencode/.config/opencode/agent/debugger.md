@@ -18,6 +18,10 @@ permission:
   bash:
     "git diff": allow
     "git log*": allow
+    "git status": allow
+    "pytest*": allow
+    "npm test*": allow
+    "uv run*": allow
     "*": ask
   edit: ask
 ---
@@ -156,4 +160,3 @@ Added test case for missing user scenario
 - Test the fix thoroughly
 - Add regression tests
 - Keep fixes minimal and focused
-

@@ -18,6 +18,10 @@ permission:
   bash:
     "git diff": allow
     "git log*": allow
+    "git status": allow
+    "pytest*": allow
+    "npm test*": allow
+    "uv run*": allow
     "*": ask
   edit: ask
 ---
@@ -106,4 +110,3 @@ Numbered, actionable steps:
 
 For simple plans: Coordinator can proceed with implementation.
 For complex plans: Save to `docs/[feature-name].plan.md` and suggest coordinator can hand off to implementation agents or proceed manually.
-

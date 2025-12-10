@@ -18,6 +18,10 @@ permission:
   bash:
     "git diff": allow
     "git log*": allow
+    "git status": allow
+    "pytest*": allow
+    "npm test*": allow
+    "uv run*": allow
     "*": ask
   edit: ask
 ---
@@ -190,4 +194,3 @@ return status == "active"
 - **Small steps** - Incremental improvements
 - **Commit often** - Easy to revert if needed
 - **Follow existing patterns** - Maintain consistency
-
