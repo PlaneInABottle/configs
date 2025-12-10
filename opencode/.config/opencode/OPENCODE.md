@@ -112,13 +112,6 @@ Feature Requested:
 **Input:** Module to refactor, optimization goals
 **Output:** Refactored module, same behavior, improved quality
 
-### @coordinator
-**Purpose:** Multi-phase project orchestration
-**When to use:** Complex projects requiring systematic phase-by-phase coordination (large refactorings, multi-phase implementations, compliance integration)
-**Input:** Project requirements, success criteria, project commands (test, lint, format)
-**Output:** Fully executed multi-phase project with all phases validated and documented
-**Special:** Orchestrates other subagents (planner → implementer/refactor → reviewer) in loops, handles error recovery with @debugger, manages documentation updates
-
 ---
 
 ## Workflow Guidelines
@@ -141,7 +134,7 @@ Feature Requested:
    - If risky → @reviewer to verify (include project commands)
 3. Final @reviewer audit for major features (include project commands)
 
-**Subagents do not delegate to other subagents - coordinator manages all orchestration.**
+
 
 ## Subagent Prompt Composition
 
