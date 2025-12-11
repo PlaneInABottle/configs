@@ -438,7 +438,13 @@ Use XML function call format for all subagent interactions:
 - Compatibility requirements
 - Risk considerations
 
-**CRITICAL INSTRUCTIONS FOR SUBAGENTS:**
+**PROMPTING REQUIREMENTS FOR SUBAGENTS:**
+
+**USE DIRECT COMMANDS:** When prompting subagents, use direct, imperative language. Avoid polite phrases like "please". Be authoritative and specific.
+
+**COMPREHENSIVE CONTEXT:** Include all necessary information in prompts. Do not assume subagents have prior knowledge.
+
+**MANDATORY EXECUTION INSTRUCTIONS:**
 
 **IMPORTANT:** After completing your task (creating plan, implementing code, reviewing changes, etc.), you MUST return control to the coordinator. DO NOT attempt to call other subagents or continue the workflow yourself.
 
@@ -460,7 +466,7 @@ Use XML function call format for all subagent interactions:
 Project: E-commerce platform using React, Node.js, PostgreSQL
 Phase: 1/3 - Design user authentication system
 
-Task: Create comprehensive implementation plan for user authentication including registration, login, password reset, and session management. Plan should include database schema, API endpoints, frontend components, and security measures.
+Task: Create comprehensive implementation plan for user authentication including registration, login, password reset, and session management. Plan must include database schema, API endpoints, frontend components, and security measures.
 
 Project Commands:
 - Test: npm test
@@ -485,7 +491,7 @@ Constraints:
 - Timeline: 2-week implementation
 - Must support 1000+ concurrent users
 
-IMPORTANT: After creating the plan file, return control to coordinator. DO NOT call other subagents or continue workflow.
+MANDATORY: After creating the plan file, return control to coordinator. Do not call other subagents or continue workflow.
 ```
 
 **Example for @implementer (after planner creates plan):**
@@ -516,7 +522,7 @@ Success Criteria:
 - Security measures implemented
 - Integration tests passing
 
-IMPORTANT: After implementing changes, return control to coordinator. DO NOT call other subagents or continue workflow.
+MANDATORY: After implementing changes, return control to coordinator. Do not call other subagents or continue workflow.
 ```
 
 ## AGENT SELECTION GUIDE
