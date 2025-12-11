@@ -4,7 +4,7 @@ mode: subagent
 tools:
   write: true
   edit: false
-  bash: true
+  bash: false
   webfetch: true
   read: true
   grep: true
@@ -15,27 +15,7 @@ tools:
   todoread: false
 permission:
   webfetch: allow
-  bash:
-    "git diff": allow
-    "git log*": allow
-    "git status": allow
-    "git show*": allow
-    "pytest*": allow
-    "npm test*": allow
-    "uv run*": allow
-    "head*": allow
-    "tail*": allow
-    "cat*": allow
-    "ls*": allow
-    "tree*": allow
-    "find*": allow
-    "grep*": allow
-    "echo*": allow
-    "wc*": allow
-    "pwd": allow
-    "sed*": deny
-    "awk*": deny
-    "*": ask
+  bash: deny
   edit: deny
 ---
 
