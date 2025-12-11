@@ -19,6 +19,7 @@ permission:
     "git diff": allow
     "git log*": allow
     "git status": allow
+    "git show*": allow
     "pytest*": allow
     "npm test*": allow
     "uv run*": allow
@@ -201,6 +202,7 @@ return status == "active"
 
 ## Important Rules
 
+- **DO NOT call other subagents** - you are a specialized agent, not an orchestrator
 - **Tests must stay green** - Run after every change
 - **Preserve behavior** - No feature changes during refactoring
 - **Small steps** - Incremental improvements

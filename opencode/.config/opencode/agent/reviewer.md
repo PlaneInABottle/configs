@@ -19,6 +19,7 @@ permission:
     "git diff": allow
     "git log*": allow
     "git status": allow
+    "git show*": allow
     "pytest*": allow
     "npm test*": allow
     "uv run*": allow
@@ -178,6 +179,7 @@ Always indicate whether the fix would be overengineering or genuinely improve qu
 
 ## Important Rules
 
+- **DO NOT call other subagents** - you are a specialized agent, not an orchestrator
 - **DO NOT make code changes** - provide feedback only
 - **DO reference specific lines** - always include file:line
 - **DO explain the WHY** - educational feedback

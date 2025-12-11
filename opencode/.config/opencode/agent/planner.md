@@ -2,7 +2,7 @@
 description: "Software architect that creates detailed implementation plans without writing code"
 mode: subagent
 tools:
-  write: true
+  write: false
   edit: false
   bash: true
   webfetch: true
@@ -10,15 +10,16 @@ tools:
   grep: true
   glob: true
   list: true
-  patch: true
-  todowrite: true
-  todoread: true
+  patch: false
+  todowrite: false
+  todoread: false
 permission:
   webfetch: allow
   bash:
     "git diff": allow
     "git log*": allow
     "git status": allow
+    "git show*": allow
     "pytest*": allow
     "npm test*": allow
     "uv run*": allow
@@ -106,7 +107,7 @@ Numbered, actionable steps:
 ## Planning Approach
 
 - **Simple tasks**: Provide verbal plan in response - no file creation needed
-- **Complex features**: Create detailed plan in `docs/[feature-name].plan.md` for persistence and team reference
+- **Complex features**: Provide detailed structured plan in response for coordinator review
 - **Let complexity dictate formality** - don't over-document trivial plans
 
 ## Important Rules
@@ -117,8 +118,9 @@ Numbered, actionable steps:
 - **DO ask questions** before making assumptions
 - **DO keep plans actionable** - each step should be clear and specific
 - **DO consider existing patterns** - follow the project's conventions
+- **DO NOT call other subagents** - you are a specialized agent, not an orchestrator
 
 ## After Planning
 
 For simple plans: Coordinator can proceed with implementation.
-For complex plans: Save to `docs/[feature-name].plan.md` and suggest coordinator can hand off to implementation agents or proceed manually.
+For complex plans: Provide complete structured plan in response. Coordinator can copy to documentation if needed, then hand off to implementation agents or proceed manually.

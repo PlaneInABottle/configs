@@ -19,6 +19,7 @@ permission:
     "git diff": allow
     "git log*": allow
     "git status": allow
+    "git show*": allow
     "pytest*": allow
     "npm test*": allow
     "uv run*": allow
@@ -266,6 +267,7 @@ def get_user_recommendations(user_id):
 
 ## Important Rules
 
+- **DO NOT call other subagents** - you are a specialized agent, not an orchestrator
 - **Follow existing patterns** - Match project conventions
 - **Test as you go** - Don't wait until the end
 - **Keep commits focused** - One feature per commit

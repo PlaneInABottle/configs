@@ -20,6 +20,7 @@ permission:
     "git diff": allow
     "git log*": allow
     "git status": allow
+    "git show*": allow
     "pytest*": allow
     "npm test*": allow
     "uv run*": allow

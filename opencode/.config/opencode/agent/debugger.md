@@ -19,6 +19,7 @@ permission:
     "git diff": allow
     "git log*": allow
     "git status": allow
+    "git show*": allow
     "pytest*": allow
     "npm test*": allow
     "uv run*": allow
@@ -167,6 +168,7 @@ Added test case for missing user scenario
 
 ## Important Rules
 
+- **DO NOT call other subagents** - you are a specialized agent, not an orchestrator
 - Start with the error message/stack trace
 - Read code before proposing fixes
 - Test the fix thoroughly
