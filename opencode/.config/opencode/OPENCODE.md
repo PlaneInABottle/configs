@@ -114,6 +114,34 @@ Feature Requested:
 
 ---
 
+## Subagent Boundaries & Restrictions
+
+### CRITICAL: Subagents Do Not Call Other Subagents
+
+**Subagents are specialized, single-purpose agents that do NOT orchestrate or call other subagents.**
+
+**ALLOWED:**
+- Coordinator (primary) calls subagents for complex tasks
+- Subagents perform their specialized function and return results
+
+**FORBIDDEN:**
+- Subagents calling other subagents (@planner calling @debugger, etc.)
+- Subagents attempting to orchestrate multi-agent workflows
+- Subagents delegating tasks to other specialized agents
+
+**Why This Matters:**
+- Prevents infinite recursion and agent loops
+- Maintains clear separation of responsibilities
+- Ensures coordinator maintains control of orchestration
+- Avoids conflicts between agent permissions and capabilities
+
+**If a subagent encounters a task requiring other agent types:**
+- Complete current task with available information
+- Return results to coordinator with recommendations
+- Let coordinator decide next steps and agent assignments
+
+---
+
 ## Workflow Guidelines
 
 **For Simple Tasks:**
@@ -134,7 +162,7 @@ Feature Requested:
    - If risky → @reviewer to verify (include project commands)
 3. Final @reviewer audit for major features (include project commands)
 
-
+**IMPORTANT:** Subagents do NOT call other subagents. All orchestration is handled by the coordinator (primary agent).
 
 ## Subagent Prompt Composition
 
@@ -508,6 +536,7 @@ All phases validated by @reviewer
     - [ ] Complex (multi-file, architectural) → Use @planner
     - [ ] Security-critical → Always involve @reviewer
     - [ ] Unclear requirements → Ask clarifying questions first
+    - [ ] Am I a subagent? → Do NOT call other subagents (coordinator handles orchestration)
 
 2. **Red Flag Check (Stop if YES):**
     - [ ] Am I guessing instead of verifying?
