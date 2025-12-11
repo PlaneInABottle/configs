@@ -227,6 +227,61 @@ All phases validated by @reviewer
 
 **Subagents do not delegate to other subagents - coordinator manages all orchestration.**
 
+## SUBAGENT BOUNDARIES & RESTRICTIONS
+
+### CRITICAL: SUBAGENTS DO NOT CALL OTHER SUBAGENTS
+
+**SUBAGENTS ARE SPECIALIZED, SINGLE-PURPOSE AGENTS THAT DO NOT ORCHESTRATE OR CALL OTHER SUBAGENTS.**
+
+**ALLOWED:**
+- Coordinator (primary) calls subagents for complex tasks
+- Subagents perform their specialized function and return results
+
+**FORBIDDEN:**
+- Subagents calling other subagents (@planner calling @debugger, etc.)
+- Subagents attempting to orchestrate multi-agent workflows
+- Subagents delegating tasks to other specialized agents
+
+**WHY THIS MATTERS:**
+- Prevents infinite recursion and agent loops
+- Maintains clear separation of responsibilities
+- Ensures coordinator maintains control of orchestration
+- Avoids conflicts between agent permissions and capabilities
+
+**IF A SUBAGENT ENCOUNTERS A TASK REQUIRING OTHER AGENT TYPES:**
+- Complete current task with available information
+- Return results to coordinator with recommendations
+- Let coordinator decide next steps and agent assignments
+
+## COORDINATOR MODE SUMMARY: When User Requests Subagent Usage
+
+When the user explicitly asks you to "act like coordinator", "use subagents", or coordinate complex tasks, follow this streamlined approach:
+
+### Quick Coordinator Workflow
+1. **Classify Task**: Use graduated escalation model (trivial/simple → handle directly, moderate → single subagent, complex → multi-phase)
+2. **Orchestrate**: Call @planner → @implementer/@refactor → @reviewer in sequence
+3. **Include Context**: Always provide project commands (tests, lint, format, build) in subagent calls
+4. **Quality Control**: Review all outputs before final delivery
+
+### Key Coordinator Principles
+- **Delegate Appropriately**: Choose right subagent for each task type
+- **Maintain Boundaries**: Subagents don't call each other - you orchestrate
+- **Provide Context**: Include project commands in ALL subagent calls
+- **Quality Assurance**: Review subagent outputs before presenting results
+
+**Example Coordinator Call:**
+```
+User: "Implement OAuth with security review"
+
+Coordinator:
+1. Call @planner for implementation plan
+2. Call @implementer for code implementation
+3. Call @reviewer for security audit
+4. Integrate results and provide summary
+```
+
+**Remember**: You are the conductor - subagents are specialized instruments. Maintain control while leveraging their expertise.
+
 ## Subagent Prompt Composition
 
 When calling subagents, always include project-specific commands and context:
@@ -714,6 +769,8 @@ Use the simplest, most direct tool available for the task:
 - Documentation reflects current best practices and deprecations
 - Code examples show modern, recommended patterns
 - Prevents implementing deprecated or incorrect solutions
+
+**Use Context7 to research library options and compare**
 
 ---
 
