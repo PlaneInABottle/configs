@@ -393,34 +393,130 @@ After ALL phases complete (including documentation):
 - Lint: [project lint command]
 ```
 
-## Subagent Calling Template
+## Subagent Calling Format
 
-Always include when spawning subagents:
+Use XML function call format for all subagent interactions:
 
+```xml
 ```
-@[agent-name]
 
-Project: [brief context]
+**REQUIRED CONTEXT TO INCLUDE IN PROMPT:**
 
-Phase: [N/total] - [phase name]
+**PROJECT CONTEXT:**
+- Project name and type
+- Current technology stack
+- Project structure and conventions
+- Any relevant business rules or constraints
 
-Task: [specific task for this agent]
+**TASK DETAILS:**
+- Specific phase number and name
+- Detailed task description with clear objectives
+- Expected deliverables and format
+- Any dependencies or prerequisites
+
+**PROJECT COMMANDS:**
+- Test: [command to run tests]
+- Lint: [command to check code quality]
+- Format: [command to format code]
+- Build: [command to build/run project, if applicable]
+
+**TECHNICAL REQUIREMENTS:**
+- Specific files or modules to work with
+- Code patterns and conventions to follow
+- Performance or security requirements
+- Integration points with existing code
+
+**SUCCESS CRITERIA:**
+- How to verify the task is complete
+- Quality standards to meet
+- Testing requirements
+- Documentation needs
+
+**CONSTRAINTS & CONTEXT:**
+- Time limitations or deadlines
+- Resource constraints
+- Compatibility requirements
+- Risk considerations
+
+**CRITICAL INSTRUCTIONS FOR SUBAGENTS:**
+
+**IMPORTANT:** After completing your task (creating plan, implementing code, reviewing changes, etc.), you MUST return control to the coordinator. DO NOT attempt to call other subagents or continue the workflow yourself.
+
+**FOR PLANNER:** After creating the plan file, return with completion status - let coordinator decide next steps.
+
+**FOR IMPLEMENTER/REFACTOR:** After implementing changes, return with completion status - let coordinator handle testing and reviews.
+
+**FOR REVIEWER:** After completing review, return with findings - let coordinator decide remediation steps.
+
+**FOR DEBUGGER:** After diagnosing issues, return with root cause analysis - let coordinator decide fixes.
+
+**WHEN PASSING BETWEEN SUBAGENTS:** Always include references to previous work:
+- For implementer/refactorer: Include path to plan file created by planner
+- For reviewer: Include paths to modified files and plan file
+- For debugger: Include error logs and relevant file paths
+
+**Example for @planner:**
+```
+Project: E-commerce platform using React, Node.js, PostgreSQL
+Phase: 1/3 - Design user authentication system
+
+Task: Create comprehensive implementation plan for user authentication including registration, login, password reset, and session management. Plan should include database schema, API endpoints, frontend components, and security measures.
 
 Project Commands:
-- Test: [command]
-- Lint: [command]
-- Format: [command]
-- Build: [command if applicable]
+- Test: npm test
+- Lint: npm run lint
+- Format: npm run format
+- Build: npm run build
 
 Requirements:
-- [specific requirement 1]
-- [specific requirement 2]
+- Use JWT for session management
+- Implement password hashing with bcrypt
+- Include email verification for registration
+- Support OAuth providers (Google, GitHub)
 
 Success Criteria:
-- [how to verify this phase succeeded]
+- Complete plan saved to docs/authentication-plan.md
+- All major components and integrations identified
+- Security best practices included
+- Testing strategy outlined
 
 Constraints:
-- [any limitations or special considerations]
+- Must integrate with existing user management system
+- Timeline: 2-week implementation
+- Must support 1000+ concurrent users
+
+IMPORTANT: After creating the plan file, return control to coordinator. DO NOT call other subagents or continue workflow.
+```
+
+**Example for @implementer (after planner creates plan):**
+```
+Project: E-commerce platform using React, Node.js, PostgreSQL
+Phase: 2/3 - Implement user authentication backend
+
+Task: Implement the authentication backend according to the plan in docs/authentication-plan.md. Focus on API endpoints, database schema, and security measures.
+
+Plan Reference: docs/authentication-plan.md (created by planner)
+Previous Work: Phase 1 plan completed
+
+Project Commands:
+- Test: npm test
+- Lint: npm run lint
+- Format: npm run format
+- Build: npm run build
+
+Requirements:
+- Follow the database schema defined in plan
+- Implement JWT token handling
+- Add password hashing with bcrypt
+- Create API endpoints for auth operations
+
+Success Criteria:
+- All auth endpoints functional and tested
+- Database migrations applied
+- Security measures implemented
+- Integration tests passing
+
+IMPORTANT: After implementing changes, return control to coordinator. DO NOT call other subagents or continue workflow.
 ```
 
 ## Agent Selection Guide
