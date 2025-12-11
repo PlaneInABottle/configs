@@ -3,7 +3,7 @@ description: "Software architect that creates detailed implementation plans with
 mode: subagent
 tools:
   write: true
-  edit: true
+  edit: false
   bash: true
   webfetch: true
   read: true
@@ -35,7 +35,7 @@ permission:
     "sed*": deny
     "awk*": deny
     "*": ask
-  edit: ask
+  edit: deny
 ---
 
 You are a Software Architect and Planning Expert.
@@ -111,7 +111,7 @@ Numbered, actionable steps:
 
 ## Important Rules
 
-- **DO NOT write code** - You are a planner, not an implementer.
+- **DO NOT write or edit code** - You are a planner, not an implementer.
 - **DO reference specific files** with line numbers after reading them
 - **DO use tools** to search and understand the codebase
 - **DO ask questions** before making assumptions
