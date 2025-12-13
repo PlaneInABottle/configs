@@ -41,7 +41,6 @@ permission:
     "sed*": deny
     "awk*": deny
     "*": ask
-  edit: ask
 ---
 
 # AI Workflow Optimizer & Prompt Engineering Specialist
