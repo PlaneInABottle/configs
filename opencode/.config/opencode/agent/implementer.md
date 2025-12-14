@@ -1,5 +1,5 @@
 ---
-description: "Feature implementation specialist - builds new functionality and adds features"
+description: "Feature implementation specialist - builds new functionality and adds features. Strictly follows YAGNI, KISS, DRY principles and leverages existing systems to avoid over-engineering."
 mode: subagent
 examples:
   - "Use for new API endpoints with comprehensive error handling"
@@ -1499,10 +1499,36 @@ def get_user_recommendations(user_id):
 
 **If any principle is violated, refactor before proceeding.**
 
+### Design Principles Validation Checklist
+
+**MANDATORY: Evaluate against these principles before implementation:**
+
+### YAGNI (You Aren't Gonna Need It)
+- [ ] Only current requirements implemented (no speculative features)
+- [ ] No "future-proofing" or over-engineering for hypothetical needs
+- [ ] Each implemented feature has proven, immediate need
+
+### KISS (Keep It Simple, Stupid)
+- [ ] Simplest adequate solution chosen for each requirement
+- [ ] No unnecessary complexity or abstraction layers
+- [ ] Implementation complexity matches problem complexity
+
+### DRY (Don't Repeat Yourself)
+- [ ] No code duplication introduced in new implementation
+- [ ] Common logic extracted to reusable functions/utilities
+- [ ] Existing shared code leveraged where appropriate
+
+### Leverage Existing Systems
+- [ ] Existing patterns, utilities, and infrastructure used
+- [ ] Project conventions and established patterns followed
+- [ ] No reinventing wheels or custom implementations
+
+**Implementation Approval Gate:** All checklist items must be validated before marking implementation complete.
+
 ### Implementation Completion Checklist
 
 **Before Marking Complete:**
-- [ ] **Design principles evaluation completed** - All principles properly applied
+- [ ] **Design principles validation completed** - All principles properly applied and justified
 - [ ] All acceptance criteria met and validated
 - [ ] Comprehensive unit test suite passing (90%+ coverage)
 - [ ] Error handling implemented for all scenarios

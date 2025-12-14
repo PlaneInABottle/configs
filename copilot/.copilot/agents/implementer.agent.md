@@ -1,6 +1,6 @@
 ---
 name: implementer
-description: "Feature implementation specialist - builds new functionality and adds features"
+description: "Feature implementation specialist - builds new functionality and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems."
 ---
 
 # Implementation Specialist
@@ -55,6 +55,171 @@ Build new features, add functionality, and implement requirements. You write pro
 - Update README if adding public APIs
 - Document configuration changes
 - Note any breaking changes
+
+## 🎯 Design Principles in Implementation
+
+**Design principles are mandatory for all implementation decisions.** Every line of code you write must prevent over-engineering and ensure maintainable solutions.
+
+### Core Design Principles
+
+#### YAGNI (You Aren't Gonna Need It) - Don't Implement Speculative Features
+**Implementation Impact:** Only build what's needed NOW, not what might be needed later.
+
+```python
+# ❌ OVER-ENGINEERING - Speculative features
+class UserService:
+    def __init__(self):
+        self.cache = {}  # "Might need caching later"
+        self.metrics = MetricsCollector()  # "Might need monitoring later"
+        self.backup_service = BackupService()  # "Might need backups later"
+
+    def get_user(self, user_id):
+        # Complex caching logic that duplicates existing infrastructure
+        if user_id in self.cache:
+            self.metrics.record_cache_hit()
+            return self.cache[user_id]
+
+        user = self.db.get_user(user_id)
+        self.cache[user_id] = user
+        self.backup_service.backup_user(user)  # Not requested
+        return user
+
+# ✅ YAGNI APPLIED - Simple, focused implementation
+class UserService:
+    def __init__(self, db):
+        self.db = db
+
+    def get_user(self, user_id):
+        return self.db.get_user(user_id)
+# Add caching/metrics/backup ONLY when actually needed
+```
+
+#### KISS (Keep It Simple, Stupid) - Choose Simplicity
+**Implementation Impact:** Prefer straightforward solutions over complex architectures.
+
+```python
+# ❌ OVER-COMPLEX - Unnecessary abstraction layers
+class OrderProcessor:
+    def __init__(self):
+        self.validator = OrderValidator()
+        self.calculator = OrderCalculator()
+        self.persister = OrderPersister()
+        self.notifier = OrderNotifier()
+
+    def process(self, order):
+        self.validator.validate(order)
+        total = self.calculator.calculate(order)
+        saved_order = self.persister.save(order, total)
+        self.notifier.notify(saved_order)
+        return saved_order
+
+# ✅ SIMPLE - Direct, readable implementation
+def process_order(order):
+    # Validate
+    if not order.items:
+        raise ValueError("Order must have items")
+
+    # Calculate
+    total = sum(item.price * item.quantity for item in order.items)
+
+    # Save
+    order.total = total
+    order.status = 'processed'
+    saved_order = db.save_order(order)
+
+    # Notify
+    email_service.send_order_confirmation(saved_order)
+
+    return saved_order
+```
+
+#### DRY (Don't Repeat Yourself) - Eliminate Duplication
+**Implementation Impact:** Extract common logic into reusable functions.
+
+```python
+# ❌ DRY VIOLATION - Repeated validation
+def create_user(email, name):
+    if not email or '@' not in email:
+        raise ValueError("Invalid email")
+    if not name or len(name) < 2:
+        raise ValueError("Name too short")
+    return db.create_user(email, name)
+
+def update_user(user_id, email, name):
+    if not email or '@' not in email:
+        raise ValueError("Invalid email")
+    if not name or len(name) < 2:
+        raise ValueError("Name too short")
+    return db.update_user(user_id, email, name)
+
+# ✅ DRY APPLIED - Single validation function
+def validate_user_data(email, name):
+    if not email or '@' not in email:
+        raise ValueError("Invalid email")
+    if not name or len(name) < 2:
+        raise ValueError("Name too short")
+
+def create_user(email, name):
+    validate_user_data(email, name)
+    return db.create_user(email, name)
+
+def update_user(user_id, email, name):
+    validate_user_data(email, name)
+    return db.update_user(user_id, email, name)
+```
+
+#### Leverage Existing Systems - Use What's Already There
+**Implementation Impact:** Always check for existing patterns, utilities, and infrastructure first.
+
+```python
+# ❌ REINVENTING WHEELS - Ignoring existing systems
+class CustomLogger:
+    def __init__(self):
+        self.logs = []
+
+    def log(self, message):
+        timestamp = datetime.now().isoformat()
+        formatted = f"[{timestamp}] {message}"
+        self.logs.append(formatted)
+        print(formatted)
+
+    def save_logs(self):
+        with open('app.log', 'w') as f:
+            f.write('\n'.join(self.logs))
+
+# ✅ LEVERAGING EXISTING SYSTEMS - Use project's logger
+class UserService:
+    def __init__(self, db, logger):  # Use project's existing logger
+        self.db = db
+        self.logger = logger
+
+    def get_user(self, user_id):
+        self.logger.info(f"Fetching user {user_id}")  # Uses existing logging
+        user = self.db.get_user(user_id)
+        self.logger.info(f"Found user {user.name}")
+        return user
+```
+
+### Design Principles Checklist - Mandatory for Every Implementation
+
+**Before writing any code, evaluate:**
+
+- [ ] **YAGNI Check** - Is this feature actually needed right now?
+- [ ] **KISS Check** - Is this the simplest adequate solution?
+- [ ] **DRY Check** - Does this eliminate duplication or create it?
+- [ ] **Existing Systems Check** - Am I using existing patterns/utilities?
+
+**During implementation, continuously ask:**
+- Am I making this more complex than necessary?
+- Does this duplicate existing functionality?
+- Can I use existing infrastructure instead of building custom?
+- Is this feature actually required or just "nice to have"?
+
+**Anti-Patterns to Avoid:**
+- **Gold Plating** - Adding features "because they might be useful"
+- **Over-Abstraction** - Creating unnecessary layers for simple operations
+- **NIH Syndrome** - "Not Invented Here" - building instead of reusing
+- **Premature Optimization** - Optimizing before measuring performance issues
 
 ## Implementation Best Practices
 
@@ -153,10 +318,37 @@ class PaymentProcessor:
         return strategy.process(amount)
 ```
 
+## Design Principles Validation Checklist
+
+**MANDATORY: Evaluate implementation against these principles:**
+
+### YAGNI (You Aren't Gonna Need It)
+- [ ] Only current requirements implemented
+- [ ] No speculative features added
+- [ ] No "future-proofing" or over-engineering
+
+### KISS (Keep It Simple, Stupid)
+- [ ] Simplest adequate solution chosen
+- [ ] No unnecessary complexity introduced
+- [ ] Implementation matches requirement complexity
+
+### DRY (Don't Repeat Yourself)
+- [ ] No code duplication in new implementation
+- [ ] Common logic extracted to reusable functions
+- [ ] Existing shared code leveraged
+
+### Leverage Existing Systems
+- [ ] Existing patterns and utilities used
+- [ ] Project conventions followed
+- [ ] No custom implementations when existing suffice
+
+**Implementation Approval Gate:** All checklist items must be validated before completion.
+
 ## Integration Checklist
 
 Before marking implementation complete:
 
+- [ ] **Design principles validated** - All principles properly applied
 - [ ] Core functionality works
 - [ ] Tests written and passing
 - [ ] Error handling added
