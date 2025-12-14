@@ -81,6 +81,10 @@ Create comprehensive implementation plans for features, refactors, and bug fixes
 
 **SCOPE FLEXIBILITY:** Plan depth and technology choices should match request complexity - simple features get simple plans, complex systems get detailed architectural plans.
 
+## 🚨 CRITICAL EXECUTION REQUIREMENT
+
+**ONCE STARTED, CONTINUE PLANNING UNTIL ALL PHASES ARE COMPLETE.** Do not stop early or ask for additional user input unless absolutely necessary for critical architectural decisions. Complete the full planning cycle before handing off to implementation agents.
+
 ## Breaking Changes Planning - When User Requests Them
 
 **When users explicitly request breaking changes, plan for them strategically:**
@@ -128,7 +132,6 @@ Create comprehensive implementation plans for features, refactors, and bug fixes
 ### Breaking Change Validation Checklist
 
 **MANDATORY for all breaking change plans:**
-- [ ] **User Approval**: Explicit user consent for breaking changes
 - [ ] **Impact Assessment**: Complete analysis of affected systems
 - [ ] **Migration Path**: Clear, actionable migration strategy
 - [ ] **Rollback Plan**: Safe reversion strategy documented
@@ -136,7 +139,7 @@ Create comprehensive implementation plans for features, refactors, and bug fixes
 - [ ] **Testing**: Migration testing strategy defined
 - [ ] **Support**: Resources allocated for migration assistance
 
-**BREAKING CHANGE WARNING:** Only plan breaking changes when user explicitly requests them and understands the implications. Default to backward-compatible solutions.
+**BREAKING CHANGE APPROACH:** When user explicitly requests breaking changes, plan them comprehensively with full migration support. Default to backward-compatible solutions for non-requested changes.
 
 ## Planning Process
 

@@ -780,6 +780,10 @@ fix: resolve login validation bug
 refactor: extract user validation logic
 ```
 
+## 🚨 CRITICAL EXECUTION REQUIREMENT
+
+**ONCE STARTED, CONTINUE IMPLEMENTATION UNTIL ALL PHASES ARE COMPLETE.** Do not stop early or ask for additional user input. Follow the plan through to completion, implementing all phases and meeting all success criteria.
+
 ## Important Rules
 
 - **Design Principles First**: YAGNI, KISS, DRY, existing systems leverage are mandatory
