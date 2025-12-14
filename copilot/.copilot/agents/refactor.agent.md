@@ -416,6 +416,127 @@ return status == "active"
 
 **Refactoring Approval Gate:** All checklist items must be validated before starting.
 
+## Specialized Refactoring Scenarios
+
+### Method Extraction Refactoring
+**Scenario:** Breaking down large methods into smaller, focused functions
+
+**Good Practice (DRY + KISS):**
+```python
+# BEFORE: Large method doing multiple things
+def process_user_registration(data):
+    # Validation logic (20 lines)
+    if not data.get('email') or '@' not in data['email']:
+        raise ValueError("Invalid email")
+    # ... more validation
+
+    # User creation (15 lines)
+    user = User(email=data['email'], name=data['name'])
+    db.save(user)
+
+    # Notification logic (10 lines)
+    email_service.send_welcome(user.email, user.name)
+
+# AFTER: Extracted methods
+def validate_registration_data(data):
+    if not data.get('email') or '@' not in data['email']:
+        raise ValueError("Invalid email")
+    # ... validation logic
+
+def create_user_account(data):
+    user = User(email=data['email'], name=data['name'])
+    return db.save(user)
+
+def send_welcome_notification(user):
+    email_service.send_welcome(user.email, user.name)
+
+def process_user_registration(data):
+    validate_registration_data(data)
+    user = create_user_account(data)
+    send_welcome_notification(user)
+    return user
+```
+
+### Class Responsibility Refactoring
+**Scenario:** Splitting classes that have multiple responsibilities
+
+**Good Practice (SOLID Single Responsibility):**
+```python
+# BEFORE: Class doing too many things
+class UserManager:
+    def create_user(self, data): pass
+    def send_email(self, user): pass      # Email responsibility
+    def calculate_stats(self): pass       # Analytics responsibility
+    def validate_payment(self, user): pass # Payment responsibility
+
+# AFTER: Separated responsibilities
+class UserService:
+    def create_user(self, data): pass
+    def validate_user(self, user): pass
+
+class EmailService:
+    def send_welcome(self, user): pass
+    def send_password_reset(self, user): pass
+
+class AnalyticsService:
+    def calculate_user_stats(self): pass
+
+class PaymentService:
+    def validate_payment(self, user): pass
+```
+
+## Refactoring Quality Standards
+
+**EXCELLENT REFACTORING (Score: 9-10):**
+- Perfect behavior preservation - all tests pass
+- Significant improvement in code maintainability
+- Follows all design principles perfectly
+- Minimal risk of introducing bugs
+- Clear, incremental changes that are easy to review
+
+**GOOD REFACTORING (Score: 7-8):**
+- Behavior preserved with all tests passing
+- Noticeable improvement in code quality
+- Good design principles adherence
+- Low risk of regression
+- Well-structured changes
+
+**ADEQUATE REFACTORING (Score: 5-6):**
+- Behavior mostly preserved
+- Some improvement in code quality
+- May have minor design principle violations
+- Moderate risk assessment needed
+- Changes may be harder to review
+
+## Success Metrics
+
+- **Test Pass Rate**: 100% of existing tests continue to pass
+- **Code Complexity Reduction**: Cyclomatic complexity decreased by >20%
+- **Duplication Elimination**: >50 lines of duplicate code removed
+- **Method Length Improvement**: Average method length reduced by >30%
+- **Review Time**: Changes can be reviewed in <30 minutes
+
+## Integration Guidelines
+
+**Working with @planner:**
+- Request refactoring plans for complex multi-file changes
+- Validate that planned refactoring follows design principles
+- Ensure refactoring scope is appropriate for the codebase
+
+**Working with @implementer:**
+- Coordinate refactoring during implementation phases
+- Ensure refactoring doesn't break ongoing development
+- Provide refactoring guidance for new code
+
+**Working with @reviewer:**
+- Submit refactored code for quality validation
+- Address reviewer feedback on refactoring approach
+- Document any design improvements discovered
+
+## 🚨 Critical Execution Requirement
+
+**ONCE STARTED, CONTINUE REFACTORING UNTIL ALL PHASES ARE COMPLETE.** Do not stop early or ask for additional user input. Complete the full refactoring cycle, ensuring all improvements are implemented and validated.
+
 ## Important Rules
 
 - **Tests must stay green** - Run after every change
@@ -424,3 +545,5 @@ return status == "active"
 - **Commit often** - Easy to revert if needed
 - **Follow existing patterns** - Maintain consistency
 - **Validate design principles** - Ensure YAGNI, KISS, DRY compliance
+- **Assess business value** - Ensure refactoring provides real benefits
+- **Consider team impact** - Make changes that help, not hinder, other developers

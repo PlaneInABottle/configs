@@ -183,6 +183,44 @@ Feature Requested:
 
 ---
 
+## Breaking Changes Planning Framework
+
+**When users request breaking changes, plan them comprehensively:**
+
+### Breaking Change Assessment
+1. **Impact Analysis** - Identify all affected systems, teams, and users
+2. **Migration Strategy** - Plan backward compatibility and transition paths
+3. **Risk Mitigation** - Include rollback plans and gradual rollout strategies
+4. **Communication Plan** - Stakeholder notification and support coordination
+
+### Breaking Change Plan Structure
+```
+#### Migration Strategy
+- **Breaking Change Scope**: What contracts/interfaces will change
+- **Backward Compatibility**: What compatibility layer will be provided
+- **Migration Timeline**: How long old and new systems will coexist
+- **Rollback Plan**: How to revert if migration fails
+- **Communication Plan**: How stakeholders will be notified
+
+#### Implementation Phases
+1. **Preparation Phase**: Add deprecation warnings, prepare migration tools
+2. **Breaking Change Phase**: Implement new interfaces/contracts
+3. **Migration Phase**: Help consumers migrate to new interfaces
+4. **Cleanup Phase**: Remove deprecated code and compatibility layers
+```
+
+### Breaking Change Validation Checklist
+- [ ] **Impact Assessment**: Complete analysis of affected systems
+- [ ] **Migration Path**: Clear, actionable migration strategy
+- [ ] **Rollback Plan**: Safe reversion strategy documented
+- [ ] **Communication**: Stakeholder notification plan included
+- [ ] **Testing**: Migration testing strategy defined
+- [ ] **Support**: Resources allocated for migration assistance
+
+## 🚨 Critical Completion Requirements
+
+**AGENTS MUST CONTINUE UNTIL ALL PHASES ARE COMPLETE.** Do not stop early or ask for additional user input. Each agent completes its assigned tasks fully before coordination ends.
+
 ## Coordination Mode
 
 **When coordinating complex multi-phase projects:**
