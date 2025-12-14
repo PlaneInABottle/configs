@@ -156,6 +156,12 @@ Feature Requested:
 **Input:** Code to review, context on changes
 **Output:** Issues, recommendations, approval status
 
+**CRITICAL REVIEWER REQUIREMENTS:**
+- **Context7 First**: When reviewing libraries/frameworks, ALWAYS check Context7 MCP first to get official documentation for specific functions and APIs being used
+- **Function Documentation**: Query Context7 for specific library functions: "[library name] [function name]" or "[library name] [API name]"
+- **Usage Validation**: Compare code implementation against official Context7 documentation
+- **Version Awareness**: Verify implementation matches current library documentation
+
 ### @implementer
 **Purpose:** Build specific phases according to plan
 **When to use:** Phased implementation with clear requirements
@@ -276,10 +282,12 @@ All phases validated by @reviewer
 **For Complex Tasks:**
 1. Use @planner for comprehensive plan (include project commands in prompt)
 2. For each phase:
+    - **Include commit requirements** in all subagent prompts
+    - **Include Context7 research requirements** for @reviewer calls
     - If security-critical → @reviewer first (include project commands)
     - @implementer or @refactor for implementation (include project commands)
     - Run tests to verify implementation works
-    - **COMMIT changes** with descriptive message for the completed phase (prevents subagents from overwriting previous work)
+    - **ENSURE SUBAGENT COMMITS** with descriptive message for the completed phase
     - If risky → @reviewer to verify (include project commands)
 3. Final @reviewer audit for major features (include project commands)
 
@@ -300,16 +308,32 @@ All phases validated by @reviewer
 - Subagents attempting to orchestrate multi-agent workflows
 - Subagents delegating tasks to other specialized agents
 
+### CRITICAL: SUBAGENTS MUST COMMIT AFTER EVERY CHANGE
+
+**SUBAGENTS MUST COMMIT CHANGES IMMEDIATELY AFTER COMPLETING EACH TASK TO PRESERVE WORK AND ENABLE SAFE MODIFICATIONS.**
+
+**COMMIT-BASED WORK PRESERVATION:**
+- **Commit after every task completion** - ensures work is preserved in git history
+- **Safe refactoring enabled** - commits prevent loss of previous work during breaking changes
+- **Session continuity maintained** - git history preserves all coordination phases
+- **Coordinator oversight** - coordinator reviews commits and manages overall workflow
+
 **WHY THIS MATTERS:**
-- Prevents infinite recursion and agent loops
-- Maintains clear separation of responsibilities
-- Ensures coordinator maintains control of orchestration
-- Avoids conflicts between agent permissions and capabilities
+- Enables safe refactoring and breaking changes without losing previous work
+- Maintains session continuity through git history
+- Allows subagents to modify code safely within their assigned tasks
+- Prevents accidental overwrites while enabling necessary changes
 
 **IF A SUBAGENT ENCOUNTERS A TASK REQUIRING OTHER AGENT TYPES:**
 - Complete current task with available information
 - Return results to coordinator with recommendations
 - Let coordinator decide next steps and agent assignments
+
+**WHY THIS MATTERS:**
+- Prevents infinite recursion and agent loops
+- Maintains clear separation of responsibilities
+- Ensures coordinator maintains control of orchestration
+- Avoids conflicts between agent permissions and capabilities
 
 ## COORDINATOR MODE SUMMARY: When User Requests Subagent Usage
 
@@ -344,12 +368,23 @@ Coordinator:
 
 When calling subagents, always include project-specific commands and context:
 
-**Required Context for All Subagent Calls:**
+**REQUIRED CONTEXT FOR ALL SUBAGENT CALLS:**
 - **Test Commands:** How to run tests (e.g., `uv run pytest`, `npm test`)
 - **Lint Commands:** Code quality checks (e.g., `uv run ruff check`, `npm run lint`)
 - **Format Commands:** Code formatting (e.g., `uv run ruff format`, `npm run format`)
 - **Build Commands:** How to build/run the project
 - **Project Structure:** Key directories and file patterns
+
+**CRITICAL SUBAGENT REQUIREMENTS:**
+- **Commit After Completion**: Include explicit instruction to commit changes after task completion
+- **Rule Propagation**: Include core design principles (KISS, SOLID, DRY, YAGNI) and completion requirements
+- **Context7 Research**: For @reviewer, include requirement to check Context7 for library documentation
+- **Work Preservation**: Reference git-based safety through commits
+
+**COMMIT REQUIREMENT FORMAT:**
+```
+**MANDATORY: After completing task, commit changes with descriptive message including phase number and test status.**
+```
 
 **Example Subagent Call:**
 ```
@@ -933,5 +968,14 @@ When facing a technical decision, evaluate:
 **Rule of thumb:** When in doubt, choose the simpler option. Complexity should be justified by clear benefits.
 
 ---
+
+## SUBAGENT COORDINATION VALIDATION
+
+**Before calling subagents, verify:**
+- [ ] **Commit requirements included** - Subagent prompts contain mandatory commit instructions
+- [ ] **Context7 research required** - @reviewer prompts include library documentation research
+- [ ] **Rule propagation complete** - Core design principles and completion requirements included
+- [ ] **Work preservation through commits** - Git-based safety ensures previous work preservation
+- [ ] **Breaking changes authorized** - Clear permissions for necessary refactoring
 
 **Remember:** The best code is no code. The second best is simple, verified, understandable code.
