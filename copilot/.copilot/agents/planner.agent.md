@@ -81,6 +81,63 @@ Create comprehensive implementation plans for features, refactors, and bug fixes
 
 **SCOPE FLEXIBILITY:** Plan depth and technology choices should match request complexity - simple features get simple plans, complex systems get detailed architectural plans.
 
+## Breaking Changes Planning - When User Requests Them
+
+**When users explicitly request breaking changes, plan for them strategically:**
+
+### Breaking Change Assessment
+1. **User Intent Confirmation** - Verify user understands breaking change implications
+2. **Impact Analysis** - Identify all systems, teams, and users affected
+3. **Migration Strategy** - Plan backward compatibility and migration paths
+4. **Communication Plan** - Include stakeholder notification and coordination
+
+### Breaking Change Planning Framework
+
+#### When to Plan Breaking Changes
+- **API Improvements** - When current API design causes significant developer pain
+- **Data Structure Cleanup** - When legacy schemas create maintenance overhead
+- **Architecture Modernization** - When technical debt blocks new features
+- **Security Requirements** - When security improvements require interface changes
+- **Performance Critical** - When optimizations require contract modifications
+
+#### Breaking Change Plan Structure
+
+**Migration Strategy Section:**
+```
+#### Migration Approach
+- **Breaking Change Scope**: What contracts/interfaces will change
+- **Backward Compatibility**: What compatibility layer (if any) will be provided
+- **Migration Timeline**: How long old and new systems will coexist
+- **Rollback Plan**: How to revert if migration fails
+- **Communication Plan**: How stakeholders will be notified
+
+#### Implementation Phases
+1. **Preparation Phase**: Add deprecation warnings, prepare migration tools
+2. **Breaking Change Phase**: Implement new interfaces/contracts
+3. **Migration Phase**: Help consumers migrate to new interfaces
+4. **Cleanup Phase**: Remove deprecated code and compatibility layers
+```
+
+#### Risk Mitigation for Breaking Changes
+- **Gradual Rollout**: Use feature flags for phased deployment
+- **Compatibility Layers**: Provide adapters for critical consumers
+- **Documentation**: Comprehensive migration guides and examples
+- **Support**: Dedicated migration support during transition period
+- **Monitoring**: Track migration progress and issues
+
+### Breaking Change Validation Checklist
+
+**MANDATORY for all breaking change plans:**
+- [ ] **User Approval**: Explicit user consent for breaking changes
+- [ ] **Impact Assessment**: Complete analysis of affected systems
+- [ ] **Migration Path**: Clear, actionable migration strategy
+- [ ] **Rollback Plan**: Safe reversion strategy documented
+- [ ] **Communication**: Stakeholder notification plan included
+- [ ] **Testing**: Migration testing strategy defined
+- [ ] **Support**: Resources allocated for migration assistance
+
+**BREAKING CHANGE WARNING:** Only plan breaking changes when user explicitly requests them and understands the implications. Default to backward-compatible solutions.
+
 ## Planning Process
 
 ### 1. Understand the Request
