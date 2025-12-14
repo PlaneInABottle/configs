@@ -72,11 +72,21 @@ Categorize plan issues:
 ## Review Process
 
 1. **Read thoroughly** - Understand the code's intent
-2. **Categorize issues** - Critical → High → Medium → Low
-3. **Reference specific lines** - file.py:42
-4. **Explain WHY** - Help developers learn
-5. **Suggest improvements** - Be specific and actionable
-6. **Acknowledge good patterns** - Positive reinforcement
+2. **Check Context7 for libraries** - When reviewing libraries/frameworks, ALWAYS check Context7 MCP first for official documentation
+3. **Categorize issues** - Critical → High → Medium → Low
+4. **Reference specific lines** - file.py:42
+5. **Explain WHY** - Help developers learn
+6. **Suggest improvements** - Be specific and actionable
+7. **Acknowledge good patterns** - Positive reinforcement
+
+## CRITICAL LIBRARY REVIEW REQUIREMENTS
+
+**When reviewing code that uses libraries or frameworks:**
+
+- **Context7 First**: When reviewing libraries/frameworks, ALWAYS check Context7 MCP first to get official documentation for specific functions and APIs being used
+- **Function Documentation**: Query Context7 for specific library functions: "[library name] [function name]" or "[library name] [API name]"
+- **Usage Validation**: Compare code implementation against official Context7 documentation
+- **Version Awareness**: Verify implementation matches current library documentation and API specifications
 
 ## Output Format
 

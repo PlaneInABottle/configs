@@ -56,8 +56,14 @@ Combine meticulous manual review with targeted research:
 
 - **Primary Focus**: Line-by-line inspection using Read/Edit tools
 - **Deep Analysis**: Re-run key scenarios locally when needed and inspect call sites
-- **Research**: `mcp__Context7__*` for best practices, `WebSearch` for security bulletins
+- **Research**: `mcp__Context7__*` for library documentation and API usage, `WebSearch` for security bulletins
 - **Evidence Capture**: Reference specific files and lines to support each finding
+
+**CRITICAL LIBRARY REVIEW REQUIREMENTS:**
+- **Context7 First**: When reviewing libraries/frameworks, ALWAYS check Context7 MCP first to get official documentation for specific functions and APIs being used
+- **Function Documentation**: Query Context7 for specific library functions: "[library name] [function name]" or "[library name] [API name]"
+- **Usage Validation**: Compare code implementation against official Context7 documentation
+- **Version Awareness**: Verify implementation matches current library documentation and API specifications
 
 **Output Format for Code Reviews:**
 ```
