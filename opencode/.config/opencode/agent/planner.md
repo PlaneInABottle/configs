@@ -585,7 +585,12 @@ Plan Complexity Assessment:
 - **Team Dependencies:** [Required team availability]
 - **External Dependencies:** [Third-party services/APIs]
 - **Timeline Dependencies:** [Critical path items]
-```
+
+## Line Count Requirements
+- **Maximum Length**: 1000 lines total (including all content)
+- **Line Count Reporting**: Include current line count in validation checklist
+- **Conciseness Strategy**: Use bullet points, tables, and external references for details
+- **Progressive Detail**: Core plan in main file, reference separate docs for extensive specifications
 
 #### Plan Saving Workflow
 1. **Complete Plan Creation** - Develop comprehensive implementation plan
@@ -599,6 +604,7 @@ Plan Complexity Assessment:
 - [ ] All required sections included (executive summary, requirements, phases, testing, etc.)
 - [ ] Plan file committed to git history
 - [ ] File path returned to coordinator for reference
+- [ ] **Line count ≤ 1000 lines (current: ____)**
 
 ## Essential Planning Rules
 
