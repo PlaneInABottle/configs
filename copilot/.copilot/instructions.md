@@ -333,6 +333,8 @@ All phases validated by @reviewer
 
 **Subagents do not delegate to other subagents - coordinator manages all orchestration.**
 
+**REVIEWER INTEGRATION:** After reviewers complete their analysis and save review files, coordinators MUST read the review files to understand all findings, recommendations, and next steps. Reviewers will provide both a summary of critical/high findings and the file path for detailed reading.
+
 ## SUBAGENT BOUNDARIES & RESTRICTIONS
 
 ### CRITICAL: SUBAGENTS DO NOT CALL OTHER SUBAGENTS

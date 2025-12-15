@@ -249,6 +249,8 @@ Feature Requested:
 
 **IMPORTANT:** Subagents do NOT call other subagents. All orchestration is handled by the coordinator (primary agent).
 
+**REVIEWER INTEGRATION:** After reviewers complete their analysis and save review files, coordinators MUST read the review files to understand all findings, recommendations, and next steps. Reviewers will provide both a summary of critical/high findings and the file path for detailed reading.
+
 ## Breaking Changes Planning Framework
 
 **When users request breaking changes, plan them comprehensively:**

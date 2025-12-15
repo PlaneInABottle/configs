@@ -391,7 +391,8 @@ Always indicate whether the fix would be overengineering or genuinely improve qu
 1. **Complete Review Process** - Perform comprehensive security, quality, and architectural review
 2. **Create Review File** - Save complete review to `docs/[feature-name].review.md` with all sections
 3. **Git Commit Review** - Ensure review is preserved in version control
-4. **Return File Reference** - Provide coordinator with review file path for implementation reference
+4. **Output Review Summary** - Provide coordinator with concise summary of findings and file location
+5. **Return File Reference** - Provide coordinator with review file path for reading and implementation reference
 
 #### Review File Validation
 **MANDATORY: Verify before returning control to coordinator:**
@@ -399,3 +400,33 @@ Always indicate whether the fix would be overengineering or genuinely improve qu
 - [ ] All required sections included (security, quality, design principles, etc.)
 - [ ] Review file committed to git history
 - [ ] File path returned to coordinator for reference
+
+#### Coordinator Output Requirements
+**MANDATORY: Provide the following summary directly to the coordinator (in addition to the file):**
+
+```
+## Review Summary for Coordinator
+
+### Overall Assessment
+- **Status:** [APPROVED / BLOCKED / NEEDS_CHANGES / CONDITIONAL_APPROVAL]
+- **Critical Issues:** [Number found - these are blocking]
+- **High Priority Issues:** [Number found - require immediate attention]
+- **Review File:** docs/[feature-name].review.md
+
+### Critical Issues (Blocking)
+[List each critical issue with brief description]
+- **SECURITY:** [Brief description of security vulnerability]
+- **ARCHITECTURE:** [Brief description of architectural problem]
+- **DATA INTEGRITY:** [Brief description of data safety issue]
+
+### High Priority Issues (Must Fix)
+[List each high priority issue with brief description]
+- [Issue 1 brief description]
+- [Issue 2 brief description]
+
+### Key Recommendations
+- **Immediate Actions:** [What must be done before proceeding]
+- **Next Steps:** [Coordinator guidance based on findings]
+
+**Full detailed analysis available in: docs/[feature-name].review.md**
+```
