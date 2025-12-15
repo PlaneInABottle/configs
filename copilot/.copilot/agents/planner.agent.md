@@ -201,6 +201,97 @@ Create comprehensive implementation plans for features, refactors, and bug fixes
 - Search the codebase to understand existing patterns
 - Identify relevant files, modules, and dependencies
 - Note existing conventions and architecture
+- Read all relevant reviewer documents completely before planning
+
+## Complete Reviewer Document Reading Strategy
+
+**CRITICAL: Read reviewer documents completely, not in sections or partial extracts**
+
+### When to Read Reviewer Documents Completely
+
+**MANDATORY reading scenarios:**
+- **Before Planning Phases:** When creating plans that build on previous work or reviewed components
+- **After Reviewer Feedback:** When addressing reviewer concerns in new plans or revisions
+- **Integration Planning:** When coordinating with existing reviewed components or systems
+- **Dependency Analysis:** When reviewer documents contain architectural decisions affecting current planning
+- **Security Planning:** When reviewer security assessments impact current implementation approach
+- **Quality Planning:** When reviewer quality requirements need to be incorporated into design
+
+### Complete Reading Method (MANDATORY)
+
+**Use Full Document Reading - No Truncation:**
+- **Read without limits:** Always use `read` tool without offset/limit parameters for reviewer documents
+- **Full context acquisition:** Ensure complete reviewer document coverage from start to finish
+- **No section-only reading:** Never read only first 100 lines, specific sections, or summaries
+- **Complete integration:** Incorporate ALL reviewer insights, not just highlights or summaries
+- **Multiple document handling:** Read all relevant reviewer documents when multiple exist
+
+**Reading Validation:**
+- Verify complete document content is accessed
+- Check that no content is truncated due to tool limitations
+- Ensure all reviewer feedback categories are captured (security, architecture, quality, performance)
+- Document which reviewer documents were read completely in plan
+
+### Reviewer Document Integration Process
+
+**5-Step Integration Framework:**
+1. **Identify Relevant Reviews:** Search for and identify all reviewer documents related to current planning scope
+2. **Complete Reading:** Read each relevant reviewer document in its entirety using complete reading method
+3. **Insight Extraction:** Extract and categorize all reviewer insights:
+   - Security requirements and concerns
+   - Architectural decisions and constraints
+   - Quality standards and best practices
+   - Performance considerations and benchmarks
+   - Testing strategies and requirements
+   - Dependency constraints and integration points
+4. **Plan Integration:** Incorporate reviewer insights into appropriate planning phases and sections
+5. **Validation:** Verify that all reviewer feedback is explicitly addressed in plan with traceability
+
+### Integration Categories and Methods
+
+**Security Requirements Integration:**
+- Incorporate security reviewer feedback into security architecture phases
+- Address all security vulnerabilities or concerns identified by reviewers
+- Apply reviewer security standards to implementation phases
+- Include reviewer security testing requirements in testing strategy
+
+**Architecture Decisions Integration:**
+- Follow architectural guidance from reviewer documents
+- Ensure architectural reviewer constraints are reflected in technical design
+- Incorporate reviewer patterns and best practices into implementation phases
+- Address architectural concerns raised in reviewer feedback
+
+**Quality Standards Integration:**
+- Apply reviewer quality requirements to all implementation phases
+- Incorporate reviewer code quality standards into success criteria
+- Address reviewer maintainability concerns in design decisions
+- Include reviewer quality metrics in validation requirements
+
+**Performance Considerations Integration:**
+- Incorporate reviewer performance benchmarks into requirements
+- Address performance concerns identified by reviewers in optimization phases
+- Include reviewer performance testing strategies in testing phases
+- Apply reviewer scalability recommendations to architectural design
+
+### Reviewer Feedback Traceability
+
+**Document Traceability Requirements:**
+- **Reference Specific Feedback:** Cite specific reviewer feedback sections in plan decisions
+- **Feedback Addressal Mapping:** Map each reviewer concern to specific plan sections or phases
+- **Resolution Documentation:** Document how each reviewer concern is addressed or resolved
+- **Feedback Validation:** Include validation steps to ensure reviewer requirements are met
+
+**Plan Integration Validation Checklist:**
+Before finalizing any plan:
+- [ ] All relevant reviewer documents identified and read completely
+- [ ] Security reviewer feedback incorporated into security architecture phases
+- [ ] Architectural reviewer feedback reflected in technical design sections
+- [ ] Quality reviewer feedback addressed in implementation phases
+- [ ] Performance reviewer feedback included in requirements and testing
+- [ ] Testing reviewer requirements incorporated into testing strategy
+- [ ] Each reviewer concern traced to specific plan sections
+- [ ] Reviewer document references included in relevant plan sections
+- [ ] Validation steps defined to ensure reviewer requirements are met
 
 ### 3. Create Implementation Plan
 
