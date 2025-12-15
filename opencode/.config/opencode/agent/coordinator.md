@@ -243,10 +243,18 @@ Issue Detected:
 - Migration guides for breaking changes
 - Code comments for complex implementations
 
+**Session Completion Summary & Documentation (MANDATORY):**
+- Save comprehensive session summary to `docs/[session-summary]-summary.md`
+- Include all phases executed, issues resolved, and recommendations for remaining work
+- Document subagent loop activities and outcomes
+- Provide assessment of low/medium priority issues for future consideration
+
 **Project Completion Cleanup (MANDATORY):**
 - Delete all planner-generated plan files (docs/*.plan.md)
-- Clean up any temporary planning artifacts
+- Delete all reviewer-generated review files (docs/*.review.md)
+- Clean up any temporary planning and review artifacts
 - Verify repository state is clean and ready for next project
+- **PRESERVE session summary file** - Keep `docs/[session-summary]-summary.md` for future reference
 
 **Final Summary Format:**
 ```
@@ -269,12 +277,125 @@ Issue Detected:
 - [Suggestions for follow-up work]
 - [Monitoring recommendations]
 
-### Project Completion Cleanup Checklist
-**MANDATORY: Complete before project finalization:**
+### Session Completion Summary & Cleanup Checklist
+**MANDATORY: Complete before session finalization:**
+- [ ] Session summary saved to docs/[session-summary]-summary.md
 - [ ] All planner plan files deleted from docs/ directory
-- [ ] No temporary planning artifacts remaining in repository
-- [ ] Repository state clean and ready for next project
-- [ ] All cleanup actions completed and verified
+- [ ] All reviewer review files deleted from docs/ directory
+- [ ] Session summary file preserved for future reference
+- [ ] No temporary planning/review artifacts remaining in repository
+- [ ] Repository state clean and ready for next session
+- [ ] All summary and cleanup actions completed and verified
+
+### Session Summary Template
+**MANDATORY: Save to `docs/[session-summary]-summary.md` with the following structure:**
+
+```markdown
+# Session Summary: [Brief Session Description]
+
+## Executive Overview
+- **Session Duration:** [Start Date] - [End Date]
+- **Primary Objective:** [Main goal or problem being solved]
+- **Overall Outcome:** [SUCCESS/PARTIAL SUCCESS/REQUIRES_FOLLOWUP]
+- **Key Achievements:** [3-5 bullet points of major accomplishments]
+
+## Subagent Loop Activities
+
+### Planning Phase
+- **Planner Agent Activities:**
+  - [List of plans created and their scope]
+  - [Key architectural decisions made]
+  - [Risk assessments conducted]
+  - [Timeline and resource estimates provided]
+
+### Implementation Phases
+- **Total Phases Executed:** [Number]
+- **Phase Breakdown:**
+  - **Phase 1:** [Name] - [Outcome] - [Key activities]
+  - **Phase 2:** [Name] - [Outcome] - [Key activities]
+  - **Phase N:** [Name] - [Outcome] - [Key activities]
+
+- **Implementer/Refactor Activities:**
+  - [Code written/modified with file counts]
+  - [Tests added/updated]
+  - [Documentation updated]
+  - [Integration points established]
+
+### Review Phase
+- **Reviewer Agent Activities:**
+  - [Security vulnerabilities identified and resolved]
+  - [Code quality issues addressed]
+  - [Performance optimizations recommended]
+  - [Design principle compliance verified]
+
+## Issues Resolution Summary
+
+### Issues Successfully Resolved
+#### CRITICAL Priority (Must Fix)
+- ✅ [Issue 1] - [Resolution approach] - [Files affected]
+- ✅ [Issue 2] - [Resolution approach] - [Files affected]
+
+#### HIGH Priority (Should Fix)
+- ✅ [Issue 1] - [Resolution approach] - [Files affected]
+- ✅ [Issue 2] - [Resolution approach] - [Files affected]
+
+### Issues Deferred for Future Sessions
+#### MEDIUM Priority (Consider Fix)
+- 🔄 [Issue 1] - [Current status] - [Future consideration rationale]
+  - **Business Impact:** [Why it matters]
+  - **Effort Estimate:** [Time/resources needed]
+  - **Recommendation:** [Tackle immediately / Next session / Future project]
+- 🔄 [Issue 2] - [Current status] - [Future consideration rationale]
+
+#### LOW Priority (Optional)
+- 🔄 [Issue 1] - [Current status] - [Future consideration rationale]
+  - **Business Impact:** [Minimal/minor benefit]
+  - **Effort Estimate:** [Quick fix if time permits]
+  - **Recommendation:** [Address when convenient / Defer indefinitely]
+
+## Quality Metrics Achieved
+- **Test Coverage:** [Percentage] - [Assessment]
+- **Security Score:** [Clean/Vulnerabilities Addressed/Major Issues Remaining]
+- **Performance Impact:** [Improved/Degraded/Neutral]
+- **Code Quality:** [Excellent/Good/Needs Improvement]
+- **Design Compliance:** [YAGNI/KISS/DRY fully met / Partial compliance / Needs work]
+
+## Lessons Learned & Recommendations
+
+### What Went Well
+- [Positive outcomes and successful approaches]
+- [Effective collaboration patterns]
+- [Good technical decisions]
+
+### Areas for Improvement
+- [Process bottlenecks identified]
+- [Technical challenges encountered]
+- [Communication or coordination issues]
+
+### Future Session Recommendations
+- [How to approach similar work in the future]
+- [Tools or processes that would help]
+- [Skills or knowledge gaps to address]
+
+## Session Impact Assessment
+- **Business Value Delivered:** [Quantifiable benefits achieved]
+- **Technical Debt Impact:** [Increased/Reduced/Maintained]
+- **Team Learning:** [New skills/tools/patterns adopted]
+- **System Health:** [Overall improvement to codebase maintainability]
+
+## Next Steps & Follow-up
+- **Immediate Actions:** [Any monitoring or validation needed]
+- **Short-term Goals:** [Next session priorities]
+- **Long-term Vision:** [How this fits into larger project goals]
+
+## Session Metadata
+- **Coordinator Agent:** Version/Configuration
+- **Subagents Used:** @planner, @implementer, @refactor, @reviewer
+- **Key Technologies:** [Languages, frameworks, tools used]
+- **External Dependencies:** [APIs, libraries, services integrated]
+- **Session Completed:** [Timestamp]
+- **Repository State:** [Final commit hash, branch, etc.]
+```
 ```
 
 ## Agent Selection Guide
