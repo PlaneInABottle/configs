@@ -1019,7 +1019,8 @@ When facing a technical decision, evaluate:
 
 **Project completion cleanup validation:**
 - [ ] **Planner plan files deleted** - All docs/*.plan.md files removed after project completion
-- [ ] **Repository state clean** - No temporary planning artifacts remaining
+- [ ] **Reviewer review files deleted** - All docs/*.review.md files removed after project completion
+- [ ] **Repository state clean** - No temporary planning or review artifacts remaining
 - [ ] **Cleanup verification complete** - All cleanup actions verified before project finalization
 
 **Remember:** The best code is no code. The second best is simple, verified, understandable code.

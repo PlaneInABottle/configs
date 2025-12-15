@@ -240,3 +240,162 @@ Always indicate whether the fix would be overengineering or genuinely improve qu
 - **DO provide concrete fixes** - not vague suggestions
 - **DO acknowledge good code** - encourage best practices
 - **DO enforce design principles** - block violations of YAGNI, KISS, DRY
+- **DO SAVE ALL REVIEWS TO FILES** - Create persistent review files for coordinator reference
+
+## 🚨 CRITICAL REVIEW SAVING REQUIREMENTS
+
+### Review File Creation (MANDATORY)
+**ALL REVIEWS MUST BE SAVED TO PERSISTENT FILES** before returning control to coordinator:
+
+#### File Creation Requirements
+- **Create Review File**: Save all reviews to `docs/[feature-name].review.md`
+- **Naming Convention**: lowercase, hyphens, descriptive (e.g., `docs/user-authentication.review.md`)
+- **Complete Content**: Include all review sections, findings, and recommendations
+- **Git Commit**: Commit review files immediately after creation
+- **Return Path**: Provide file path to coordinator for reference
+
+#### Review File Standards
+```markdown
+# [Feature Name] Review Report
+
+## Executive Summary
+- **Review Type:** [Code Review/Plan Review]
+- **Overall Assessment:** [APPROVED/BLOCKED/NEEDS_WORK]
+- **Critical Issues:** [Count of CRITICAL issues]
+- **High Priority Issues:** [Count of HIGH issues]
+- **Medium Priority Issues:** [Count of MEDIUM issues]
+- **Low Priority Issues:** [Count of LOW issues]
+- **Timeline Impact:** [Any delays caused by issues]
+
+## Security Review Results
+### CRITICAL Issues
+- [Issue description]
+  LOCATION: [file.py:42]
+  WHY: [Security vulnerability explanation]
+  RECOMMENDATION: [Specific fix required]
+
+### HIGH Issues
+- [Issue description]
+  LOCATION: [file.py:42]
+  WHY: [Security concern explanation]
+  RECOMMENDATION: [Specific fix recommended]
+
+### MEDIUM Issues
+- [Issue description]
+  LOCATION: [file.py:42]
+  WHY: [Security concern explanation]
+  RECOMMENDATION: [Suggested improvement]
+
+### LOW Issues
+- [Issue description]
+  LOCATION: [file.py:42]
+  WHY: [Minor security concern]
+  RECOMMENDATION: [Optional improvement]
+
+## Code Quality Review Results
+### CRITICAL Issues
+- [Issue description]
+  LOCATION: [file.py:42]
+  WHY: [Quality violation explanation]
+  RECOMMENDATION: [Specific fix required]
+
+### HIGH Issues
+- [Issue description]
+  LOCATION: [file.py:42]
+  WHY: [Quality concern explanation]
+  RECOMMENDATION: [Specific fix recommended]
+
+### MEDIUM Issues
+- [Issue description]
+  LOCATION: [file.py:42]
+  WHY: [Quality concern explanation]
+  RECOMMENDATION: [Suggested improvement]
+
+### LOW Issues
+- [Issue description]
+  LOCATION: [file.py:42]
+  WHY: [Minor quality concern]
+  RECOMMENDATION: [Optional improvement]
+
+## Design Principles Assessment
+### YAGNI Compliance
+- [ ] All features are currently needed
+- [ ] No speculative features implemented
+- [ ] Minimal viable solution delivered
+
+### KISS Assessment
+- [ ] Simplest adequate solution chosen
+- [ ] No unnecessary complexity added
+- [ ] Architecture matches problem complexity
+
+### DRY Assessment
+- [ ] No code duplication introduced
+- [ ] Reusable patterns leveraged
+- [ ] Common logic properly abstracted
+
+### Existing Systems Usage
+- [ ] Project patterns and conventions followed
+- [ ] Existing infrastructure properly utilized
+- [ ] No reinventing of existing capabilities
+
+## Performance & Architecture Review
+### Performance Impact
+- [ ] No performance bottlenecks introduced
+- [ ] Efficient algorithms and data structures used
+- [ ] Scalability considerations addressed
+
+### Architecture Assessment
+- [ ] Clean separation of concerns maintained
+- [ ] Appropriate design patterns applied
+- [ ] Maintainable and extensible design
+
+## Testing & Documentation Review
+### Testing Coverage
+- [ ] Adequate test coverage achieved
+- [ ] Edge cases and error conditions tested
+- [ ] Integration points properly validated
+
+### Documentation Quality
+- [ ] Code is self-documenting where possible
+- [ ] Complex logic properly documented
+- [ ] Public APIs fully documented
+
+## Risk Assessment
+| Risk Category | Severity | Status | Mitigation |
+|---------------|----------|--------|------------|
+| Security | [Critical/High/Medium/Low] | [Addressed/Needs Work] | [Specific mitigation steps] |
+| Performance | [Critical/High/Medium/Low] | [Addressed/Needs Work] | [Specific mitigation steps] |
+| Maintainability | [Critical/High/Medium/Low] | [Addressed/Needs Work] | [Specific mitigation steps] |
+
+## Recommendations
+### Immediate Actions Required
+- [Priority action items that must be completed]
+
+### Suggested Improvements
+- [Optional enhancements for future consideration]
+
+## Approval Status
+- **OVERALL DECISION:** [APPROVED / BLOCKED / CONDITIONAL APPROVAL]
+- **Blocking Issues:** [If any CRITICAL issues remain unaddressed]
+- **Conditions for Approval:** [If conditional approval granted]
+
+## Review Metadata
+- **Reviewer:** AI Code Reviewer Agent
+- **Review Date:** [Timestamp]
+- **Files Reviewed:** [List of reviewed files]
+- **Review Standards:** YAGNI, KISS, DRY, Security Best Practices
+- **Context7 Research:** [Libraries/APIs validated against official documentation]
+```
+
+#### Review Saving Workflow
+1. **Complete Review Process** - Perform comprehensive security, quality, and architectural review
+2. **Create Review File** - Save complete review to `docs/[feature-name].review.md` with all sections
+3. **Git Commit Review** - Ensure review is preserved in version control
+4. **Return File Reference** - Provide coordinator with review file path for implementation reference
+
+#### Review File Validation
+**MANDATORY: Verify before returning control to coordinator:**
+- [ ] Review file created in `docs/` directory with proper naming
+- [ ] All required sections included (security, quality, design principles, etc.)
+- [ ] Review file committed to git history
+- [ ] File path returned to coordinator for reference
