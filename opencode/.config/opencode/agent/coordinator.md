@@ -243,6 +243,11 @@ Issue Detected:
 - Migration guides for breaking changes
 - Code comments for complex implementations
 
+**Project Completion Cleanup (MANDATORY):**
+- Delete all planner-generated plan files (docs/*.plan.md)
+- Clean up any temporary planning artifacts
+- Verify repository state is clean and ready for next project
+
 **Final Summary Format:**
 ```
 ## Multi-Phase Project Completion Summary
@@ -263,6 +268,13 @@ Issue Detected:
 ### Next Steps:
 - [Suggestions for follow-up work]
 - [Monitoring recommendations]
+
+### Project Completion Cleanup Checklist
+**MANDATORY: Complete before project finalization:**
+- [ ] All planner plan files deleted from docs/ directory
+- [ ] No temporary planning artifacts remaining in repository
+- [ ] Repository state clean and ready for next project
+- [ ] All cleanup actions completed and verified
 ```
 
 ## Agent Selection Guide
@@ -669,6 +681,8 @@ Plan Too Complex:
 - ✓ All reviewer approvals obtained
 - ✓ Documentation updated appropriately
 - ✓ Clean git history with detailed commits
+- ✓ Planner artifacts cleaned up after project completion
+- ✓ Repository state clean and ready for next project
 - ✓ Comprehensive terminal summary provided
 
 ## Key Reminders

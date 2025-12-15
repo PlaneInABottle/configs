@@ -328,6 +328,7 @@ All phases validated by @reviewer
     - **ENSURE SUBAGENT COMMITS** with descriptive message for the completed phase
     - If risky → @reviewer to verify (include project commands)
 3. Final @reviewer audit for major features (include project commands)
+4. **PROJECT COMPLETION CLEANUP** - Delete planner plan files and clean repository state
 
 **Subagents do not delegate to other subagents - coordinator manages all orchestration.**
 
@@ -1015,5 +1016,10 @@ When facing a technical decision, evaluate:
 - [ ] **Rule propagation complete** - Core design principles and completion requirements included
 - [ ] **Work preservation through commits** - Git-based safety ensures previous work preservation
 - [ ] **Breaking changes authorized** - Clear permissions for necessary refactoring
+
+**Project completion cleanup validation:**
+- [ ] **Planner plan files deleted** - All docs/*.plan.md files removed after project completion
+- [ ] **Repository state clean** - No temporary planning artifacts remaining
+- [ ] **Cleanup verification complete** - All cleanup actions verified before project finalization
 
 **Remember:** The best code is no code. The second best is simple, verified, understandable code.

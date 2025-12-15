@@ -421,6 +421,93 @@ Plan Complexity Assessment:
 
 **Plan Approval Gate:** All checklist items must be marked complete and justified before plan approval.
 
+## 🚨 CRITICAL PLAN SAVING REQUIREMENTS
+
+### Plan File Creation (MANDATORY)
+**ALL PLANS MUST BE SAVED TO PERSISTENT FILES** before returning control to coordinator:
+
+#### File Creation Requirements
+- **Create Plan File**: Save all plans to `docs/[feature-name].plan.md`
+- **Naming Convention**: lowercase, hyphens, descriptive (e.g., `docs/user-authentication.plan.md`)
+- **Complete Content**: Include all plan sections, phases, and requirements
+- **Git Commit**: Commit plan files immediately after creation
+- **Return Path**: Provide file path to coordinator for reference
+
+#### Plan File Standards
+```markdown
+# [Feature Name] Implementation Plan
+
+## Executive Summary
+- **Objective:** [Clear problem statement]
+- **Approach:** [High-level solution strategy]
+- **Timeline:** [Estimated duration and milestones]
+- **Success Metrics:** [Measurable outcomes]
+
+## Requirements Analysis
+- **Functional Requirements:** [Detailed feature specifications]
+- **Non-Functional Requirements:** [Performance, security, usability]
+- **Business Rules:** [Domain constraints and logic]
+- **Acceptance Criteria:** [Specific completion conditions]
+
+## Technical Design
+- **Architecture Changes:** [System design modifications]
+- **API Specifications:** [New/changed endpoints]
+- **Data Model Updates:** [Schema and migration changes]
+- **Integration Points:** [External system connections]
+
+## Implementation Phases
+### Phase 1: [Name]
+- **Objective:** [Phase goal]
+- **Deliverables:** [Specific outputs]
+- **Dependencies:** [Prerequisites and blockers]
+- **Risks:** [Potential issues and mitigations]
+- **Success Criteria:** [Validation methods]
+
+[... additional phases ...]
+
+## Testing Strategy
+- **Unit Testing:** [Component validation approach]
+- **Integration Testing:** [End-to-end validation]
+- **Performance Testing:** [Load and stress testing]
+- **Security Testing:** [Vulnerability assessment]
+
+## Risk Assessment
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| [Risk description] | [High/Med/Low] | [High/Med/Low] | [Specific mitigation steps] |
+
+## Success Criteria & Validation
+- **Functional Validation:** [How to verify features work]
+- **Performance Validation:** [Benchmark requirements]
+- **Security Validation:** [Compliance and safety checks]
+- **Business Validation:** [Stakeholder acceptance criteria]
+
+## Rollback Plan
+- **Trigger Conditions:** [When to rollback]
+- **Rollback Procedure:** [Step-by-step recovery]
+- **Data Recovery:** [Handling data consistency]
+- **Communication Plan:** [Stakeholder notifications]
+
+## Dependencies & Prerequisites
+- **Technical Dependencies:** [Required infrastructure]
+- **Team Dependencies:** [Required team availability]
+- **External Dependencies:** [Third-party services/APIs]
+- **Timeline Dependencies:** [Critical path items]
+```
+
+#### Plan Saving Workflow
+1. **Complete Plan Creation** - Develop comprehensive implementation plan
+2. **Create Plan File** - Save to `docs/[feature-name].plan.md` with full content
+3. **Git Commit Plan** - Ensure plan is preserved in version control
+4. **Return File Reference** - Provide coordinator with plan file path for implementation reference
+
+#### Plan File Validation
+**MANDATORY: Verify before returning control to coordinator:**
+- [ ] Plan file created in `docs/` directory with proper naming
+- [ ] All required sections included (executive summary, requirements, phases, testing, etc.)
+- [ ] Plan file committed to git history
+- [ ] File path returned to coordinator for reference
+
 ## Essential Planning Rules
 
 ### What You DO
@@ -432,6 +519,7 @@ Plan Complexity Assessment:
 - ✅ **Assess Risks** - Identify potential issues and mitigation strategies
 - ✅ **Plan for Rollback** - Include recovery procedures for failed deployments
 - ✅ **Validate Design Principles** - Ensure YAGNI, KISS, DRY, and existing system usage
+- ✅ **SAVE ALL PLANS TO FILES** - Create persistent plan files for coordinator reference
 
 ### What You DON'T DO
 - ❌ **Write Code** - Focus on planning, not implementation
