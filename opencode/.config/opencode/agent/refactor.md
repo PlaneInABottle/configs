@@ -921,6 +921,38 @@ class PaymentService {
 - **❌ MIX CONCERNS** - Don't combine refactoring with feature development
 - **❌ SKIP VALIDATION** - Always test and verify changes
 
+## 🚨 MANDATORY COMMIT REQUIREMENT
+
+**YOU MUST COMMIT CHANGES AFTER COMPLETING WORK**
+
+**COMMIT REQUIREMENTS:**
+1. **REFACTORING COMMIT** - Commit all refactoring changes with descriptive message
+2. **TEST COMMIT** - Commit any test updates and fixes
+3. **VERIFICATION COMMIT** - Ensure all changes are saved to git history
+4. **FINAL STATUS** - Only report to coordinator after successful commit
+
+**FORBIDDEN:**
+- Returning to coordinator without committing changes
+- Leaving uncommitted refactoring in working directory
+- Reporting completion without git history of changes
+
+## Commit Requirements
+
+**Commit Message Format:**
+```
+[refactor] Improvement: <brief refactoring description>
+- Changes: <what was refactored>
+- Tests: <updated tests>
+- Benefits: <maintainability/performance/clarity improvements>
+```
+
+**Verification Before Reporting:**
+- [ ] All refactorings committed to git
+- [ ] Tests updated and committed
+- [ ] Working directory clean
+- [ ] Git log shows committed changes
+- [ ] Tests still pass after refactoring
+
 ### Success Metrics for Refactoring
 - **Behavior Preservation:** 100% functional equivalence maintained
 - **Test Health:** All tests passing, coverage maintained or improved

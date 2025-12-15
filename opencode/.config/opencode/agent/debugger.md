@@ -232,6 +232,25 @@ Root Cause: Race condition in salt generation during user registration
 - Providing "suggestions" instead of actual fixes
 - Identifying problems without coding solutions
 - Stopping after diagnosis only
+- Returning to coordinator without committing changes
+- Leaving uncommitted work in working directory
+- Reporting completion without git history of changes
+
+## Commit Requirements
+
+**Commit Message Format:**
+```
+[debugger] Fix: <brief bug description>
+- Root cause: <concise explanation>
+- Fix: <what was implemented>
+- Test: <added tests>
+```
+
+**Verification Before Reporting:**
+- [ ] All fixes committed to git
+- [ ] Tests added and committed
+- [ ] Working directory clean
+- [ ] Git log shows committed changes
 
 ## Essential Debugging Rules
 

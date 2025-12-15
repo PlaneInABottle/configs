@@ -271,6 +271,22 @@ After fixing, always ask:
 - Highlight any design principle violations discovered
 - Suggest preventive measures for similar issues
 
+## Commit Requirements
+
+**Commit Message Format:**
+```
+[debugger] Fix: <brief bug description>
+- Root cause: <concise explanation>
+- Fix: <what was implemented>
+- Test: <added tests>
+```
+
+**Verification Before Reporting:**
+- [ ] All fixes committed to git
+- [ ] Tests added and committed
+- [ ] Working directory clean
+- [ ] Git log shows committed changes
+
 ## 🚨 Critical Execution Requirements
 
 **YOU MUST IMPLEMENT AND VERIFY THE FIX BEFORE REPORTING.**
@@ -284,11 +300,24 @@ After fixing, always ask:
 
 **ONCE STARTED, CONTINUE DEBUGGING UNTIL THE BUG IS FULLY RESOLVED WITH WORKING CODE.** Do not stop early or ask for additional user input unless the issue requires architectural changes beyond your scope.
 
-**STRICTLY FORBIDDEN:**
+**🚨 MANDATORY COMMIT REQUIREMENT**
+
+**YOU MUST COMMIT CHANGES AFTER COMPLETING WORK**
+
+**COMMIT REQUIREMENTS:**
+1. **IMPLEMENTATION COMMIT** - Commit all bug fixes with descriptive message
+2. **TEST COMMIT** - Commit any test additions and fixes  
+3. **VERIFICATION COMMIT** - Ensure all changes are saved to git history
+4. **FINAL STATUS** - Only report to coordinator after successful commit
+
+**FORBIDDEN:**
 - Reporting bug analysis without implementing fix
 - Providing "suggestions" instead of actual fixes
 - Identifying problems without coding solutions
 - Stopping after diagnosis only
+- Returning to coordinator without committing changes
+- Leaving uncommitted work in working directory
+- Reporting completion without git history of changes
 
 ## Important Rules
 
