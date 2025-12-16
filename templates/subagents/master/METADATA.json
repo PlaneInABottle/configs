@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "created": "2025-12-16T10:23:22.063Z",
+  "description": "Master templates for subagent content",
+  "subagents": {
+    "debugger": {
+      "name": "debugger",
+      "description": "Debugging specialist - finds and fixes bugs directly",
+      "examples": [
+        "  - \"Use for test failures and unexpected behavior diagnosis\"",
+        "  - \"Use for performance issues and memory leaks\"",
+        "  - \"Use for integration problems and API failures\"",
+        "  - \"Use for complex multi-component issue resolution\""
+      ]
+    },
+    "planner": {
+      "name": "planner",
+      "description": "Software architect that creates detailed implementation plans without writing code. Emphasizes YAGNI, KISS, DRY, and leveraging existing systems.",
+      "examples": [
+        "  - \"Use for complex multi-step features requiring architectural design\"",
+        "  - \"Use for large refactoring projects needing systematic planning\"",
+        "  - \"Use for security-critical changes requiring careful risk assessment\""
+      ]
+    },
+    "reviewer": {
+      "name": "reviewer",
+      "description": "Comprehensive code reviewer - finds security vulnerabilities, bugs, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage.",
+      "examples": [
+        "  - \"Use for security review of authentication systems\"",
+        "  - \"Use for code quality assessment before merging\"",
+        "  - \"Use for architectural validation of implementation plans\""
+      ]
+    },
+    "implementer": {
+      "name": "implementer",
+      "description": "Feature implementation specialist - builds new functionality and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems.",
+      "examples": [
+        "  - \"Use for new API endpoints with comprehensive error handling\"",
+        "  - \"Use for complex business logic with thorough testing\"",
+        "  - \"Use for UI components with accessibility and performance\""
+      ]
+    },
+    "refactor": {
+      "name": "refactor",
+      "description": "Refactoring specialist - improves code quality without changing behavior. Applies YAGNI, KISS, DRY principles and leverages existing systems.",
+      "examples": [
+        "  - \"Use for code smell elimination and technical debt reduction\"",
+        "  - \"Use for performance optimization without behavior changes\"",
+        "  - \"Use for improving code maintainability and readability\""
+      ]
+    }
+  }
+}
