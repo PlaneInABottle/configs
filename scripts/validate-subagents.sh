@@ -14,36 +14,24 @@ NC='\033[0m'
 # Script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-METADATA_FILE="$CONFIG_DIR/templates/subagents/master/METADATA.json"
 
-# Header line counts (line before content starts) - read from METADATA.json
-get_header_lines() {
-    local agent="$1"
-    local system="$2"
-    
-    # Try to read from METADATA.json first
-    if [[ -f "$METADATA_FILE" ]] && command -v python3 &> /dev/null; then
-        local line_count=$(python3 -c "import json; data=json.load(open('$METADATA_FILE')); print(data['subagents']['$agent']['header_lines']['$system'])" 2>/dev/null || echo "")
-        if [[ -n "$line_count" ]]; then
-            echo "$line_count"
-            return 0
-        fi
-    fi
-    
-    # Fallback to hardcoded values if METADATA.json not available
-    case "$system:$agent" in
-        copilot:debugger) echo "5" ;;
-        copilot:planner) echo "4" ;;
-        copilot:reviewer) echo "5" ;;
-        copilot:implementer) echo "4" ;;
-        copilot:refactor) echo "4" ;;
-        opencode:debugger) echo "46" ;;
-        opencode:planner) echo "25" ;;
-        opencode:reviewer) echo "45" ;;
-        opencode:implementer) echo "45" ;;
-        opencode:refactor) echo "46" ;;
-        *) echo "0" ;;
-    esac
+content_start_line() {
+    # Returns the 1-indexed line number where content starts (after last --- and following blank lines)
+    local file="$1"
+    python3 - <<'PY' "$file"
+import sys
+p = sys.argv[1]
+lines = open(p, 'r', encoding='utf-8', errors='replace').read().splitlines()
+idxs = [i for i,l in enumerate(lines) if l.strip() == '---']
+if not idxs:
+    print(1)
+    raise SystemExit(0)
+start = idxs[-1] + 2  # line after closing --- (1-indexed)
+# Skip blank lines
+while start <= len(lines) and lines[start-1].strip() == '':
+    start += 1
+print(start)
+PY
 }
 
 print_info() {
@@ -81,13 +69,9 @@ validate_agent() {
         return 1
     fi
     
-    # Get header line counts
-    local copilot_header=$(get_header_lines "$agent" "copilot")
-    local opencode_header=$(get_header_lines "$agent" "opencode")
-    
-    local copilot_start=$((copilot_header + 1))
-    local opencode_start=$((opencode_header + 1))
-    
+    local copilot_start=$(content_start_line "$copilot_file")
+    local opencode_start=$(content_start_line "$opencode_file")
+
     # Extract content (skip headers)
     local copilot_content=$(tail -n +${copilot_start} "$copilot_file")
     local opencode_content=$(tail -n +${opencode_start} "$opencode_file")

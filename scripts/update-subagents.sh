@@ -70,9 +70,9 @@ check_prerequisites() {
         print_error "METADATA.json not found. Run extract-to-master.sh first."
         exit 1
     fi
-    
-    if [[ ! -f "$HEADERS_DIR/copilot.template" ]] || [[ ! -f "$HEADERS_DIR/opencode.template" ]]; then
-        print_error "Header templates not found. Run extract-to-master.sh first."
+
+    if ! command -v python3 &> /dev/null; then
+        print_error "python3 is required for metadata parsing"
         exit 1
     fi
 }
@@ -80,45 +80,71 @@ check_prerequisites() {
 get_metadata_value() {
     local agent="$1"
     local key="$2"
-    
-    # Simple JSON parsing (works for our simple structure)
-    grep -A 20 "\"$agent\":" "$METADATA_FILE" | grep "\"$key\":" | sed 's/.*": "\(.*\)".*/\1/' | head -1
+    python3 -c "import json; d=json.load(open('$METADATA_FILE')); print(d['subagents']['$agent']['$key'])"
 }
 
-get_metadata_examples() {
-    local agent="$1"
-    
-    # Extract examples array
-    sed -n "/\"$agent\":/,/\"examples\":/p" "$METADATA_FILE" | \
-    sed -n '/\[/,/\]/p' | grep '"' | sed 's/.*"\(.*\)".*/\1/'
+get_metadata_lines() {
+    # Prints joined lines from a JSON list.
+    # Usage: get_metadata_lines subagents debugger examples
+    local root="$1"
+    local agent="$2"
+    local key="$3"
+
+    python3 - <<'PY' "$METADATA_FILE" "$root" "$agent" "$key" 2>/dev/null || true
+import json, sys
+path, root, agent, key = sys.argv[1:5]
+d = json.load(open(path))
+print("\n".join(d[root][agent].get(key, [])))
+PY
+}
+
+get_default_lines() {
+    # Usage: get_default_lines opencode tools_lines
+    local system="$1"
+    local key="$2"
+
+    python3 - <<'PY' "$METADATA_FILE" "$system" "$key" 2>/dev/null || true
+import json, sys
+path, system, key = sys.argv[1:4]
+d = json.load(open(path))
+print("\n".join(d.get('defaults', {}).get(system, {}).get(key, [])))
+PY
 }
 
 generate_header() {
     local agent="$1"
     local system="$2"
-    
-    local template_file="$HEADERS_DIR/${system}.template"
+
     local name=$(get_metadata_value "$agent" "name")
     local description=$(get_metadata_value "$agent" "description")
-    
-    local header=$(cat "$template_file")
-    
-    # Replace placeholders
-    header="${header//\{\{NAME\}\}/$name}"
-    header="${header//\{\{DESCRIPTION\}\}/$description}"
-    
-    # Handle examples (multi-line)
-    if [[ "$system" == "opencode" ]]; then
-        local examples=$(get_metadata_examples "$agent")
-        # Replace {{EXAMPLES}} with actual examples
-        local examples_block=""
-        while IFS= read -r line; do
-            examples_block+="$line"$'\n'
-        done <<< "$examples"
-        header="${header//\{\{EXAMPLES\}\}/$examples_block}"
+
+    if [[ "$system" == "copilot" ]]; then
+        cat <<EOF
+---
+name: ${name}
+description: "${description}"
+---
+EOF
+        return 0
     fi
-    
-    echo "$header"
+
+    # opencode
+    local examples="$(get_metadata_lines subagents "$agent" examples)"
+    local tools_lines="$(get_default_lines opencode tools_lines)"
+    local permission_lines="$(get_default_lines opencode permission_lines)"
+
+    cat <<EOF
+---
+description: "${description}"
+mode: subagent
+examples:
+${examples}
+tools:
+${tools_lines}
+permission:
+${permission_lines}
+---
+EOF
 }
 
 update_agent() {
@@ -162,6 +188,7 @@ update_agent() {
     # Combine header + content
     {
         echo "$header"
+        echo ""
         cat "$master_file"
     } > "$output_file"
     

@@ -7,23 +7,44 @@ examples:
   - "Use for security-critical changes requiring careful risk assessment"
 tools:
   write: true
-  edit: false
-  bash: false
+  edit: true
+  bash: true
   webfetch: true
   read: true
   grep: true
   glob: true
   list: true
-  patch: false
-  todowrite: false
-  todoread: false
+  patch: true
+  todowrite: true
+  todoread: true
 permission:
   webfetch: allow
-  bash: deny
-  edit: deny
+  bash:
+    "git diff": allow
+    "git log*": allow
+    "git status": allow
+    "git show*": allow
+    "pytest*": allow
+    "npm test*": allow
+    "uv run*": allow
+    "head*": allow
+    "tail*": allow
+    "cat*": allow
+    "ls*": allow
+    "tree*": allow
+    "find*": allow
+    "grep*": allow
+    "echo*": allow
+    "wc*": allow
+    "pwd": allow
+    "sed*": deny
+    "awk*": deny
+    "*": ask
+  edit: ask
 ---
 
-# Software Architect & Planning Expert
+<!-- sync-test: generated via templates/subagents/master + scripts/update-subagents.sh -->
+
 
 You are a Senior Software Architect specializing in creating comprehensive, actionable implementation plans. You excel at breaking down complex requirements into systematic, low-risk execution strategies.
 

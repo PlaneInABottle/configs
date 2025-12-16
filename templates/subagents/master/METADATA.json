@@ -1,10 +1,50 @@
 {
-  "version": "1.0.0",
   "created": "2025-12-16T10:33:00Z",
+  "defaults": {
+    "opencode": {
+      "permission_lines": [
+        "  webfetch: allow",
+        "  bash:",
+        "    \"git diff\": allow",
+        "    \"git log*\": allow",
+        "    \"git status\": allow",
+        "    \"git show*\": allow",
+        "    \"pytest*\": allow",
+        "    \"npm test*\": allow",
+        "    \"uv run*\": allow",
+        "    \"head*\": allow",
+        "    \"tail*\": allow",
+        "    \"cat*\": allow",
+        "    \"ls*\": allow",
+        "    \"tree*\": allow",
+        "    \"find*\": allow",
+        "    \"grep*\": allow",
+        "    \"echo*\": allow",
+        "    \"wc*\": allow",
+        "    \"pwd\": allow",
+        "    \"sed*\": deny",
+        "    \"awk*\": deny",
+        "    \"*\": ask",
+        "  edit: ask"
+      ],
+      "tools_lines": [
+        "  write: true",
+        "  edit: true",
+        "  bash: true",
+        "  webfetch: true",
+        "  read: true",
+        "  grep: true",
+        "  glob: true",
+        "  list: true",
+        "  patch: true",
+        "  todowrite: true",
+        "  todoread: true"
+      ]
+    }
+  },
   "description": "Master templates for subagent content with configuration",
   "subagents": {
     "debugger": {
-      "name": "debugger",
       "description": "Debugging specialist - finds and fixes bugs directly",
       "examples": [
         "  - \"Use for test failures and unexpected behavior diagnosis\"",
@@ -15,36 +55,10 @@
       "header_lines": {
         "copilot": 5,
         "opencode": 46
-      }
-    },
-    "planner": {
-      "name": "planner",
-      "description": "Software architect that creates detailed implementation plans without writing code. Emphasizes YAGNI, KISS, DRY, and leveraging existing systems.",
-      "examples": [
-        "  - \"Use for complex multi-step features requiring architectural design\"",
-        "  - \"Use for large refactoring projects needing systematic planning\"",
-        "  - \"Use for security-critical changes requiring careful risk assessment\""
-      ],
-      "header_lines": {
-        "copilot": 4,
-        "opencode": 25
-      }
-    },
-    "reviewer": {
-      "name": "reviewer",
-      "description": "Comprehensive code reviewer - finds security vulnerabilities, bugs, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage.",
-      "examples": [
-        "  - \"Use for security review of authentication systems\"",
-        "  - \"Use for code quality assessment before merging\"",
-        "  - \"Use for architectural validation of implementation plans\""
-      ],
-      "header_lines": {
-        "copilot": 5,
-        "opencode": 45
-      }
+      },
+      "name": "debugger"
     },
     "implementer": {
-      "name": "implementer",
       "description": "Feature implementation specialist - builds new functionality and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems.",
       "examples": [
         "  - \"Use for new API endpoints with comprehensive error handling\"",
@@ -54,10 +68,23 @@
       "header_lines": {
         "copilot": 4,
         "opencode": 45
-      }
+      },
+      "name": "implementer"
+    },
+    "planner": {
+      "description": "Software architect that creates detailed implementation plans without writing code. Emphasizes YAGNI, KISS, DRY, and leveraging existing systems.",
+      "examples": [
+        "  - \"Use for complex multi-step features requiring architectural design\"",
+        "  - \"Use for large refactoring projects needing systematic planning\"",
+        "  - \"Use for security-critical changes requiring careful risk assessment\""
+      ],
+      "header_lines": {
+        "copilot": 4,
+        "opencode": 25
+      },
+      "name": "planner"
     },
     "refactor": {
-      "name": "refactor",
       "description": "Refactoring specialist - improves code quality without changing behavior. Applies YAGNI, KISS, DRY principles and leverages existing systems.",
       "examples": [
         "  - \"Use for code smell elimination and technical debt reduction\"",
@@ -67,7 +94,22 @@
       "header_lines": {
         "copilot": 4,
         "opencode": 46
-      }
+      },
+      "name": "refactor"
+    },
+    "reviewer": {
+      "description": "Comprehensive code reviewer - finds security vulnerabilities, bugs, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage.",
+      "examples": [
+        "  - \"Use for security review of authentication systems\"",
+        "  - \"Use for code quality assessment before merging\"",
+        "  - \"Use for architectural validation of implementation plans\""
+      ],
+      "header_lines": {
+        "copilot": 5,
+        "opencode": 45
+      },
+      "name": "reviewer"
     }
-  }
+  },
+  "version": "1.0.0"
 }

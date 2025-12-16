@@ -1,3 +1,5 @@
+<!-- sync-test: generated via templates/subagents/master + scripts/update-subagents.sh -->
+
 
 # Debugging Specialist
 
