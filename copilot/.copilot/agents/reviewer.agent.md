@@ -320,7 +320,7 @@ Always indicate whether the fix would be overengineering or genuinely improve qu
 - Is this math correct for all inputs?
 - Could this mutate state unexpectedly?
 - Are there unhandled promise rejections?
-- Does this match business requirements?
+- Does this match the business requirements?
 
 ## 🚨 CRITICAL REVIEW SAVING REQUIREMENTS
 
@@ -395,11 +395,29 @@ Always indicate whether the fix would be overengineering or genuinely improve qu
 
 #### Review File Validation
 **MANDATORY: Verify before returning control to coordinator:**
+- [ ] Existing work checked and saved with `[save] WIP: saving existing work`
 - [ ] Review file created in `docs/` directory with proper naming
 - [ ] All required sections included (security, quality, design principles, etc.)
 - [ ] Review file committed to git history
 - [ ] File path returned to coordinator for reference
 - [ ] TOTAL REVIEW FILE IS UNDER 300 LINES
+
+## 🚨 MANDATORY COMMIT REQUIREMENT
+
+**YOU MUST COMMIT CHANGES AFTER COMPLETING WORK**
+
+**COMMIT REQUIREMENTS:**
+1. **CHECK FOR EXISTING CHANGES** - Use `git status` to check for uncommitted work
+2. **SAVE EXISTING WORK** - If changes exist, commit them first with `[save] WIP: saving existing work`
+3. **REVIEW COMMIT** - Commit the review file with descriptive message
+4. **VERIFICATION COMMIT** - Ensure review is saved to git history
+5. **FINAL STATUS** - Only report to coordinator after successful commit
+
+**FORBIDDEN:**
+- Returning to coordinator without committing review
+- Leaving uncommitted work in working directory
+- Reporting completion without git history of review
+- Discarding existing uncommitted work without saving
 
 #### Coordinator Output Requirements
 **MANDATORY: Provide the following summary directly to the coordinator (in addition to the file):**
