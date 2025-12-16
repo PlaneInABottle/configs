@@ -1,0 +1,307 @@
+# Subagent Management Scripts
+
+Automated system for managing subagent instruction files across Copilot and Opencode systems.
+
+## Overview
+
+This system uses **master templates** as single source of truth and generates tool-specific files by combining master content with appropriate headers.
+
+```
+templates/subagents/
+├── master/                 # Single source of truth
+│   ├── debugger.md
+│   ├── planner.md
+│   ├── reviewer.md
+│   ├── implementer.md
+│   ├── refactor.md
+│   └── METADATA.json       # Agent metadata (descriptions, examples)
+└── headers/                # Tool-specific headers
+    ├── copilot.template    # Copilot header format
+    └── opencode.template   # Opencode header format (YAML)
+```
+
+## Scripts
+
+### 1. `extract-to-master.sh`
+
+Extracts content from existing subagent files into master templates.
+
+**Usage:**
+```bash
+./scripts/extract-to-master.sh
+```
+
+**What it does:**
+- Reads copilot and opencode subagent files
+- Extracts content (excluding headers)
+- Saves to `templates/subagents/master/{agent}.md`
+- Creates header templates
+- Generates METADATA.json with descriptions and examples
+
+**When to use:**
+- Initial setup (already done)
+- After manual edits to subagent files that should become the new master
+
+### 2. `update-subagents.sh`
+
+Generates subagent files from master templates + headers.
+
+**Usage:**
+```bash
+# Update specific agent for all systems
+./scripts/update-subagents.sh --agent=debugger
+
+# Update all agents for specific system
+./scripts/update-subagents.sh --agent=all --system=copilot
+
+# Dry run to preview changes
+./scripts/update-subagents.sh --agent=all --dry-run
+
+# Force overwrite without prompts
+./scripts/update-subagents.sh --agent=all --force
+```
+
+**Options:**
+- `--agent=NAME` - Agent to update (debugger|planner|reviewer|implementer|refactor|all)
+- `--system=NAME` - System to update (copilot|opencode|all) [default: all]
+- `--dry-run` - Preview changes without modifying files
+- `--force` - Overwrite without confirmation
+
+**What it does:**
+- Reads master template content
+- Reads metadata (description, examples)
+- Generates appropriate header for target system
+- Combines header + content
+- Writes to target location
+
+**When to use:**
+- After editing master templates
+- To regenerate all files from master
+- To ensure synchronization
+
+### 3. `validate-subagents.sh`
+
+Validates that copilot and opencode files have identical content.
+
+**Usage:**
+```bash
+./scripts/validate-subagents.sh
+```
+
+**What it does:**
+- Compares content of copilot vs opencode files (excluding headers)
+- Reports which agents are in sync
+- Exit code 0 if all synced, 1 if any differ
+
+**When to use:**
+- Before committing changes
+- To verify synchronization
+- In CI/CD pipeline (future)
+
+## Workflow
+
+### Making Changes to Subagents
+
+**Recommended workflow:**
+
+1. **Edit master template:**
+   ```bash
+   # Edit the master template
+   vim templates/subagents/master/debugger.md
+   ```
+
+2. **Update all files:**
+   ```bash
+   # Dry run first to preview
+   ./scripts/update-subagents.sh --agent=debugger --dry-run
+   
+   # Apply changes
+   ./scripts/update-subagents.sh --agent=debugger --force
+   ```
+
+3. **Validate:**
+   ```bash
+   ./scripts/validate-subagents.sh
+   ```
+
+4. **Commit:**
+   ```bash
+   git add templates copilot opencode
+   git commit -m "[subagents] Update debugger: <description>"
+   ```
+
+### Bulk Updates
+
+```bash
+# Update all subagents
+./scripts/update-subagents.sh --agent=all --force
+
+# Validate everything
+./scripts/validate-subagents.sh
+
+# Commit if all good
+git add templates copilot opencode
+git commit -m "[subagents] Bulk update: <description>"
+```
+
+## File Structure
+
+### Copilot Format
+
+```markdown
+---
+name: debugger
+description: "..."
+---
+
+<content from master template>
+```
+
+### Opencode Format
+
+```yaml
+---
+description: "..."
+mode: subagent
+examples:
+  - "..."
+  - "..."
+tools:
+  write: true
+  # ... more tools
+permission:
+  webfetch: allow
+  # ... more permissions
+---
+
+<content from master template>
+```
+
+## Design Decisions
+
+### Why Different Headers?
+
+- **Copilot**: Minimal header (4 lines) - only needs name and description
+- **Opencode**: Extended YAML header (44-46 lines) - needs detailed tool permissions
+
+Different tools have different requirements. Headers remain tool-specific.
+
+### Why Different Section Structures?
+
+Each subagent serves a different purpose:
+- **Debugger**: 4-phase debugging framework
+- **Planner**: Comprehensive planning with SOLID principles
+- **Implementer**: Technology-specific implementation guides
+- **Reviewer**: Security and quality focus areas
+- **Refactor**: Code smell catalog and refactoring patterns
+
+Custom sections per role ensure maximum clarity and usability.
+
+## Current Status
+
+✅ **Working:**
+- Extraction script
+- Validation script
+- Master templates created
+- Header templates created
+
+⚠️ **Known Issues:**
+- Update script examples array handling needs fixing
+- Implementer and refactor headers corrupted in last run
+
+🔧 **TODO:**
+- Fix examples generation in update script
+- Regenerate implementer and refactor
+- Add comprehensive tests
+- CI/CD integration (optional)
+
+## Maintenance
+
+### Adding a New Subagent
+
+1. Create master template: `templates/subagents/master/newagent.md`
+2. Add metadata to `METADATA.json`
+3. Update scripts to include new agent in arrays
+4. Run update script: `./scripts/update-subagents.sh --agent=newagent --force`
+5. Validate: `./scripts/validate-subagents.sh`
+
+### Updating Master Templates
+
+Master templates are plain markdown files. Edit them directly:
+
+```bash
+vim templates/subagents/master/debugger.md
+```
+
+Then regenerate:
+
+```bash
+./scripts/update-subagents.sh --agent=debugger --force
+```
+
+### Verifying Sync
+
+Always validate before committing:
+
+```bash
+./scripts/validate-subagents.sh
+```
+
+Expected output when synced:
+```
+✓ debugger content identical (415 lines)
+✓ planner content identical (1405 lines)
+✓ reviewer content identical (448 lines)
+✓ implementer content identical (1602 lines)
+✓ refactor content identical (919 lines)
+
+✓ All subagents are in sync!
+```
+
+## Troubleshooting
+
+### Validation fails after update
+
+```bash
+# Check what actually differs
+diff <(tail -n +6 copilot/.copilot/agents/debugger.agent.md) \
+     <(tail -n +45 opencode/.config/opencode/agent/debugger.md)
+
+# Re-extract and update
+./scripts/extract-to-master.sh
+./scripts/update-subagents.sh --agent=debugger --force
+```
+
+### Manual edits were made to copilot/opencode files
+
+```bash
+# Extract current state to master
+./scripts/extract-to-master.sh
+
+# This uses opencode as source of truth
+# Review the extracted master templates
+vim templates/subagents/master/*.md
+
+# Regenerate to sync everything
+./scripts/update-subagents.sh --agent=all --force
+```
+
+### Header line counts are wrong
+
+Edit `validate-subagents.sh` and `extract-to-master.sh` functions `get_header_lines()` to update the line counts where content actually starts.
+
+## Future Enhancements
+
+- [ ] Git pre-commit hook for automatic validation
+- [ ] Automated tests for scripts
+- [ ] CI/CD integration
+- [ ] Version tracking in METADATA.json
+- [ ] Diff viewing before update
+- [ ] Interactive mode for update script
+- [ ] Backup/restore functionality
+- [ ] Change log generation
+
+## Related Documentation
+
+- [Subagent Update Script Analysis](../docs/subagent-update-script-analysis.md) - Full analysis and options
+- [Project Agents Generator](./generate-project-agents.sh) - Similar pattern for project-specific agents
