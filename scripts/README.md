@@ -168,14 +168,46 @@ examples:
   - "..."
 tools:
   write: true
-  # ... more tools
+  edit: true
+  bash: true
+  webfetch: true
+  read: true
+  grep: true
+  glob: true
+  list: true
+  patch: true
+  todowrite: true
+  todoread: true
 permission:
   webfetch: allow
-  # ... more permissions
+  bash:
+    "git diff": allow
+    "git log*": allow
+    "git status": allow
+    "git show*": allow
+    "pytest*": allow
+    "npm test*": allow
+    "uv run*": allow
+    "head*": allow
+    "tail*": allow
+    "cat*": allow
+    "ls*": allow
+    "tree*": allow
+    "find*": allow
+    "grep*": allow
+    "echo*": allow
+    "wc*": allow
+    "pwd": allow
+    "sed*": deny
+    "awk*": deny
+    "*": ask
+  edit: ask
 ---
 
 <content from master template>
 ```
+
+These Opencode `tools` / `permission` blocks are generated from `METADATA.json` (`defaults.opencode.*`) so you can update them in one place.
 
 ## Design Decisions
 
@@ -200,19 +232,23 @@ Custom sections per role ensure maximum clarity and usability.
 ## Current Status
 
 ✅ **Working:**
-- Extraction script
-- Validation script
+- Extraction script (`extract-to-master.sh`)
+- Generation script (`update-subagents.sh`)
+- Validation script (`validate-subagents.sh`)
 - Master templates created
 - Header templates created
 
-⚠️ **Known Issues:**
-- Update script examples array handling needs fixing
-- Implementer and refactor headers corrupted in last run
+✅ **Implemented Configurability:**
+- Opencode header `tools:` and `permission:` blocks are configurable via `templates/subagents/master/METADATA.json`:
+  - `defaults.opencode.tools_lines`
+  - `defaults.opencode.permission_lines`
 
-🔧 **TODO:**
-- Fix examples generation in update script
-- Regenerate implementer and refactor
-- Add comprehensive tests
+✅ **Robust Validation:**
+- `validate-subagents.sh` detects content start dynamically (after the last `---` and following blank lines), so it does **not** rely on hardcoded header lengths.
+
+🔧 **TODO (Optional Enhancements):**
+- Add per-subagent overrides for opencode tools/permissions (e.g. reviewer stricter than implementer)
+- Add a small test suite for the scripts
 - CI/CD integration (optional)
 
 ## Maintenance
@@ -288,7 +324,11 @@ vim templates/subagents/master/*.md
 
 ### Header line counts are wrong
 
-Edit `validate-subagents.sh` and `extract-to-master.sh` functions `get_header_lines()` to update the line counts where content actually starts.
+They shouldn’t be anymore: `validate-subagents.sh` detects content start dynamically.
+
+If generation looks wrong, verify the header template and metadata instead:
+- `templates/subagents/headers/opencode.template`
+- `templates/subagents/master/METADATA.json` (`defaults.opencode.tools_lines`, `defaults.opencode.permission_lines`, and per-agent `examples`)
 
 ## Future Enhancements
 
