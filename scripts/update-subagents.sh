@@ -111,6 +111,25 @@ print("\n".join(d.get('defaults', {}).get(system, {}).get(key, [])))
 PY
 }
 
+get_opencode_lines_for_agent() {
+    # Usage: get_opencode_lines_for_agent reviewer tools_lines
+    # Falls back to defaults.opencode.<key> if subagents.<agent>.opencode.<key> is empty/missing
+    local agent="$1"
+    local key="$2"
+
+    python3 - <<'PY' "$METADATA_FILE" "$agent" "$key" 2>/dev/null || true
+import json, sys
+path, agent, key = sys.argv[1:4]
+d = json.load(open(path))
+sub = d.get('subagents', {}).get(agent, {})
+override = sub.get('opencode', {}).get(key)
+if override:
+    print("\n".join(override))
+else:
+    print("\n".join(d.get('defaults', {}).get('opencode', {}).get(key, [])))
+PY
+}
+
 generate_header() {
     local agent="$1"
     local system="$2"
@@ -130,8 +149,8 @@ EOF
 
     # opencode
     local examples="$(get_metadata_lines subagents "$agent" examples)"
-    local tools_lines="$(get_default_lines opencode tools_lines)"
-    local permission_lines="$(get_default_lines opencode permission_lines)"
+    local tools_lines="$(get_opencode_lines_for_agent "$agent" tools_lines)"
+    local permission_lines="$(get_opencode_lines_for_agent "$agent" permission_lines)"
 
     cat <<EOF
 ---

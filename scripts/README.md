@@ -207,7 +207,10 @@ permission:
 <content from master template>
 ```
 
-These Opencode `tools` / `permission` blocks are generated from `METADATA.json` (`defaults.opencode.*`) so you can update them in one place.
+These Opencode `tools` / `permission` blocks are generated from `METADATA.json`.
+
+- Default (applies to all agents): `defaults.opencode.tools_lines` and `defaults.opencode.permission_lines`
+- Per-agent override (optional): `subagents.<agent>.opencode.tools_lines` and `subagents.<agent>.opencode.permission_lines` (falls back to defaults when empty)
 
 ## Design Decisions
 

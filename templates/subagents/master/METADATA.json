@@ -56,7 +56,8 @@
         "copilot": 5,
         "opencode": 46
       },
-      "name": "debugger"
+      "name": "debugger",
+      "opencode": {}
     },
     "implementer": {
       "description": "Feature implementation specialist - builds new functionality and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems.",
@@ -69,7 +70,8 @@
         "copilot": 4,
         "opencode": 45
       },
-      "name": "implementer"
+      "name": "implementer",
+      "opencode": {}
     },
     "planner": {
       "description": "Software architect that creates detailed implementation plans without writing code. Emphasizes YAGNI, KISS, DRY, and leveraging existing systems.",
@@ -82,7 +84,8 @@
         "copilot": 4,
         "opencode": 25
       },
-      "name": "planner"
+      "name": "planner",
+      "opencode": {}
     },
     "refactor": {
       "description": "Refactoring specialist - improves code quality without changing behavior. Applies YAGNI, KISS, DRY principles and leverages existing systems.",
@@ -95,7 +98,8 @@
         "copilot": 4,
         "opencode": 46
       },
-      "name": "refactor"
+      "name": "refactor",
+      "opencode": {}
     },
     "reviewer": {
       "description": "Comprehensive code reviewer - finds security vulnerabilities, bugs, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage.",
@@ -108,7 +112,8 @@
         "copilot": 5,
         "opencode": 45
       },
-      "name": "reviewer"
+      "name": "reviewer",
+      "opencode": {}
     }
   },
   "version": "1.0.0"
