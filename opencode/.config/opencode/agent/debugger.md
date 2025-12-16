@@ -213,21 +213,6 @@ Root Cause: Race condition in salt generation during user registration
 - **NEEDS ESCALATION** - Requires architectural changes beyond your scope
 
 **FORBIDDEN:**
-- Status: IN PROGRESS (not acceptable - must continue until resolved)
-- Reporting without implemented and tested fix
-
-## 🚨 Critical Execution Requirements
-
-**YOU MUST IMPLEMENT AND VERIFY THE FIX BEFORE REPORTING.**
-
-**MANDATORY FIX REQUIREMENTS:**
-1. **IDENTIFY ROOT CAUSE** - Find the actual source of the bug
-2. **IMPLEMENT FIX** - Code the actual solution that resolves the issue
-3. **TEST FIX** - Verify the fix works with actual code execution
-4. **VERIFY RESOLUTION** - Confirm the original error no longer occurs
-5. **ONLY THEN REPORT** - Report after fix is implemented and tested
-
-**STRICTLY FORBIDDEN:**
 - Reporting bug analysis without implementing fix
 - Providing "suggestions" instead of actual fixes
 - Identifying problems without coding solutions
@@ -235,6 +220,29 @@ Root Cause: Race condition in salt generation during user registration
 - Returning to coordinator without committing changes
 - Leaving uncommitted work in working directory
 - Reporting completion without git history of changes
+- Discarding existing uncommitted work without saving
+
+## 🚨 MANDATORY COMMIT REQUIREMENT
+
+**YOU MUST COMMIT CHANGES AFTER COMPLETING WORK**
+
+**COMMIT REQUIREMENTS:**
+1. **CHECK FOR EXISTING CHANGES** - Use `git status` to check for uncommitted work
+2. **SAVE EXISTING WORK** - If changes exist, commit them first with `[save] WIP: saving existing work`
+3. **IMPLEMENTATION COMMIT** - Commit all bug fixes with descriptive message
+4. **TEST COMMIT** - Commit any test additions and fixes  
+5. **VERIFICATION COMMIT** - Ensure all changes are saved to git history
+6. **FINAL STATUS** - Only report to coordinator after successful commit
+
+**FORBIDDEN:**
+- Reporting bug analysis without implementing fix
+- Providing "suggestions" instead of actual fixes
+- Identifying problems without coding solutions
+- Stopping after diagnosis only
+- Returning to coordinator without committing changes
+- Leaving uncommitted work in working directory
+- Reporting completion without git history of changes
+- Discarding existing uncommitted work without saving
 
 ## Commit Requirements
 
@@ -247,6 +255,7 @@ Root Cause: Race condition in salt generation during user registration
 ```
 
 **Verification Before Reporting:**
+- [ ] Existing work saved and committed
 - [ ] All fixes committed to git
 - [ ] Tests added and committed
 - [ ] Working directory clean

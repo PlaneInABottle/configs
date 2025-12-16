@@ -926,15 +926,18 @@ class PaymentService {
 **YOU MUST COMMIT CHANGES AFTER COMPLETING WORK**
 
 **COMMIT REQUIREMENTS:**
-1. **REFACTORING COMMIT** - Commit all refactoring changes with descriptive message
-2. **TEST COMMIT** - Commit any test updates and fixes
-3. **VERIFICATION COMMIT** - Ensure all changes are saved to git history
-4. **FINAL STATUS** - Only report to coordinator after successful commit
+1. **CHECK FOR EXISTING CHANGES** - Use `git status` to check for uncommitted work
+2. **SAVE EXISTING WORK** - If changes exist, commit them first with `[save] WIP: saving existing work`
+3. **REFACTORING COMMIT** - Commit all refactoring changes with descriptive message
+4. **TEST COMMIT** - Commit any test updates and fixes
+5. **VERIFICATION COMMIT** - Ensure all changes are saved to git history
+6. **FINAL STATUS** - Only report to coordinator after successful commit
 
 **FORBIDDEN:**
 - Returning to coordinator without committing changes
 - Leaving uncommitted refactoring in working directory
 - Reporting completion without git history of changes
+- Discarding existing uncommitted work without saving
 
 ## Commit Requirements
 

@@ -282,6 +282,7 @@ After fixing, always ask:
 ```
 
 **Verification Before Reporting:**
+- [ ] Existing work saved and committed
 - [ ] All fixes committed to git
 - [ ] Tests added and committed
 - [ ] Working directory clean
@@ -305,10 +306,12 @@ After fixing, always ask:
 **YOU MUST COMMIT CHANGES AFTER COMPLETING WORK**
 
 **COMMIT REQUIREMENTS:**
-1. **IMPLEMENTATION COMMIT** - Commit all bug fixes with descriptive message
-2. **TEST COMMIT** - Commit any test additions and fixes  
-3. **VERIFICATION COMMIT** - Ensure all changes are saved to git history
-4. **FINAL STATUS** - Only report to coordinator after successful commit
+1. **CHECK FOR EXISTING CHANGES** - Use `git status` to check for uncommitted work
+2. **SAVE EXISTING WORK** - If changes exist, commit them first with `[save] WIP: saving existing work`
+3. **IMPLEMENTATION COMMIT** - Commit all bug fixes with descriptive message
+4. **TEST COMMIT** - Commit any test additions and fixes  
+5. **VERIFICATION COMMIT** - Ensure all changes are saved to git history
+6. **FINAL STATUS** - Only report to coordinator after successful commit
 
 **FORBIDDEN:**
 - Reporting bug analysis without implementing fix
@@ -318,6 +321,7 @@ After fixing, always ask:
 - Returning to coordinator without committing changes
 - Leaving uncommitted work in working directory
 - Reporting completion without git history of changes
+- Discarding existing uncommitted work without saving
 
 ## Important Rules
 

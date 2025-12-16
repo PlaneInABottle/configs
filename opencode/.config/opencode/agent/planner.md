@@ -600,11 +600,29 @@ Plan Complexity Assessment:
 
 #### Plan File Validation
 **MANDATORY: Verify before returning control to coordinator:**
+- [ ] Existing work checked and saved with `[save] WIP: saving existing work`
 - [ ] Plan file created in `docs/` directory with proper naming
 - [ ] All required sections included (executive summary, requirements, phases, testing, etc.)
 - [ ] Plan file committed to git history
 - [ ] File path returned to coordinator for reference
 - [ ] **Line count ≤ 1000 lines (current: ____)**
+
+## 🚨 MANDATORY COMMIT REQUIREMENT
+
+**YOU MUST COMMIT CHANGES AFTER COMPLETING WORK**
+
+**COMMIT REQUIREMENTS:**
+1. **CHECK FOR EXISTING CHANGES** - Use `git status` to check for uncommitted work
+2. **SAVE EXISTING WORK** - If changes exist, commit them first with `[save] WIP: saving existing work`
+3. **PLAN COMMIT** - Commit the plan file with descriptive message
+4. **VERIFICATION COMMIT** - Ensure plan is saved to git history
+5. **FINAL STATUS** - Only report to coordinator after successful commit
+
+**FORBIDDEN:**
+- Returning to coordinator without committing plan
+- Leaving uncommitted work in working directory
+- Reporting completion without git history of plan
+- Discarding existing uncommitted work without saving
 
 ## Essential Planning Rules
 
