@@ -14,19 +14,34 @@ NC='\033[0m'
 # Script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+METADATA_FILE="$CONFIG_DIR/templates/subagents/master/METADATA.json"
 
-# Header line counts (where content actually starts - after blank line)
+# Header line counts (line before content starts) - read from METADATA.json
 get_header_lines() {
     local agent="$1"
     local system="$2"
     
+    # Try to read from METADATA.json first
+    if [[ -f "$METADATA_FILE" ]] && command -v python3 &> /dev/null; then
+        local line_count=$(python3 -c "import json; data=json.load(open('$METADATA_FILE')); print(data['subagents']['$agent']['header_lines']['$system'])" 2>/dev/null || echo "")
+        if [[ -n "$line_count" ]]; then
+            echo "$line_count"
+            return 0
+        fi
+    fi
+    
+    # Fallback to hardcoded values if METADATA.json not available
     case "$system:$agent" in
-        copilot:*) echo "5" ;;  # Header ends at 4, blank at 5, content at 6
-        opencode:debugger) echo "44" ;;
-        opencode:planner) echo "44" ;;
-        opencode:reviewer) echo "44" ;;
+        copilot:debugger) echo "5" ;;
+        copilot:planner) echo "4" ;;
+        copilot:reviewer) echo "5" ;;
+        copilot:implementer) echo "4" ;;
+        copilot:refactor) echo "4" ;;
+        opencode:debugger) echo "46" ;;
+        opencode:planner) echo "25" ;;
+        opencode:reviewer) echo "45" ;;
         opencode:implementer) echo "45" ;;
-        opencode:refactor) echo "45" ;;
+        opencode:refactor) echo "46" ;;
         *) echo "0" ;;
     esac
 }

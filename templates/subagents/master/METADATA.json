@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "created": "2025-12-16T10:23:22.063Z",
-  "description": "Master templates for subagent content",
+  "created": "2025-12-16T10:33:00Z",
+  "description": "Master templates for subagent content with configuration",
   "subagents": {
     "debugger": {
       "name": "debugger",
@@ -11,7 +11,11 @@
         "  - \"Use for performance issues and memory leaks\"",
         "  - \"Use for integration problems and API failures\"",
         "  - \"Use for complex multi-component issue resolution\""
-      ]
+      ],
+      "header_lines": {
+        "copilot": 5,
+        "opencode": 46
+      }
     },
     "planner": {
       "name": "planner",
@@ -20,7 +24,11 @@
         "  - \"Use for complex multi-step features requiring architectural design\"",
         "  - \"Use for large refactoring projects needing systematic planning\"",
         "  - \"Use for security-critical changes requiring careful risk assessment\""
-      ]
+      ],
+      "header_lines": {
+        "copilot": 4,
+        "opencode": 25
+      }
     },
     "reviewer": {
       "name": "reviewer",
@@ -29,7 +37,11 @@
         "  - \"Use for security review of authentication systems\"",
         "  - \"Use for code quality assessment before merging\"",
         "  - \"Use for architectural validation of implementation plans\""
-      ]
+      ],
+      "header_lines": {
+        "copilot": 5,
+        "opencode": 45
+      }
     },
     "implementer": {
       "name": "implementer",
@@ -38,7 +50,11 @@
         "  - \"Use for new API endpoints with comprehensive error handling\"",
         "  - \"Use for complex business logic with thorough testing\"",
         "  - \"Use for UI components with accessibility and performance\""
-      ]
+      ],
+      "header_lines": {
+        "copilot": 4,
+        "opencode": 45
+      }
     },
     "refactor": {
       "name": "refactor",
@@ -47,7 +63,11 @@
         "  - \"Use for code smell elimination and technical debt reduction\"",
         "  - \"Use for performance optimization without behavior changes\"",
         "  - \"Use for improving code maintainability and readability\""
-      ]
+      ],
+      "header_lines": {
+        "copilot": 4,
+        "opencode": 46
+      }
     }
   }
 }
