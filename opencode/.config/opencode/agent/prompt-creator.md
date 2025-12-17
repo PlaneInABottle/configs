@@ -135,8 +135,12 @@ Before generating any prompt, complete this research:
 | **@planner** | Strategic Design | Architecture, planning, risk assessment | Complex changes, new features, system design |
 | **@implementer** | Feature Building | New functionality, API development, component creation | Adding features, implementing designs |
 | **@refactor** | Code Improvement | Restructuring, optimization, maintainability | Code cleanup, restructuring, performance |
-| **@reviewer** | Quality Assurance | Security, performance, architecture validation | After implementation, quality gates |
-| **@debugger** | Issue Resolution | Root cause analysis, bug fixing, diagnostics | Test failures, unexpected behavior |
+| **@reviewer** | Quality Assurance & Validation | Security, performance, architecture validation, code review, logic verification | **Verify implementations, validate correctness, review code quality, check compliance** |
+| **@debugger** | Issue Resolution | Root cause analysis, bug fixing, diagnostics | **ONLY for test failures, bugs, unexpected behavior** |
+
+**CRITICAL DISTINCTIONS:**
+- **Use `@reviewer` for:** Verifying implementations are correct, validating logic, reviewing code quality, checking security/performance
+- **Use `@debugger` for:** Fixing broken tests, debugging issues, investigating failures — NOT for verification
 
 ## Prompt Template Structure
 
@@ -161,11 +165,9 @@ You are acting as a Senior Engineering Coordinator. You have access to subagents
 **PROJECT CONTEXT:**
 - Technology Stack: [identified from research]
 - Project Commands:
-  - Test (fast): [fast command from research, prefer unit/lint/typecheck]
-  - Test (slow, only if needed): [slow command from research, e2e/integration]
+  - Test: [fast test command from research, e.g., unit tests only]
   - Lint: [command from research]
   - Format: [command from research]
-  - Build: [command from research]
 - Current Architecture: [summary from codebase analysis]
 - Existing Patterns: [identified conventions]
 
@@ -173,9 +175,9 @@ You are acting as a Senior Engineering Coordinator. You have access to subagents
 **[CRITICAL: 1–5 PHASES MAX]**
 - Use **1–2 phases** for simple tasks, **3–5 phases** for complex tasks.
 - Each phase should include: **name**, **goal**, **suggested subagents**, and **exit criteria**.
-  - Example suggested subagents: `@planner` (design/plan), `@implementer` (build/tests), `@refactor` (cleanup), `@reviewer` (QA), `@debugger` (failures).
+  - Example suggested subagents: `@planner` (design/plan), `@implementer` (build/tests), `@refactor` (cleanup), `@reviewer` (validate logic/code quality), `@debugger` (ONLY for fixing failures/bugs).
 - Keep phase content high-level (no step-by-step). The coordinator AI should create detailed tasks during execution.
-- **At minimum per phase:** delegate implementation to `@implementer/@refactor` and validation to `@reviewer`.
+- **At minimum per phase:** delegate implementation to `@implementer/@refactor` and validation/verification to `@reviewer`.
 
 **COORDINATION LOOP:**
 For each issue/phase:
@@ -979,7 +981,6 @@ For each phase:
 - Test: npm test
 - Lint: npm run lint
 - Format: npm run format
-- Build: npm run build
 
 **SUBAGENT PROTOCOLS**
 When calling subagents, provide:
