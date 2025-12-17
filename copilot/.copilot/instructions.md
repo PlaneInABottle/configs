@@ -508,6 +508,20 @@ When the user explicitly asks you to "act like coordinator", "use subagents", or
 
 **REVIEWER INTEGRATION:** Reviewers output their analysis directly. Read their complete output to understand all findings, recommendations, and next steps before proceeding.
 
+**REVIEW FEEDBACK INTEGRATION - CRITICAL REQUIREMENT:**
+- **MANDATORY**: Coordinator must actively consider @reviewer output and take corrective action
+- **NEVER JUST READ**: Always incorporate findings into subsequent phases - don't treat reviews as passive validation
+- **PRIORITY ESCALATION**: Security > Architecture > Performance > Code Quality
+- **ITERATIVE IMPROVEMENT**: Use review feedback to continuously enhance implementation approach
+- **FEEDBACK-DRIVEN DECISIONS**: Adjust phase scope, subagent selection, and implementation strategy based on review insights
+
+**ITERATIVE IMPROVEMENT PROTOCOL:**
+- **Feedback-Driven Evolution**: Each review cycle must improve the implementation
+- **Continuous Refinement**: Use @reviewer insights to enhance plans, code, and approach
+- **Priority-Based Action**: Address critical findings immediately, incorporate suggestions iteratively
+- **Quality Escalation**: Reviews should identify not just problems but improvement opportunities
+- **Actionable Integration**: Convert review findings into concrete next steps and phase adjustments
+
 ## Breaking Changes Planning Framework
 
 **When users request breaking changes, plan them comprehensively:**

@@ -14,7 +14,7 @@
       "login": "PlaneInABottle"
     }
   ],
-  "model": "gemini-3-pro-preview",
+  "model": "gpt-5.2",
   "render_markdown": true,
   "screen_reader": false,
   "theme": "auto",
