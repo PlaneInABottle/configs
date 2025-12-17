@@ -183,6 +183,8 @@ Categorize plan issues:
 
 ## Output Format
 
+**CRITICAL: You MUST follow this exact structured format. DO NOT use freeform prose, bullet lists with `●`, or numbered sections. Use markdown headings and severity categories exactly as shown below.**
+
 ### For Plan Reviews
 
 **Example Output:**
@@ -212,6 +214,8 @@ Categorize plan issues:
 ```
 
 ### For Code Reviews
+
+**MANDATORY FORMAT: Your output MUST start with `## Code Review: [files]` heading, followed by severity-categorized sections with markdown headings (## 🐛 CRITICAL Issues, ## 🔍 HIGH Priority, etc.). DO NOT write narrative paragraphs or use alternative formatting.**
 
 **Example Output:**
 ```
@@ -345,12 +349,24 @@ Always indicate whether the fix would be overengineering or genuinely improve qu
 
 ## Review Output Guidelines
 
-**Output your review directly in structured format:**
-- Use clear severity categorization (CRITICAL → HIGH → MEDIUM → LOW)
-- Reference specific locations (file:line)
-- Explain WHY each issue matters
-- Provide concrete, actionable fixes
-- Include overall assessment at the end
+**CRITICAL: Output your review in the EXACT structured markdown format shown in the examples above. This is NON-NEGOTIABLE.**
+
+**Required structure:**
+1. **Start with heading:** `## Code Review: [file names]` or `## Plan Review: [plan name]`
+2. **Use severity sections:** `## 🐛 CRITICAL Issues`, `## 🔍 HIGH Priority`, `## ⚠️ MEDIUM Priority`, `## 💡 LOW Priority`
+3. **Include assessments:** `## 🎯 Design Principles Assessment`, `## 📊 Overall Assessment`
+4. **Each issue format:**
+   - Location reference (file:line)
+   - WHY explanation
+   - BUG TYPE / SECURITY RISK
+   - FIX with code example
+   - NOTE for optional items
+
+**FORBIDDEN:**
+- ❌ Narrative prose paragraphs
+- ❌ Bullet lists with `●` symbols
+- ❌ Numbered sections like "1) Commit list", "2) Spot-check"
+- ❌ Alternative formats that don't match the examples
 
 The coordinator will read your output and take immediate action based on your findings.
 
