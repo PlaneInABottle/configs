@@ -189,9 +189,21 @@ For each issue/phase:
 1. @planner: Create detailed implementation plan
 2. @implementer/@refactor: Execute the plan
 3. @reviewer: Review code quality, security, and correctness
-4. If `@reviewer` finds issues: @implementer fixes them (or @debugger if tests fail)
-5. **COMMIT automatically after each completed phase** (once `@reviewer` approves) with a detailed message
-6. Move to next issue
+4. **CRITICAL: Analyze @reviewer findings and incorporate into immediate action**
+   - **Security issues**: @implementer fixes immediately before proceeding
+   - **Architecture improvements**: @planner refines plan with feedback
+   - **Performance concerns**: @refactor optimizes before continuing
+   - **Code quality issues**: @implementer addresses in current/next phase
+5. If `@reviewer` finds issues: @implementer fixes them (or @debugger if tests fail)
+6. **COMMIT automatically after each completed phase** (once `@reviewer` approves) with a detailed message
+7. Move to next issue
+
+**REVIEW FEEDBACK INTEGRATION - CRITICAL REQUIREMENT:**
+- **MANDATORY**: Coordinator must actively consider @reviewer output and take corrective action
+- **NEVER JUST READ**: Always incorporate findings into subsequent phases - don't treat reviews as passive validation
+- **PRIORITY ESCALATION**: Security > Architecture > Performance > Code Quality
+- **ITERATIVE IMPROVEMENT**: Use review feedback to continuously enhance implementation approach
+- **FEEDBACK-DRIVEN DECISIONS**: Adjust phase scope, subagent selection, and implementation strategy based on review insights
 
 **QUALITY REQUIREMENTS:**
 - Follow design principles: KISS (Keep It Simple Stupid), SOLID, DRY (Don't Repeat Yourself), YAGNI (You Aren't Gonna Need It), Composition over Inheritance
@@ -208,6 +220,13 @@ For each issue/phase:
 - Code follows project conventions
 - Documentation updated
 - No redundant code remaining
+
+**ITERATIVE IMPROVEMENT PROTOCOL:**
+- **Feedback-Driven Evolution**: Each review cycle must improve the implementation
+- **Continuous Refinement**: Use @reviewer insights to enhance plans, code, and approach
+- **Priority-Based Action**: Address critical findings immediately, incorporate suggestions iteratively
+- **Quality Escalation**: Reviews should identify not just problems but improvement opportunities
+- **Actionable Integration**: Convert review findings into concrete next steps and phase adjustments
 
 **EXECUTION RULES - CRITICAL EMPHASIS:**
 - Use subagents aggressively in the specified loop
@@ -1008,11 +1027,13 @@ When calling subagents, provide:
 **SUBAGENT LOOP USAGE - ABSOLUTE REQUIREMENT:**
 ```
 COORDINATION LOOP EXECUTION:
-├── Phase 1 Complete → @reviewer validation → Commit → Phase 2
-├── Phase 2 Complete → @reviewer validation → Commit → Phase 3
-├── Phase N Complete → @reviewer validation → Commit → Check for new issues
+├── Phase 1 Complete → @reviewer validation → **INCORPORATE FEEDBACK** → Commit → Phase 2
+├── Phase 2 Complete → @reviewer validation → **INCORPORATE FEEDBACK** → Commit → Phase 3
+├── Phase N Complete → @reviewer validation → **INCORPORATE FEEDBACK** → Commit → Check for new issues
+├── **REVIEW FINDINGS DISCOVERED** → @implementer/@refactor addresses immediately → @reviewer re-validates → Continue
 ├── New Issues Found → Add to execution queue → Continue loop
 ├── Quality Gates Passed → Move to next phase
+├── **REVIEW IMPROVEMENTS IDENTIFIED** → Integrate into next phase planning → Enhanced execution
 ├── Test Failures → @debugger → @implementer/@refactor → @reviewer → Continue
 └── **NEVER STOP UNTIL MISSION COMPLETE**
 ```
@@ -1023,6 +1044,10 @@ COORDINATION LOOP EXECUTION:
 - ✅ **Quality Improvements**: Beneficial enhancements → Implement → Continue
 - ✅ **Test Fixes**: Failures resolved → Validation → Continue
 - ✅ **Documentation Updates**: Required changes → Implement → Continue
+- ✅ **Review Feedback Integration**: @reviewer findings → Immediate action → Enhanced implementation
+- ✅ **Security Issues**: Critical vulnerabilities → Priority fixes → Re-validation → Continue
+- ✅ **Architecture Suggestions**: @reviewer insights → @planner refinement → Improved plan → Continue
+- ✅ **Performance Concerns**: @reviewer flags → @refactor optimization → Validation → Continue
 
 **LOOP TERMINATION CONDITIONS (RARE):**
 - ❌ **ONLY STOP FOR**: Major architectural decisions requiring user business approval
@@ -1137,11 +1162,13 @@ Phase 4: Document & Release-Ready (if needed)
 **SUBAGENT LOOP USAGE - ABSOLUTE REQUIREMENT:**
 ```
 COORDINATION LOOP EXECUTION:
-├── Phase 1 Complete → @reviewer validation → Commit → Phase 2
-├── Phase 2 Complete → @reviewer validation → Commit → Phase 3
-├── Phase N Complete → @reviewer validation → Commit → Check for new issues
+├── Phase 1 Complete → @reviewer validation → **INCORPORATE FEEDBACK** → Commit → Phase 2
+├── Phase 2 Complete → @reviewer validation → **INCORPORATE FEEDBACK** → Commit → Phase 3
+├── Phase N Complete → @reviewer validation → **INCORPORATE FEEDBACK** → Commit → Check for new issues
+├── **REVIEW FINDINGS DISCOVERED** → @implementer/@refactor addresses immediately → @reviewer re-validates → Continue
 ├── New Issues Found → Add to execution queue → Continue loop
 ├── Quality Gates Passed → Move to next phase
+├── **REVIEW IMPROVEMENTS IDENTIFIED** → Integrate into next phase planning → Enhanced execution
 ├── Integration Issues → @debugger → @implementer/@refactor → @reviewer → Continue
 └── **NEVER STOP UNTIL MISSION COMPLETE**
 ```
@@ -1152,6 +1179,9 @@ COORDINATION LOOP EXECUTION:
 - ✅ **Performance Problems**: Bottlenecks identified → @refactor optimization → Validation → Continue
 - ✅ **Security Enhancements**: Vulnerabilities found → @implementer fixes → @reviewer validation → Continue
 - ✅ **Documentation Updates**: API changes require docs → @implementer updates → Continue
+- ✅ **Review Feedback Integration**: @reviewer findings → Immediate action → Enhanced implementation
+- ✅ **Architecture Refinements**: @reviewer suggestions → @planner updates plan → Improved approach
+- ✅ **Code Quality Improvements**: @reviewer feedback → @implementer/@refactor enhancements → Continue
 
 **LOOP TERMINATION CONDITIONS (RARE):**
 - ❌ **ONLY STOP FOR**: Major architectural changes affecting business strategy
