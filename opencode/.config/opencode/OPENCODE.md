@@ -501,12 +501,12 @@ When the user explicitly asks you to "act like coordinator", "use subagents", or
     - If risky → @reviewer to verify (include project commands)
 3. Final @reviewer audit for major features (include project commands)
 4. **SESSION COMPLETION SUMMARY** - Save comprehensive session summary documenting all phases, issues resolved, and future recommendations
-5. **SESSION COMPLETION CLEANUP** - Delete planner plan files and reviewer review files, preserve session summary
+5. **SESSION COMPLETION CLEANUP** - Delete planner plan files, preserve session summary
 6. **PROJECT COMPLETION CLEANUP** - Delete planner plan files and clean repository state
 
 **IMPORTANT:** Subagents do NOT call other subagents. All orchestration is handled by the coordinator (primary agent).
 
-**REVIEWER INTEGRATION:** After reviewers complete their analysis and save review files, coordinators MUST read the review files to understand all findings, recommendations, and next steps. Reviewers will provide both a summary of critical/high findings and the file path for detailed reading.
+**REVIEWER INTEGRATION:** Reviewers output their analysis directly. Read their complete output to understand all findings, recommendations, and next steps before proceeding.
 
 ## Breaking Changes Planning Framework
 
@@ -1129,9 +1129,8 @@ When facing a technical decision, evaluate:
 **Session completion summary & cleanup validation:**
 - [ ] **Session summary saved** - Comprehensive summary saved to docs/[session-summary]-summary.md
 - [ ] **Planner plan files deleted** - All docs/*.plan.md files removed after session completion
-- [ ] **Reviewer review files deleted** - All docs/*.review.md files removed after session completion
 - [ ] **Session summary preserved** - Summary file kept for future reference
-- [ ] **Repository state clean** - No temporary planning or review artifacts remaining
+- [ ] **Repository state clean** - No temporary planning artifacts remaining
 - [ ] **Cleanup verification complete** - All summary and cleanup actions verified before session finalization
 
 ### Session Summary Template

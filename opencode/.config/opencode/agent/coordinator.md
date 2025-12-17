@@ -251,8 +251,7 @@ Issue Detected:
 
 **Project Completion Cleanup (MANDATORY):**
 - Delete all planner-generated plan files (docs/*.plan.md)
-- Delete all reviewer-generated review files (docs/*.review.md)
-- Clean up any temporary planning and review artifacts
+- Clean up any temporary planning artifacts
 - Verify repository state is clean and ready for next project
 - **PRESERVE session summary file** - Keep `docs/[session-summary]-summary.md` for future reference
 
@@ -282,7 +281,6 @@ Issue Detected:
 - [ ] Session summary saved to docs/[session-summary]-summary.md
 - [ ] All planner plan files deleted from docs/ directory
 - [ ] All reviewer review files deleted from docs/ directory
-- [ ] Session summary file preserved for future reference
 - [ ] No temporary planning/review artifacts remaining in repository
 - [ ] Repository state clean and ready for next session
 - [ ] All summary and cleanup actions completed and verified
@@ -513,6 +511,10 @@ New Task Received:
 - Inconsistent tracking
 
 ## Subagent Communication Standards
+
+**IMPORTANT:** Subagents do NOT call other subagents. All orchestration is handled by the coordinator.
+
+**REVIEWER INTEGRATION:** Reviewers output their analysis directly. Read their complete output to understand all findings, recommendations, and next steps before proceeding.
 
 **📋 REQUIRED CONTEXT:** Include ALL of these elements in every subagent prompt for reliable execution.
 
