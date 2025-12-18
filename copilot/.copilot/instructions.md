@@ -227,11 +227,7 @@ Feature Requested:
 
 ## Available Subagents
 
-### @debugger
-**Purpose:** Root cause analysis across codebase
-**When to use:** Moderate bugs requiring investigation
-**Input:** Error description, reproduction steps, relevant code
-**Output:** Root cause analysis + fix recommendations
+
 
 ### @planner
 **Purpose:** Architecture design and detailed planning
@@ -735,7 +731,7 @@ Coordinator: "Tests failed in Phase 6. Use @reviewer for analysis"
 @reviewer Output: Root cause analysis - circular import issue
 
 Coordinator: "Use @implementer to fix based on reviewer analysis"
-[Input to @refactor: "Fix circular import identified by @debugger: [specific fix]"]
+[Input to @implementer: "Fix circular import identified by @reviewer analysis: [specific fix]"]
 @refactor Output: Fixed
 
 Coordinator: "Re-running tests..."
