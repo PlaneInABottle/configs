@@ -170,7 +170,7 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 
 - **Trivial (typo, one-line fix)** → Handle directly
 - **Simple (2-5 line fix, clear solution)** → Handle directly
-- **Moderate (requires investigation, unclear root cause)** → Use @debugger for diagnosis, then handle fix
+- **Moderate (requires investigation, unclear root cause)** → Use @reviewer for analysis and bug detection
 - **Complex (multi-file changes, architectural impact)** → Use @planner for design, then phased implementation
 - **Security-critical (auth, payments, data handling)** → Always involve @reviewer before and after changes
 
@@ -221,11 +221,7 @@ Feature Requested:
 
 ## Available Subagents
 
-### @debugger
-**Purpose:** Root cause analysis across codebase
-**When to use:** Moderate bugs requiring investigation
-**Input:** Error description, reproduction steps, relevant code
-**Output:** Root cause analysis + fix recommendations
+
 
 ### @planner
 **Purpose:** Architecture design and detailed planning
@@ -729,7 +725,7 @@ Coordinator: "Tests failed in Phase 6. Use @reviewer for analysis"
 @reviewer Output: Root cause analysis - circular import issue
 
 Coordinator: "Use @implementer to fix based on reviewer analysis"
-[Input to @refactor: "Fix circular import identified by @debugger: [specific fix]"]
+[Input to @implementer: "Fix circular import identified by @reviewer analysis: [specific fix]"]
 @refactor Output: Fixed
 
 Coordinator: "Re-running tests..."
