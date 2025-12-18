@@ -114,6 +114,21 @@
       },
       "name": "reviewer",
       "opencode": {}
+    },
+    "coordinator": {
+      "description": "Multi-phase project coordinator - orchestrates specialized agents for systematic software engineering excellence",
+      "examples": [
+        "  - \"Use for complex multi-step software tasks requiring systematic execution\"",
+        "  - \"Use for codebase cleanup and refactoring projects with quality assurance\"",
+        "  - \"Use for feature implementation with comprehensive testing and review\""
+      ],
+      "header_lines": {
+        "copilot": 6,
+        "opencode": 47
+      },
+      "name": "coordinator",
+      "opencode": {},
+      "mode": "primary"
     }
   },
   "version": "1.0.0"

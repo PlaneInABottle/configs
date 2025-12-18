@@ -63,6 +63,7 @@ copilot/.copilot/command-history-state.json
 copilot/.copilot/history-session-state/
 copilot/.copilot/logs/
 copilot/.copilot/session-state/
+copilot/.copilot/pkg/
 
 # Gemini CLI - Exclude account info and runtime files
 gemini/.gemini/google_account_id

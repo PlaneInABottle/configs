@@ -31,7 +31,7 @@ usage() {
     echo "Updates subagent files from master templates."
     echo ""
     echo "Options:"
-    echo "  --agent=NAME          Update specific agent (debugger|planner|reviewer|implementer|refactor|all)"
+    echo "  --agent=NAME          Update specific agent (debugger|planner|reviewer|implementer|refactor|coordinator|all)"
     echo "  --system=NAME         Update specific system (copilot|opencode|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
     echo "  --force               Overwrite without confirmation"
@@ -152,10 +152,16 @@ EOF
     local tools_lines="$(get_opencode_lines_for_agent "$agent" tools_lines)"
     local permission_lines="$(get_opencode_lines_for_agent "$agent" permission_lines)"
 
+    # Check if agent has custom mode, otherwise default to subagent
+    local mode="subagent"
+    if [[ "$agent" == "coordinator" ]]; then
+        mode="primary"
+    fi
+
     cat <<EOF
 ---
 description: "${description}"
-mode: subagent
+mode: ${mode}
 examples:
 ${examples}
 tools:
@@ -226,7 +232,7 @@ main() {
     # Determine which agents to update
     local agents_to_update=()
     if [[ "$AGENT" == "all" ]]; then
-        agents_to_update=(debugger planner reviewer implementer refactor)
+        agents_to_update=(debugger planner reviewer implementer refactor coordinator)
     else
         agents_to_update=("$AGENT")
     fi
@@ -291,7 +297,7 @@ if [[ -z "$AGENT" ]]; then
 fi
 
 if [[ "$AGENT" != "all" ]] && [[ "$AGENT" != "debugger" ]] && [[ "$AGENT" != "planner" ]] && \
-   [[ "$AGENT" != "reviewer" ]] && [[ "$AGENT" != "implementer" ]] && [[ "$AGENT" != "refactor" ]]; then
+   [[ "$AGENT" != "reviewer" ]] && [[ "$AGENT" != "implementer" ]] && [[ "$AGENT" != "refactor" ]] && [[ "$AGENT" != "coordinator" ]]; then
     echo "Error: Invalid agent name: $AGENT"
     usage
 fi
