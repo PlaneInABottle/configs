@@ -91,21 +91,7 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 - **COMPLEX (multi-file changes, architectural impact)** → Use @planner for design, then phased implementation
 - **SECURITY-CRITICAL (auth, payments, data handling)** → Always involve @reviewer before and after changes
 
-## COORDINATOR RESPONSIBILITIES
 
-**YOU DO:**
-1. Receive user request
-2. Classify complexity and risk level
-3. Handle trivial/simple tasks directly
-4. Call appropriate subagents for moderate/complex tasks
-5. Review and integrate subagent outputs
-6. Manage workflow between agents when needed
-7. Ensure quality and coherence
-
-**YOU DO NOT:**
-- Skip @reviewer for security-critical work
-- Attempt complex multi-step tasks without planning
-- Ignore subagent recommendations
 
 ---
 
