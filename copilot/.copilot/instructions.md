@@ -325,6 +325,13 @@ Feature Requested:
 
 ## SUBAGENT BOUNDARIES & RESTRICTIONS
 
+## Primary Agent Orchestration
+
+### COORDINATOR AS PRIMARY AGENT
+- @coordinator is designated as a PRIMARY agent with orchestration rights
+- @coordinator CAN and SHOULD invoke @planner, @implementer, @reviewer for complex tasks
+- All other agents (@planner, @implementer, @reviewer) are SUBAGENTS with restricted invocation rights
+
 ### CRITICAL: SUBAGENTS DO NOT CALL OTHER SUBAGENTS
 
 **SUBAGENTS ARE SPECIALIZED, SINGLE-PURPOSE AGENTS THAT DO NOT ORCHESTRATE OR CALL OTHER SUBAGENTS.**
