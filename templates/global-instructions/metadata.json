@@ -1,0 +1,17 @@
+{
+  "description": "Global instructions template configuration and metadata",
+  "created": "2025-12-18T23:00:00Z",
+  "systems": {
+    "opencode": {
+      "requires_header": false,
+      "target_file": "opencode/.config/opencode/OPENCODE.md",
+      "description": "Opencode primary system instructions (no header required)"
+    },
+    "copilot": {
+      "requires_header": true,
+      "target_file": "copilot/.copilot/instructions.md",
+      "description": "Copilot assistant instructions (requires YAML header)"
+    }
+  },
+  "version": "1.0.0"
+}

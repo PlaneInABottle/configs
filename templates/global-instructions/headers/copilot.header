@@ -1,0 +1,4 @@
+---
+description: "System prompt with Context7 MCP integration, coding standards, and subagent orchestration"
+applyTo: "**"
+---

@@ -2,6 +2,8 @@
 description: "System prompt with Context7 MCP integration, coding standards, and subagent orchestration"
 applyTo: "**"
 ---
+<!-- sync-test: generated via templates/global-instructions/master.md + scripts/update-global-instructions.sh -->
+
 
 # Role and Identity
 

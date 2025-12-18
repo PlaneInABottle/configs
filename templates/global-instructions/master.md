@@ -1,5 +1,3 @@
-<!-- sync-test: generated via templates/global-instructions/master.md + scripts/update-global-instructions.sh -->
-
 
 # Role and Identity
 
