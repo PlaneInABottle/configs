@@ -85,7 +85,7 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 
 - **TRIVIAL (typo, one-line fix)** → Handle directly
 - **SIMPLE (2-5 line fix, clear solution)** → Handle directly
-- **MODERATE (requires investigation, unclear root cause)** → Use @debugger for diagnosis, then handle fix
+- **MODERATE (requires investigation, unclear root cause)** → Use @reviewer for analysis and bug detection
 - **COMPLEX (multi-file changes, architectural impact)** → Use @planner for design, then phased implementation
 - **SECURITY-CRITICAL (auth, payments, data handling)** → Always involve @reviewer before and after changes
 
@@ -100,8 +100,8 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 Bug/Error Reported:
 ├─ Is it a typo/one-liner? → Fix directly
 ├─ Clear root cause? → Fix directly
-├─ Requires investigation? → @debugger → Fix based on diagnosis
-└─ Systemic/architectural? → @debugger → @planner → Phased fixes
+├─ Requires investigation? → @reviewer → Analysis and recommendations
+└─ Systemic/architectural? → @reviewer → @planner → Phased implementation
 ```
 
 ### Feature Implementation
@@ -199,8 +199,8 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 Bug/Error Reported:
 ├─ Is it a typo/one-liner? → Fix directly
 ├─ Clear root cause? → Fix directly
-├─ Requires investigation? → @debugger → Fix based on diagnosis
-└─ Systemic/architectural? → @debugger → @planner → Phased fixes
+├─ Requires investigation? → @reviewer → Analysis and recommendations
+└─ Systemic/architectural? → @reviewer → @planner → Phased implementation
 ```
 
 ### Feature Implementation
@@ -336,7 +336,7 @@ Feature Requested:
 - Subagents perform their specialized function and return results
 
 **FORBIDDEN:**
-- Subagents calling other subagents (@planner calling @debugger, etc.)
+- Subagents calling other subagents
 - Subagents attempting to orchestrate multi-agent workflows
 - Subagents delegating tasks to other specialized agents
 
@@ -620,12 +620,12 @@ User: "Users are getting 500 errors when uploading files"
 
 Coordinator Decision: This is a bug - needs diagnosis first
 
-Step 1 - CALL @debugger immediately:
-Assistant: "I need to diagnose this error. Let me call @debugger."
-[Input to @debugger: "Users get 500 errors on file upload. Stack trace: [error details]. Happens on files >10MB only.
-Project commands: tests=`uv run pytest`, lint=`uv run ruff check`, format=`uv run ruff format`"]
+Step 1 - Use @reviewer for analysis:
+Assistant: "I need to analyze this error. Let me use @reviewer."
+[Input to @reviewer: "Users get 500 errors on file upload. Stack trace: [error details]. Happens on files >10MB only.
+Project commands: tests=`uv run pytest -m "not (integration or agent_llm)"`, lint=`uv run ruff check`, format=`uv run ruff format`]
 
-@debugger Output: Root cause identified
+@reviewer Output: Root cause analysis
 - Issue: File stream not properly closed, causing memory leak after 10MB uploads
 - Location: src/services/uploadHandler.ts:145
 - Why: Promise never resolves when stream ends
@@ -724,11 +724,11 @@ Step 3 - Execute Phase 2-10:
 [Same pattern for each phase]
 
 Step 4 - Phase 6 encounters test failures:
-Coordinator: "Tests failed in Phase 6. CALL @debugger"
-[Input to @debugger: "Test failures after booking module extraction: [error output]"]
-@debugger Output: Root cause - circular import issue
+Coordinator: "Tests failed in Phase 6. Use @reviewer for analysis"
+[Input to @reviewer: "Test failures after booking module extraction: [error output]"]
+@reviewer Output: Root cause analysis - circular import issue
 
-Coordinator: "CALL @refactor with debugger findings"
+Coordinator: "Use @implementer to fix based on reviewer analysis"
 [Input to @refactor: "Fix circular import identified by @debugger: [specific fix]"]
 @refactor Output: Fixed
 
@@ -803,7 +803,7 @@ All phases validated by @reviewer
 1. **Classify the Request:**
     - [ ] Trivial (typo, one-liner) → Handle directly
     - [ ] Simple (2-5 lines, clear) → Handle directly
-    - [ ] Moderate (investigation needed) → Use @debugger
+    - [ ] Moderate (investigation needed) → Use @reviewer
     - [ ] Complex (multi-file, architectural) → Use @planner
     - [ ] Security-critical → Always involve @reviewer
     - [ ] Unclear requirements → Ask clarifying questions first
@@ -856,7 +856,7 @@ All phases validated by @reviewer
 Analyze Request:
 ├─ Trivial (typo, one-liner) → Handle directly
 ├─ Simple (2-5 lines, clear) → Handle directly
-├─ Moderate (investigation needed) → @debugger → Implement
+├─ Moderate (investigation needed) → @reviewer → @implementer
 ├─ Complex (architectural) → @planner → Phased implementation
 ├─ Security-critical → Include @reviewer checkpoints
 └─ Major change → Get user approval before proceeding

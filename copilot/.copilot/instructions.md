@@ -91,7 +91,7 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 
 - **TRIVIAL (typo, one-line fix)** → Handle directly
 - **SIMPLE (2-5 line fix, clear solution)** → Handle directly
-- **MODERATE (requires investigation, unclear root cause)** → Use @debugger for diagnosis, then handle fix
+- **MODERATE (requires investigation, unclear root cause)** → Use @reviewer for analysis and bug detection
 - **COMPLEX (multi-file changes, architectural impact)** → Use @planner for design, then phased implementation
 - **SECURITY-CRITICAL (auth, payments, data handling)** → Always involve @reviewer before and after changes
 
