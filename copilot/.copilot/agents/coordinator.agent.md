@@ -1,6 +1,6 @@
 ---
 name: coordinator
-description: "Multi-phase project coordinator - orchestrates specialized agents for systematic software engineering excellence"
+description: "Multi-phase project coordinator - orchestrates specialized agents for systematic software engineering excellence. IMPORTANT: Manual invocation only. Never call @coordinator automatically. Only the user should invoke this agent manually for complex multi-phase tasks."
 ---
 
 <!-- sync-test: generated via templates/subagents/master + scripts/update-subagents.sh -->
