@@ -44,21 +44,7 @@
   },
   "description": "Master templates for subagent content with configuration",
   "subagents": {
-    "debugger": {
-      "description": "Debugging specialist - finds and fixes bugs directly",
-      "examples": [
-        "  - \"Use for test failures and unexpected behavior diagnosis\"",
-        "  - \"Use for performance issues and memory leaks\"",
-        "  - \"Use for integration problems and API failures\"",
-        "  - \"Use for complex multi-component issue resolution\""
-      ],
-      "header_lines": {
-        "copilot": 5,
-        "opencode": 46
-      },
-      "name": "debugger",
-      "opencode": {}
-    },
+
     "implementer": {
       "description": "Feature implementation specialist - builds new functionality and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems.",
       "examples": [
@@ -102,9 +88,9 @@
       "opencode": {}
     },
     "reviewer": {
-      "description": "Comprehensive code reviewer - finds bugs, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage.",
+      "description": "Comprehensive code reviewer and bug analyst - finds bugs, runtime errors, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage.",
       "examples": [
-        "  - \"Use for security review of authentication systems\"",
+        "  - \"Use for bug analysis and runtime error investigation\"",
         "  - \"Use for code quality assessment before merging\"",
         "  - \"Use for architectural validation of implementation plans\""
       ],
