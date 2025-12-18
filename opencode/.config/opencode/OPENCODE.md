@@ -501,8 +501,8 @@ When the user explicitly asks you to "act like coordinator", "use subagents", or
     - If risky → @reviewer to verify (include project commands)
 3. Final @reviewer audit for major features (include project commands)
 4. **SESSION COMPLETION SUMMARY** - Save comprehensive session summary documenting all phases, issues resolved, and future recommendations
-5. **SESSION COMPLETION CLEANUP** - Delete planner plan files, preserve session summary
-6. **PROJECT COMPLETION CLEANUP** - Delete planner plan files and clean repository state
+5. **SESSION COMPLETION CLEANUP** - Delete implemented planner plan files, preserve session summary and unimplemented plans
+6. **PROJECT COMPLETION CLEANUP** - Delete implemented planner plan files and clean repository state, preserve unimplemented plans as reference
 
 **IMPORTANT:** Subagents do NOT call other subagents. All orchestration is handled by the coordinator (primary agent).
 
@@ -1142,9 +1142,10 @@ When facing a technical decision, evaluate:
 
 **Session completion summary & cleanup validation:**
 - [ ] **Session summary saved** - Comprehensive summary saved to docs/[session-summary]-summary.md
-- [ ] **Planner plan files deleted** - All docs/*.plan.md files removed after session completion
+- [ ] **Implemented plan files deleted** - Only docs/*.plan.md files for completed phases removed after session completion
+- [ ] **Unimplemented plans preserved** - Unimplemented plan files kept as future reference documentation
 - [ ] **Session summary preserved** - Summary file kept for future reference
-- [ ] **Repository state clean** - No temporary planning artifacts remaining
+- [ ] **Repository state clean** - No unnecessary temporary artifacts remaining
 - [ ] **Cleanup verification complete** - All summary and cleanup actions verified before session finalization
 
 ### Session Summary Template
