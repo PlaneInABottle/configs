@@ -232,7 +232,7 @@ main() {
     # Determine which agents to update
     local agents_to_update=()
     if [[ "$AGENT" == "all" ]]; then
-        agents_to_update=(debugger planner reviewer implementer refactor coordinator)
+        agents_to_update=(planner reviewer implementer coordinator)
     else
         agents_to_update=("$AGENT")
     fi
@@ -296,8 +296,8 @@ if [[ -z "$AGENT" ]]; then
     usage
 fi
 
-if [[ "$AGENT" != "all" ]] && [[ "$AGENT" != "debugger" ]] && [[ "$AGENT" != "planner" ]] && \
-   [[ "$AGENT" != "reviewer" ]] && [[ "$AGENT" != "implementer" ]] && [[ "$AGENT" != "refactor" ]] && [[ "$AGENT" != "coordinator" ]]; then
+if [[ "$AGENT" != "all" ]] && [[ "$AGENT" != "planner" ]] && \
+   [[ "$AGENT" != "reviewer" ]] && [[ "$AGENT" != "implementer" ]] && [[ "$AGENT" != "coordinator" ]]; then
     echo "Error: Invalid agent name: $AGENT"
     usage
 fi

@@ -83,7 +83,7 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 
 ## TASK CLASSIFICATION & ESCALATION
 
-**IMPORTANT:** Never call @coordinator as a subagent. It will be used by the user manually for complex orchestration. For complex tasks, use @planner, @implementer, @refactor, or @reviewer directly.
+**IMPORTANT:** Never call @coordinator as a subagent. It will be used by the user manually for complex orchestration. For complex tasks, use @planner, @implementer, or @reviewer directly.
 
 - **TRIVIAL (typo, one-line fix)** → Handle directly
 - **SIMPLE (2-5 line fix, clear solution)** → Handle directly
@@ -249,11 +249,7 @@ Feature Requested:
 **Input:** Phase description, requirements, constraints
 **Output:** Working implementation, tested, ready for next phase
 
-### @refactor
-**Purpose:** Code optimization and cleanup
-**When to use:** Module refactoring, performance optimization
-**Input:** Module to refactor, optimization goals
-**Output:** Refactored module, same behavior, improved quality
+
 
 
 
@@ -315,7 +311,7 @@ Feature Requested:
    - **Include commit requirements** in all subagent prompts
    - **Include Context7 research requirements** for @reviewer calls
    - If security-critical → @reviewer first (include project commands)
-   - @implementer or @refactor for implementation (include project commands)
+   - @implementer for implementation and refactoring (include project commands)
    - Run tests to verify implementation works
    - **ENSURE SUBAGENT COMMITS** with descriptive message for the completed phase
    - If risky → @reviewer to verify (include project commands)
@@ -370,7 +366,7 @@ Feature Requested:
     - **Include commit requirements** in all subagent prompts
     - **Include Context7 research requirements** for @reviewer calls
     - If security-critical → @reviewer first (include project commands)
-    - @implementer or @refactor for implementation (include project commands)
+   - @implementer for implementation and refactoring (include project commands)
     - Run tests to verify implementation works
     - **ENSURE SUBAGENT COMMITS** with descriptive message for the completed phase
     - If risky → @reviewer to verify (include project commands)
@@ -705,9 +701,9 @@ Project commands: test=`uv run pytest -m 'not (integration or agent_llm)'`, lint
 Goal: Extract ~400 lines to flight_filters.py"]
 @planner Output: Detailed extraction plan
 
-Coordinator: "Plan approved. CALL @refactor for implementation"
-[Input to @refactor: "Execute Phase 1: Extract flight filtering per plan. Write tests."]
-@refactor Output: flight_filters.py created, flight_selector.py updated
+Coordinator: "Plan approved. Use @implementer for implementation and refactoring"
+[Input to @implementer: "Execute Phase 1: Extract flight filtering per plan. Write tests and refactor as needed."]
+@implementer Output: flight_filters.py created, flight_selector.py updated with improved code quality
 
 Coordinator: "Running tests..."
 [Runs: uv run pytest -m 'not (integration or agent_llm)']
@@ -726,9 +722,9 @@ Coordinator: "Tests failed in Phase 6. Use @reviewer for analysis"
 [Input to @reviewer: "Test failures after booking module extraction: [error output]"]
 @reviewer Output: Root cause analysis - circular import issue
 
-Coordinator: "Use @implementer to fix based on reviewer analysis"
+Coordinator: "Use @implementer to fix and refactor based on reviewer analysis"
 [Input to @implementer: "Fix circular import identified by @reviewer analysis: [specific fix]"]
-@refactor Output: Fixed
+@implementer Output: Fixed and refactored
 
 Coordinator: "Re-running tests..."
 Tests: PASSED
@@ -1124,7 +1120,7 @@ When facing a technical decision, evaluate:
 
 ## Session Metadata
 - **Coordinator Agent:** Version/Configuration
-- **Subagents Used:** @planner, @implementer, @refactor, @reviewer
+- **Subagents Used:** @planner, @implementer, @reviewer
 - **Key Technologies:** [Languages, frameworks, tools used]
 - **External Dependencies:** [APIs, libraries, services integrated]
 - **Session Completed:** [Timestamp]

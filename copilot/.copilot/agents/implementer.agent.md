@@ -1,6 +1,6 @@
 ---
 name: implementer
-description: "Feature implementation specialist - builds new functionality and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems."
+description: "Feature implementation specialist - builds new functionality, optimizes code quality, and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems."
 ---
 
 <!-- sync-test: generated via templates/subagents/master + scripts/update-subagents.sh -->

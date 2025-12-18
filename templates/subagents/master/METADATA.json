@@ -46,11 +46,13 @@
   "subagents": {
 
     "implementer": {
-      "description": "Feature implementation specialist - builds new functionality and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems.",
+      "description": "Feature implementation specialist - builds new functionality, optimizes code quality, and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems.",
       "examples": [
         "  - \"Use for new API endpoints with comprehensive error handling\"",
         "  - \"Use for complex business logic with thorough testing\"",
-        "  - \"Use for UI components with accessibility and performance\""
+        "  - \"Use for UI components with accessibility and performance\"",
+        "  - \"Use for code refactoring and quality optimization\"",
+        "  - \"Use for performance improvements and technical debt reduction\""
       ],
       "header_lines": {
         "copilot": 4,
@@ -73,20 +75,7 @@
       "name": "planner",
       "opencode": {}
     },
-    "refactor": {
-      "description": "Refactoring specialist - improves code quality without changing behavior. Applies YAGNI, KISS, DRY principles and leverages existing systems.",
-      "examples": [
-        "  - \"Use for code smell elimination and technical debt reduction\"",
-        "  - \"Use for performance optimization without behavior changes\"",
-        "  - \"Use for improving code maintainability and readability\""
-      ],
-      "header_lines": {
-        "copilot": 4,
-        "opencode": 46
-      },
-      "name": "refactor",
-      "opencode": {}
-    },
+
     "reviewer": {
       "description": "Comprehensive code reviewer and bug analyst - finds bugs, runtime errors, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage.",
       "examples": [

@@ -1,10 +1,12 @@
 ---
-description: "Feature implementation specialist - builds new functionality and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems."
+description: "Feature implementation specialist - builds new functionality, optimizes code quality, and adds features. Follows YAGNI, KISS, DRY principles and leverages existing systems."
 mode: subagent
 examples:
   - "Use for new API endpoints with comprehensive error handling"
   - "Use for complex business logic with thorough testing"
   - "Use for UI components with accessibility and performance"
+  - "Use for code refactoring and quality optimization"
+  - "Use for performance improvements and technical debt reduction"
 tools:
   write: true
   edit: true
