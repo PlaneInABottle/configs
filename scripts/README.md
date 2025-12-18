@@ -9,11 +9,10 @@ This system uses **master templates** as single source of truth and generates to
 ```
 templates/subagents/
 ├── master/                 # Single source of truth
-│   ├── debugger.md
 │   ├── planner.md
 │   ├── reviewer.md
 │   ├── implementer.md
-│   ├── refactor.md
+│   ├── coordinator.md
 │   └── METADATA.json       # Agent metadata (descriptions, examples)
 └── headers/                # Tool-specific headers
     ├── copilot.template    # Copilot header format
@@ -62,7 +61,7 @@ Generates subagent files from master templates + headers.
 ```
 
 **Options:**
-- `--agent=NAME` - Agent to update (debugger|planner|reviewer|implementer|refactor|all)
+- `--agent=NAME` - Agent to update (planner|reviewer|implementer|coordinator|all)
 - `--system=NAME` - System to update (copilot|opencode|all) [default: all]
 - `--dry-run` - Preview changes without modifying files
 - `--force` - Overwrite without confirmation
@@ -106,17 +105,17 @@ Validates that copilot and opencode files have identical content.
 
 1. **Edit master template:**
    ```bash
-   # Edit the master template
-   vim templates/subagents/master/debugger.md
+   # Edit the master template (e.g., planner, implementer, reviewer, coordinator)
+   vim templates/subagents/master/implementer.md
    ```
 
 2. **Update all files:**
    ```bash
    # Dry run first to preview
-   ./scripts/update-subagents.sh --agent=debugger --dry-run
-   
+   ./scripts/update-subagents.sh --agent=implementer --dry-run
+
    # Apply changes
-   ./scripts/update-subagents.sh --agent=debugger --force
+   ./scripts/update-subagents.sh --agent=implementer --force
    ```
 
 3. **Validate:**
@@ -127,7 +126,7 @@ Validates that copilot and opencode files have identical content.
 4. **Commit:**
    ```bash
    git add templates copilot opencode
-   git commit -m "[subagents] Update debugger: <description>"
+   git commit -m "[subagents] Update implementer: <description>"
    ```
 
 ### Bulk Updates
@@ -150,7 +149,7 @@ git commit -m "[subagents] Bulk update: <description>"
 
 ```markdown
 ---
-name: debugger
+name: implementer
 description: "..."
 ---
 
@@ -269,13 +268,13 @@ Custom sections per role ensure maximum clarity and usability.
 Master templates are plain markdown files. Edit them directly:
 
 ```bash
-vim templates/subagents/master/debugger.md
+vim templates/subagents/master/implementer.md
 ```
 
 Then regenerate:
 
 ```bash
-./scripts/update-subagents.sh --agent=debugger --force
+./scripts/update-subagents.sh --agent=implementer --force
 ```
 
 ### Verifying Sync
@@ -288,11 +287,10 @@ Always validate before committing:
 
 Expected output when synced:
 ```
-✓ debugger content identical (415 lines)
 ✓ planner content identical (1405 lines)
 ✓ reviewer content identical (448 lines)
 ✓ implementer content identical (1602 lines)
-✓ refactor content identical (919 lines)
+✓ coordinator content identical (328 lines)
 
 ✓ All subagents are in sync!
 ```
@@ -303,12 +301,12 @@ Expected output when synced:
 
 ```bash
 # Check what actually differs
-diff <(tail -n +6 copilot/.copilot/agents/debugger.agent.md) \
-     <(tail -n +45 opencode/.config/opencode/agent/debugger.md)
+diff <(tail -n +6 copilot/.copilot/agents/implementer.agent.md) \
+     <(tail -n +45 opencode/.config/opencode/agent/implementer.md)
 
 # Re-extract and update
 ./scripts/extract-to-master.sh
-./scripts/update-subagents.sh --agent=debugger --force
+./scripts/update-subagents.sh --agent=implementer --force
 ```
 
 ### Manual edits were made to copilot/opencode files
