@@ -81,6 +81,8 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 
 ## TASK CLASSIFICATION & ESCALATION
 
+**IMPORTANT:** Never call @coordinator as a subagent. It will be used by the user manually for complex orchestration. For complex tasks, use @planner, @implementer, @refactor, or @reviewer directly.
+
 - **TRIVIAL (typo, one-line fix)** → Handle directly
 - **SIMPLE (2-5 line fix, clear solution)** → Handle directly
 - **MODERATE (requires investigation, unclear root cause)** → Use @debugger for diagnosis, then handle fix
@@ -121,7 +123,7 @@ Bug/Error Reported:
 Feature Requested:
 ├─ Small enhancement (<10 lines)? → Implement directly
 ├─ Moderate (single module)? → Verbal plan → @implementer
-├─ Large multi-phase project? → @coordinator
+├─ Large multi-phase project? → @planner → Phased implementation
 └─ Large (multi-file/architectural)? → @planner → Phased implementation
 ```
 
@@ -220,7 +222,7 @@ Bug/Error Reported:
 Feature Requested:
 ├─ Small enhancement (<10 lines)? → Implement directly
 ├─ Moderate (single module)? → Verbal plan → @implementer
-├─ Large multi-phase project? → @coordinator
+├─ Large multi-phase project? → @planner → Phased implementation
 └─ Large (multi-file/architectural)? → @planner → Phased implementation
 ```
 
