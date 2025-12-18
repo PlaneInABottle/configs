@@ -341,9 +341,9 @@ Phase Completion → Commit Pattern:
 - Subagents return results to coordinator for integration
 
 ### Invocation Protocol
-When calling subagents, use this format:
+When calling subagents, use inner tools rather than CLI commands:
 ```
-@subagent_name - Task description with:
+Use the appropriate tool to invoke the subagent with:
 - Clear objective and success criteria
 - Required project commands (test, lint, format)
 - Design principles to follow
