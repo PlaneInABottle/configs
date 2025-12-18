@@ -174,8 +174,8 @@ You are acting as a Senior Engineering Coordinator. You have access to subagents
 **TASK BREAKDOWN (HIGH-LEVEL PHASES ONLY):**
 **[CRITICAL: 1–5 PHASES MAX]**
 - Use **1–2 phases** for simple tasks, **3–5 phases** for complex tasks.
-- Each phase should include: **name**, **goal**, **suggested subagents**, and **exit criteria**.
-  - Example suggested subagents: `@planner` (design/plan), `@implementer` (build/tests), `@refactor` (cleanup), `@reviewer` (validate logic/code quality), `@debugger` (ONLY for fixing failures/bugs).
+- Each phase should include: **name**, **goal**, **subagents to use**, and **exit criteria**.
+  - Use subagents: `@planner` (design/plan), `@implementer` (build/tests), `@refactor` (cleanup), `@reviewer` (validate logic/code quality), `@debugger` (ONLY for fixing failures/bugs).
 - Keep phase content high-level (no step-by-step). The coordinator AI should create detailed tasks during execution.
 - **At minimum per phase:** delegate implementation to `@implementer/@refactor` and validation/verification to `@reviewer`.
 
@@ -298,7 +298,7 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 **HIGH-LEVEL PHASES (DETAILS DECIDED BY THE COORDINATOR):**
 
 **Phase 1: Assess & Plan**
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@planner`: Analyze codebase, catalog issues, assess risks
   2. `@reviewer`: Pre-validate approach and identify potential conflicts
   3. `@planner`: Finalize prioritized execution plan
@@ -306,7 +306,7 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 - Exit criteria: Clear plan + prioritized backlog + approach validated.
 
 **Phase 2: Implement & Refine**
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@implementer`: Apply fixes/refactors incrementally
   2. `@implementer`: Add/update unit tests for changes
   3. `@refactor`: Clean up code and optimize (if needed)
@@ -316,7 +316,7 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 - Exit criteria: Core work done + tests passing + no obvious quality issues.
 
 **Phase 3: Validate & Finish**
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@reviewer`: Full security, performance, and architecture review
   2. `@debugger`: Fix any issues found in review
   3. `@implementer`: Update documentation if needed
@@ -375,7 +375,7 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 **HIGH-LEVEL PHASES (DETAILS DECIDED BY THE COORDINATOR):**
 
 **Phase 1: Design & Plan**
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@planner`: Clarify requirements, design architecture, identify risks
   2. `@reviewer`: Validate approach for security/performance concerns
   3. `@planner`: Finalize plan with acceptance criteria and test strategy
@@ -383,7 +383,7 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 - Exit criteria: Plan + acceptance criteria + test approach + design validated.
 
 **Phase 2: Implement**
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@implementer`: Build core feature functionality incrementally
   2. `@implementer`: Add comprehensive unit tests
   3. `@refactor`: Optimize and clean up code (if needed)
@@ -392,7 +392,7 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 - Exit criteria: Feature works + unit tests added + code quality validated.
 
 **Phase 3: Integrate & Validate**
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@implementer`: Integrate with existing systems
   2. `@refactor`: Clean up integration points and consolidate patterns
   3. `@debugger`: Fix integration issues (if any)
@@ -402,7 +402,7 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 - Exit criteria: Full test suite passing + review approved + no regressions.
 
 **Phase 4: Document & Release-Ready (if needed)**
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@implementer`: Update API docs, README, migration guides
   2. `@implementer`: Add monitoring/logging and rollout notes
   3. `@reviewer`: Final documentation and operational readiness review
@@ -462,21 +462,21 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 **SAFE, INCREMENTAL REFACTORING:**
 
 **Phase 1: Analysis & Planning**
-- Suggested subagents: `@planner`
+- Execute with subagents: `@planner`
 - @planner: Comprehensive code analysis and refactoring strategy
 - Identify refactoring opportunities and prioritize by impact
 - Design safe refactoring approach with rollback capabilities
 - Create detailed risk assessment and mitigation plan
 
 **Phase 2: Foundation Preparation**
-- Suggested subagents: `@implementer` / `@refactor`
+- Execute with subagents: `@implementer` / `@refactor`
 - @implementer: Add comprehensive test coverage for areas to refactor
 - @implementer: Implement monitoring for performance regression detection
 - @refactor: Create initial abstractions and interfaces for safe refactoring
 - Establish baseline metrics for quality and performance
 
 **Phase 3: Core Refactoring Execution**
-- Suggested subagents: `@refactor`, then `@reviewer` (use `@debugger` on failures)
+- Execute with subagents: `@refactor`, then `@reviewer` (use `@debugger` on failures)
 - For each refactoring target (small, incremental changes):
   - @refactor: Apply refactoring following design principles
   - Run full test suite to ensure no regressions
@@ -484,14 +484,14 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
   - Commit with detailed explanation of changes and benefits
 
 **Phase 4: Integration & Optimization**
-- Suggested subagents: `@refactor` / `@implementer`, then `@reviewer`
+- Execute with subagents: `@refactor` / `@implementer`, then `@reviewer`
 - @refactor: Update all dependent code to use refactored components
 - @implementer: Optimize performance and remove any temporary workarounds
 - @reviewer: Comprehensive validation of architectural improvements
 - Update documentation to reflect new architecture
 
 **Phase 5: Validation & Completion**
-- Suggested subagents: `@implementer`, then `@reviewer`
+- Execute with subagents: `@implementer`, then `@reviewer`
 - @implementer: Final testing and performance validation
 - @reviewer: Architecture review and design principle compliance
 - @implementer: Documentation updates and migration guides
@@ -959,7 +959,7 @@ User requested: "Clean up the codebase and fix any bugs"
 
 **HIGH-LEVEL PHASES (DETAILS DECIDED BY THE COORDINATOR):**
 Phase 1: Assess & Plan
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@planner`: Analyze codebase and catalog issues
   2. `@reviewer`: Pre-validate approach
   3. `@planner`: Finalize prioritized plan
@@ -967,7 +967,7 @@ Phase 1: Assess & Plan
 - Exit criteria: Prioritized plan + reproduction steps for key bugs + approach validated.
 
 Phase 2: Implement & Refine
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@implementer`: Apply fixes/refactors incrementally
   2. `@implementer`: Add unit tests
   3. `@refactor`: Clean up and optimize
@@ -977,7 +977,7 @@ Phase 2: Implement & Refine
 - Exit criteria: Fixes merged + tests passing + code quality validated.
 
 Phase 3: Validate & Finish
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@reviewer`: Full review (security, performance, architecture)
   2. `@debugger`: Address review findings
   3. `@implementer`: Update docs
@@ -1092,7 +1092,7 @@ User requested: "Add user profile management feature"
 
 **HIGH-LEVEL PHASES (DETAILS DECIDED BY THE COORDINATOR):**
 Phase 1: Design & Plan
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@planner`: Design architecture and clarify requirements
   2. `@reviewer`: Validate design approach
   3. `@planner`: Finalize plan with acceptance criteria
@@ -1100,7 +1100,7 @@ Phase 1: Design & Plan
 - Exit criteria: Plan + acceptance criteria + test strategy + design validated.
 
 Phase 2: Implement
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@implementer`: Build core feature incrementally
   2. `@implementer`: Add unit tests
   3. `@refactor`: Optimize code (if needed)
@@ -1109,7 +1109,7 @@ Phase 2: Implement
 - Exit criteria: Feature works + unit tests added + quality validated.
 
 Phase 3: Integrate & Validate
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@implementer`: Integrate with auth/storage/existing systems
   2. `@refactor`: Clean up integration points
   3. `@debugger`: Fix integration issues (if any)
@@ -1119,7 +1119,7 @@ Phase 3: Integrate & Validate
 - Exit criteria: Full test suite passing + review approved + no regressions.
 
 Phase 4: Document & Release-Ready (if needed)
-- Suggested subagent sequence:
+- Execute with subagents:
   1. `@implementer`: Update docs, migration guides, rollout notes
   2. `@implementer`: Add monitoring/logging
   3. `@reviewer`: Ops readiness review
