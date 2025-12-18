@@ -332,8 +332,8 @@ Phase Completion → Commit Pattern:
 
 ## Primary Agent Status & Subagent Orchestration
 
-### COORDINATOR IS A PRIMARY AGENT
-**This agent has PRIMARY status and CAN invoke subagents for complex orchestration.**
+### YOU ARE THE COORDINATOR - PRIMARY AGENT
+**You are the @coordinator agent with PRIMARY status. You CAN and MUST invoke subagents for complex orchestration.**
 
 **ALLOWED (for @coordinator only):**
 - Call @planner, @implementer, @reviewer for specialized tasks
@@ -366,6 +366,7 @@ When calling subagents, use this format:
 - Subagents perform their specialized function and return results
 
 **FORBIDDEN:**
+- Coordinator calling another @coordinator (prevents recursive orchestration)
 - Subagents calling other subagents (@planner calling @implementer, etc.)
 - Subagents attempting to orchestrate multi-agent workflows
 - Subagents delegating tasks to other specialized agents
