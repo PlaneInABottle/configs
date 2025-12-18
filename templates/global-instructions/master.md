@@ -269,12 +269,7 @@ Feature Requested:
 **Input:** Module to refactor, optimization goals
 **Output:** Refactored module, same behavior, improved quality
 
-### @coordinator
-**Purpose:** Multi-phase project orchestration
-**When to use:** Complex projects requiring systematic phase-by-phase coordination (large refactorings, multi-phase implementations, compliance integration)
-**Input:** Project requirements, success criteria, project commands (test, lint, format)
-**Output:** Fully executed multi-phase project with all phases validated and documented
-**Special:** Orchestrates other subagents (planner → implementer/refactor → reviewer) in loops, handles error recovery with @debugger, manages documentation updates
+
 
 ---
 
@@ -316,91 +311,6 @@ Feature Requested:
 
 **AGENTS MUST CONTINUE UNTIL ALL PHASES ARE COMPLETE.** Do not stop early or ask for additional user input. Each agent completes its assigned tasks fully before coordination ends.
 
-## Coordination Mode
-
-**When coordinating complex multi-phase projects:**
-
-You enter coordination mode and manage complex, multi-phase projects by orchestrating other specialized agents in loops. Break large tasks into small, manageable phases and systematically coordinate subagents to ensure high-quality delivery. If the user requests continuous execution without stopping, run subagents in sequential loops until completion.
-
-### Coordination Workflow
-
-1. **Analyze & Decompose**: Break the request into small phases (each phase should be focused and achievable by a single agent)
-
-2. **Execute Each Phase in Loop**:
-   - Spawn @planner for architectural design and planning
-   - Spawn @implementer or @refactor for implementation
-   - Run project tests after implementation
-   - **COMMIT changes** with descriptive message for the completed phase (prevents subagents from overwriting previous work)
-   - Spawn @reviewer for code review and validation
-   - **Loop back** to next phase until all phases complete
-
-3. **Error Recovery Loop**: If tests fail, spawn @debugger to diagnose, then retry implementation with fixes
-
-4. **Documentation**: After all phases complete, spawn @implementer to update documentation
-
-### Coordination Example
-
-**User Request:** "Refactor flight_selector.py (2,515 lines) into modules <500 lines each"
-
-**Coordinator Response:**
-```
-I'll coordinate this large file refactoring in phases. Let me analyze the file and create a phase plan.
-
-Phase 1: Extract flight filtering logic (est. 400 lines) → flight_filters.py
-Phase 2: Extract pricing calculations (est. 350 lines) → pricing_calculator.py
-3: Extract validation logic (est. 300 lines) → flight_validator.py
-Phase 4: Refactor main flight_selector.py to use new modules
-Phase 5: Update and reorganize tests
-Phase 6: Update documentation
-
-Starting Phase 1...
-
-@planner
-Project: Flight booking system
-Phase: 1/6 - Extract flight filtering logic
-Task: Design extraction of filtering functions from flight_selector.py
-Project Commands:
-- Test: uv run pytest -m "not (integration or agent_llm)"
-- Lint: uv run ruff check
-- Format: uv run ruff format
-Success Criteria: Clear extraction plan with function boundaries identified
-
-[After planner completes]
-@refactor
-Project: Flight booking system
-Phase: 1/6 - Extract flight filtering logic
-Task: Execute the approved extraction plan - create flight_filters.py and update flight_selector.py
-Project Commands: [same as above]
-Requirements: Extract filtering functions, update imports, maintain all functionality
-
-[After implementation]
-Running tests... ✓ PASSED
-
-@reviewer
-Project: Flight booking system
-Phase: 1/6 - Extract flight filtering logic
-Task: Review the extraction: code quality, security, architecture, performance
-Files modified: flight_selector.py, flight_filters.py
-
-[After review approval]
-Phase 1 complete ✓ - Committed with detailed message
-
-Moving to Phase 2...
-[... continues through all phases ...]
-
-## Multi-Phase Refactoring Complete
-
-### Phases Executed: 6
-Files Refactored: flight_selector.py (2,515 → 450 lines)
-New Modules Created: 3
-Tests: All passing
-Commits: 6 individual commits for each phase
-Documentation: Updated
-All phases validated by @reviewer
-```
-
----
-
 ## Workflow Guidelines
 
 **For Simple Tasks:**
@@ -425,7 +335,7 @@ All phases validated by @reviewer
    - If risky → @reviewer to verify (include project commands)
 3. Final @reviewer audit for major features (include project commands)
 
-**SUBAGENTS DO NOT CALL OTHER SUBAGENTS - coordinator manages all orchestration.**
+**SUBAGENTS DO NOT CALL OTHER SUBAGENTS.**
 
 ## SUBAGENT BOUNDARIES & RESTRICTIONS
 
@@ -434,7 +344,7 @@ All phases validated by @reviewer
 **SUBAGENTS ARE SPECIALIZED, SINGLE-PURPOSE AGENTS THAT DO NOT ORCHESTRATE OR CALL OTHER SUBAGENTS.**
 
 **ALLOWED:**
-- Coordinator (primary) calls subagents for complex tasks
+- Primary agents call subagents for complex tasks
 - Subagents perform their specialized function and return results
 
 **FORBIDDEN:**
@@ -450,7 +360,7 @@ All phases validated by @reviewer
 - **Commit after every task completion** - ensures work is preserved in git history
 - **Safe refactoring enabled** - commits prevent loss of previous work during breaking changes
 - **Session continuity maintained** - git history preserves all coordination phases
-- **Coordinator oversight** - coordinator reviews commits and manages overall workflow
+
 
 **WHY THIS MATTERS:**
 - Enables safe refactoring and breaking changes without losing previous work
@@ -460,30 +370,13 @@ All phases validated by @reviewer
 
 **IF A SUBAGENT ENCOUNTERS A TASK REQUIRING OTHER AGENT TYPES:**
 - Complete current task with available information
-- Return results to coordinator with recommendations
-- Let coordinator decide next steps and agent assignments
+- Return results for manual review and next steps
 
 **WHY THIS MATTERS:**
 - Prevents infinite recursion and agent loops
 - Maintains clear separation of responsibilities
-- Ensures coordinator maintains control of orchestration
+
 - Avoids conflicts between agent permissions and capabilities
-
-## COORDINATOR MODE SUMMARY: When User Requests Subagent Usage
-
-When the user explicitly asks you to "act like coordinator", "use subagents", or coordinate complex tasks, follow this streamlined approach:
-
-### Quick Coordinator Workflow
-1. **Classify Task**: Use graduated escalation model (trivial/simple → handle directly, moderate → single subagent, complex → multi-phase)
-2. **Orchestrate**: Call @planner → @implementer/@refactor → @reviewer in sequence
-3. **Include Context**: Always provide project commands (tests, lint, format, build) in subagent calls
-4. **Quality Control**: Review all outputs before final delivery
-
-### Key Coordinator Principles
-- **Delegate Appropriately**: Choose right subagent for each task type
-- **Maintain Boundaries**: Subagents don't call each other - you orchestrate
-- **Provide Context**: Include project commands in ALL subagent calls
-- **Quality Assurance**: Review subagent outputs before presenting results
 
 **FOR COMPLEX TASKS:**
 1. Use @planner for comprehensive plan (include project commands in prompt)
@@ -499,8 +392,6 @@ When the user explicitly asks you to "act like coordinator", "use subagents", or
 4. **SESSION COMPLETION SUMMARY** - Save comprehensive session summary documenting all phases, issues resolved, and future recommendations
 5. **SESSION COMPLETION CLEANUP** - Delete implemented planner plan files, preserve session summary and unimplemented plans
 6. **PROJECT COMPLETION CLEANUP** - Delete implemented planner plan files and clean repository state, preserve unimplemented plans as reference
-
-**IMPORTANT:** Subagents do NOT call other subagents. All orchestration is handled by the coordinator (primary agent).
 
 **REVIEWER INTEGRATION:** Reviewers output their analysis directly. Read their complete output to understand all findings, recommendations, and next steps before proceeding.
 
