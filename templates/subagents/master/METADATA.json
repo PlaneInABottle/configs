@@ -102,7 +102,7 @@
       "opencode": {}
     },
     "reviewer": {
-      "description": "Comprehensive code reviewer - finds security vulnerabilities, bugs, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage.",
+      "description": "Comprehensive code reviewer - finds bugs, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage.",
       "examples": [
         "  - \"Use for security review of authentication systems\"",
         "  - \"Use for code quality assessment before merging\"",
