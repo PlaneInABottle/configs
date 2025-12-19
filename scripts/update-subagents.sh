@@ -229,14 +229,6 @@ main() {
     
     check_prerequisites
     
-    # Determine which agents to update
-    local agents_to_update=()
-    if [[ "$AGENT" == "all" ]]; then
-        agents_to_update=(planner reviewer implementer coordinator)
-    else
-        agents_to_update=("$AGENT")
-    fi
-    
     # Determine which systems to update
     local systems_to_update=()
     if [[ "$SYSTEM" == "all" ]]; then
@@ -244,10 +236,21 @@ main() {
     else
         systems_to_update=("$SYSTEM")
     fi
-    
-    # Update each combination
-    for agent in "${agents_to_update[@]}"; do
-        for sys in "${systems_to_update[@]}"; do
+
+    # Update each system (agent logic moved into the loop for system-specific handling)
+    for sys in "${systems_to_update[@]}"; do
+        local agents_to_update=()
+        if [[ "$AGENT" == "all" ]]; then
+            if [[ "$sys" == "copilot" ]]; then
+                agents_to_update=(planner reviewer implementer)  # Skip coordinator for copilot
+            else
+                agents_to_update=(planner reviewer implementer coordinator)
+            fi
+        else
+            agents_to_update=("$AGENT")
+        fi
+
+        for agent in "${agents_to_update[@]}"; do
             update_agent "$agent" "$sys"
         done
     done

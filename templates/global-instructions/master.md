@@ -93,6 +93,100 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 
 ---
 
+# Coordination Mode
+
+For complex multi-phase tasks, use systematic coordination to ensure quality and completeness. This mode provides structured guidance for handling complex software engineering challenges.
+
+## When to Use Coordination Mode
+
+- **Multi-phase features** requiring systematic planning and execution
+- **Large refactorings** with multiple interdependent changes
+- **Complex bug fixes** requiring investigation, planning, and verification
+- **Architecture changes** impacting multiple modules or systems
+
+## Coordination Workflow
+
+### Phase 1: Task Analysis & Decomposition
+1. **Understand Requirements** - Parse user request and identify core objectives
+2. **Assess Complexity** - Determine scope and potential challenges
+3. **Decompose into Phases** - Break down into logical, manageable phases
+4. **Define Success Criteria** - Establish measurable outcomes for each phase
+5. **Plan Quality Gates** - Determine validation checkpoints
+
+### Phase 2: Systematic Execution
+Execute each phase with discipline:
+```
+For each phase in sequence:
+├── Execute phase implementation
+├── Run tests to validate functionality
+├── Apply design principles (YAGNI, KISS, DRY)
+├── Validate against success criteria
+├── Document changes and progress
+└── Proceed to next phase or handle errors
+```
+
+### Phase 3: Quality Assurance
+- **Test Execution** - Run comprehensive test suites
+- **Design Validation** - Ensure YAGNI, KISS, DRY principles followed
+- **Integration Testing** - Verify system-wide compatibility
+- **Documentation Updates** - Update docs to reflect changes
+
+## Coordination Patterns
+
+### Feature Implementation Pattern
+```
+User Request → Plan architecture → Implement core → Add tests →
+Review security → Integrate → Validate → Document → Complete
+```
+
+### Bug Fix Pattern
+```
+User Request → Investigate root cause → Plan fix approach → Implement fix →
+Test thoroughly → Verify no regressions → Document solution → Complete
+```
+
+### Refactoring Pattern
+```
+User Request → Analyze current code → Plan refactoring phases →
+Execute phase 1 → Test → Execute phase 2 → Test → Final validation → Complete
+```
+
+## Error Recovery Protocols
+
+### Test Failures
+- Re-analyze the failing test
+- Adjust implementation approach
+- Retry with fixes
+- If persistent, escalate with clear explanation
+
+### Blocking Issues
+- Document the blocker clearly
+- Provide context and attempted solutions
+- Suggest alternatives or next steps
+- Escalate to user with recommendations
+
+## Quality Gates
+
+Apply these checkpoints throughout coordination:
+- [ ] **YAGNI**: Only building what's needed now
+- [ ] **KISS**: Simplest adequate solution chosen
+- [ ] **DRY**: No unnecessary duplication introduced
+- [ ] **Tests Pass**: All automated tests successful
+- [ ] **Integration Works**: Changes compatible with existing systems
+- [ ] **Documentation Updated**: Changes properly documented
+
+## Success Metrics
+
+A coordinated task is successful when:
+- All requirements fully implemented and tested
+- Code follows design principles and existing patterns
+- Tests pass and functionality verified
+- No regressions introduced
+- Changes documented and properly integrated
+- User requirements satisfied
+
+---
+
 ## Decision Framework
 
 ### Bug/Error Handling
