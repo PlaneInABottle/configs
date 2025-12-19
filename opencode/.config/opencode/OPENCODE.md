@@ -83,8 +83,6 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 
 ## TASK CLASSIFICATION & ESCALATION
 
-**IMPORTANT:** Never call @coordinator as a subagent. It will be used by the user manually for complex orchestration. For complex tasks, use @planner, @implementer, or @reviewer directly.
-
 - **TRIVIAL (typo, one-line fix)** → Handle directly
 - **SIMPLE (2-5 line fix, clear solution)** → Handle directly
 - **MODERATE (requires investigation, unclear root cause)** → Use @reviewer for analysis and bug detection
@@ -95,168 +93,7 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 
 ---
 
-# Coordination Mode
 
-For complex multi-phase tasks, use systematic coordination to ensure quality and completeness. This mode provides structured guidance for handling complex software engineering challenges.
-
-## When to Use Coordination Mode
-
-- **Multi-phase features** requiring systematic planning and execution
-- **Large refactorings** with multiple interdependent changes
-- **Complex bug fixes** requiring investigation, planning, and verification
-- **Architecture changes** impacting multiple modules or systems
-
-## Coordination Workflow
-
-### Phase 1: Task Analysis & Decomposition
-1. **Understand Requirements** - Parse user request and identify core objectives
-2. **Assess Complexity** - Determine scope and potential challenges
-3. **Decompose into Phases** - Break down into logical, manageable phases
-4. **Define Success Criteria** - Establish measurable outcomes for each phase
-5. **Plan Quality Gates** - Determine validation checkpoints
-
-### Phase 2: Systematic Execution
-Execute each phase with discipline:
-```
-For each phase in sequence:
-├── Execute phase implementation
-├── Run tests to validate functionality
-├── Apply design principles (YAGNI, KISS, DRY)
-├── Validate against success criteria
-├── Document changes and progress
-└── Proceed to next phase or handle errors
-```
-
-### Phase 3: Quality Assurance
-- **Test Execution** - Run comprehensive test suites
-- **Design Validation** - Ensure YAGNI, KISS, DRY principles followed
-- **Integration Testing** - Verify system-wide compatibility
-- **Documentation Updates** - Update docs to reflect changes
-
-## Coordination Patterns
-
-### Feature Implementation Pattern
-```
-User Request → Plan architecture → Implement core → Add tests →
-Review security → Integrate → Validate → Document → Complete
-```
-
-### Bug Fix Pattern
-```
-User Request → Investigate root cause → Plan fix approach → Implement fix →
-Test thoroughly → Verify no regressions → Document solution → Complete
-```
-
-### Refactoring Pattern
-```
-User Request → Analyze current code → Plan refactoring phases →
-Execute phase 1 → Test → Execute phase 2 → Test → Final validation → Complete
-```
-
-## Error Recovery Protocols
-
-### Test Failures
-- Re-analyze the failing test
-- Adjust implementation approach
-- Retry with fixes
-- If persistent, escalate with clear explanation
-
-### Blocking Issues
-- Document the blocker clearly
-- Provide context and attempted solutions
-- Suggest alternatives or next steps
-- Escalate to user with recommendations
-
-## Quality Gates
-
-Apply these checkpoints throughout coordination:
-- [ ] **YAGNI**: Only building what's needed now
-- [ ] **KISS**: Simplest adequate solution chosen
-- [ ] **DRY**: No unnecessary duplication introduced
-- [ ] **Tests Pass**: All automated tests successful
-- [ ] **Integration Works**: Changes compatible with existing systems
-- [ ] **Documentation Updated**: Changes properly documented
-
-## Success Metrics
-
-A coordinated task is successful when:
-- All requirements fully implemented and tested
-- Code follows design principles and existing patterns
-- Tests pass and functionality verified
-- No regressions introduced
-- Changes documented and properly integrated
-- User requirements satisfied
-
----
-
-## Decision Framework
-
-### Bug/Error Handling
-```
-Bug/Error Reported:
-├─ Is it a typo/one-liner? → Fix directly
-├─ Clear root cause? → Fix directly
-├─ Requires investigation? → @reviewer → Analysis and recommendations
-└─ Systemic/architectural? → @reviewer → @planner → Phased implementation
-```
-
-### Feature Implementation
-```
-Feature Requested:
-├─ Small enhancement (<10 lines)? → Implement directly
-├─ Moderate (single module)? → Verbal plan → @implementer
-├─ Large multi-phase project? → @planner → Phased implementation
-└─ Large (multi-file/architectural)? → @planner → Phased implementation
-```
-
-### Security Reviews
-- **Always call @reviewer** for: auth, payments, data, external APIs
-- **Call @reviewer** before risky changes and after implementation
-- **Use @reviewer** for final audits on major features
-
----
-
-## AVAILABLE SUBAGENTS
-
-### @DEBUGGER
-**PURPOSE:** Root cause analysis across codebase
-**WHEN TO USE:** Moderate bugs requiring investigation
-**INPUT:** Error description, reproduction steps, relevant code
-**OUTPUT:** Root cause analysis + fix recommendations
-
-### @PLANNER
-**PURPOSE:** Architecture design and detailed planning
-**WHEN TO USE:** Complex features, major refactors, architecture decisions
-**INPUT:** Feature requirements, constraints, current architecture
-**OUTPUT:** Detailed implementation plan with phases
-
-### @REVIEWER
-**PURPOSE:** Security, performance, architecture audit
-**WHEN TO USE:** Security-critical code, between phases, pre-deployment
-**INPUT:** Code to review, context on changes
-**OUTPUT:** Issues, recommendations, approval status
-
-**CRITICAL REVIEWER REQUIREMENTS:**
-- **Context7 First**: When reviewing libraries/frameworks, ALWAYS check Context7 MCP first to get official documentation for specific functions and APIs being used
-- **Function Documentation**: Query Context7 for specific library functions: "[library name] [function name]" or "[library name] [API name]"
-- **Usage Validation**: Compare code implementation against official Context7 documentation
-- **Version Awareness**: Verify implementation matches current library documentation
-
-### @IMPLEMENTER
-**PURPOSE:** Build specific phases according to plan
-**WHEN TO USE:** Phased implementation with clear requirements
-**INPUT:** Phase description, requirements, constraints
-**OUTPUT:** Working implementation, tested, ready for next phase
-
-### @REFACTOR
-**PURPOSE:** Code optimization and cleanup
-**WHEN TO USE:** Module refactoring, performance optimization
-**INPUT:** Module to refactor, optimization goals
-**OUTPUT:** Refactored module, same behavior, improved quality
-
----
-
----
 
 # Graduated Escalation Model
 
@@ -415,19 +252,12 @@ Feature Requested:
 
 ## SUBAGENT BOUNDARIES & RESTRICTIONS
 
-## Primary Agent Orchestration
-
-### COORDINATOR AS PRIMARY AGENT
-- @coordinator is designated as a PRIMARY agent with orchestration rights
-- @coordinator CAN and SHOULD invoke @planner, @implementer, @reviewer for complex tasks
-- All other agents (@planner, @implementer, @reviewer) are SUBAGENTS with restricted invocation rights
-
 ### CRITICAL: SUBAGENTS DO NOT CALL OTHER SUBAGENTS
 
 **SUBAGENTS ARE SPECIALIZED, SINGLE-PURPOSE AGENTS THAT DO NOT ORCHESTRATE OR CALL OTHER SUBAGENTS.**
 
 **ALLOWED:**
-- Primary agents call subagents for complex tasks
+- Calling subagents for complex tasks
 - Subagents perform their specialized function and return results
 
 **FORBIDDEN:**

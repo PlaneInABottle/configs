@@ -81,8 +81,6 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 
 ## TASK CLASSIFICATION & ESCALATION
 
-**IMPORTANT:** Never call @coordinator as a subagent. It will be used by the user manually for complex orchestration. For complex tasks, use @planner, @implementer, or @reviewer directly.
-
 - **TRIVIAL (typo, one-line fix)** → Handle directly
 - **SIMPLE (2-5 line fix, clear solution)** → Handle directly
 - **MODERATE (requires investigation, unclear root cause)** → Use @reviewer for analysis and bug detection
@@ -93,6 +91,7 @@ Use subagents based on task complexity and risk. Simple tasks can be handled dir
 
 ---
 
+<!-- SECTION:coordination_mode:START:copilot -->
 # Coordination Mode
 
 For complex multi-phase tasks, use systematic coordination to ensure quality and completeness. This mode provides structured guidance for handling complex software engineering challenges.
@@ -255,6 +254,7 @@ Feature Requested:
 ---
 
 ---
+<!-- SECTION:coordination_mode:END -->
 
 # Graduated Escalation Model
 
@@ -413,19 +413,12 @@ Feature Requested:
 
 ## SUBAGENT BOUNDARIES & RESTRICTIONS
 
-## Primary Agent Orchestration
-
-### COORDINATOR AS PRIMARY AGENT
-- @coordinator is designated as a PRIMARY agent with orchestration rights
-- @coordinator CAN and SHOULD invoke @planner, @implementer, @reviewer for complex tasks
-- All other agents (@planner, @implementer, @reviewer) are SUBAGENTS with restricted invocation rights
-
 ### CRITICAL: SUBAGENTS DO NOT CALL OTHER SUBAGENTS
 
 **SUBAGENTS ARE SPECIALIZED, SINGLE-PURPOSE AGENTS THAT DO NOT ORCHESTRATE OR CALL OTHER SUBAGENTS.**
 
 **ALLOWED:**
-- Primary agents call subagents for complex tasks
+- Calling subagents for complex tasks
 - Subagents perform their specialized function and return results
 
 **FORBIDDEN:**

@@ -94,6 +94,46 @@ else:
     print(value)"
 }
 
+filter_sections_for_system() {
+    local system="$1"
+    local input_file="$2"
+    
+    python3 - "$system" "$input_file" <<'PYTHON_SCRIPT'
+import re
+import sys
+
+target_system = sys.argv[1]
+input_file = sys.argv[2]
+
+with open(input_file, 'r', encoding='utf-8') as f:
+    content = f.read()
+
+# Pattern to match section markers
+# <!-- SECTION:section_id:START:system1,system2 -->...<!-- SECTION:section_id:END -->
+pattern = r'<!-- SECTION:(\w+):START:([\w,]+) -->\n(.*?)\n<!-- SECTION:\1:END -->'
+
+def should_include_section(enabled_for_str, target):
+    enabled_systems = [s.strip() for s in enabled_for_str.split(',')]
+    return target in enabled_systems or 'all' in enabled_systems
+
+result = content
+for match in re.finditer(pattern, content, re.DOTALL):
+    section_id = match.group(1)
+    enabled_for = match.group(2)
+    section_content = match.group(3)
+    full_match = match.group(0)
+    
+    if should_include_section(enabled_for, target_system):
+        # Keep section content but remove markers
+        result = result.replace(full_match, section_content)
+    else:
+        # Remove entire section including markers
+        result = result.replace(full_match, '')
+
+print(result, end='')
+PYTHON_SCRIPT
+}
+
 update_system() {
     local system="$1"
 
@@ -130,14 +170,14 @@ update_system() {
             echo ""
             echo "<!-- sync-test: generated via templates/global-instructions/master.md + scripts/update-global-instructions.sh -->"
             echo ""
-            cat "$MASTER_FILE"
+            filter_sections_for_system "$system" "$MASTER_FILE"
         } > "$target_file"
     else
         # For systems that don't require headers (opencode)
         {
             echo "<!-- sync-test: generated via templates/global-instructions/master.md + scripts/update-global-instructions.sh -->"
             echo ""
-            cat "$MASTER_FILE"
+            filter_sections_for_system "$system" "$MASTER_FILE"
         } > "$target_file"
     fi
 

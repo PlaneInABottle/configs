@@ -13,5 +13,12 @@
       "description": "Copilot assistant instructions (requires YAML header)"
     }
   },
-  "version": "1.0.0"
+  "dynamic_sections": {
+    "coordination_mode": {
+      "enabled_for": ["copilot"],
+      "description": "Internal coordination guidance for systems without subagent capabilities",
+      "location": "After 'Graduated Escalation Model' section"
+    }
+  },
+  "version": "1.1.0"
 }
