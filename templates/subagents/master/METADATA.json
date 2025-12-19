@@ -104,6 +104,21 @@
       "name": "coordinator",
       "opencode": {},
       "mode": "primary"
+    },
+    "prompt-creator": {
+      "description": "Prompt engineering specialist - transforms user requests into rigorous execution prompts for systematic agent coordination. IMPORTANT: Manual invocation only. Never call @prompt-creator automatically.",
+      "examples": [
+        "  - \"Use to turn a vague request into a complete coordinator prompt\"",
+        "  - \"Use to generate a phased execution prompt with clear DoD, commands, and constraints\"",
+        "  - \"Use to craft subagent call prompts (planner → implementer → reviewer) with success criteria\""
+      ],
+      "header_lines": {
+        "copilot": 4,
+        "opencode": 45
+      },
+      "name": "prompt-creator",
+      "opencode": {},
+      "mode": "primary"
     }
   },
   "version": "1.0.0"

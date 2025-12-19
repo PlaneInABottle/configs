@@ -31,7 +31,7 @@ usage() {
     echo "Updates subagent files from master templates."
     echo ""
     echo "Options:"
-    echo "  --agent=NAME          Update specific agent (debugger|planner|reviewer|implementer|refactor|coordinator|all)"
+    echo "  --agent=NAME          Update specific agent (debugger|planner|reviewer|implementer|refactor|coordinator|prompt-creator|all)"
     echo "  --system=NAME         Update specific system (copilot|opencode|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
     echo "  --force               Overwrite without confirmation"
@@ -81,6 +81,20 @@ get_metadata_value() {
     local agent="$1"
     local key="$2"
     python3 -c "import json; d=json.load(open('$METADATA_FILE')); print(d['subagents']['$agent']['$key'])"
+}
+
+get_metadata_value_or_default() {
+    # Usage: get_metadata_value_or_default planner mode subagent
+    local agent="$1"
+    local key="$2"
+    local default_value="$3"
+
+    python3 - <<'PY' "$METADATA_FILE" "$agent" "$key" "$default_value" 2>/dev/null || true
+import json, sys
+path, agent, key, default_value = sys.argv[1:5]
+d = json.load(open(path))
+print(d.get('subagents', {}).get(agent, {}).get(key, default_value))
+PY
 }
 
 get_metadata_lines() {
@@ -152,11 +166,9 @@ EOF
     local tools_lines="$(get_opencode_lines_for_agent "$agent" tools_lines)"
     local permission_lines="$(get_opencode_lines_for_agent "$agent" permission_lines)"
 
-    # Check if agent has custom mode, otherwise default to subagent
-    local mode="subagent"
-    if [[ "$agent" == "coordinator" ]]; then
-        mode="primary"
-    fi
+    # Read mode from metadata; default to subagent
+    local mode
+    mode="$(get_metadata_value_or_default "$agent" "mode" "subagent")"
 
     cat <<EOF
 ---
@@ -242,9 +254,9 @@ main() {
         local agents_to_update=()
         if [[ "$AGENT" == "all" ]]; then
             if [[ "$sys" == "copilot" ]]; then
-                agents_to_update=(planner reviewer implementer)  # Skip coordinator for copilot
+                agents_to_update=(planner reviewer implementer prompt-creator)  # Skip coordinator for copilot
             else
-                agents_to_update=(planner reviewer implementer coordinator)
+                agents_to_update=(planner reviewer implementer coordinator prompt-creator)
             fi
         else
             agents_to_update=("$AGENT")
@@ -300,7 +312,7 @@ if [[ -z "$AGENT" ]]; then
 fi
 
 if [[ "$AGENT" != "all" ]] && [[ "$AGENT" != "planner" ]] && \
-   [[ "$AGENT" != "reviewer" ]] && [[ "$AGENT" != "implementer" ]] && [[ "$AGENT" != "coordinator" ]]; then
+   [[ "$AGENT" != "reviewer" ]] && [[ "$AGENT" != "implementer" ]] && [[ "$AGENT" != "coordinator" ]] && [[ "$AGENT" != "prompt-creator" ]]; then
     echo "Error: Invalid agent name: $AGENT"
     usage
 fi
