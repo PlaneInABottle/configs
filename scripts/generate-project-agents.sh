@@ -205,6 +205,10 @@ prompt_for_details() {
             [[ -z "$TESTING_STRATEGY" ]] && TESTING_STRATEGY="$(sed -n '/<testing>/,/<\/testing>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
             [[ -z "$DEPENDENCY_GUIDELINES" ]] && DEPENDENCY_GUIDELINES="$(sed -n '/<dependencies>/,/<\/dependencies>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
             [[ -z "$PROJECT_NOTES" ]] && PROJECT_NOTES="$(sed -n '/<project_notes>/,/<\/project_notes>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
+            [[ -z "$DEVELOPMENT_WORKFLOW" ]] && DEVELOPMENT_WORKFLOW="$(sed -n '/<development_workflow>/,/<\/development_workflow>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
+            [[ -z "$IMPLEMENTATION_GUIDELINES" ]] && IMPLEMENTATION_GUIDELINES="$(sed -n '/<implementation_guidelines>/,/<\/implementation_guidelines>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
+            [[ -z "$COMMON_PATTERNS" ]] && COMMON_PATTERNS="$(sed -n '/<common_patterns>/,/<\/common_patterns>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
+            [[ -z "$TROUBLESHOOTING" ]] && TROUBLESHOOTING="$(sed -n '/<troubleshooting>/,/<\/troubleshooting>/p' "$TARGET_DIR/.claude/CLAUDE.md" | grep -v "^<" | grep -v "^##" | grep -v "^$" || echo "")"
             set -e
 
             # Apply any flag overrides again (to override loaded values)
@@ -261,32 +265,32 @@ replace_placeholders() {
 
     # Replace all placeholders (handling literal \n characters as newlines)
     content="${content//\{\{PROJECT_DESCRIPTION\}\}/$PROJECT_DESCRIPTION}"
-    # For multiline values, replace \n with actual newlines
-    KEY_TECHNOLOGIES_NEWLINE=$(printf '%s\n' "$KEY_TECHNOLOGIES" | sed 's/\\n/\n/g')
+    # For multiline values, replace \n with actual newlines (avoiding unwanted trailing newlines)
+    KEY_TECHNOLOGIES_NEWLINE=$(echo "$KEY_TECHNOLOGIES" | sed 's/\\n/\n/g')
     content="${content//\{\{KEY_TECHNOLOGIES\}\}/$KEY_TECHNOLOGIES_NEWLINE}"
-    FEW_SHOT_EXAMPLES_NEWLINE=$(printf '%s\n' "$FEW_SHOT_EXAMPLES" | sed 's/\\n/\n/g')
+    FEW_SHOT_EXAMPLES_NEWLINE=$(echo "$FEW_SHOT_EXAMPLES" | sed 's/\\n/\n/g')
     content="${content//\{\{FEW_SHOT_EXAMPLES\}\}/$FEW_SHOT_EXAMPLES_NEWLINE}"
-    SPECIALIZED_AGENTS_NEWLINE=$(printf '%s\n' "$SPECIALIZED_AGENTS" | sed 's/\\n/\n/g')
+    SPECIALIZED_AGENTS_NEWLINE=$(echo "$SPECIALIZED_AGENTS" | sed 's/\\n/\n/g')
     content="${content//\{\{SPECIALIZED_AGENTS\}\}/$SPECIALIZED_AGENTS_NEWLINE}"
-    ARCHITECTURE_PATTERNS_NEWLINE=$(printf '%s\n' "$ARCHITECTURE_PATTERNS" | sed 's/\\n/\n/g')
+    ARCHITECTURE_PATTERNS_NEWLINE=$(echo "$ARCHITECTURE_PATTERNS" | sed 's/\\n/\n/g')
     content="${content//\{\{ARCHITECTURE_PATTERNS\}\}/$ARCHITECTURE_PATTERNS_NEWLINE}"
-    CODE_STYLE_GUIDE_NEWLINE=$(printf '%s\n' "$CODE_STYLE_GUIDE" | sed 's/\\n/\n/g')
+    CODE_STYLE_GUIDE_NEWLINE=$(echo "$CODE_STYLE_GUIDE" | sed 's/\\n/\n/g')
     content="${content//\{\{CODE_STYLE_GUIDE\}\}/$CODE_STYLE_GUIDE_NEWLINE}"
-    FILE_ORGANIZATION_NEWLINE=$(printf '%s\n' "$FILE_ORGANIZATION" | sed 's/\\n/\n/g')
+    FILE_ORGANIZATION_NEWLINE=$(echo "$FILE_ORGANIZATION" | sed 's/\\n/\n/g')
     content="${content//\{\{FILE_ORGANIZATION\}\}/$FILE_ORGANIZATION_NEWLINE}"
-    TESTING_STRATEGY_NEWLINE=$(printf '%s\n' "$TESTING_STRATEGY" | sed 's/\\n/\n/g')
+    TESTING_STRATEGY_NEWLINE=$(echo "$TESTING_STRATEGY" | sed 's/\\n/\n/g')
     content="${content//\{\{TESTING_STRATEGY\}\}/$TESTING_STRATEGY_NEWLINE}"
-    DEPENDENCY_GUIDELINES_NEWLINE=$(printf '%s\n' "$DEPENDENCY_GUIDELINES" | sed 's/\\n/\n/g')
+    DEPENDENCY_GUIDELINES_NEWLINE=$(echo "$DEPENDENCY_GUIDELINES" | sed 's/\\n/\n/g')
     content="${content//\{\{DEPENDENCY_GUIDELINES\}\}/$DEPENDENCY_GUIDELINES_NEWLINE}"
-    DEVELOPMENT_WORKFLOW_NEWLINE=$(printf '%s\n' "$DEVELOPMENT_WORKFLOW" | sed 's/\\n/\n/g')
+    DEVELOPMENT_WORKFLOW_NEWLINE=$(echo "$DEVELOPMENT_WORKFLOW" | sed 's/\\n/\n/g')
     content="${content//\{\{DEVELOPMENT_WORKFLOW\}\}/$DEVELOPMENT_WORKFLOW_NEWLINE}"
-    IMPLEMENTATION_GUIDELINES_NEWLINE=$(printf '%s\n' "$IMPLEMENTATION_GUIDELINES" | sed 's/\\n/\n/g')
+    IMPLEMENTATION_GUIDELINES_NEWLINE=$(echo "$IMPLEMENTATION_GUIDELINES" | sed 's/\\n/\n/g')
     content="${content//\{\{IMPLEMENTATION_GUIDELINES\}\}/$IMPLEMENTATION_GUIDELINES_NEWLINE}"
-    COMMON_PATTERNS_NEWLINE=$(printf '%s\n' "$COMMON_PATTERNS" | sed 's/\\n/\n/g')
+    COMMON_PATTERNS_NEWLINE=$(echo "$COMMON_PATTERNS" | sed 's/\\n/\n/g')
     content="${content//\{\{COMMON_PATTERNS\}\}/$COMMON_PATTERNS_NEWLINE}"
-    TROUBLESHOOTING_NEWLINE=$(printf '%s\n' "$TROUBLESHOOTING" | sed 's/\\n/\n/g')
+    TROUBLESHOOTING_NEWLINE=$(echo "$TROUBLESHOOTING" | sed 's/\\n/\n/g')
     content="${content//\{\{TROUBLESHOOTING\}\}/$TROUBLESHOOTING_NEWLINE}"
-    PROJECT_NOTES_NEWLINE=$(printf '%s\n' "$PROJECT_NOTES" | sed 's/\\n/\n/g')
+    PROJECT_NOTES_NEWLINE=$(echo "$PROJECT_NOTES" | sed 's/\\n/\n/g')
     content="${content//\{\{PROJECT_NOTES\}\}/$PROJECT_NOTES_NEWLINE}"
     content="${content//\{\{TIMESTAMP\}\}/$TIMESTAMP}"
 
