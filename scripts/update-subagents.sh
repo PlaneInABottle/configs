@@ -254,7 +254,7 @@ main() {
         local agents_to_update=()
         if [[ "$AGENT" == "all" ]]; then
             if [[ "$sys" == "copilot" ]]; then
-                agents_to_update=(planner reviewer implementer prompt-creator)  # Skip coordinator for copilot
+                agents_to_update=(planner reviewer implementer)  # Skip coordinator and prompt-creator for copilot
             else
                 agents_to_update=(planner reviewer implementer coordinator prompt-creator)
             fi
