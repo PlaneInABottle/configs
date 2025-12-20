@@ -138,6 +138,7 @@ You are acting as a Senior Engineering Coordinator. You have access to subagents
   - Use subagents: `@planner` (design/plan), `@implementer` (build/tests and cleanup), `@reviewer` (validate logic/code quality and fixing failures/bugs).
 - Keep phase content high-level (no step-by-step). The coordinator AI should create detailed tasks during execution.
 - **At minimum per phase:** delegate implementation to `@implementer` and validation/verification to `@reviewer`.
+- **Include cleanup phase:** Add a final cleanup phase to delete implemented plan files and temporary artifacts. At the end, mention all deleted files.
 
 **🚨 PHASE NAMING RULES:**
 - If phase name contains: "Verify", "Validate", "Review", "Check", "Confirm", "Assess" → Use `@reviewer`
@@ -284,6 +285,12 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 - Goal: Run tests, address review findings, and update docs if needed.
 - Exit criteria: All tests passing + review approved + docs aligned.
 
+**Phase 4: Cleanup**
+- Execute with subagents:
+  1. `@implementer`: Delete implemented plan files and temporary artifacts
+- Goal: Remove all temporary files created during the implementation process.
+- Exit criteria: Workspace cleaned of all plan files and temporary artifacts. At the end, mention all deleted files.
+
 ### BREAKING CHANGES POLICY
 **ALLOWED when following design principles:**
 - ✅ Function signature improvements (SOLID Interface Segregation)
@@ -368,6 +375,12 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
   3. `@reviewer`: Final documentation and operational readiness review
 - Goal: Update docs/migrations and ensure operability.
 - Exit criteria: Docs updated + rollout notes ready + ops review passed.
+
+**Phase 5: Cleanup**
+- Execute with subagents:
+  1. `@implementer`: Delete implemented plan files and temporary artifacts
+- Goal: Remove all temporary files created during the implementation process.
+- Exit criteria: Workspace cleaned of all plan files and temporary artifacts. At the end, mention all deleted files.
 
 ### DESIGN PRINCIPLES ENFORCEMENT
 **MANDATORY COMPLIANCE:**
@@ -456,6 +469,12 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 - @reviewer: Architecture review and design principle compliance
 - @implementer: Documentation updates and migration guides
 - Establish new baseline metrics and monitoring
+
+**Phase 6: Cleanup**
+- Execute with subagents:
+  1. `@implementer`: Delete implemented plan files and temporary artifacts
+- Goal: Remove all temporary files created during the implementation process.
+- Exit criteria: Workspace cleaned of all plan files and temporary artifacts. At the end, mention all deleted files.
 
 ### REFACTORING SAFETY PROTOCOLS
 **MANDATORY SAFETY MEASURES:**
@@ -798,6 +817,14 @@ After completing each issue:
 
 **When generating prompts for subagents, always include:**
 
+- **Plan Reference Protocol**: Explicit references to @planner's output files (e.g., "docs/planner-plan-phase-1.md") for @implementer and @reviewer calls
+- **Context Inheritance**: Summary of completed phases, previous decisions, and execution history
+- **Artifact Tracking**: Registry of created/modified files and artifacts for reference across phases
+- **Error Context**: Specific error details and previous attempt information when retrying failed calls
+- **Execution History**: Include outcomes of prior phases and subagent interactions
+- **Dependency Mapping**: List prerequisites, dependencies, and integration points
+- **Configuration Context**: Pass relevant project configs, environment variables, and setup details
+- **Quality Metrics**: Include success criteria, quality thresholds, and validation requirements specific to the task
 - **Relevant Project Commands**: Only the commands the subagent will need (e.g., test command for @implementer, lint command for @reviewer)
 - **Design Principles**: Explicit mention of KISS, SOLID, DRY, YAGNI principles to follow
 - **File Specifications**: Exact files/modules to work with, or reference to @planner's plan file
@@ -805,6 +832,9 @@ After completing each issue:
 - **Breaking Change Permissions**: When breaking changes are allowed following design principles (including file deletion)
 - **Testing Requirements**: Unit tests must be written for all changes that modify behavior
 - **Context Information**: Relevant codebase patterns and existing infrastructure
+- **Validation Checkpoints**: Require @reviewer validation after major @implementer changes
+- **Security Reviews**: Mandatory security validation for sensitive operations
+- **Performance Monitoring**: Include benchmarks and monitoring requirements where applicable
 
 **Example Subagent Prompt Structure:**
 ```
@@ -813,11 +843,18 @@ Phase: [Number/Name] - [Brief Description]
 
 Task: [Detailed task description with specific requirements]
 
-Plan Reference: docs/[plan-file].md (created by @planner)
+Plan Reference: docs/[plan-file].md (created by @planner in previous phase)
+Execution History: [Summary of completed phases and outcomes, e.g., "Phase 1 completed successfully with user authentication implemented"]
+Artifact Registry: [List of files created/modified so far, e.g., "src/auth/middleware.ts (modified), src/auth/controller.ts (created)"]
+Dependencies: [Prerequisites and integration points, e.g., "Requires database connection setup from Phase 1"]
+
+Configuration Context: [Relevant configs, e.g., "Database: PostgreSQL, Auth: JWT with 1h expiry"]
+Quality Metrics: [Specific thresholds, e.g., "Test coverage: 90%+, Response time: <200ms"]
 
 Project Commands: [Only include relevant commands for this subagent]
 - Test: [command]  // For @implementer
 - Lint: [command]  // For @reviewer
+- Security: [command]  // For sensitive operations
 
 Design Principles: Follow KISS, SOLID, DRY, YAGNI, Composition over Inheritance principles
 
@@ -825,15 +862,61 @@ Requirements:
 - [Specific technical requirements]
 - **Breaking changes allowed unless backward compatibility specified**: obsolete code removal, function signature updates, architectural improvements, file deletion when following design principles
 - Write comprehensive unit tests for all changes that modify behavior
+- Include @reviewer validation checkpoints after major changes
+- Monitor performance against specified benchmarks
 - [Other specific requirements]
 
 Success Criteria:
 - [Measurable completion indicators]
-- All tests pass
+- All tests pass with required coverage
 - Code follows design principles
+- Security validation passed (if applicable)
+- Performance metrics met
 
-MANDATORY: After completing task, return control to coordinator. Do not call other subagents.
+Error Recovery: [If retrying, include previous error details and fixes attempted]
+
+MANDATORY: After completing task, return control to coordinator with detailed status. Do not call other subagents.
 ```
+
+## Enhanced Subagent Coordination Patterns
+
+**Sequential Reference Chain:**
+- @planner creates detailed plan → @implementer references plan in execution → @reviewer validates against plan → coordinator incorporates feedback
+
+**Parallel Execution Guidelines:**
+- When safe, specify parallel subagent calls with clear integration points
+- Example: @implementer working on frontend while @implementer works on backend, with @reviewer validating both
+
+**Escalation Protocols:**
+- @reviewer finding architectural issues → escalate to @planner for refinement
+- @implementer encountering blockers → escalate to coordinator for resolution
+- Security concerns → immediate @reviewer validation with coordinator approval
+
+**Feedback Loop Integration:**
+- @reviewer findings must be explicitly incorporated into subsequent @implementer calls
+- Example: "Incorporate @reviewer feedback: add input validation for security, optimize query for performance"
+
+**Template-Specific Customizations:**
+
+**For Simple Tasks (1-2 phases):**
+- Streamlined prompting with minimal references
+- Focus on direct execution with basic validation
+- Skip complex context inheritance for trivial changes
+
+**For Complex Tasks (3-5 phases):**
+- Comprehensive referencing and context passing
+- Full execution history and artifact tracking
+- Enhanced validation and review cycles
+
+**For Security-Critical Operations:**
+- Mandatory @reviewer involvement before and after changes
+- Include security audit trails and compliance checks
+- Enhanced error context and recovery protocols
+
+**For Architecture Changes:**
+- Additional @planner refinement cycles
+- Breaking change impact assessment
+- Extended validation with performance monitoring
 
 ## Quality Assurance & Validation Framework
 
@@ -928,13 +1011,13 @@ Phase 1: Assess & Plan
 
 Phase 2: Implement & Refine
 - Execute with subagents:
-  1. `@implementer`: Apply fixes/refactors incrementally
-  2. `@implementer`: Add unit tests
-  3. `@implementer`: Clean up and optimize
-  4. `@reviewer`: Fix test failures (if any)
-  5. `@reviewer`: Spot-check critical issues
+  1. `@implementer`: Apply fixes/refactors incrementally, referencing docs/planner-plan-phase-1.md for detailed specifications
+  2. `@implementer`: Add unit tests for all changes, following the test patterns outlined in the plan
+  3. `@implementer`: Clean up and optimize, incorporating any architectural improvements from @planner
+  4. `@reviewer`: Validate implementation against plan requirements, fix any test failures with detailed error context
+  5. `@reviewer`: Spot-check critical issues, providing feedback for @implementer to address
 - Goal: Apply fixes/refactors incrementally, keeping changes minimal.
-- Exit criteria: Fixes merged + tests passing + code quality validated.
+- Exit criteria: Fixes merged + tests passing + code quality validated, with @reviewer approval referencing plan compliance.
 
 Phase 3: Validate & Finish
 - Execute with subagents:
@@ -968,11 +1051,22 @@ For each phase:
 
 **SUBAGENT PROTOCOLS**
 When calling subagents, provide:
-- Relevant project commands only (test for implementation, lint for review)
+- Plan Reference Protocol: Explicit references to @planner's output files (e.g., "docs/planner-plan-phase-1.md")
+- Context Inheritance: Summary of completed phases, previous decisions, and execution history
+- Artifact Tracking: Registry of created/modified files and artifacts for reference across phases
+- Error Context: Specific error details and previous attempt information when retrying failed calls
+- Execution History: Include outcomes of prior phases and subagent interactions
+- Dependency Mapping: List prerequisites, dependencies, and integration points
+- Configuration Context: Pass relevant project configs, environment variables, and setup details
+- Quality Metrics: Include success criteria, quality thresholds, and validation requirements
+- Relevant project commands only (test for implementation, lint for review, security for sensitive ops)
 - Design principles: SOLID, DRY, YAGNI, KISS, Composition over Inheritance
 - Reference to @planner's plan files for detailed specifications
 - Breaking changes permission: obsolete code removal, API improvements, infrastructure consolidation
 - Comprehensive unit testing requirements for all behavioral changes
+- Validation Checkpoints: Require @reviewer validation after major @implementer changes
+- Security Reviews: Mandatory security validation for sensitive operations
+- Performance Monitoring: Include benchmarks and monitoring requirements where applicable
 
 **ESCALATION RULES**
 - Trivial decisions: Implement following design principles
@@ -1061,12 +1155,12 @@ Phase 1: Design & Plan
 
 Phase 2: Implement
 - Execute with subagents:
-  1. `@implementer`: Build core feature incrementally
-  2. `@implementer`: Add unit tests
-  3. `@implementer`: Optimize code (if needed)
-  4. `@reviewer`: Spot-check implementation
+  1. `@implementer`: Build core feature incrementally, referencing docs/planner-plan-phase-1.md for architecture and API specifications
+  2. `@implementer`: Add comprehensive unit tests with 90%+ coverage, following existing test patterns
+  3. `@implementer`: Optimize code for performance (P95 <200ms), incorporating any @planner optimization recommendations
+  4. `@reviewer`: Spot-check implementation quality, security, and plan compliance
 - Goal: Build core feature capabilities incrementally.
-- Exit criteria: Feature works + unit tests added + quality validated.
+- Exit criteria: Feature works + unit tests added (90%+ coverage) + quality validated + performance benchmarks met.
 
 Phase 3: Integrate & Validate
 - Execute with subagents:
@@ -1087,11 +1181,13 @@ Phase 4: Document & Release-Ready (if needed)
 - Exit criteria: Docs updated + rollout notes ready + ops validated.
 
 **COORDINATION INTELLIGENCE**
+- **Sequential Reference Chain**: @planner creates plan → @implementer references plan → @reviewer validates against plan → coordinator incorporates feedback
+- **Parallel Execution**: @implementer can work on frontend/backend simultaneously when safe, with @reviewer validating both
+- **Escalation Protocols**: @reviewer escalates architectural issues to @planner; security concerns require immediate coordinator approval
+- **Feedback Integration**: @reviewer findings must be explicitly addressed in subsequent @implementer calls (e.g., "Incorporate security fixes from @reviewer")
 - @planner: Used for complex architectural decisions and planning
-- @implementer: Primary agent for new functionality and testing
-- @implementer: Applied for code optimization and integration improvements
-- @reviewer: Mandatory for all security, performance, and quality validation
-- @reviewer: Activated for any integration issues or unexpected behavior
+- @implementer: Primary agent for new functionality, testing, and optimization (always references @planner's plan)
+- @reviewer: Mandatory for all security, performance, and quality validation; activated for any issues
 
 **QUALITY ASSURANCE FRAMEWORK**
 - **Security**: Input validation, SQL injection prevention, XSS protection, authentication enforcement
