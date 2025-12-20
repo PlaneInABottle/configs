@@ -57,6 +57,7 @@ codex/.codex/internal_storage.json
 codex/.codex/log/
 codex/.codex/sessions/
 codex/.codex/version.json
+codex/.codex/skills/
 
 # Copilot CLI - Exclude runtime state and logs
 copilot/.copilot/command-history-state.json
