@@ -263,6 +263,14 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 5. **Test Coverage Enhancement** - Add comprehensive tests for all changes
 6. **Documentation Synchronization** - Update docs to reflect code changes
 
+**DETAILED REQUIREMENTS:**
+
+1. **[Specific Bug/Issue #1]**: Detailed technical description with exact behavior, reproduction steps, and expected fix.
+
+2. **[Specific Bug/Issue #2]**: Detailed technical description with exact behavior, reproduction steps, and expected fix.
+
+[... continue for each major bug or issue to address]
+
 **COORDINATION STRATEGY**
 **HIGH-LEVEL PHASES (DETAILS DECIDED BY THE COORDINATOR):**
 
