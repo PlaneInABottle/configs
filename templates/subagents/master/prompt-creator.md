@@ -122,6 +122,14 @@ You are acting as a Senior Engineering Coordinator. You have access to subagents
 - [Behavior/feature acceptance criteria]
 - [Quality gates: fast tests pass, lint/typecheck pass if present]
 
+**DETAILED REQUIREMENTS:**
+
+1. **[Specific Feature/Issue #1]**: Detailed technical description with exact behavior, edge cases, and implementation notes.
+
+2. **[Specific Feature/Issue #2]**: Detailed technical description with exact behavior, edge cases, and implementation notes.
+
+[... continue for each major requirement]
+
 **PROJECT CONTEXT:**
 - Technology Stack: [identified from research]
 - Project Commands:
