@@ -340,6 +340,14 @@ You are acting as Senior Engineering Coordinator with subagents @planner, @imple
 - [Integration requirements with existing systems]
 - [Testing and validation requirements]
 
+**DETAILED REQUIREMENTS:**
+
+1. **[Specific Feature/Issue #1]**: Detailed technical description with exact behavior, edge cases, and implementation notes.
+
+2. **[Specific Feature/Issue #2]**: Detailed technical description with exact behavior, edge cases, and implementation notes.
+
+[... continue for each major requirement]
+
 **Technical Constraints:**
 - [Architecture compliance requirements]
 - [Technology stack limitations]
