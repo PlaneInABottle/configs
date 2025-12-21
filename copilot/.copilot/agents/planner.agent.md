@@ -110,9 +110,11 @@ Use this structure (trim sections that truly don’t apply; don’t invent fille
 
 ## Testing strategy
 - **Unit tests:**
-- **Integration/E2E tests:**
+- **Integration tests:** (only when explicitly requested)
 - **Performance checks:** (if relevant)
 - **Security checks:** (if relevant)
+
+**Note:** Integration tests should only be included in the testing strategy when the user explicitly requests them. Default to unit tests unless integration testing is specifically mentioned in requirements.
 
 ## Rollout & rollback
 - **Rollout plan:** (feature flags, staged deploy, migration ordering)
