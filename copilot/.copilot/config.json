@@ -14,7 +14,7 @@
       "login": "PlaneInABottle"
     }
   ],
-  "model": "gpt-5.2",
+  "model": "gpt-5-mini",
   "render_markdown": true,
   "screen_reader": false,
   "theme": "auto",
