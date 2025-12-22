@@ -192,6 +192,10 @@ The subagents must work in strict sequence to ensure quality and proper implemen
 
 3. Create and use @reviewer subagent: THIRD, validates the implementation against the original requirements and @planner's plan, tests functionality, checks for bugs, and ensures all improvements work correctly.
 
+**COMMAND PROVISION:** When creating subagents, include relevant project commands in their input prompts (especially test commands for validation):
+- @implementer: Test commands for implementation and validation
+- @reviewer: Test commands for validation and bug checking
+
 **CRITICAL**: @implementer references @planner's plan files and previous subagent findings. No direct subagent calls.
 
 **CRITICAL**: @implementer MUST reference @planner's plan files. No subagent calls other subagents directly. Coordinator manages the sequence.
