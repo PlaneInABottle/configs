@@ -188,7 +188,7 @@ The subagents must work in strict sequence to ensure quality and proper implemen
 
 1. Create and use @planner subagent: FIRST, analyzes all requirements, examines current codebase, and creates a comprehensive implementation plan with specific file changes, code modifications, and UI behavior details. Creates plan files that @implementer will reference.
 
-2. Create and use @implementer subagent: SECOND, references @planner's plan files and executes the implementation exactly as specified, making all required code changes, UI modifications, and feature additions.
+2. Create and use @implementer subagent: SECOND, references @planner's plan files and executes the implementation exactly as specified, making all required code changes, UI modifications, feature additions, and test additions/refactoring.
 
 3. Create and use @reviewer subagent: THIRD, validates the implementation against the original requirements and @planner's plan, tests functionality, checks for bugs, and ensures all improvements work correctly.
 
@@ -209,7 +209,7 @@ If @reviewer finds issues or bugs during validation:
 **[CRITICAL: 1–5 PHASES MAX]**
 - Use **1–2 phases** for simple tasks, **3–5 phases** for complex tasks.
 - Each phase should include: **name**, **goal**, **Create subagents to use** (e.g., Create @planner subagent), and **exit criteria**.
-  - Create subagents: `@planner` (design/plan), `@implementer` (build/tests and cleanup), `@reviewer` (validate logic/code quality and fixing failures/bugs).
+  - Create subagents: `@planner` (design/plan), `@implementer` (build features, implement/refactor tests, and cleanup), `@reviewer` (validate logic/code quality and fixing failures/bugs).
 - Keep phase content high-level (no step-by-step). The coordinator AI should create detailed tasks during execution.
 - **At minimum per phase:** delegate implementation to `@implementer` and validation/verification to `@reviewer`.
 - **Include cleanup phase:** Add a final cleanup phase to delete implemented plan files and temporary artifacts. At the end, mention all deleted files.
@@ -238,7 +238,7 @@ For each phase:
 **QUALITY REQUIREMENTS:**
 - Follow design principles: KISS (Keep It Simple Stupid), SOLID, DRY (Don't Repeat Yourself), YAGNI (You Aren't Gonna Need It), Composition over Inheritance
 - **Breaking changes allowed unless user specifies backward compatibility**: obsolete code removal (YAGNI), function signature updates (SOLID Interface Segregation), redundant code elimination (DRY), architectural improvements (SOLID), infrastructure consolidation (DRY)
-- Add unit tests for every change
+- Always add or refactor necessary tests after feature implementation
 - Remove redundant code and functions
 - Utilize existing infrastructure (HTML generation, etc.)
 - No hardcoded values - make everything configurable
