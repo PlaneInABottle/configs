@@ -213,11 +213,11 @@ Categorize plan issues:
   WHY: MD5 is cryptographically broken for password storage
   RECOMMENDATION: Use bcrypt or Argon2 with proper salt
 
-### MEDIUM Priority (Optional - fix if improves quality without overengineering)
+### MEDIUM Priority (Must fix when straightforward/easy)
 - Login rate limiting not mentioned in plan
   WHY: Prevents brute force attacks
   RECOMMENDATION: Add rate limiting middleware
-  NOTE: Optional improvement, not blocking
+  NOTE: Must fix if straightforward to implement
 
 ### Plan Assessment
 - Scope: Appropriate
@@ -282,11 +282,11 @@ Categorize plan issues:
   BUG TYPE: Data validation gap
   FIX: Add email regex validation before processing
 
-## 🔧 MEDIUM Priority (Fix if improves quality, skip if overengineering)
+## ⚠️ MEDIUM Priority (Must fix when straightforward/easy)
 - file.py:120 - Long function (85 lines)
   WHY: Hard to test and understand
   FIX: Extract helper functions
-  NOTE: Optional - only if it genuinely improves readability
+  NOTE: Must fix if easy refactor (single function extraction)
 
 - file.js:150 - Potential race condition
   WHY: Shared state modified without synchronization
@@ -305,8 +305,15 @@ Categorize plan issues:
 ✓ Good separation of concerns in authentication module
 ```
 
-**IMPORTANT for MEDIUM and LOW issues:**
-Always indicate whether the fix would be overengineering or genuinely improve quality.
+**IMPORTANT for MEDIUM issues:**
+Always assess if the fix is straightforward/easy. Easy fixes MUST be implemented immediately. Complex fixes may be deferred but should be tracked as technical debt.
+
+**Easy Medium Issue Criteria:**
+- Single function/method changes
+- No new dependencies required
+- Clear, obvious fixes (DRY violations, magic number extraction, simple refactoring)
+- Minimal risk of introducing bugs
+- Improves maintainability without significant effort
 
 ## Design Principles Validation Checklist
 
