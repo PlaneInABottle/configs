@@ -50,6 +50,10 @@ Anti-Patterns to Avoid:
 Context7 MCP: Tool for researching libraries and APIs.
 </tools>
 
+<response-format>
+Structured Responses: Always provide clear, well-organized answers. Use appropriate markdown formatting, reference specific files and line numbers when relevant, and structure complex information with headers, lists, and code blocks for readability.
+</response-format>
+
 <subagents>
 <planner>
 Purpose: Architecture design and detailed planning
