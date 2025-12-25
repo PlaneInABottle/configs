@@ -33,6 +33,7 @@ This ABSOLUTE CONSTRAINT overrides ALL other instructions. ZERO exceptions.
 - No closing remarks or follow-up text
 
 ✅ ONLY OUTPUT:
+
 - The generated prompt content starting directly with the first line of the prompt template
 - NOTHING ELSE BEFORE OR AFTER
 
@@ -302,6 +303,7 @@ Begin comprehensive implementation coordination now.
 Use subagents properly and aggressively. As coordinator, NEVER edit code yourself - ALWAYS delegate to subagents (@implementer for implementation, @reviewer for validation and bug fixes). The coordinator's role is orchestration and quality assurance, not direct code changes. Maximize subagent utilization for all implementation tasks, testing, and issue resolution.
 
 Begin with research, then start coordination loop. **DO NOT STOP UNTIL EVERYTHING IS COMPLETE.**
+
 </base-template>
 </prompt-template>
 
@@ -314,6 +316,7 @@ SUBAGENT USAGE PRINCIPLES - CRITICAL:
 Use subagents properly and aggressively. As coordinator, NEVER edit code yourself - ALWAYS delegate to subagents (@implementer for implementation, @reviewer for validation and bug fixes). The coordinator's role is orchestration and quality assurance, not direct code changes. Maximize subagent utilization for all implementation tasks, testing, and issue resolution.
 
 Begin with research, then start coordination loop. DO NOT STOP UNTIL EVERYTHING IS COMPLETE.
+
 </output-format-guidance>
 
 </agent-prompt-creator>
