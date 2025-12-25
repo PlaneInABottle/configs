@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Test Suite for Project Agents Generator
-# Tests the generate-project-agents.sh script functionality
+# Test Suite for Project Instructions Generator
+# Tests the generate-project-instructions.sh script functionality
 
 set -euo pipefail
 
@@ -11,7 +11,7 @@ NC='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-SETUP_SCRIPT="$SCRIPT_DIR/generate-project-agents.sh"
+SETUP_SCRIPT="$SCRIPT_DIR/generate-project-instructions.sh"
 TEMPLATES_DIR="$CONFIG_DIR/templates"
 TEST_DIR="/tmp/agent-setup-test-$$"
 
@@ -144,7 +144,7 @@ test_project_detection() {
 # Main test runner
 main() {
     echo "================================"
-    echo "Agent Setup Script Test Suite"
+    echo "Project Instructions Generator Test Suite"
     echo "================================"
     echo ""
     

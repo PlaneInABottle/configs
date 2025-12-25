@@ -345,4 +345,4 @@ If generation looks wrong, verify the header template and metadata instead:
 ## Related Documentation
 
 - [Subagent Update Script Analysis](../docs/subagent-update-script-analysis.md) - Full analysis and options
-- [Project Agents Generator](./generate-project-agents.sh) - Similar pattern for project-specific agents
+- [Project Instructions Generator](./generate-project-instructions.sh) - Generates project-specific AI instruction files for Claude, Gemini, Qwen, and Copilot/OpenCode
