@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends an AI assistant's capabilities with specialized knowledge, workflows, or tool integrations.
+description: Comprehensive guide for creating and managing AI skills - modular packages that extend AI assistants with specialized knowledge, workflows, and tool integrations. Use this skill when you need to write, update, or package AI skills that transform general-purpose AI agents into specialized experts for specific domains, tasks, or workflows.
 license: Complete terms in LICENSE.txt
 ---
 
