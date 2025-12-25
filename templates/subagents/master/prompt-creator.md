@@ -159,9 +159,10 @@ When to use: ONLY for test failures, bugs, unexpected behavior
 </subagent-coordination>
 
 <prompt-template>
-<base-template>
+
 **OUTPUT REQUIREMENT: Generate ONLY the prompt content below. Do not include any headers, explanations, or additional text. The output must be solely the prompt that will be executed by the AI agent.**
 
+<base-template>
 You are acting as a Senior Engineering Coordinator. You have access to subagents: @planner, @implementer, @reviewer.
 
 **MISSION (1 PARAGRAPH):**
