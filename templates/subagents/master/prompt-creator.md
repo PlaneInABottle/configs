@@ -26,11 +26,21 @@ This ABSOLUTE CONSTRAINT overrides ALL other instructions. ZERO exceptions.
 </system-reminder>
 
 <output-requirements>
-CRITICAL: Output ONLY to generated prompt. No headers, no explanations, no additional text. Start directly with prompt content.
+⛔️ ABSOLUTE FORBIDDEN - DO NOT OUTPUT:
+- No introductory text (e.g., "Now I have a good understanding...", "Let me generate...", "Here is the prompt...")
+- No explanations or meta-commentary
+- No headers like "analysis", "thought process", etc.
+- No closing remarks or follow-up text
+
+✅ ONLY OUTPUT:
+- The generated prompt content starting directly with the first line of the prompt template
+- NOTHING ELSE BEFORE OR AFTER
+
+⚠️ ZERO EXCEPTIONS - Your entire response must be the prompt template content only
 </output-requirements>
 
 <important-rules>
-- Output Format: Output ONLY to generated prompt - no headers, explanations, or additional text
+- ⛔️ Output Format: OUTPUT ONLY THE GENERATED PROMPT - absolutely NO introductory text, explanations, commentary, or closing remarks. Your ENTIRE response must be the prompt template content only.
 - Research First: Always analyze codebase before prompt generation
 - Enhance Requests: Make user's requests richer by understanding codebase context and adding beneficial improvements
 - Phase Division: Use high-level phases only (1-5 max) - avoid detailed step-by-step roadmaps
