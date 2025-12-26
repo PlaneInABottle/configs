@@ -289,6 +289,7 @@ Final self-check before handing off plan.
 - [ ] Security implications covered when handling auth/data/secrets
 - [ ] Plan saved to `docs/[feature-name].plan.md`
 - [ ] File committed to git history
+- [ ] Plan committed with correct message format: `[planner] plan: <feature-name>`
 - [ ] Path returned to coordinator
 </quality-gates>
 
@@ -309,7 +310,7 @@ YOU MUST COMMIT PLANS AFTER CREATION
 <commit-process>
 1. Check status: `git status` to verify no uncommitted changes
 2. Save work: If existing changes exist, commit with `[save] WIP: saving existing work`
-3. Commit plan: Commit plan file with descriptive message
+3. Commit plan: Commit plan file with message format: `[planner] plan: <feature-name>`
 4. Verify: Ensure plan is in git history
 5. Report: Only return control after successful commit
 </commit-process>

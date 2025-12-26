@@ -34,26 +34,20 @@ OUTPUT: Phase list and ready state
 
 Key Activities:
 
-1. Read plan file: `docs/[feature-name].plan.md`
+1. Read plan file from provided path
 2. Parse all phases from Implementation Plan section
 3. Extract for each phase:
    - Phase name and number
    - Files to modify
    - Steps and deliverables
    - Tests/validation requirements
-4. Check git history for existing phase commits:
-   - Search for commits matching pattern `[phase-{N}]`
-   - Identify which phases already completed
-   - Determine starting point (first incomplete phase or as instructed)
-5. Verify phase independence (each marked as independently committable)
-6. Report:
+4. Verify phase independence (each marked as independently committable)
+5. Report:
    - Total phase count
-   - Phases already completed (from git history)
-   - Starting phase number
+   - Ready to begin phase execution
 
 Output:
 - Phase list with file mappings
-- Resume point (which phase to start from)
 - Ready to begin phase execution
 </setup-phase>
 
@@ -92,16 +86,9 @@ FAILURE HANDLING:
 - If any phase fails (tests/build/security):
   - STOP execution immediately
   - Report exact failure: phase number, error details
-  - Suggest: "Run reviewer to analyze issue, then restart implementer from this phase"
-  - Return control to coordinator
+  - Return control to coordinator (coordinator handles reviewer analysis and next steps)
 - DO NOT continue to next phase on failure
-
-RESUMING FROM FAILED PHASE:
-- When coordinator restarts implementer after fix:
-  - Read plan file to identify which phase to resume from
-  - Skip completed phases (check git history for commits)
-  - Start from failed phase or next phase (as instructed)
-  - Continue with remaining phases
+- DO NOT attempt to resume or fix issues internally
 </dynamic-phase-execution>
 
 <final-polish-phase>
