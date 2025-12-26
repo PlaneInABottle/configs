@@ -29,7 +29,7 @@ OUTPUT: Phase list and ready state
 
 Key Activities:
 
-1. Read plan file: `docs/[feature-name].plan.md`
+1. Read plan file from provided path
 2. Parse all phases from Implementation Plan section
 3. Extract for each phase:
    - Phase name and number
