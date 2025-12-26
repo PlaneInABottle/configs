@@ -184,8 +184,8 @@ Implementer Phase N Failure (stops execution, returns to coordinator):
 - Implementer reports: "Phase N failed: [error details], stopped at commit SHA"
 - Coordinator calls @reviewer: "Analyze failed commit [sha] for phase N"
 - Reviewer analyzes, returns findings and fix recommendations
-- Coordinator calls @implementer: "Apply fixes for phase N, continue with remaining phases"
-- Implementer applies fixes, continues from phase N (or next phase)
+- Coordinator calls @implementer: "Apply reviewer fixes for phase N, then execute phases N+1 to end"
+- Implementer starts fresh, applies reviewer-recommended fixes for phase N, then executes remaining phases
 - If persistent failure, escalate to user
 </implementer-phase-failure>
 
@@ -377,11 +377,11 @@ FORBIDDEN:
 @implementer workflow:
 1. Read plan from provided file path
 2. Parse N phases from plan
-3. Execute phases 1..N sequentially
+3. Execute phases 1..N sequentially (or apply fixes and execute from specific phase if instructed)
 4. Commit each phase immediately with `[phase-{N}] <phase-name>: <description>`
 5. Optional final polish commit with `[final] polish: <description>`
 6. Return to coordinator after all phases complete
-7. If phase fails: stop, report failure, return to coordinator
+7. If phase fails: stop, report failure, return to coordinator (no internal fixing)
 8. Do NOT call other subagents
 
 @reviewer workflow:
