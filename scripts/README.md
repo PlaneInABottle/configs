@@ -1,6 +1,6 @@
 # Subagent Management Scripts
 
-Automated system for managing subagent instruction files across Copilot and Opencode systems.
+Automated system for managing subagent instruction files across Copilot, Opencode, and Claude systems.
 
 ## Overview
 
@@ -13,10 +13,12 @@ templates/subagents/
 │   ├── reviewer.md
 │   ├── implementer.md
 │   ├── coordinator.md
+│   ├── prompt-creator.md
 │   └── METADATA.json       # Agent metadata (descriptions, examples)
 └── headers/                # Tool-specific headers
     ├── copilot.template    # Copilot header format
-    └── opencode.template   # Opencode header format (YAML)
+    ├── opencode.template   # Opencode header format (YAML)
+    └── claude.template     # Claude header format
 ```
 
 ## Scripts
@@ -52,6 +54,7 @@ Generates subagent files from master templates + headers.
 
 # Update all agents for specific system
 ./scripts/update-subagents.sh --agent=all --system=copilot
+./scripts/update-subagents.sh --agent=all --system=claude
 
 # Dry run to preview changes
 ./scripts/update-subagents.sh --agent=all --dry-run
@@ -61,8 +64,8 @@ Generates subagent files from master templates + headers.
 ```
 
 **Options:**
-- `--agent=NAME` - Agent to update (planner|reviewer|implementer|coordinator|all)
-- `--system=NAME` - System to update (copilot|opencode|all) [default: all]
+- `--agent=NAME` - Agent to update (planner|reviewer|implementer|coordinator|prompt-creator|all)
+- `--system=NAME` - System to update (copilot|opencode|claude|all) [default: all]
 - `--dry-run` - Preview changes without modifying files
 - `--force` - Overwrite without confirmation
 
@@ -211,6 +214,29 @@ These Opencode `tools` / `permission` blocks are generated from `METADATA.json`.
 - Default (applies to all agents): `defaults.opencode.tools_lines` and `defaults.opencode.permission_lines`
 - Per-agent override (optional): `subagents.<agent>.opencode.tools_lines` and `subagents.<agent>.opencode.permission_lines` (falls back to defaults when empty)
 
+### Claude Format
+
+```markdown
+---
+name: planner
+description: "Software architect that creates detailed implementation plans without writing code..."
+
+Examples:
+  - "Use for complex multi-step features requiring architectural design"
+  - "Use for large refactoring projects needing systematic planning"
+tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, NotebookEdit, WebFetch, TodoWrite, WebSearch, BashOutput, KillBash, mcp__Context7__resolve-library-id, mcp__Context7__get-library-docs, ListMcpResourcesTool, ReadMcpResourceTool
+---
+
+<content from master template>
+```
+
+Claude header is generated from `METADATA.json`:
+
+- `name`: Agent name from `subagents.<agent>.name`
+- `description`: Agent description from `subagents.<agent>.description`
+- `Examples`: Example usage blocks from `subagents.<agent>.examples`
+- `tools`: Tools list from `defaults.claude.tools` (same for all agents)
+
 ## Design Decisions
 
 ### Why Different Headers?
@@ -223,13 +249,38 @@ Different tools have different requirements. Headers remain tool-specific.
 ### Why Different Section Structures?
 
 Each subagent serves a different purpose:
-- **Debugger**: 4-phase debugging framework
 - **Planner**: Comprehensive planning with SOLID principles
 - **Implementer**: Technology-specific implementation guides
 - **Reviewer**: Security and quality focus areas
-- **Refactor**: Code smell catalog and refactoring patterns
+- **Coordinator**: Multi-phase orchestration (Opencode only)
+- **Prompt-Creator**: Prompt engineering specialist (Opencode only)
 
 Custom sections per role ensure maximum clarity and usability.
+
+## Current Status
+
+✅ **Working:**
+- Extraction script (`extract-to-master.sh`)
+- Generation script (`update-subagents.sh`)
+- Validation script (`validate-subagents.sh`)
+- Master templates created
+- Header templates created
+- **Claude integration added**
+
+✅ **Implemented Configurability:**
+- Opencode header `tools:` and `permission:` blocks are configurable via `templates/subagents/master/METADATA.json`:
+  - `defaults.opencode.tools_lines`
+  - `defaults.opencode.permission_lines`
+- Claude header `tools:` is configurable via `templates/subagents/master/METADATA.json`:
+  - `defaults.claude.tools`
+
+✅ **Robust Validation:**
+- `validate-subagents.sh` detects content start dynamically (after the last `---` and following blank lines), so it does **not** rely on hardcoded header lengths.
+
+✅ **Multi-System Support:**
+- **Copilot**: planner, reviewer, implementer
+- **Opencode**: planner, reviewer, implementer, coordinator, prompt-creator
+- **Claude**: planner, reviewer, implementer
 
 ## Current Status
 
@@ -258,7 +309,9 @@ Custom sections per role ensure maximum clarity and usability.
 ### Adding a New Subagent
 
 1. Create master template: `templates/subagents/master/newagent.md`
-2. Add metadata to `METADATA.json`
+2. Add metadata to `METADATA.json`:
+   - `name`, `description`, `examples`
+   - `header_lines` for each system (copilot, opencode, claude) if applicable
 3. Update scripts to include new agent in arrays
 4. Run update script: `./scripts/update-subagents.sh --agent=newagent --force`
 5. Validate: `./scripts/validate-subagents.sh`

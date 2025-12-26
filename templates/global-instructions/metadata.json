@@ -11,6 +11,11 @@
       "requires_header": true,
       "target_file": "copilot/.copilot/instructions.md",
       "description": "Copilot assistant instructions (requires YAML header)"
+    },
+    "claude": {
+      "requires_header": false,
+      "target_file": "claude/.claude/CLAUDE.md",
+      "description": "Claude desktop app instructions (no header required)"
     }
   },
   "dynamic_sections": {
@@ -20,5 +25,5 @@
       "location": "After 'Graduated Escalation Model' section"
     }
   },
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

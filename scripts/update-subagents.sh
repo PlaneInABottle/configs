@@ -31,14 +31,14 @@ usage() {
     echo "Updates subagent files from master templates."
     echo ""
     echo "Options:"
-    echo "  --agent=NAME          Update specific agent (debugger|planner|reviewer|implementer|refactor|coordinator|prompt-creator|all)"
-    echo "  --system=NAME         Update specific system (copilot|opencode|all) [default: all]"
+    echo "  --agent=NAME          Update specific agent (planner|reviewer|implementer|coordinator|prompt-creator|all)"
+    echo "  --system=NAME         Update specific system (copilot|opencode|claude|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
     echo "  --force               Overwrite without confirmation"
     echo "  --help, -h            Show this help message"
     echo ""
     echo "Examples:"
-    echo "  $0 --agent=debugger"
+    echo "  $0 --agent=planner"
     echo "  $0 --agent=all --system=copilot"
     echo "  $0 --agent=planner --dry-run"
     echo "  $0 --agent=all --force"
@@ -161,6 +161,23 @@ EOF
         return 0
     fi
 
+    if [[ "$system" == "claude" ]]; then
+        local examples="$(get_metadata_lines subagents "$agent" examples)"
+        local tools="$(get_default_lines "claude" "tools")"
+
+        cat <<EOF
+---
+name: ${name}
+description: "${description}"
+
+Examples:
+${examples}
+tools: ${tools}
+---
+EOF
+        return 0
+    fi
+
     # opencode
     local examples="$(get_metadata_lines subagents "$agent" examples)"
     local tools_lines="$(get_opencode_lines_for_agent "$agent" tools_lines)"
@@ -199,6 +216,8 @@ update_agent() {
     local output_file=""
     if [[ "$system" == "copilot" ]]; then
         output_file="$CONFIG_DIR/copilot/.copilot/agents/${agent}.agent.md"
+    elif [[ "$system" == "claude" ]]; then
+        output_file="$CONFIG_DIR/claude/.claude/agents/${agent}.md"
     else
         output_file="$CONFIG_DIR/opencode/.config/opencode/agent/${agent}.md"
     fi
@@ -244,7 +263,7 @@ main() {
     # Determine which systems to update
     local systems_to_update=()
     if [[ "$SYSTEM" == "all" ]]; then
-        systems_to_update=(copilot opencode)
+        systems_to_update=(copilot opencode claude)
     else
         systems_to_update=("$SYSTEM")
     fi
@@ -254,7 +273,9 @@ main() {
         local agents_to_update=()
         if [[ "$AGENT" == "all" ]]; then
             if [[ "$sys" == "copilot" ]]; then
-                agents_to_update=(planner reviewer implementer)  # Skip coordinator and prompt-creator for copilot
+                agents_to_update=(planner reviewer implementer)
+            elif [[ "$sys" == "claude" ]]; then
+                agents_to_update=(planner reviewer implementer)
             else
                 agents_to_update=(planner reviewer implementer coordinator prompt-creator)
             fi
@@ -312,12 +333,14 @@ if [[ -z "$AGENT" ]]; then
 fi
 
 if [[ "$AGENT" != "all" ]] && [[ "$AGENT" != "planner" ]] && \
-   [[ "$AGENT" != "reviewer" ]] && [[ "$AGENT" != "implementer" ]] && [[ "$AGENT" != "coordinator" ]] && [[ "$AGENT" != "prompt-creator" ]]; then
+   [[ "$AGENT" != "reviewer" ]] && [[ "$AGENT" != "implementer" ]] && \
+   [[ "$AGENT" != "coordinator" ]] && [[ "$AGENT" != "prompt-creator" ]]; then
     echo "Error: Invalid agent name: $AGENT"
     usage
 fi
 
-if [[ "$SYSTEM" != "all" ]] && [[ "$SYSTEM" != "copilot" ]] && [[ "$SYSTEM" != "opencode" ]]; then
+if [[ "$SYSTEM" != "all" ]] && [[ "$SYSTEM" != "copilot" ]] && \
+   [[ "$SYSTEM" != "opencode" ]] && [[ "$SYSTEM" != "claude" ]]; then
     echo "Error: Invalid system name: $SYSTEM"
     usage
 fi
