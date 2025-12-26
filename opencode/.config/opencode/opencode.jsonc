@@ -35,7 +35,8 @@
       "stat": "allow",
       "file": "allow",
       "which*": "allow",
-      "whereis": "allow"
+      "whereis": "allow",
+      "*": "ask"
     }
   },
   "keybinds": {
