@@ -162,17 +162,10 @@ EOF
     fi
 
     if [[ "$system" == "claude" ]]; then
-        local examples="$(get_metadata_lines subagents "$agent" examples)"
-        local tools="$(get_default_lines "claude" "tools")"
-
         cat <<EOF
 ---
 name: ${name}
 description: "${description}"
-
-Examples:
-${examples}
-tools: ${tools}
 ---
 EOF
         return 0

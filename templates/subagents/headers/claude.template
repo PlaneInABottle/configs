@@ -1,8 +1,4 @@
 ---
 name: {{NAME}}
 description: "{{DESCRIPTION}}"
-
-Examples:
-{{EXAMPLES}}
-tools: {{TOOLS}}
 ---
