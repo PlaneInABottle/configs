@@ -22,6 +22,7 @@ claude/.claude/file-history/
 claude/.claude/plugins/installed_plugins.json
 claude/.claude/plugins/known_marketplaces.json
 claude/.claude/plugins/marketplaces/
+claude/.claude/plugins/install-counts-cache.json
 
 # Removed duplicate patterns - using simple filename patterns below
 
