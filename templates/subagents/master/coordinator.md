@@ -103,7 +103,7 @@ Coordinator Responsibilities:
 <standard-orchestration-sequence>
 For Complex Multi-Phase Tasks:
 - @planner - Create detailed implementation plan, save to file, commit plan
-- (Optional) @reviewer - Review plan (only for huge/major plans)
+- (Optional) @reviewer - Review plan (for complex plans meeting criteria)
 - @implementer - Read plan, execute N phases, create N commits
 - @reviewer - Review all N commits together
 </standard-orchestration-sequence>
@@ -142,11 +142,28 @@ User Request → @reviewer (review specified files/commits) → Complete
 
 <phase-transition-gates>
 - Planning Gate: Plan must follow design principles and be implementable
-- Plan Review Gate (optional, for huge/major plans): Plan reviewed by @reviewer before implementation
+- Plan Review Gate (optional): Plan reviewed by @reviewer before implementation (for complex plans)
 - Implementation Gate: All N phases complete, N commits created, tests pass
 - Review Gate: Code meets quality standards, security requirements, all N commits reviewed
 - Integration Gate: Changes work in full system context
 </phase-transition-gates>
+
+<plan-review-criteria>
+WHEN TO CALL REVIEWER FOR PLAN REVIEW:
+
+Call @reviewer to review plan before implementation when:
+- Plan has >10 phases or >20 total commits
+- Involves architectural changes or new system components
+- Touches security-critical code (auth, data validation, encryption)
+- Complex refactoring with multiple system impacts
+- When uncertainty exists about approach viability
+
+Skip plan review for:
+- Simple feature additions (<5 phases, <10 commits)
+- Bug fixes with clear reproduction steps
+- Documentation updates
+- Minor configuration changes
+</plan-review-criteria>
 
 <success-criteria-validation>
 Each phase: Functional completion, test coverage, code quality, documentation, integration
@@ -162,7 +179,7 @@ Process:
 4. If APPROVED: task complete
 5. If NEEDS_CHANGES: implementer fixes all issues in one run
 
-Plan Review (only for huge/major plans):
+Plan Review (for complex plans meeting criteria):
 
 Process:
 1. Planner creates plan, commits plan file
@@ -404,7 +421,7 @@ Before orchestration:
 
 After planner phase:
 - [ ] Plan file saved to docs/[feature].plan.md, committed, path recorded
-- [ ] Plan reviewed by @reviewer (if huge/major plan)
+- [ ] Plan reviewed by @reviewer (if complex plan meeting criteria)
 
 During implementer phase:
 - [ ] Plan path passed, N phases confirmed, progress tracked (Phase X of N)
