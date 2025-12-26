@@ -2,7 +2,6 @@
 name: reviewer
 description: "Comprehensive code reviewer and bug analyst - finds bugs, runtime errors, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage."
 ---
-
 <!-- sync-test: generated via templates/subagents/master + scripts/update-subagents.sh -->
 <agent-reviewer>
 
