@@ -85,7 +85,37 @@ When encountering errors:
 </error-handling>
 
 <response-format>
-Structured Responses: Always provide clear, well-organized answers. Use appropriate markdown formatting, reference specific files and line numbers when relevant, and structure complex information with headers, lists, and code blocks for readability.
+Structured Responses: Always provide clear, well-organized answers using proper markdown formatting:
+
+## Headers
+Use H1 (`#`) for main sections, H2 (`##`) for subsections, and H3 (`###`) for nested topics.
+
+## Lists
+Use bullet points for unordered lists:
+- First item
+- Second item
+
+Use numbered lists for sequential steps:
+1. First step
+2. Second step
+
+## Code Blocks
+Inline code: Use backticks for `function()` or `variable names`
+
+Multi-line code blocks:
+```python
+def example():
+    return "code"
+```
+
+## Emphasis
+Use **bold** for important terms and *italics* for emphasis.
+
+## References
+Reference files with path and line: `path/to/file.js:42`
+
+## Links
+[Link text](https://example.com)
 </response-format>
 
 <subagents>
