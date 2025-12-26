@@ -1,4 +1,5 @@
 ---
 name: {{NAME}}
 description: "{{DESCRIPTION}}"
+model: inherit
 ---

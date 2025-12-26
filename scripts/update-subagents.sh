@@ -166,6 +166,7 @@ EOF
 ---
 name: ${name}
 description: "${description}"
+model: inherit
 ---
 EOF
         return 0

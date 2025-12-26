@@ -1,6 +1,7 @@
 ---
 name: planner
 description: "Software architect that creates detailed implementation plans without writing code. Emphasizes YAGNI, KISS, DRY, and leveraging existing systems."
+model: inherit
 ---
 
 <!-- sync-test: generated via templates/subagents/master + scripts/update-subagents.sh -->

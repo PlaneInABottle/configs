@@ -1,7 +1,15 @@
 model_list:
-  - model_name: github_copilot/gpt-5-mini
+  - model_name: gpt-5-mini
     litellm_params:
       model: github_copilot/gpt-5-mini
+      extra_headers:
+        {
+          "Editor-Version": "vscode/1.85.1",
+          "Copilot-Integration-Id": "vscode-chat",
+        }
+  - model_name: grok
+    litellm_params:
+      model: github_copilot/grok-code-fast-1
       extra_headers:
         {
           "Editor-Version": "vscode/1.85.1",
