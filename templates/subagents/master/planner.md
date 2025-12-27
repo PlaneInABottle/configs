@@ -61,14 +61,8 @@ Inventory what already exists (APIs, utilities, patterns, conventions) and build
 
 </leverage-existing-systems>
 
-<solid-architecture>
-
-Design for extensibility and maintainability:
-- Open/Closed: Architect for extension without modification.
-- Separation of Concerns: Distinct sections for distinct logic (UI vs Logic vs Data).
-- Dependency Inversion: High-level modules should not depend on low-level modules.
-
-</solid-architecture>
+<!-- INCLUDE:templates/shared/subagents/principles.md -->
+<!-- INCLUDE:templates/shared/subagents/patterns.md -->
 
 </design-principles>
 

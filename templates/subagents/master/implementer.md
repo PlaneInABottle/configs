@@ -129,28 +129,12 @@ Commit (if changes made):
 
 <design-principles>
 
-MANDATORY: Apply these principles to all implementations.
+MANDATORY: Apply these principles and patterns to all implementations.
 
-<solid-principles>
+<!-- INCLUDE:templates/shared/subagents/principles.md -->
+<!-- INCLUDE:templates/shared/subagents/patterns.md -->
 
-- SRP (Single Responsibility Principle): Each function/class has one clear responsibility
-- OCP (Open/Closed Principle): Open for extension, closed for modification
-- LSP (Liskov Substitution Principle): Subtypes are substitutable for base types
-- ISP (Interface Segregation Principle): Clients don't depend on unused interfaces
-- DIP (Dependency Inversion Principle): Depend on abstractions, not concretions
-
-</solid-principles>
-
-<essential-principles>
-
-- DRY (Don't Repeat Yourself): Eliminate code duplication through abstraction
-- SoC (Separation of Concerns): Distinct logic handled in distinct sections
-- YAGNI (You Aren't Gonna Need It): Don't implement speculative features
-- KISS (Keep It Simple, Stupid): Choose the simplest adequate solution
-
-</essential-principles>
-
-<code-quality-standards>
+<code_quality_standards>
 
 - Functions with single responsibility
 - Meaningful, descriptive names

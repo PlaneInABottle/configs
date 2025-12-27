@@ -124,21 +124,8 @@ Red Flags:
 
 </leverage-existing-systems>
 
-<solid-and-soc>
-
-Review Criteria:
-
-- Open/Closed: Can behavior be extended without modifying source?
-- Separation of Concerns: Is business logic mixed with UI/Data access?
-- Single Responsibility: Does a class/function do too much?
-
-Red Flags:
-
-- "God classes" handling everything
-- Hard-coded dependencies inhibiting testing/extension
-- UI components containing complex business rules
-
-</solid-and-soc>
+<!-- INCLUDE:templates/shared/subagents/principles.md -->
+<!-- INCLUDE:templates/shared/subagents/patterns.md -->
 
 </design-principles-review>
 

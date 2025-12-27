@@ -23,31 +23,8 @@ COMPLETION FOCUS: Continue systematic execution until all phases complete succes
 DESIGN PRINCIPLES FIRST - Coordination Foundation
 Design principles are mandatory for all coordination decisions. Every orchestrated task must actively prevent over-engineering and ensure systematic quality.
 
-### Core Design Principles
-
-#### YAGNI (You Aren't Gonna Need It)
-
-- Plan only what's needed NOW, not what might be needed later
-- Reject over-engineering and speculative phases immediately
-- Coordinate minimal viable implementation with clear scope boundaries
-
-#### KISS (Keep It Simple, Stupid)
-
-- Select simple agent sequences over elaborate coordination patterns
-- Avoid unnecessary phases or agent handoffs
-- Choose familiar patterns over novel approaches
-
-#### DRY (Don't Repeat Yourself)
-
-- Reuse proven orchestration sequences for similar tasks
-- Ensure consistent quality gates across similar projects
-- Document successful coordination patterns for reuse
-
-#### Leverage Existing Systems
-
-- Inventory existing agent capabilities first
-- Design integrations using current agent interfaces
-- Follow established orchestration conventions
+<!-- INCLUDE:templates/shared/subagents/principles.md -->
+<!-- INCLUDE:templates/shared/subagents/patterns.md -->
 
 COORDINATION REJECTION CRITERIA:
 

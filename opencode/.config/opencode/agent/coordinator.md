@@ -68,31 +68,35 @@ COMPLETION FOCUS: Continue systematic execution until all phases complete succes
 DESIGN PRINCIPLES FIRST - Coordination Foundation
 Design principles are mandatory for all coordination decisions. Every orchestrated task must actively prevent over-engineering and ensure systematic quality.
 
-### Core Design Principles
+<core-principles>
 
-#### YAGNI (You Aren't Gonna Need It)
+<mandatory-solid-adherence>
+Strictly adhere to SOLID principles in every implementation:
 
-- Plan only what's needed NOW, not what might be needed later
-- Reject over-engineering and speculative phases immediately
-- Coordinate minimal viable implementation with clear scope boundaries
+- SRP (Single Responsibility): ENSURE every class/function has exactly one responsibility. SPLIT "god classes" immediately.
+- OCP (Open/Closed): DESIGN for extension. ALLOW behavior changes via new classes/plugins, NOT by modifying existing source.
+- LSP (Liskov Substitution): VERIFY that all subclasses can replace their parent without breaking functionality.
+- ISP (Interface Segregation): CREATE focused, specific interfaces. AVOID forcing clients to depend on methods they don't use.
+- DIP (Dependency Inversion): DEPEND on abstractions (interfaces), not concrete implementations. INJECT dependencies.
+</mandatory-solid-adherence>
 
-#### KISS (Keep It Simple, Stupid)
+<general-architecture-commands>
+- SoC (Separation of Concerns): STRICTLY SEPARATE distinct logic types (UI, Business Logic, Data Access) into different modules/layers.
+- DRY (Don't Repeat Yourself): IDENTIFY and ABSTRACT duplicates. If you see the same logic twice, create a shared utility.
+- KISS (Keep It Simple, Stupid): PRIORITIZE the simplest solution that works. REJECT complexity unless absolutely required.
+- YAGNI (You Aren't Gonna Need It): IMPLEMENT ONLY what is requested NOW. REJECT speculative features.
+</general-architecture-commands>
 
-- Select simple agent sequences over elaborate coordination patterns
-- Avoid unnecessary phases or agent handoffs
-- Choose familiar patterns over novel approaches
+</core-principles>
+<required-design-patterns>
+Apply these patterns to ensure maintainability and testability:
 
-#### DRY (Don't Repeat Yourself)
-
-- Reuse proven orchestration sequences for similar tasks
-- Ensure consistent quality gates across similar projects
-- Document successful coordination patterns for reuse
-
-#### Leverage Existing Systems
-
-- Inventory existing agent capabilities first
-- Design integrations using current agent interfaces
-- Follow established orchestration conventions
+- **Dependency Injection**: ALWAYS pass dependencies via constructors/initializers. NEVER hard-code dependencies or use global state.
+- **Repository Pattern**: ISOLATE all data access logic. CREATE interfaces for repositories to allow mocking in tests.
+- **Strategy Pattern**: USE this pattern for interchangeable algorithms (e.g., different providers, formats). AVOID long switch/if-else chains.
+- **Factory Pattern**: CENTRALIZE object creation complexity. USE factories when creation logic involves multiple steps or conditions.
+- **Middleware/Wrappers**: ENCAPSULATE cross-cutting concerns (logging, error handling, auth) in wrappers or middleware. DO NOT mix them with core business logic.
+</required-design-patterns>
 
 COORDINATION REJECTION CRITERIA:
 
@@ -601,3 +605,4 @@ Escalate to user when:
 </coordination-completeness-checklist>
 
 </agent-coordinator>
+

@@ -144,6 +144,29 @@ else:
 PY
 }
 
+process_includes() {
+    local base_dir="$CONFIG_DIR"
+    
+    python3 -c '
+import sys, re, os
+
+base_dir = sys.argv[1]
+# Read content from stdin (which is now the piped data, not this script)
+content = sys.stdin.read()
+
+def replace_include(match):
+    rel_path = match.group(1).strip()
+    full_path = os.path.join(base_dir, rel_path)
+    if os.path.exists(full_path):
+        with open(full_path, "r", encoding="utf-8") as f:
+            return f.read()
+    return f"<!-- ERROR: Include not found {rel_path} -->"
+
+# Process includes recursively (simple single-pass for now)
+print(re.sub(r"<!-- INCLUDE:(.*?) -->", replace_include, content))
+' "$base_dir"
+}
+
 generate_header() {
     local agent="$1"
     local system="$2"
@@ -240,7 +263,7 @@ update_agent() {
         echo "$header"
         echo ""
         cat "$master_file"
-    } > "$output_file"
+    } | process_includes > "$output_file"
     
     local line_count=$(wc -l < "$output_file" | tr -d ' ')
     print_info "Updated ${system}/${agent} (${line_count} lines)"

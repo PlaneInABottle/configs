@@ -326,6 +326,10 @@ For each phase:
 - **ITERATIVE IMPROVEMENT**: Use review feedback to continuously enhance implementation approach
 - **FEEDBACK-DRIVEN DECISIONS**: Adjust phase scope, subagent selection, and implementation strategy based on review insights
 
+**MANDATORY DESIGN PRINCIPLES AND PATTERNS:**
+<!-- INCLUDE:templates/shared/subagents/principles.md -->
+<!-- INCLUDE:templates/shared/subagents/patterns.md -->
+
 **QUALITY REQUIREMENTS:**
 
 - Follow design principles: KISS, SOLID, DRY, YAGNI

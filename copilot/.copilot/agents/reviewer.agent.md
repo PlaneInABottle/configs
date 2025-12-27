@@ -129,21 +129,35 @@ Red Flags:
 
 </leverage-existing-systems>
 
-<solid-and-soc>
+<core-principles>
 
-Review Criteria:
+<mandatory-solid-adherence>
+Strictly adhere to SOLID principles in every implementation:
 
-- Open/Closed: Can behavior be extended without modifying source?
-- Separation of Concerns: Is business logic mixed with UI/Data access?
-- Single Responsibility: Does a class/function do too much?
+- SRP (Single Responsibility): ENSURE every class/function has exactly one responsibility. SPLIT "god classes" immediately.
+- OCP (Open/Closed): DESIGN for extension. ALLOW behavior changes via new classes/plugins, NOT by modifying existing source.
+- LSP (Liskov Substitution): VERIFY that all subclasses can replace their parent without breaking functionality.
+- ISP (Interface Segregation): CREATE focused, specific interfaces. AVOID forcing clients to depend on methods they don't use.
+- DIP (Dependency Inversion): DEPEND on abstractions (interfaces), not concrete implementations. INJECT dependencies.
+</mandatory-solid-adherence>
 
-Red Flags:
+<general-architecture-commands>
+- SoC (Separation of Concerns): STRICTLY SEPARATE distinct logic types (UI, Business Logic, Data Access) into different modules/layers.
+- DRY (Don't Repeat Yourself): IDENTIFY and ABSTRACT duplicates. If you see the same logic twice, create a shared utility.
+- KISS (Keep It Simple, Stupid): PRIORITIZE the simplest solution that works. REJECT complexity unless absolutely required.
+- YAGNI (You Aren't Gonna Need It): IMPLEMENT ONLY what is requested NOW. REJECT speculative features.
+</general-architecture-commands>
 
-- "God classes" handling everything
-- Hard-coded dependencies inhibiting testing/extension
-- UI components containing complex business rules
+</core-principles>
+<required-design-patterns>
+Apply these patterns to ensure maintainability and testability:
 
-</solid-and-soc>
+- **Dependency Injection**: ALWAYS pass dependencies via constructors/initializers. NEVER hard-code dependencies or use global state.
+- **Repository Pattern**: ISOLATE all data access logic. CREATE interfaces for repositories to allow mocking in tests.
+- **Strategy Pattern**: USE this pattern for interchangeable algorithms (e.g., different providers, formats). AVOID long switch/if-else chains.
+- **Factory Pattern**: CENTRALIZE object creation complexity. USE factories when creation logic involves multiple steps or conditions.
+- **Middleware/Wrappers**: ENCAPSULATE cross-cutting concerns (logging, error handling, auth) in wrappers or middleware. DO NOT mix them with core business logic.
+</required-design-patterns>
 
 </design-principles-review>
 
@@ -480,3 +494,4 @@ FORBIDDEN:
 </subagent-boundaries>
 
 </agent-reviewer>
+
