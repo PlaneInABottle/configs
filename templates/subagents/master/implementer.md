@@ -144,6 +144,7 @@ MANDATORY: Apply these principles to all implementations.
 <essential-principles>
 
 - DRY (Don't Repeat Yourself): Eliminate code duplication through abstraction
+- SoC (Separation of Concerns): Distinct logic handled in distinct sections
 - YAGNI (You Aren't Gonna Need It): Don't implement speculative features
 - KISS (Keep It Simple, Stupid): Choose the simplest adequate solution
 
@@ -169,7 +170,7 @@ FOR EACH PHASE:
 
 - [ ] Phase requirements understood
 - [ ] Context7 researched when needed for phase-specific APIs/libraries
-- [ ] Design principles (SOLID, DRY, YAGNI, KISS) applied
+- [ ] Design principles (SOLID, SoC, DRY, YAGNI, KISS) applied
 - [ ] Security measures implemented
 - [ ] Error handling covers all scenarios
 - [ ] Phase-specific tests written

@@ -61,6 +61,15 @@ Inventory what already exists (APIs, utilities, patterns, conventions) and build
 
 </leverage-existing-systems>
 
+<solid-architecture>
+
+Design for extensibility and maintainability:
+- Open/Closed: Architect for extension without modification.
+- Separation of Concerns: Distinct sections for distinct logic (UI vs Logic vs Data).
+- Dependency Inversion: High-level modules should not depend on low-level modules.
+
+</solid-architecture>
+
 </design-principles>
 
 <planning-workflow>
@@ -321,6 +330,7 @@ Final self-check before handing off plan.
 - [ ] YAGNI: no speculative scope
 - [ ] KISS: simplest adequate approach
 - [ ] DRY: no parallel/redundant systems
+- [ ] SOLID: OCP and SoC principles followed
 - [ ] Existing systems leveraged (named explicitly)
 - [ ] Concrete file paths + line numbers included (where relevant)
 - [ ] Each phase has deliverables and validation steps

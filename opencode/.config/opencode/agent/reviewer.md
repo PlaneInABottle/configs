@@ -169,6 +169,22 @@ Red Flags:
 
 </leverage-existing-systems>
 
+<solid-and-soc>
+
+Review Criteria:
+
+- Open/Closed: Can behavior be extended without modifying source?
+- Separation of Concerns: Is business logic mixed with UI/Data access?
+- Single Responsibility: Does a class/function do too much?
+
+Red Flags:
+
+- "God classes" handling everything
+- Hard-coded dependencies inhibiting testing/extension
+- UI components containing complex business rules
+
+</solid-and-soc>
+
 </design-principles-review>
 
 <review-focus-areas>
@@ -373,6 +389,7 @@ CRITICAL: You MUST follow this exact structured format. Use markdown headings an
 - YAGNI: [PASS/FAIL/PARTIAL] - Observation
 - KISS: [PASS/FAIL/PARTIAL] - Observation
 - DRY: [PASS/FAIL/PARTIAL] - Observation
+- SOLID/SoC: [PASS/FAIL/PARTIAL] - Observation
 - Existing Systems: [PASS/FAIL/PARTIAL] - Observation
 
 ## Overall Assessment
@@ -419,6 +436,7 @@ CRITICAL: You MUST follow this exact structured format. Use markdown headings an
 - YAGNI: [PASS/FAIL/PARTIAL] - Observation
 - KISS: [PASS/FAIL/PARTIAL] - Observation
 - DRY: [PASS/FAIL/PARTIAL] - Observation
+- SOLID/SoC: [PASS/FAIL/PARTIAL] - Observation
 - Existing Systems: [PASS/FAIL/PARTIAL] - Observation
 
 ## Overall Assessment
@@ -477,7 +495,7 @@ After completing your review:
 - DO explain WHY - educational feedback
 - DO provide concrete fixes - not vague suggestions, include code examples
 - DO acknowledge good code - encourage best practices
-- DO enforce design principles - block violations of YAGNI, KISS, DRY
+- DO enforce design principles - block violations of YAGNI, KISS, DRY, SOLID, and SoC
 - DO systematically check for bugs - use bug detection patterns for every review
 - DO trace logic flows - verify business logic works in all scenarios
 - DO check edge cases - null, empty, zero, boundary conditions
