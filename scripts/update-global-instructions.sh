@@ -31,7 +31,7 @@ usage() {
     echo "Updates global instruction files from master template."
     echo ""
     echo "Options:"
-    echo "  --system=NAME         Update specific system (copilot|opencode|claude|all) [default: all]"
+    echo "  --system=NAME         Update specific system (copilot|opencode|claude|gemini|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
     echo "  --force               Overwrite without confirmation"
     echo "  --help, -h            Show this help message"
@@ -196,7 +196,7 @@ main() {
     # Determine which systems to update
     local systems_to_update=()
     if [[ "$SYSTEM" == "all" ]]; then
-        systems_to_update=(copilot opencode claude)
+        systems_to_update=(copilot opencode claude gemini)
     else
         systems_to_update=("$SYSTEM")
     fi
@@ -242,7 +242,8 @@ done
 
 # Validate arguments
 if [[ "$SYSTEM" != "all" ]] && [[ "$SYSTEM" != "copilot" ]] && \
-   [[ "$SYSTEM" != "opencode" ]] && [[ "$SYSTEM" != "claude" ]]; then
+   [[ "$SYSTEM" != "opencode" ]] && [[ "$SYSTEM" != "claude" ]] && \
+   [[ "$SYSTEM" != "gemini" ]]; then
     echo "Error: Invalid system name: $SYSTEM"
     usage
 fi
