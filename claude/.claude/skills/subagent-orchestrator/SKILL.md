@@ -45,8 +45,8 @@ Use this when you have modified a master template or the global metadata.
 | **Planner** | Architecture & planning (no code) | Claude, Copilot, OpenCode |
 | **Implementer** | Feature building & refactoring | Claude, Copilot, OpenCode |
 | **Reviewer** | Bug hunting & quality audit | Claude, Copilot, OpenCode |
-| **Coordinator** | Multi-phase project management | OpenCode, Copilot |
-| **Prompt Creator** | Prompt engineering for agent chains | OpenCode, Copilot |
+| **Coordinator** | Multi-phase project management | OpenCode |
+| **Prompt Creator** | Prompt engineering for agent chains | OpenCode |
 
 ## Resources
 

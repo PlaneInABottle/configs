@@ -104,7 +104,6 @@
         "  - \"Use for feature implementation with comprehensive testing and review\""
       ],
       "header_lines": {
-        "copilot": 6,
         "opencode": 47
       },
       "name": "coordinator",
@@ -119,7 +118,6 @@
         "  - \"Use to craft subagent call prompts (planner → implementer → reviewer) with success criteria\""
       ],
       "header_lines": {
-        "copilot": 4,
         "opencode": 45
       },
       "name": "prompt-creator",

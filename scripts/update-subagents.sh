@@ -221,6 +221,15 @@ EOF
 update_agent() {
     local agent="$1"
     local system="$2"
+
+    # Check if agent is enabled for this system
+    local has_header
+    has_header=$(python3 -c "import json; d=json.load(open('$METADATA_FILE')); print('$system' in d['subagents']['$agent'].get('header_lines', {}))")
+
+    if [[ "$has_header" != "True" ]]; then
+        print_warning "Skipping ${system}/${agent}: Not enabled for this system in metadata."
+        return 0
+    fi
     
     local master_file="$MASTER_DIR/${agent}.md"
     
@@ -285,17 +294,12 @@ main() {
         systems_to_update=("$SYSTEM")
     fi
 
-    # Update each system (agent logic moved into the loop for system-specific handling)
+    # Update each system
     for sys in "${systems_to_update[@]}"; do
         local agents_to_update=()
         if [[ "$AGENT" == "all" ]]; then
-            if [[ "$sys" == "copilot" ]]; then
-                agents_to_update=(planner reviewer implementer)
-            elif [[ "$sys" == "claude" ]]; then
-                agents_to_update=(planner reviewer implementer)
-            else
-                agents_to_update=(planner reviewer implementer coordinator prompt-creator)
-            fi
+            # Dynamically get all subagent keys from METADATA.json
+            agents_to_update=($(python3 -c "import json; d=json.load(open('$METADATA_FILE')); print(' '.join(d['subagents'].keys()))"))
         else
             agents_to_update=("$AGENT")
         fi
