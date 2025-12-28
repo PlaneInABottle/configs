@@ -30,6 +30,8 @@ claude/.claude/plugins/install-counts-cache.json
 kitty/.config/kitty/sessions/
 
 # General exclusions
+__pycache__/
+*.py[cod]
 *.log
 *.tmp
 *.cache
