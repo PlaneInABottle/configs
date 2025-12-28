@@ -42,9 +42,12 @@ __pycache__/
 
 # Environment variables
 .env
-
-# Serena MCP local state
 .serena/
+
+# OpenCode - Exclude local environment and runtime files
+opencode/.env
+opencode/node_modules/
+opencode/.config/opencode/node_modules/
 
 # Qwen CLI - Exclude runtime files and sensitive configuration
 qwen/.qwen/installation_id
