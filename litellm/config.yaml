@@ -15,6 +15,22 @@ model_list:
           "Editor-Version": "vscode/1.106.3",
           "Copilot-Integration-Id": "vscode-chat",
         }
+  - model_name: sonnet
+    litellm_params:
+      model: github_copilot/claude-sonnet-4.5
+      extra_headers:
+        {
+          "Editor-Version": "vscode/1.106.3",
+          "Copilot-Integration-Id": "vscode-chat",
+        }
+  - model_name: gpt-5.2
+    litellm_params:
+      model: github_copilot/gpt-5.2
+      extra_headers:
+        {
+          "Editor-Version": "vscode/1.106.3",
+          "Copilot-Integration-Id": "vscode-chat",
+        }
 
 general_settings:
   master_key: sk-1234567890
