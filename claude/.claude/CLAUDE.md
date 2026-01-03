@@ -151,6 +151,8 @@ Critical Requirements:
 Subagents should inherit the main agent's model and not select or configure their own model. Do not specify model parameters when calling subagents to ensure consistent behavior.
 </subagent-model-usage>
 
+
+
 </subagents>
 
 </global-instructions>

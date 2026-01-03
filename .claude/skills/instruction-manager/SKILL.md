@@ -15,14 +15,33 @@ The `instruction-manager` skill provides a unified workflow for maintaining the 
 
 Use this workflow when you update core behavioral principles in the master template.
 
-1.  **Edit Master Template**: Modify `templates/global-instructions/master.md`. Use `<!-- SECTION:id:START:system1,system2 -->` markers to target specific tools.
+1.  **Edit Master Template**: Modify `templates/global-instructions/master.md`.
 2.  **Run Sync Script**:
     ```bash
-    ./scripts/update-global-instructions.sh --system=all --force
+    ./scripts/update-global-instructions.sh --system=all
     ```
     *   `--system`: `gemini`, `claude`, `copilot`, `opencode`, or `all`.
-    *   `--force`: Overwrites existing files without prompting.
+    *   `--dry-run`: Show what would be updated without making changes.
 3.  **Verify Changes**: Check the target files (e.g., `gemini/.gemini/GEMINI.md`, `claude/.claude/CLAUDE.md`) to ensure the sync was successful.
+
+## SECTION Syntax (Inclusion/Exclusion)
+
+Use SECTION markers to include/exclude content for specific systems:
+
+```markdown
+<!-- SECTION:name:START:system1,system2 -->
+Content for system1 and system2 only
+<!-- SECTION:name:END -->
+
+<!-- SECTION:name:START:!copilot -->
+Content for all systems EXCEPT copilot
+<!-- SECTION:name:END -->
+```
+
+- **Include list**: `copilot,claude` — only those systems see this block
+- **Exclude prefix**: `!copilot` — all systems EXCEPT copilot see this block
+
+Works in both global instructions (`templates/global-instructions/master.md`) and subagent masters (`templates/subagents/master/*.md`).
 
 ## Workflow: Project Initialization
 
@@ -42,11 +61,14 @@ Use this workflow when starting a new project or updating instructions for an ex
 
 Use this workflow when modifying specialized sub-agent (Planner, Reviewer, etc.) behaviors.
 
-1.  **Edit Agent Master**: Modify files in `templates/subagents/master/` (e.g., `planner.md`).
+1.  **Edit Agent Master**: Modify files in `templates/subagents/master/` (e.g., `planner.md`). Use SECTION markers for platform-specific content.
 2.  **Sync Agents**:
     ```bash
-    ./scripts/update-subagents.sh --agent=all --system=all --force
+    ./scripts/update-subagents.sh --agent=all --system=all
     ```
+    *   `--agent`: `planner`, `reviewer`, `implementer`, `coordinator`, `prompt-creator`, or `all`.
+    *   `--system`: `copilot`, `opencode`, `claude`, or `all`.
+    *   `--dry-run`: Show what would be updated without making changes.
 3.  **Validate Sync**:
     ```bash
     ./scripts/validate-subagents.sh

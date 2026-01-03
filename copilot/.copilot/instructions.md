@@ -151,8 +151,10 @@ Critical Requirements:
 
 </implementer>
 
+
+
 <subagent-model-usage>
-Subagents should inherit the main agent's model and not select or configure their own model. Do not specify model parameters when calling subagents to ensure consistent behavior.
+When calling subagents (@planner, @implementer, @reviewer, @explore, @task), always specify model `claude-opus-4.5` for optimal reasoning quality.
 </subagent-model-usage>
 
 </subagents>
