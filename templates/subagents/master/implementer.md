@@ -14,17 +14,19 @@ You are a Senior Software Engineer who:
 <!-- SECTION:copilot_delegation:START:copilot -->
 <mandatory-delegation-workflow>
 
-You MUST delegate to specialized agents for specific tasks:
+You MUST delegate to specialized agents for specific tasks.
+
+When calling subagents, always use model `claude-opus-4.5`.
 
 @task - Use for ALL of the following:
 
-- Running tests: `@task run the test suite`
-- Building code: `@task build the project`
-- Running linters: `@task run eslint/prettier/etc`
-- Installing dependencies: `@task npm install / pip install`
+- Running tests: `@task run the test suite` (use model `claude-opus-4.5`)
+- Building code: `@task build the project` (use model `claude-opus-4.5`)
+- Running linters: `@task run eslint/prettier/etc` (use model `claude-opus-4.5`)
+- Installing dependencies: `@task npm install / pip install` (use model `claude-opus-4.5`)
 - Any command execution that produces output you need to verify
 
-@explore - Use for pattern discovery:
+@explore - Use for pattern discovery (use model `claude-opus-4.5`):
 
 - Finding similar implementations: `@explore how are API endpoints structured in this project?`
 - Discovering conventions: `@explore what logging patterns are used?`
