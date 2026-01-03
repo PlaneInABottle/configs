@@ -23,7 +23,6 @@ METADATA_FILE="$TEMPLATE_DIR/metadata.json"
 # Options
 SYSTEM="all"
 DRY_RUN=false
-FORCE=false
 
 usage() {
     echo "Usage: $0 [OPTIONS]"
@@ -33,13 +32,11 @@ usage() {
     echo "Options:"
     echo "  --system=NAME         Update specific system (copilot|opencode|claude|gemini|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
-    echo "  --force               Overwrite without confirmation"
     echo "  --help, -h            Show this help message"
     echo ""
     echo "Examples:"
     echo "  $0 --system=copilot"
     echo "  $0 --system=all --dry-run"
-    echo "  $0 --system=opencode --force"
     exit 1
 }
 
@@ -110,11 +107,21 @@ with open(input_file, 'r', encoding='utf-8') as f:
 
 # Pattern to match section markers
 # <!-- SECTION:section_id:START:system1,system2 -->...<!-- SECTION:section_id:END -->
-pattern = r'<!-- SECTION:(\w+):START:([\w,]+) -->\n(.*?)\n<!-- SECTION:\1:END -->'
+pattern = r'<!-- SECTION:(\w+):START:([\w,!]+) -->\n?(.*?)\n?<!-- SECTION:\1:END -->'
 
 def should_include_section(enabled_for_str, target):
     enabled_systems = [s.strip() for s in enabled_for_str.split(',')]
-    return target in enabled_systems or 'all' in enabled_systems
+    
+    # Check for exclusion syntax (e.g., !copilot means all except copilot)
+    exclusions = [s[1:] for s in enabled_systems if s.startswith('!')]
+    inclusions = [s for s in enabled_systems if not s.startswith('!')]
+    
+    # If there are exclusions, include unless target is excluded
+    if exclusions:
+        return target not in exclusions
+    
+    # Otherwise, check inclusions
+    return target in inclusions or 'all' in inclusions
 
 result = content
 for match in re.finditer(pattern, content, re.DOTALL):
@@ -146,15 +153,6 @@ update_system() {
     if [[ "$DRY_RUN" == true ]]; then
         print_dry_run "Would update: $target_file"
         return 0
-    fi
-
-    # Check if file exists and not in force mode
-    if [[ -f "$target_file" ]] && [[ "$FORCE" == false ]]; then
-        read -p "File exists. Overwrite $target_file? (y/N): " -r
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            print_warning "Skipped ${system}"
-            return 0
-        fi
     fi
 
     # Generate the instruction file
@@ -227,7 +225,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --force)
-            FORCE=true
+            # Ignored for backward compatibility
             shift
             ;;
         --help|-h)

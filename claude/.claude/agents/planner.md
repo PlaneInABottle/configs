@@ -17,6 +17,8 @@ You are a Senior Software Architect whose job is to produce implementation-ready
 
 </role-and-identity>
 
+
+
 <mission>
 
 Produce a plan that:

@@ -23,7 +23,6 @@ METADATA_FILE="$MASTER_DIR/METADATA.json"
 AGENT=""
 SYSTEM="all"
 DRY_RUN=false
-FORCE=false
 
 usage() {
     echo "Usage: $0 [OPTIONS]"
@@ -34,14 +33,12 @@ usage() {
     echo "  --agent=NAME          Update specific agent (planner|reviewer|implementer|coordinator|prompt-creator|all)"
     echo "  --system=NAME         Update specific system (copilot|opencode|claude|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
-    echo "  --force               Overwrite without confirmation"
     echo "  --help, -h            Show this help message"
     echo ""
     echo "Examples:"
     echo "  $0 --agent=planner"
     echo "  $0 --agent=all --system=copilot"
     echo "  $0 --agent=planner --dry-run"
-    echo "  $0 --agent=all --force"
     exit 1
 }
 
@@ -89,12 +86,12 @@ get_metadata_value_or_default() {
     local key="$2"
     local default_value="$3"
 
-    python3 - <<'PY' "$METADATA_FILE" "$agent" "$key" "$default_value" 2>/dev/null || true
+    python3 -c "
 import json, sys
-path, agent, key, default_value = sys.argv[1:5]
+path, agent, key, default_value = '$METADATA_FILE', '$agent', '$key', '$default_value'
 d = json.load(open(path))
 print(d.get('subagents', {}).get(agent, {}).get(key, default_value))
-PY
+" 2>/dev/null || true
 }
 
 get_metadata_lines() {
@@ -104,12 +101,12 @@ get_metadata_lines() {
     local agent="$2"
     local key="$3"
 
-    python3 - <<'PY' "$METADATA_FILE" "$root" "$agent" "$key" 2>/dev/null || true
+    python3 -c "
 import json, sys
-path, root, agent, key = sys.argv[1:5]
+path, root, agent, key = '$METADATA_FILE', '$root', '$agent', '$key'
 d = json.load(open(path))
-print("\n".join(d[root][agent].get(key, [])))
-PY
+print('\n'.join(d[root][agent].get(key, [])))
+" 2>/dev/null || true
 }
 
 get_default_lines() {
@@ -117,12 +114,12 @@ get_default_lines() {
     local system="$1"
     local key="$2"
 
-    python3 - <<'PY' "$METADATA_FILE" "$system" "$key" 2>/dev/null || true
+    python3 -c "
 import json, sys
-path, system, key = sys.argv[1:4]
+path, system, key = '$METADATA_FILE', '$system', '$key'
 d = json.load(open(path))
-print("\n".join(d.get('defaults', {}).get(system, {}).get(key, [])))
-PY
+print('\n'.join(d.get('defaults', {}).get(system, {}).get(key, [])))
+" 2>/dev/null || true
 }
 
 get_opencode_lines_for_agent() {
@@ -131,17 +128,17 @@ get_opencode_lines_for_agent() {
     local agent="$1"
     local key="$2"
 
-    python3 - <<'PY' "$METADATA_FILE" "$agent" "$key" 2>/dev/null || true
+    python3 -c "
 import json, sys
-path, agent, key = sys.argv[1:4]
+path, agent, key = '$METADATA_FILE', '$agent', '$key'
 d = json.load(open(path))
 sub = d.get('subagents', {}).get(agent, {})
 override = sub.get('opencode', {}).get(key)
 if override:
-    print("\n".join(override))
+    print('\n'.join(override))
 else:
-    print("\n".join(d.get('defaults', {}).get('opencode', {}).get(key, [])))
-PY
+    print('\n'.join(d.get('defaults', {}).get('opencode', {}).get(key, [])))
+" 2>/dev/null || true
 }
 
 process_includes() {
@@ -151,7 +148,6 @@ process_includes() {
 import sys, re, os
 
 base_dir = sys.argv[1]
-# Read content from stdin (which is now the piped data, not this script)
 content = sys.stdin.read()
 
 def replace_include(match):
@@ -165,6 +161,54 @@ def replace_include(match):
 # Process includes recursively (simple single-pass for now)
 print(re.sub(r"<!-- INCLUDE:(.*?) -->", replace_include, content))
 ' "$base_dir"
+}
+
+filter_sections_for_system() {
+    # Filter SECTION markers based on target system
+    # Supports: all, inclusion (copilot,claude), exclusion (!copilot)
+    local system="$1"
+    
+    python3 -c '
+import re
+import sys
+
+target_system = sys.argv[1]
+content = sys.stdin.read()
+
+# Pattern to match section markers
+# <!-- SECTION:section_id:START:system1,system2 -->...<!-- SECTION:section_id:END -->
+pattern = r"<!-- SECTION:(\w+):START:([\w,!]+) -->\n?(.*?)\n?<!-- SECTION:\1:END -->"
+
+def should_include_section(enabled_for_str, target):
+    enabled_systems = [s.strip() for s in enabled_for_str.split(",")]
+    
+    # Check for exclusion syntax (e.g., !copilot means all except copilot)
+    exclusions = [s[1:] for s in enabled_systems if s.startswith("!")]
+    inclusions = [s for s in enabled_systems if not s.startswith("!")]
+    
+    # If there are exclusions, include unless target is excluded
+    if exclusions:
+        return target not in exclusions
+    
+    # Otherwise, check inclusions
+    return target in inclusions or "all" in inclusions
+
+result = content
+for match in re.finditer(pattern, content, re.DOTALL):
+    section_id = match.group(1)
+    enabled_for = match.group(2)
+    section_content = match.group(3)
+    full_match = match.group(0)
+    
+    if should_include_section(enabled_for, target_system):
+        # Keep section content but remove markers
+        result = result.replace(full_match, section_content)
+    else:
+        # Remove entire section including markers
+        result = result.replace(full_match, "")
+
+print(result, end="")
+' "$system"
 }
 
 generate_header() {
@@ -255,26 +299,19 @@ update_agent() {
         return 0
     fi
     
-    # Check if file exists and not in force mode
-    if [[ -f "$output_file" ]] && [[ "$FORCE" == false ]]; then
-        read -p "File exists. Overwrite $output_file? (y/N): " -r
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            print_warning "Skipped ${system}/${agent}"
-            return 0
-        fi
-    fi
-    
     # Generate header
-    local header=$(generate_header "$agent" "$system")
+    local header
+    header=$(generate_header "$agent" "$system")
     
-    # Combine header + content
+    # Combine header + content, process includes, then filter sections
     {
         echo "$header"
         echo ""
         cat "$master_file"
-    } | process_includes > "$output_file"
+    } | process_includes | filter_sections_for_system "$system" > "$output_file"
     
-    local line_count=$(wc -l < "$output_file" | tr -d ' ')
+    local line_count
+    line_count=$(wc -l < "$output_file" | tr -d ' ')
     print_info "Updated ${system}/${agent} (${line_count} lines)"
 }
 
@@ -334,7 +371,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --force)
-            FORCE=true
+            # Ignored for backward compatibility
             shift
             ;;
         --help|-h)
