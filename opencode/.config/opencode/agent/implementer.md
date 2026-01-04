@@ -7,18 +7,6 @@ examples:
   - "Use for UI components with accessibility and performance"
   - "Use for code refactoring and quality optimization"
   - "Use for performance improvements and technical debt reduction"
-tools:
-  write: true
-  edit: true
-  bash: true
-  webfetch: true
-  read: true
-  grep: true
-  glob: true
-  list: true
-  patch: true
-  todowrite: true
-  todoread: true
 permission:
   webfetch: allow
   bash:

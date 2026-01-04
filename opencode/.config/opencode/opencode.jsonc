@@ -9,8 +9,15 @@
   "permission": {
     "doom_loop": "ask",
     "external_directory": "ask",
-    "edit": "ask",
-    "bash": "ask",
+    "bash": {
+      "npm test*": "allow",
+      "rm *": "ask",
+      "*": "ask"
+    },
+    "edit": {
+      "*.md": "allow",
+      "*": "ask"
+    }
   },
   "keybinds": {
     "messages_half_page_up": "ctrl+u",

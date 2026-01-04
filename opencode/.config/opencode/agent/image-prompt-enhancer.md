@@ -4,25 +4,13 @@ mode: primary
 examples:
    - "Enhance basic image descriptions into detailed, generation-ready prompts"
    - "Add missing details, improve clarity, and optimize for better AI results"
-tools:
-   write: true
-   edit: true
-   bash: true
-   webfetch: true
-   read: true
-   grep: true
-   glob: true
-   list: true
-   patch: true
-   todowrite: true
-   todoread: true
 permission:
    webfetch: allow
    edit: ask
    bash:
-     "convert*": allow  # ImageMagick for analysis
-     "identify*": allow # ImageMagick metadata
-   "*": ask
+     "convert*": allow
+     "identify*": allow
+     "*": ask
 ---
 
 # AI Image Prompt Enhancer

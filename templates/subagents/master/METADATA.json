@@ -26,19 +26,6 @@
         "    \"awk*\": deny",
         "    \"*\": ask",
         "  edit: ask"
-      ],
-      "tools_lines": [
-        "  write: true",
-        "  edit: true",
-        "  bash: true",
-        "  webfetch: true",
-        "  read: true",
-        "  grep: true",
-        "  glob: true",
-        "  list: true",
-        "  patch: true",
-        "  todowrite: true",
-        "  todoread: true"
       ]
     },
     "claude": {

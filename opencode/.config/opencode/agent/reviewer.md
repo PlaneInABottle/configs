@@ -5,18 +5,6 @@ examples:
   - "Use for bug analysis and runtime error investigation"
   - "Use for code quality assessment before merging"
   - "Use for architectural validation of implementation plans"
-tools:
-  write: true
-  edit: true
-  bash: true
-  webfetch: true
-  read: true
-  grep: true
-  glob: true
-  list: true
-  patch: true
-  todowrite: true
-  todoread: true
 permission:
   webfetch: allow
   bash:

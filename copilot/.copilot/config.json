@@ -29,5 +29,8 @@
     "/home/mirza/Documents/Projects",
     "/home/mirza/Documents/Projects/measureApp"
   ],
-  "disabled_skills": []
+  "disabled_skills": [],
+  "allowed_urls": [
+    "https://github.com"
+  ]
 }

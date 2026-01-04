@@ -5,18 +5,6 @@ examples:
   - "Use for complex multi-step software tasks requiring systematic execution"
   - "Use for codebase cleanup and refactoring projects with quality assurance"
   - "Use for feature implementation with comprehensive testing and review"
-tools:
-  write: true
-  edit: true
-  bash: true
-  webfetch: true
-  read: true
-  grep: true
-  glob: true
-  list: true
-  patch: true
-  todowrite: true
-  todoread: true
 permission:
   webfetch: allow
   bash:

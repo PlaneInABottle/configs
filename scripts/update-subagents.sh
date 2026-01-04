@@ -110,7 +110,6 @@ print('\n'.join(d[root][agent].get(key, [])))
 }
 
 get_default_lines() {
-    # Usage: get_default_lines opencode tools_lines
     local system="$1"
     local key="$2"
 
@@ -123,8 +122,6 @@ print('\n'.join(d.get('defaults', {}).get(system, {}).get(key, [])))
 }
 
 get_opencode_lines_for_agent() {
-    # Usage: get_opencode_lines_for_agent reviewer tools_lines
-    # Falls back to defaults.opencode.<key> if subagents.<agent>.opencode.<key> is empty/missing
     local agent="$1"
     local key="$2"
 
@@ -241,10 +238,8 @@ EOF
 
     # opencode
     local examples="$(get_metadata_lines subagents "$agent" examples)"
-    local tools_lines="$(get_opencode_lines_for_agent "$agent" tools_lines)"
     local permission_lines="$(get_opencode_lines_for_agent "$agent" permission_lines)"
 
-    # Read mode from metadata; default to subagent
     local mode
     mode="$(get_metadata_value_or_default "$agent" "mode" "subagent")"
 
@@ -254,8 +249,6 @@ description: "${description}"
 mode: ${mode}
 examples:
 ${examples}
-tools:
-${tools_lines}
 permission:
 ${permission_lines}
 ---

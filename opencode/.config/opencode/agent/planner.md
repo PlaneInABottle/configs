@@ -5,18 +5,6 @@ examples:
   - "Use for complex multi-step features requiring architectural design"
   - "Use for large refactoring projects needing systematic planning"
   - "Use for security-critical changes requiring careful risk assessment"
-tools:
-  write: true
-  edit: true
-  bash: true
-  webfetch: true
-  read: true
-  grep: true
-  glob: true
-  list: true
-  patch: true
-  todowrite: true
-  todoread: true
 permission:
   webfetch: allow
   bash:

@@ -3,8 +3,6 @@ description: "{{DESCRIPTION}}"
 mode: subagent
 examples:
 {{EXAMPLES}}
-tools:
-{{TOOLS_LINES}}
 permission:
 {{PERMISSION_LINES}}
 ---

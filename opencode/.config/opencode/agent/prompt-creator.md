@@ -5,18 +5,6 @@ examples:
   - "Use to turn a vague request into a complete coordinator prompt"
   - "Use to generate a phased execution prompt with clear DoD, commands, and constraints"
   - "Use to craft subagent call prompts (planner → implementer → reviewer) with success criteria"
-tools:
-  write: true
-  edit: true
-  bash: true
-  webfetch: true
-  read: true
-  grep: true
-  glob: true
-  list: true
-  patch: true
-  todowrite: true
-  todoread: true
 permission:
   webfetch: allow
   bash:
