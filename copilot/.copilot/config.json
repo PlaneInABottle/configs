@@ -30,7 +30,11 @@
     "/home/mirza/Documents/Projects/measureApp"
   ],
   "allowed_urls": [
-    "https://github.com"
+    "https://github.com",
+    "http://localhost:3000",
+    "http://localhost:3002",
+    "https://render.com",
+    "https://simstudio-0nnt.onrender.com"
   ],
   "disabled_skills": []
 }

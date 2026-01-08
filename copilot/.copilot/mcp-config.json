@@ -10,6 +10,17 @@
         "-y",
         "@upstash/context7-mcp"
       ]
+    },
+    "chrome-devtools": {
+      "tools": [
+        "*"
+      ],
+      "type": "local",
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ]
     }
   }
 }
