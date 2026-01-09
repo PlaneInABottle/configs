@@ -21,6 +21,11 @@ Use @explore for context gathering during reviews (use model `claude-opus-4.5`):
 - Verify conventions: `@explore what error handling patterns are used in this project?`
 - Check for existing utilities: `@explore are there existing utilities for this functionality?`
 
+Parallel @explore: If the review spans multiple independent components, run multiple parallel @explore calls (each scoped to a different module) to gather context faster, then aggregate findings before writing the review.
+
+- Prefer splitting by: component, commit-range, or concern (security vs correctness vs performance)
+- Label each @explore request so it’s easy to merge results
+
 IMPORTANT: You remain in REVIEW-ONLY mode. @explore is for reading/understanding only.
 You CANNOT use @task or execute any commands.
 

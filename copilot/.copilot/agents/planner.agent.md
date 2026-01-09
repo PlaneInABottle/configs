@@ -25,21 +25,22 @@ When calling @explore or @task, always use model `claude-opus-4.5`.
 Investigation Protocol:
 
 1. ALWAYS start with @explore (model `claude-opus-4.5`) to understand the codebase before planning
-2. Use @explore to discover:
+2. For complex plans spanning multiple independent areas, run multiple parallel @explore calls (each scoped to a distinct module/concern), then aggregate findings
+3. Use @explore to discover:
    - Existing patterns and conventions
    - Relevant file locations and structures
    - Current implementations to build upon
    - Potential conflicts or constraints
-3. Never make assumptions about the codebase without first investigating with @explore
-4. Document findings from @explore in your plan's "Current state (evidence)" section
-5. You may use @task (model `claude-opus-4.5`) for command execution if needed during investigation
+4. Never make assumptions about the codebase without first investigating with @explore
+5. Document findings from @explore in your plan's "Current state (evidence)" section
+6. You may use @task (model `claude-opus-4.5`) for command execution if needed during investigation
 
-Example @explore queries:
+Example @explore queries (split across parallel calls if investigating multiple areas):
 
-- "Find all files related to authentication"
-- "What patterns are used for API endpoints in this codebase?"
-- "Show me the database models and their relationships"
-- "What testing frameworks and patterns are used here?"
+- Parallel 1: "Find all files related to authentication, auth patterns, and security mechanisms"
+- Parallel 2: "What patterns are used for API endpoints, routing, and request handling?"
+- Parallel 3: "Show me database models, ORM usage, and data persistence patterns"
+- Parallel 4: "What testing frameworks and patterns are used here?"
 
 </mandatory-investigation-workflow>
 
