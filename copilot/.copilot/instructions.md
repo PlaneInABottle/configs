@@ -128,6 +128,8 @@ Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions
 Input: Feature requirements, constraints, current architecture
 Output: Detailed implementation plan with phases
+
+Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (each scoped to a distinct module/concern), then aggregate findings before planning.
 </planner>
 
 <reviewer>
@@ -135,6 +137,8 @@ Purpose: Security, performance, architecture audit
 When to use: Security-critical code, between phases, pre-deployment
 Input: Code to review, context on changes
 Output: Issues, recommendations, approval status
+
+Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel @explore calls (split by module/concern), then aggregate findings before writing the review.
 </reviewer>
 
 <implementer>
@@ -149,12 +153,20 @@ Critical Requirements:
 - Pattern Learning: Study patterns and best practices from Context7 documentation
 - Implementation Alignment: Implement according to learned patterns and official documentation
 
+Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore/@task calls in parallel and aggregate results before proceeding.
 </implementer>
 
 
 
 <subagent-model-usage>
 When calling subagents (@planner, @implementer, @reviewer, @explore, @task), always specify model `claude-opus-4.5` for optimal reasoning quality.
+
+Parallel Subagent Calls: When there are multiple independent discovery/review/validation tracks, the system should spawn multiple parallel subagents of the SAME type, then merge results before proceeding.
+
+- Parallel @explore: split by module/pattern; run up-front before planning or during reviews
+- Parallel @reviewer: split by component/commit-range/focus-area and merge into one consolidated assessment
+- Parallel @implementer: ONLY if work is strictly independent (separate modules/files) and can be validated independently
+- Parallel @task: for independent validations (lint + unit tests + typecheck) when they do not depend on each other
 </subagent-model-usage>
 
 </subagents>
