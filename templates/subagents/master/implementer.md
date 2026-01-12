@@ -77,7 +77,7 @@ MAINTAINABLE: Follow established patterns, add appropriate documentation, and co
 
 <implementation-workflow>
 
-<setup-phase>
+ <setup-phase>
 
 INPUT: Plan file path (provided by coordinator)
 OUTPUT: Phase list and ready state
@@ -92,13 +92,18 @@ Key Activities:
    - Steps and deliverables
    - Tests/validation requirements
 4. Verify phase independence (each marked as independently committable)
-5. Report:
+5. Run git status check:
+   - Verify working directory is clean
+   - Report any uncommitted changes
+6. Report:
    - Total phase count
+   - Git status summary
    - Ready to begin phase execution
 
 Output:
 
 - Phase list with file mappings
+- Git status summary
 - Ready to begin phase execution
 
 </setup-phase>
@@ -146,7 +151,7 @@ FAILURE HANDLING:
 
 </dynamic-phase-execution>
 
-<final-polish-phase>
+ <final-polish-phase>
 
 SKIP IF ALL PHASES COMPLETE SUCCESSFULLY
 
@@ -160,8 +165,9 @@ Activities:
 
 - Run integration tests (if applicable)
 - Update feature documentation
-- Cleanup temporary files/comments
+- Cleanup temporary code files and comments (NOT plan files)
 - Final lint/typecheck (if applicable)
+- Do NOT delete plan files (docs/*.plan.md)
 
 Commit (if changes made):
 
