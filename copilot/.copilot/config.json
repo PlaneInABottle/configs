@@ -34,7 +34,12 @@
     "http://localhost:3000",
     "http://localhost:3002",
     "https://render.com",
-    "https://simstudio-0nnt.onrender.com"
+    "https://simstudio-0nnt.onrender.com",
+    "https://docs.github.com",
+    "https://docs.sim.ai",
+    "https://docs.render.com",
+    "https://raw.githubusercontent.com",
+    "https://www.yurticikargo.com"
   ],
   "disabled_skills": []
 }

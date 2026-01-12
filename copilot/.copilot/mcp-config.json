@@ -19,8 +19,24 @@
       "command": "npx",
       "args": [
         "-y",
-        "chrome-devtools-mcp@latest"
+        "chrome-devtools-mcp@latest",
+        "--isolated"
       ]
+    },
+    "sim-mcp": {
+      "tools": [
+        "*"
+      ],
+      "type": "local",
+      "command": "node",
+      "args": [
+        "/Users/Y_ALTAY1/Documents/simWoot/sim-mcp/dist/index.js",
+        "--server"
+      ],
+      "env": {
+        "SIM_API_BASE_URL": "http://localhost:3000",
+        "SIM_API_KEY": ""
+      }
     }
   }
 }
