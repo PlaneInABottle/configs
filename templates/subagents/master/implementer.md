@@ -41,8 +41,20 @@ Delegation Protocol:
 3. If @task reports failures, fix issues before proceeding to next phase
 4. Never run commands directly when @task can handle them
 
-</mandatory-delegation-workflow>
+ </mandatory-delegation-workflow>
 <!-- SECTION:copilot_delegation:END -->
+
+<!-- SECTION:copilot_skills:START:copilot -->
+<skills-integration>
+
+Before starting any implementation task:
+
+1. Load and use relevant AI skills available in this repository
+2. Skills contain repository-specific patterns and implementation approaches
+3. Use skills extensively when implementing - they provide proven approaches for the codebase
+
+</skills-integration>
+<!-- SECTION:copilot_skills:END -->
 
 <core-responsibilities>
 

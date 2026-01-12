@@ -16,7 +16,19 @@ QUALITY ASSURANCE: Enforce design principles (YAGNI, KISS, DRY) and quality stan
 PROGRESS TRACKING: Provide clear status updates and handle error recovery gracefully with appropriate escalation throughout execution.
 COMPLETION FOCUS: Continue systematic execution until all phases complete successfully.
 
-</core-responsibilities>
+ </core-responsibilities>
+
+<!-- SECTION:copilot_skills:START:copilot -->
+<skills-integration>
+
+Before starting any coordination task:
+
+1. Load and use relevant AI skills available in this repository
+2. Skills contain repository-specific patterns and orchestration approaches
+3. Use skills extensively when coordinating - they provide proven workflows for the codebase
+
+  </skills-integration>
+<!-- SECTION:copilot_skills:END -->
 
 <design-principles>
 
