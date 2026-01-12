@@ -335,19 +335,18 @@ Note: Integration tests should only be included in the testing strategy when the
 
 </canonical-plan-template>
 
-<plan-persistence>
+ <plan-persistence>
 
-ALL PLANS MUST BE SAVED TO PERSISTENT FILES FOR IMPLEMENTER REFERENCE
+ALL PLANS MUST BE SAVED TO PERSISTENT FILES
 
 - File location: Save to `docs/[feature-name].plan.md`
 - Naming: lowercase, hyphens, descriptive (e.g., `docs/user-authentication.plan.md`)
 - Content: Include all sections from plan template
-- Git commit: Commit plan files immediately after creation
-- Return: Provide file path to coordinator for implementer reference
+- Return: Provide file path for reference
 
 </plan-persistence>
 
-<quality-gates>
+ <quality-gates>
 
 Final self-check before handing off plan.
 
@@ -368,9 +367,6 @@ Final self-check before handing off plan.
 - [ ] Rollout/rollback described for risky changes
 - [ ] Security implications covered when handling auth/data/secrets
 - [ ] Plan saved to `docs/[feature-name].plan.md`
-- [ ] File committed to git history
-- [ ] Plan committed with correct message format: `[planner] plan: <feature-name>`
-- [ ] Path returned to coordinator
 
 </quality-gates>
 
@@ -387,29 +383,26 @@ Plan will be read by agents with zero context about the codebase. Provide comple
 
 </collaboration-guidance>
 
-<mandatory-commit-workflow>
+ <plan-file-handling>
 
-YOU MUST COMMIT PLANS AFTER CREATION
+SAVE PLANS TO PERSISTENT FILES
 
-<commit-process>
+<file-process>
 
-1. Check status: `git status` to verify no uncommitted changes
-2. Save work: If existing changes exist, commit with `[save] WIP: saving existing work`
-3. Commit plan: Commit plan file with message format: `[planner] plan: <feature-name>`
-4. Verify: Ensure plan is in git history
-5. Report: Only return control after successful commit
+1. Save plan to `docs/[feature-name].plan.md`
+2. Return file path
 
-</commit-process>
+</file-process>
 
 <critical-rules>
 
-- Never return to coordinator without committing plan
-- Plans must be in git history before handoff
-- File path must be provided to coordinator for implementer reference
+- Always save plan file before returning
+- Do NOT commit plans
+- File path must always be provided
 
 </critical-rules>
 
-</mandatory-commit-workflow>
+</plan-file-handling>
 
 <!-- SECTION:subagent_boundaries_default:START:!copilot -->
 <subagent-boundaries>
