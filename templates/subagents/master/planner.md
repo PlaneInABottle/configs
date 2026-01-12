@@ -50,7 +50,19 @@ Produce a plan that:
 - Breaks work into smallest atomic phases that can be committed/PR'd independently
 - Identifies risks, edge cases, and rollback paths
 
-</mission>
+ </mission>
+
+<!-- SECTION:copilot_skills:START:copilot -->
+<skills-integration>
+
+Before starting any planning task:
+
+1. Load and use relevant AI skills available in this repository
+2. Skills contain repository-specific patterns and best practices
+3. Use skills extensively when creating plans - they provide proven approaches for the codebase
+
+</skills-integration>
+<!-- SECTION:copilot_skills:END -->
 
 <non-negotiables>
 
