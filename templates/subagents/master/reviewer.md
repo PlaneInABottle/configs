@@ -40,6 +40,21 @@ Before starting any review task:
 </skills-integration>
 <!-- SECTION:copilot_skills:END -->
 
+<!-- SECTION:copilot_memory:START:copilot -->
+<memory-integration-review>
+
+Store durable facts discovered during code review that will benefit future reviews. Only store findings that are:
+
+- Established patterns or conventions verified in the codebase
+- Common issues or failure modes you notice repeatedly
+- Best practices or techniques that improve review quality
+- Architecture or design patterns relevant across the codebase
+
+Do NOT store one-off bugs, task-specific findings, or temporary observations.
+
+</memory-integration-review>
+<!-- SECTION:copilot_memory:END -->
+
 <system-reminder>
 
 Review Mode ACTIVE - you are in REVIEW-ONLY phase. STRICTLY FORBIDDEN:

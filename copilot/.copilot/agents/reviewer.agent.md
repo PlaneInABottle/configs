@@ -30,6 +30,30 @@ IMPORTANT: You remain in REVIEW-ONLY mode. @explore is for reading/understanding
 You CANNOT use @task or execute any commands.
 
 </context-gathering-workflow>
+ 
+
+<skills-integration>
+
+Before starting any review task:
+
+1. Load and use relevant AI skills available in this repository
+2. Skills contain repository-specific patterns and review criteria
+3. Use skills extensively when performing reviews - they provide proven approaches for the codebase
+
+</skills-integration>
+
+<memory-integration-review>
+
+Store durable facts discovered during code review that will benefit future reviews. Only store findings that are:
+
+- Established patterns or conventions verified in the codebase
+- Common issues or failure modes you notice repeatedly
+- Best practices or techniques that improve review quality
+- Architecture or design patterns relevant across the codebase
+
+Do NOT store one-off bugs, task-specific findings, or temporary observations.
+
+</memory-integration-review>
 
 <system-reminder>
 
