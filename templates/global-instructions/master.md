@@ -62,6 +62,56 @@ Example: "Add OAuth to API"
 ✗ Don't implement from scratch
 </skills-examples>
 
+<!-- SECTION:copilot_memory:START:copilot -->
+<memory-integration>
+
+Store durable facts about the codebase using `store_memory` to persist knowledge across tasks.
+
+Key principle: Record stable, widely-applicable knowledge that will remain relevant in future work. Memory persists across all tasks on this codebase.
+
+Use `store_memory` to save durable knowledge and patterns from this codebase that persist across tasks.
+
+**When to store:**
+- Coding conventions and patterns that are consistent (naming styles, error handling, code organization)
+- Build and deployment workflows (commands, scripts, validation procedures)
+- Architecture and design decisions (module structure, component patterns, system flow)
+- Repository-specific tools, libraries, and their integration patterns
+- Testing strategies and common test patterns
+- Security practices, validation approaches, and data handling conventions
+- Utilities and helper functions you discover or build that will be reused
+- Documentation standards, comment conventions, and file naming patterns
+
+**User preferences and working patterns to store:**
+- Your preferred subagent usage (e.g., always run @explore first before planning, use @task for all command execution)
+- Workflow preferences discovered while working (e.g., run linter before tests, parallel investigation calls save time)
+- Code review priorities and validation sequences (e.g., check security first, then performance, then style)
+- Environment setup patterns (e.g., dependency install order, config precedence, bootstrap steps)
+- Coding style preferences applied consistently (e.g., comment frequency, test coverage targets, refactoring thresholds)
+- Debugging and troubleshooting approaches that worked well (e.g., how to reproduce issues, common failure modes)
+
+**Never store:**
+- Secrets, credentials, API keys, or sensitive data
+- Task-specific observations or temporary findings
+- One-off bugs or issues that won't recur
+- External systems that change frequently
+
+Store facts once. They remain accessible across all future work on this codebase.
+
+</memory-integration>
+
+<memory-examples>
+Example: "Build and test workflow"
+✓ Store: "Run `npm run build && npm run test` to validate changes" (stable, used in every task)
+✓ Store: "Always run linter before tests" (proven workflow)
+✗ Don't store: "Fixed bug in component X" (task-specific, won't recur)
+
+Example: "Codebase conventions"
+✓ Store: "Use Jest for testing, ESLint for linting, TypeScript for type safety" (established patterns)
+✓ Store: "Error handling uses custom ErrorKind wrapper pattern" (architectural pattern)
+✗ Don't store: "This PR needs to handle edge case Y" (temporary observation)
+</memory-examples>
+<!-- SECTION:copilot_memory:END -->
+
 <completion-criteria>
 Task is complete when:
 □ Requirement verified against original request
