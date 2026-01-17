@@ -39,7 +39,17 @@
     "https://docs.sim.ai",
     "https://docs.render.com",
     "https://raw.githubusercontent.com",
-    "https://www.yurticikargo.com"
+    "https://www.yurticikargo.com",
+    "https://kamatas.com",
+    "https://www.sikayetvar.com",
+    "https://www.youtube.com",
+    "https://developers.chatwoot.com",
+    "https://www.chatwoot.com",
+    "https://api.rubyonrails.org",
+    "https://chatwoot-web-kw3b.onrender.com",
+    "https://www.rubydoc.info",
+    "https://docs.livekit.io"
   ],
-  "disabled_skills": []
+  "disabled_skills": [],
+  "show_reasoning": false
 }
