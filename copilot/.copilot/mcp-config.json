@@ -34,9 +34,16 @@
         "--server"
       ],
       "env": {
-        "SIM_API_BASE_URL": "http://localhost:3000",
+        "SIM_API_BASE_URL": "",
         "SIM_API_KEY": ""
       }
+    },
+    "livekit-docs-mcp": {
+      "type": "http",
+      "url": "https://docs.livekit.io/mcp",
+      "tools": [
+        "*"
+      ]
     }
   }
 }
