@@ -50,6 +50,8 @@ Before starting any task:
 1. Prefer using existing skills over custom implementations
 2. Skills can include specialized patterns, tool integrations, and workflows
 3. If a skill exists for the task type, load it before proceeding
+
+**Operational Gate:** If an existing tool/skill/system solves it, do not build custom code.
 </skills-integration>
 
 <skills-examples>
@@ -64,9 +66,12 @@ Example: "Add OAuth to API"
 ✗ Don't implement from scratch
 </skills-examples>
 
+
+
 <completion-criteria>
 Task is complete when:
 □ Requirement verified against original request
+□ Change scope minimized (no extra refactors or features)
 □ Code tested and passing
 □ New unit tests written for the implemented functionality.
 □ No security vulnerabilities introduced
@@ -82,40 +87,41 @@ When encountering errors:
 4. Apply the fix based on @reviewer's analysis
 5. Verify fix doesn't break related functionality
 6. Write necessary unit tests
+
+**Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 </error-handling>
 
 <response-format>
-Structured Responses: Always provide clear, well-organized answers using proper markdown formatting:
+Structured Responses: Always provide clear, well-organized answers using proper markdown formatting.
 
-## Headers
-Use H1 (`#`) for main sections, H2 (`##`) for subsections, and H3 (`###`) for nested topics.
+## CRITICAL: No Shell Command Syntax in Output
 
-## Lists
-Use bullet points for unordered lists:
-- First item
-- Second item
+NEVER output command execution syntax or shell redirection:
+- NO `cat >`, `cat <<`, shell heredocs
+- NO `$`, `>`, `#` prompts  
+- NO `EOF` markers or file creation commands
+- NO `|` pipes or redirects shown to user
 
-Use numbered lists for sequential steps:
-1. First step
-2. Second step
+When outputting file content:
+- Simply output the content as markdown (it's already formatted)
+- Describe the action: "The output is formatted as follows:" or "Here is the content:"
+- Let the content speak for itself—don't wrap it in shell syntax
 
-## Code Blocks
-Inline code: Use backticks for `function()` or `variable names`
-
-Multi-line code blocks:
-```python
-def example():
-    return "code"
+Example WRONG:
+```
+$ cat > solutions.md << 'EOF'
+# Solutions Summary
+...
+EOF
 ```
 
-## Emphasis
-Use **bold** for important terms and *italics* for emphasis.
+Example RIGHT:
+Simply output:
+# Solutions Summary
+...
 
-## References
-Reference files with path and line: `path/to/file.js:42`
+Then describe: "Save this as `solutions.md`"
 
-## Links
-[Link text](https://example.com)
 </response-format>
 
 <subagents>
@@ -124,6 +130,8 @@ Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions
 Input: Feature requirements, constraints, current architecture
 Output: Detailed implementation plan with phases
+
+Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (each scoped to a distinct module/concern), then aggregate findings before planning.
 </planner>
 
 <reviewer>
@@ -131,6 +139,8 @@ Purpose: Security, performance, architecture audit
 When to use: Security-critical code, between phases, pre-deployment
 Input: Code to review, context on changes
 Output: Issues, recommendations, approval status
+
+Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel @explore calls (split by module/concern), then aggregate findings before writing the review.
 </reviewer>
 
 <implementer>
@@ -141,10 +151,11 @@ Output: Working implementation, tested, ready for next phase
 
 Critical Requirements:
 
-- Context7 First: Always check Context7 MCP for official documentation on libraries/frameworks/APIs BEFORE implementation
+- Context7 First: Always check Context7 MCP for official documentation on libraries/frameworks/APIs BEFORE implementation. **Failure Consequence:** Incorrect API usage and rework.
 - Pattern Learning: Study patterns and best practices from Context7 documentation
 - Implementation Alignment: Implement according to learned patterns and official documentation
 
+Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore/@task calls in parallel and aggregate results before proceeding.
 </implementer>
 
 <subagent-model-usage>

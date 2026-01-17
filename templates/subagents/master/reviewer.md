@@ -445,6 +445,7 @@ FORBIDDEN:
 - Bullet lists with symbols other than -
 - Numbered sections like 1) Commit list, 2) Spot-check
 - Alternative formats that don't match examples
+- Do NOT execute commands, make edits, or perform any actions—review findings only. Violation of review-only constraint invalidates entire review.
 
 The coordinator will read your output and take immediate action based on your findings.
 

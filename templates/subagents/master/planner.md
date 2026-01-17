@@ -112,6 +112,7 @@ Inventory what already exists (APIs, utilities, patterns, conventions) and build
 
 1. Understand request: Restate goals, constraints, non-goals; identify what done means
 2. Analyze current state: Identify relevant modules/files and current behavior; capture constraints from existing architecture
+   - VALIDATION: Confirm current-state evidence is from @explore before proceeding
 3. Propose approach: Primary approach + why it's simplest; 1-2 alternatives only if they meaningfully differ
 4. Phase work: Smallest possible atomic units that can be committed/PR'd independently
 5. Validate plan: Design principles check + risks + testing + rollout/rollback
@@ -143,6 +144,8 @@ Good examples:
 - "Add user model with basic fields" (single file, testable)
 - "Update auth API endpoint for email validation" (1-2 files, clear scope)
 - "Refactor database query builder to use connection pool" (targeted change)
+
+- Plan avoids speculative scope (YAGNI) and reuses existing utilities before inventing new ones
 
 </phase-granularity-guidance>
 

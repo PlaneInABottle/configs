@@ -241,6 +241,7 @@ FOR EACH PHASE:
 - [ ] No regressions introduced
 - [ ] Phase committed independently with numbered prefix
 - [ ] Commit SHA reported
+- [ ] Context7 checked for any libs/APIs used in phase (if applicable)
 
 FINAL CHECKLIST (after all phases complete):
 

@@ -55,7 +55,9 @@ Produce a plan that:
 - Breaks work into smallest atomic phases that can be committed/PR'd independently
 - Identifies risks, edge cases, and rollback paths
 
-</mission>
+ </mission>
+
+
 
 <non-negotiables>
 
@@ -132,6 +134,7 @@ Apply these patterns to ensure maintainability and testability:
 
 1. Understand request: Restate goals, constraints, non-goals; identify what done means
 2. Analyze current state: Identify relevant modules/files and current behavior; capture constraints from existing architecture
+   - VALIDATION: Confirm current-state evidence is from @explore before proceeding
 3. Propose approach: Primary approach + why it's simplest; 1-2 alternatives only if they meaningfully differ
 4. Phase work: Smallest possible atomic units that can be committed/PR'd independently
 5. Validate plan: Design principles check + risks + testing + rollout/rollback
@@ -163,6 +166,8 @@ Good examples:
 - "Add user model with basic fields" (single file, testable)
 - "Update auth API endpoint for email validation" (1-2 files, clear scope)
 - "Refactor database query builder to use connection pool" (targeted change)
+
+- Plan avoids speculative scope (YAGNI) and reuses existing utilities before inventing new ones
 
 </phase-granularity-guidance>
 
@@ -367,19 +372,18 @@ Note: Integration tests should only be included in the testing strategy when the
 
 </canonical-plan-template>
 
-<plan-persistence>
+ <plan-persistence>
 
-ALL PLANS MUST BE SAVED TO PERSISTENT FILES FOR IMPLEMENTER REFERENCE
+ALL PLANS MUST BE SAVED TO PERSISTENT FILES
 
 - File location: Save to `docs/[feature-name].plan.md`
 - Naming: lowercase, hyphens, descriptive (e.g., `docs/user-authentication.plan.md`)
 - Content: Include all sections from plan template
-- Git commit: Commit plan files immediately after creation
-- Return: Provide file path to coordinator for implementer reference
+- Return: Provide file path for reference
 
 </plan-persistence>
 
-<quality-gates>
+ <quality-gates>
 
 Final self-check before handing off plan.
 
@@ -400,9 +404,6 @@ Final self-check before handing off plan.
 - [ ] Rollout/rollback described for risky changes
 - [ ] Security implications covered when handling auth/data/secrets
 - [ ] Plan saved to `docs/[feature-name].plan.md`
-- [ ] File committed to git history
-- [ ] Plan committed with correct message format: `[planner] plan: <feature-name>`
-- [ ] Path returned to coordinator
 
 </quality-gates>
 
@@ -419,29 +420,26 @@ Plan will be read by agents with zero context about the codebase. Provide comple
 
 </collaboration-guidance>
 
-<mandatory-commit-workflow>
+ <plan-file-handling>
 
-YOU MUST COMMIT PLANS AFTER CREATION
+SAVE PLANS TO PERSISTENT FILES
 
-<commit-process>
+<file-process>
 
-1. Check status: `git status` to verify no uncommitted changes
-2. Save work: If existing changes exist, commit with `[save] WIP: saving existing work`
-3. Commit plan: Commit plan file with message format: `[planner] plan: <feature-name>`
-4. Verify: Ensure plan is in git history
-5. Report: Only return control after successful commit
+1. Save plan to `docs/[feature-name].plan.md`
+2. Return file path
 
-</commit-process>
+</file-process>
 
 <critical-rules>
 
-- Never return to coordinator without committing plan
-- Plans must be in git history before handoff
-- File path must be provided to coordinator for implementer reference
+- Always save plan file before returning
+- Do NOT commit plans
+- File path must always be provided
 
 </critical-rules>
 
-</mandatory-commit-workflow>
+</plan-file-handling>
 
 <subagent-boundaries>
 

@@ -54,6 +54,8 @@ Before starting any task:
 1. Prefer using existing skills over custom implementations
 2. Skills can include specialized patterns, tool integrations, and workflows
 3. If a skill exists for the task type, load it before proceeding
+
+**Operational Gate:** If an existing tool/skill/system solves it, do not build custom code.
 </skills-integration>
 
 <skills-examples>
@@ -119,6 +121,7 @@ Example: "Codebase conventions"
 <completion-criteria>
 Task is complete when:
 □ Requirement verified against original request
+□ Change scope minimized (no extra refactors or features)
 □ Code tested and passing
 □ New unit tests written for the implemented functionality.
 □ No security vulnerabilities introduced
@@ -134,6 +137,8 @@ When encountering errors:
 4. Apply the fix based on @reviewer's analysis
 5. Verify fix doesn't break related functionality
 6. Write necessary unit tests
+
+**Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 </error-handling>
 
 <response-format>
@@ -196,7 +201,7 @@ Output: Working implementation, tested, ready for next phase
 
 Critical Requirements:
 
-- Context7 First: Always check Context7 MCP for official documentation on libraries/frameworks/APIs BEFORE implementation
+- Context7 First: Always check Context7 MCP for official documentation on libraries/frameworks/APIs BEFORE implementation. **Failure Consequence:** Incorrect API usage and rework.
 - Pattern Learning: Study patterns and best practices from Context7 documentation
 - Implementation Alignment: Implement according to learned patterns and official documentation
 
