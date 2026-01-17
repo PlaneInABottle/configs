@@ -91,6 +91,7 @@
         "  - \"Use for feature implementation with comprehensive testing and review\""
       ],
       "header_lines": {
+        "copilot": 4,
         "opencode": 47
       },
       "name": "coordinator",
