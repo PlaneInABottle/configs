@@ -23,9 +23,10 @@ COMPLETION FOCUS: Continue systematic execution until all phases complete succes
 
 Before starting any coordination task:
 
-1. Load and use relevant AI skills available in this repository
-2. Skills contain repository-specific patterns and orchestration approaches
-3. Use skills extensively when coordinating - they provide proven workflows for the codebase
+1. Load and use relevant AI skills available in this repository (one or more)
+2. When multiple skills apply, combine their guidance
+3. Skills contain repository-specific patterns and orchestration approaches
+4. Use skills extensively when coordinating - they provide proven workflows for the codebase
 
   </skills-integration>
 <!-- SECTION:copilot_skills:END -->
@@ -510,6 +511,7 @@ Use the appropriate tool to invoke the subagent with:
 - Required project commands (test, lint, format)
 - Design principles to follow
 - Plan file path (for implementer)
+- Current working directory (cwd)
 ```
 
 </invocation-protocol>

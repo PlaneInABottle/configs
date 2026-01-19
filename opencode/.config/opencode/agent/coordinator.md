@@ -543,6 +543,7 @@ Use the appropriate tool to invoke the subagent with:
 - Required project commands (test, lint, format)
 - Design principles to follow
 - Plan file path (for implementer)
+- Current working directory (cwd)
 ```
 
 </invocation-protocol>

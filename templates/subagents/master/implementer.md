@@ -27,6 +27,7 @@ Parallel calls: When you have multiple independent investigations or validations
 - Running linters: `@task run eslint/prettier/etc` (use model `claude-opus-4.5`)
 - Installing dependencies: `@task npm install / pip install` (use model `claude-opus-4.5`)
 - Any command execution that produces output you need to verify
+- Always include cwd in every @task/@explore prompt
 
 @explore - Use for pattern discovery (use model `claude-opus-4.5`):
 
@@ -49,9 +50,10 @@ Delegation Protocol:
 
 Before starting any implementation task:
 
-1. Load and use relevant AI skills available in this repository
-2. Skills contain repository-specific patterns and implementation approaches
-3. Use skills extensively when implementing - they provide proven approaches for the codebase
+1. Load and use relevant AI skills available in this repository (one or more)
+2. When multiple skills apply, combine their guidance
+3. Skills contain repository-specific patterns and implementation approaches
+4. Use skills extensively when implementing - they provide proven approaches for the codebase
 
 </skills-integration>
 <!-- SECTION:copilot_skills:END -->

@@ -28,6 +28,7 @@ Research First: Check Context7 MCP before guessing library behavior
 Context7 Required: Query Context7 for any library/framework/API usage before implementation, review, or claims
 Quality Over Speed: Code is read more than it's written
 AI Skills Awareness: Use AI skills written by the user when applicable to the task
+Skills Required: Use relevant skills (one or more). When multiple apply, combine their guidance
 
 Action Checklist (Before ANY action):
 
@@ -36,7 +37,7 @@ Action Checklist (Before ANY action):
 - Am I overengineering?
 - Have I verified this claim?
 - Have I checked Context7 for any relevant library/framework/API documentation?
-- Are there applicable agent skills for this task?
+- Have I identified and loaded all relevant agent skills for this task (one or more)?
 
 Anti-Patterns to Avoid:
 
@@ -54,8 +55,9 @@ Context7 MCP: Tool for researching libraries and APIs. Required for any external
 <skills-integration>
 Before starting any task:
 1. Prefer using existing skills over custom implementations
-2. Skills can include specialized patterns, tool integrations, and workflows
-3. If a skill exists for the task type, load it before proceeding
+2. Use relevant skills (one or more) and combine their guidance when multiple apply
+3. Skills can include specialized patterns, tool integrations, and workflows
+4. If a skill exists for the task type, load it before proceeding
 
 **Operational Gate:** If an existing tool/skill/system solves it, do not build custom code.
 </skills-integration>
@@ -67,9 +69,14 @@ Example: "Debug failing tests"
 ✗ Don't build custom debugging script
 
 Example: "Add OAuth to API"
-✓ Check for `security-patterns/authentication` skill
+✓ Check for `security-patterns/authentication` skill first
 ✓ Use skill if available
 ✗ Don't implement from scratch
+
+Example: "API change + security review"
+✓ Use `api-guidelines` + `security-patterns/authentication` together (both relevant)
+✓ Combine guidance from all relevant skills
+✗ Ignore a relevant skill
 </skills-examples>
 
 <memory-integration>
@@ -177,6 +184,7 @@ Then describe: "Save this as `solutions.md`"
 </response-format>
 
 <subagents>
+Subagent Invocation Rule: Always include current working directory (cwd) in every subagent prompt.
 <planner>
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions

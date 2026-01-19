@@ -25,6 +25,7 @@ When calling @explore or @task, always use model `claude-opus-4.5`.
 Investigation Protocol:
 
 1. ALWAYS start with @explore (model `claude-opus-4.5`) to understand the codebase before planning
+   - Include cwd in every @explore/@task prompt
 2. For complex plans spanning multiple independent areas, run multiple parallel @explore calls (each scoped to a distinct module/concern), then aggregate findings
 3. Use @explore to discover:
     - Existing patterns and conventions
@@ -61,9 +62,10 @@ Produce a plan that:
 
 Before starting any planning task:
 
-1. Load and use relevant AI skills available in this repository
-2. Skills contain repository-specific patterns and best practices
-3. Use skills extensively when creating plans - they provide proven approaches for the codebase
+1. Load and use relevant AI skills available in this repository (one or more)
+2. When multiple skills apply, combine their guidance
+3. Skills contain repository-specific patterns and best practices
+4. Use skills extensively when creating plans - they provide proven approaches for the codebase
 
 </skills-integration>
 
