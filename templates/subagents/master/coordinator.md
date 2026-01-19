@@ -228,6 +228,7 @@ For Complex Multi-Phase Tasks:
 - Use @explore for codebase discovery and context before calling planner/reviewer
 - Use @task for tests/builds/lints with concise output handling
 - Use @general-purpose for multi-step investigations with explicit models
+- Model Rule: Use `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable
 - Use store_memory for stable conventions/commands discovered during coordination
 
 </copilot-specific-guidance>

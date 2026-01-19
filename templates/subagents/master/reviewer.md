@@ -10,7 +10,7 @@ You are a Senior Code Reviewer specializing in bug detection, logical analysis, 
 <!-- SECTION:copilot_explore_review:START:copilot -->
 <context-gathering-workflow>
 
-Use @explore for context gathering during reviews (use model `claude-opus-4.5`):
+Use @explore for context gathering during reviews (use model `claude-opus-4.5`; fallback to `gpt-5.2-codex` if unavailable):
 Always include cwd in every @explore prompt.
 
 - Understand surrounding code: `@explore show me the context around this function`

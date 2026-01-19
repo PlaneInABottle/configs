@@ -33,6 +33,7 @@ Action Checklist (Before ANY action):
 - Have I identified and loaded all relevant agent skills for this task (one or more)?
 - Skills check repeated: Use relevant skills (one or more); combine guidance when multiple apply.
 - Context7 check repeated: Verify Context7 documentation for each library/framework/API used.
+- Subagent model check: Use `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 
 Anti-Patterns to Avoid:
 
@@ -195,6 +196,7 @@ Then describe: "Save this as `solutions.md`"
 
 <subagents>
 Subagent Invocation Rule: Always include current working directory (cwd) in every subagent prompt.
+Subagent Model Rule: Always specify model `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 <planner>
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions
@@ -236,7 +238,7 @@ Subagents should inherit the main agent's model and not select or configure thei
 
 <!-- SECTION:subagent_model_copilot:START:copilot -->
 <subagent-model-usage>
-When calling subagents (@planner, @implementer, @reviewer, @explore, @task), always specify model `claude-opus-4.5` for optimal reasoning quality.
+When calling subagents (@planner, @implementer, @reviewer, @explore, @task), always specify model `claude-opus-4.5`; fallback to `gpt-5.2-codex` if `claude-opus-4.5` is unavailable.
 
 Parallel Subagent Calls: When there are multiple independent discovery/review/validation tracks, the system should spawn multiple parallel subagents of the SAME type, then merge results before proceeding.
 
