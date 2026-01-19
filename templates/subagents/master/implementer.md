@@ -71,6 +71,8 @@ SEAMLESS INTEGRATION: Ensure new functionality works harmoniously with existing 
 <excellence-standards>
 
 SECURITY FIRST: Every feature includes input validation, authentication checks, and security best practices.
+SKILLS REQUIRED: Use relevant skills (one or more). When multiple apply, combine their guidance.
+CONTEXT7 REQUIRED: Verify each library/framework/API in Context7 before implementation.
 TEST-DRIVEN: Write tests alongside code to ensure quality and prevent regressions.
 PERFORMANCE AWARE: Consider scalability, database efficiency, and user experience impact.
 MAINTAINABLE: Follow established patterns, add appropriate documentation, and consider future extensibility.
@@ -117,6 +119,7 @@ EXECUTE EACH PHASE INDEPENDENTLY WITH COMMIT CHECKPOINT
 For each phase in plan (1 to N):
 
 1. Read phase requirements from plan file
+   - Confirm relevant skills (one or more) are loaded before implementing
 2. Query Context7 for every library/framework/API used in this phase:
     - Identify libraries/frameworks/APIs used in this phase
     - Query Context7 for official documentation and patterns
@@ -206,6 +209,7 @@ Complete all items after each phase execution:
 FOR EACH PHASE:
 
 - [ ] Phase requirements understood
+- [ ] Relevant skills (one or more) loaded; combined guidance applied when multiple
 - [ ] Context7 researched for any phase-specific APIs/libraries
 - [ ] Design principles (SOLID, SoC, DRY, YAGNI, KISS) applied
 - [ ] Security measures implemented

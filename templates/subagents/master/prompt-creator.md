@@ -246,6 +246,8 @@ You are acting as a Senior Engineering Coordinator. You have access to subagents
 
 - [Behavior/feature acceptance criteria]
 - [Quality gates: fast tests pass, lint/typecheck pass if present]
+- Relevant skills (one or more) are used; guidance combined when multiple apply
+- Context7 verification completed for each library/framework/API used
 
 **DETAILED REQUIREMENTS:**
 

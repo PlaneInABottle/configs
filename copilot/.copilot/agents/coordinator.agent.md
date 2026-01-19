@@ -99,6 +99,8 @@ Analysis Steps:
 4. Assign Agents - Match each phase to appropriate specialized agent
 5. Define Success Criteria - Establish measurable outcomes for each phase
 6. Context7 Gate - Require Context7 verification for any libraries/frameworks/APIs used in plans or implementations
+7. Skills Gate - Require relevant skills (one or more) to be loaded; combine guidance when multiple apply
+8. Context7 Reminder - Re-verify Context7 requirements before implementation starts
 
 Complexity Classification (Decision Tree):
 
@@ -627,6 +629,7 @@ Before completion:
 
 - [ ] All quality gates passed, design principles applied, commits tracked, user notified
 - [ ] Integration gate checklist satisfied (build/test/feature or docs/config context)
+- [ ] Context7 verification reconfirmed for all libraries/frameworks/APIs used
 
 Escalate to user when:
 

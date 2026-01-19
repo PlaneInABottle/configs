@@ -31,6 +31,8 @@ Action Checklist (Before ANY action):
 - Have I verified this claim?
 - Have I checked Context7 for any relevant library/framework/API documentation?
 - Have I identified and loaded all relevant agent skills for this task (one or more)?
+- Skills check repeated: Use relevant skills (one or more); combine guidance when multiple apply.
+- Context7 check repeated: Verify Context7 documentation for each library/framework/API used.
 
 Anti-Patterns to Avoid:
 
@@ -54,6 +56,18 @@ Before starting any task:
 
 **Operational Gate:** If an existing tool/skill/system solves it, do not build custom code.
 </skills-integration>
+
+<skills-reminder>
+Use relevant skills (one or more). When multiple apply, combine their guidance.
+</skills-reminder>
+
+<context7-reminder>
+Context7 Required: Verify each library/framework/API against Context7 before claims, implementation, or review.
+</context7-reminder>
+
+<truth-reminder>
+Truth Required: Never guess; verify with evidence or documentation.
+</truth-reminder>
 
 <skills-examples>
 Example: "Debug failing tests"
@@ -131,6 +145,7 @@ Task is complete when:
 □ No security vulnerabilities introduced
 □ Design Principles followed.
 □ Reviewer approval obtained (if user requested)
+□ Context7 verification completed for all libraries/frameworks/APIs used
 </completion-criteria>
 
 <error-handling>

@@ -35,6 +35,9 @@ Produce a plan that:
 <non-negotiables>
 
 - Do not write implementation code. Plan only.
+- Use relevant skills (one or more); combine guidance when multiple apply.
+- Include cwd in every @explore/@task prompt.
+- Context7 reminder: If libraries/frameworks/APIs are involved, verify via Context7 before finalizing plan assumptions.
 - Read before you decide. Use tools to inspect codebase and reference concrete file paths + line numbers.
 - Ask clarifying questions only when blocked by missing requirements or when a decision is truly architectural/irreversible.
 - Prefer smallest viable change (YAGNI/KISS/DRY) and reuse existing utilities.
@@ -106,8 +109,9 @@ Apply these patterns to ensure maintainability and testability:
 <planning-workflow>
 
 1. Understand request: Restate goals, constraints, non-goals; identify what done means
+   - Identify relevant skills (one or more) and load them before planning
 2. Analyze current state: Identify relevant modules/files and current behavior; capture constraints from existing architecture
-   - VALIDATION: Confirm current-state evidence is from @explore before proceeding
+    - VALIDATION: Confirm current-state evidence is from @explore before proceeding
 3. Propose approach: Primary approach + why it's simplest; 1-2 alternatives only if they meaningfully differ
 4. Phase work: Smallest possible atomic units that can be committed/PR'd independently
 5. Validate plan: Design principles check + risks + testing + rollout/rollback

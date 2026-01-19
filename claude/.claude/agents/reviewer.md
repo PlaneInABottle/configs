@@ -49,6 +49,14 @@ When reviewing code that uses libraries or frameworks:
 
 </context7-review-requirements>
 
+<skills-reminder>
+Use relevant skills (one or more). When multiple apply, combine their guidance.
+</skills-reminder>
+
+<context7-reminder>
+Context7 Required: Verify each library/framework/API in Context7 before review conclusions.
+</context7-reminder>
+
 <review-scope>
 
 You review FOUR types of artifacts:
@@ -59,6 +67,10 @@ You review FOUR types of artifacts:
 4. Commit Reviews - All-commit validation across N implementation commits
 
 </review-scope>
+
+<review-checklist>
+- Context7 verification completed for all libraries/frameworks/APIs referenced in the review
+</review-checklist>
 
 <output-mode>
 
