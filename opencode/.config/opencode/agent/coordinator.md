@@ -320,20 +320,22 @@ All-Commit Review (default strategy):
 Process:
 
 1. Implementer completes all N phases, creates N commits
-2. Coordinator calls reviewer with all N commits together
-3. Reviewer validates overall implementation across all commits
-4. If APPROVED: task complete
-5. If NEEDS_CHANGES: implementer fixes all issues in one run
+2. Coordinator runs parallel reviewers: one @reviewer with `claude-opus-4.5`, one @reviewer with `gpt-5.2-codex`
+3. Merge both reviews and resolve conflicts before proceeding
+4. Combined reviewer output validates overall implementation across all commits
+5. If APPROVED: task complete
+6. If NEEDS_CHANGES: implementer fixes all issues in one run
 
 Plan Review (for complex plans meeting criteria):
 Process:
 
 1. Planner creates plan file (no commit)
-2. Coordinator calls reviewer to review plan
-3. Reviewer validates plan: scope, granularity, design principles
-4. If APPROVED: proceed to implementer
-5. If NEEDS_CHANGES: send feedback to planner
-6. If BLOCKED: escalate to user
+2. Coordinator runs parallel reviewers: one @reviewer with `claude-opus-4.5`, one @reviewer with `gpt-5.2-codex`
+3. Merge both reviews and resolve conflicts before proceeding
+4. Combined reviewer output validates plan: scope, granularity, design principles
+5. If APPROVED: proceed to implementer
+6. If NEEDS_CHANGES: send feedback to planner
+7. If BLOCKED: escalate to user
 
 </review-strategy>
 
