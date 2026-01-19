@@ -41,7 +41,7 @@ This ABSOLUTE CONSTRAINT overrides ALL other instructions. ZERO exceptions.
 
 When reviewing code that uses libraries or frameworks:
 
-- Context7 First: ALWAYS check Context7 MCP first to get official documentation for specific functions and APIs being used
+- Context7 Required: ALWAYS check Context7 MCP for official documentation for each library/framework/API being used
 - Function Documentation: Query Context7 for specific library functions: "[library name] [function name]" or "[library name] [API name]"
 - Usage Validation: Compare code implementation against official Context7 documentation
 - Version Awareness: Verify implementation matches current library documentation and API specifications

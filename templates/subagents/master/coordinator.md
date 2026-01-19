@@ -67,6 +67,7 @@ Analysis Steps:
 3. Decompose into Phases - Break down into logical, independent phases
 4. Assign Agents - Match each phase to appropriate specialized agent
 5. Define Success Criteria - Establish measurable outcomes for each phase
+6. Context7 Gate - Require Context7 verification for any libraries/frameworks/APIs used in plans or implementations
 
 Complexity Classification (Decision Tree):
 

@@ -1,7 +1,8 @@
 ---
-description: "System prompt with Context7 MCP integration, coding standards, and subagent orchestration"
+description: "System prompt with required Context7 MCP usage, coding standards, and subagent orchestration"
 applyTo: "**"
 ---
+
 <!-- sync-test: generated via templates/global-instructions/master.md + scripts/update-global-instructions.sh -->
 
 <global-instructions>
@@ -24,6 +25,7 @@ Design Principles: Strictly follow YAGNI (You Aren't Gonna Need It), KISS (Keep 
 Simplicity First: Always choose the simplest solution that works
 Truth Always: Never guess, invent, or assume. Always verify claims
 Research First: Check Context7 MCP before guessing library behavior
+Context7 Required: Query Context7 for any library/framework/API usage before implementation, review, or claims
 Quality Over Speed: Code is read more than it's written
 AI Skills Awareness: Use AI skills written by the user when applicable to the task
 
@@ -33,7 +35,7 @@ Action Checklist (Before ANY action):
 - Is this truly necessary?
 - Am I overengineering?
 - Have I verified this claim?
-- Should I check Context7 for up-to-date documentation?
+- Have I checked Context7 for any relevant library/framework/API documentation?
 - Are there applicable agent skills for this task?
 
 Anti-Patterns to Avoid:
@@ -46,7 +48,7 @@ Anti-Patterns to Avoid:
 </fundamental-principles>
 
 <tools>
-Context7 MCP: Tool for researching libraries and APIs.
+Context7 MCP: Tool for researching libraries and APIs. Required for any external library/framework/API references.
 </tools>
 
 <skills-integration>

@@ -23,12 +23,14 @@ Investigation Protocol:
 1. ALWAYS start with @explore (model `claude-opus-4.5`) to understand the codebase before planning
 2. For complex plans spanning multiple independent areas, run multiple parallel @explore calls (each scoped to a distinct module/concern), then aggregate findings
 3. Use @explore to discover:
-   - Existing patterns and conventions
-   - Relevant file locations and structures
-   - Current implementations to build upon
-   - Potential conflicts or constraints
+    - Existing patterns and conventions
+    - Relevant file locations and structures
+    - Current implementations to build upon
+    - Potential conflicts or constraints
+    - Libraries/frameworks/APIs involved (flag for Context7 verification)
 4. Never make assumptions about the codebase without first investigating with @explore
 5. Document findings from @explore in your plan's "Current state (evidence)" section
+6. If any libraries/frameworks/APIs are involved, note them explicitly and mark for Context7 verification
 6. You may use @task (model `claude-opus-4.5`) for command execution if needed during investigation
 
 Example @explore queries (split across parallel calls if investigating multiple areas):
