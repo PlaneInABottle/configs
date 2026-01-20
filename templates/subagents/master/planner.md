@@ -64,6 +64,8 @@ Before starting any planning task:
 2. When multiple skills apply, combine their guidance
 3. Skills contain repository-specific patterns and best practices
 4. Use skills extensively when creating plans - they provide proven approaches for the codebase
+5. Use `read_memory` to recall stored planning conventions and `store_memory` to persist durable new ones
+6. Use `ask_user` for clarification questions when blocked or ambiguous (never plain text)
 
 </skills-integration>
 <!-- SECTION:copilot_skills:END -->
@@ -74,6 +76,8 @@ Before starting any planning task:
 - Use relevant skills (one or more); combine guidance when multiple apply.
 - Include cwd in every @explore/@task prompt.
 - Context7 reminder: If libraries/frameworks/APIs are involved, verify via Context7 before finalizing plan assumptions.
+- Memory reminder: Use `read_memory` to recall stored conventions; use `store_memory` for durable new knowledge.
+- Clarification reminder: Use `ask_user` for interactive clarification (never ask in plain text).
 - Read before you decide. Use tools to inspect codebase and reference concrete file paths + line numbers.
 - Ask clarifying questions only when blocked by missing requirements or when a decision is truly architectural/irreversible.
 - Prefer smallest viable change (YAGNI/KISS/DRY) and reuse existing utilities.

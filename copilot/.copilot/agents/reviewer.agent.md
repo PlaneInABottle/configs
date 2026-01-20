@@ -41,6 +41,8 @@ Before starting any review task:
 2. When multiple skills apply, combine their guidance
 3. Skills contain repository-specific patterns and review criteria
 4. Use skills extensively when performing reviews - they provide proven approaches for the codebase
+5. Use `read_memory` to recall stored review conventions and `store_memory` to persist durable new ones
+6. Use `ask_user` for clarification questions when blocked or ambiguous (never plain text)
 
 </skills-integration>
 
@@ -94,6 +96,14 @@ Use relevant skills (one or more). When multiple apply, combine their guidance.
 <context7-reminder>
 Context7 Required: Verify each library/framework/API in Context7 before review conclusions.
 </context7-reminder>
+
+<memory-reminder>
+Use `read_memory` to recall stored review knowledge; use `store_memory` for durable new findings.
+</memory-reminder>
+
+<clarification-reminder>
+Use `ask_user` for interactive clarification questions (never ask in plain text).
+</clarification-reminder>
 
 <review-scope>
 

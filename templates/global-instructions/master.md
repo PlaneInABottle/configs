@@ -22,6 +22,8 @@ Context7 Required: Query Context7 for any library/framework/API usage before imp
 Quality Over Speed: Code is read more than it's written
 AI Skills Awareness: Use AI skills written by the user when applicable to the task
 Skills Required: Use relevant skills (one or more). When multiple apply, combine their guidance
+Memory First: Use `read_memory` to recall stored knowledge; use `store_memory` to persist durable facts
+Clarify Interactively: Use `ask_user` for clarification questions when blocked or ambiguous (never ask in plain text)
 
 Action Checklist (Before ANY action):
 
@@ -31,8 +33,11 @@ Action Checklist (Before ANY action):
 - Have I verified this claim?
 - Have I checked Context7 for any relevant library/framework/API documentation?
 - Have I identified and loaded all relevant agent skills for this task (one or more)?
+- Have I recalled relevant stored knowledge via `read_memory`?
 - Skills check repeated: Use relevant skills (one or more); combine guidance when multiple apply.
 - Context7 check repeated: Verify Context7 documentation for each library/framework/API used.
+- Memory check repeated: Use `read_memory` for stored context; use `store_memory` for durable new knowledge.
+- Clarification check repeated: Use `ask_user` for missing requirements or ambiguous instructions (never plain text).
 - Subagent model check: Use `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 - Parallel review check: For code/commit reviews, spawn parallel @reviewer calls (claude-opus-4.5 + gpt-5.2-codex) and merge findings.
 
@@ -47,6 +52,8 @@ Anti-Patterns to Avoid:
 
 <tools>
 Context7 MCP: Tool for researching libraries and APIs. Required for any external library/framework/API references.
+Memory tools: `read_memory` to retrieve stored knowledge; `store_memory` to persist durable codebase facts.
+ask_user: Use for interactive clarification questions; never ask in plain text.
 </tools>
 
 <skills-integration>
@@ -67,9 +74,17 @@ Use relevant skills (one or more). When multiple apply, combine their guidance.
 Context7 Required: Verify each library/framework/API against Context7 before claims, implementation, or review.
 </context7-reminder>
 
+<memory-reminder>
+Use `read_memory` to recall stored knowledge; use `store_memory` to persist durable facts.
+</memory-reminder>
+
 <truth-reminder>
 Truth Required: Never guess; verify with evidence or documentation.
 </truth-reminder>
+
+<clarification-reminder>
+Use `ask_user` for interactive clarification questions (never ask in plain text).
+</clarification-reminder>
 
 <skills-examples>
 Example: "Debug failing tests"
@@ -96,6 +111,8 @@ Store durable facts about the codebase using `store_memory` to persist knowledge
 Key principle: Record stable, widely-applicable knowledge that will remain relevant in future work. Memory persists across all tasks on this codebase.
 
 Use `store_memory` to save durable knowledge and patterns from this codebase that persist across tasks.
+Use `read_memory` before major decisions to recall stored conventions, workflows, and patterns.
+Repeat: `read_memory` for recall; `store_memory` for durable new knowledge.
 
 **When to store:**
 - Coding conventions and patterns that are consistent (naming styles, error handling, code organization)

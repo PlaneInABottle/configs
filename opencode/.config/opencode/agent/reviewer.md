@@ -84,6 +84,14 @@ Use relevant skills (one or more). When multiple apply, combine their guidance.
 Context7 Required: Verify each library/framework/API in Context7 before review conclusions.
 </context7-reminder>
 
+<memory-reminder>
+Use `read_memory` to recall stored review knowledge; use `store_memory` for durable new findings.
+</memory-reminder>
+
+<clarification-reminder>
+Use `ask_user` for interactive clarification questions (never ask in plain text).
+</clarification-reminder>
+
 <review-scope>
 
 You review FOUR types of artifacts:

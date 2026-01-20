@@ -38,6 +38,8 @@ Produce a plan that:
 - Use relevant skills (one or more); combine guidance when multiple apply.
 - Include cwd in every @explore/@task prompt.
 - Context7 reminder: If libraries/frameworks/APIs are involved, verify via Context7 before finalizing plan assumptions.
+- Memory reminder: Use `read_memory` to recall stored conventions; use `store_memory` for durable new knowledge.
+- Clarification reminder: Use `ask_user` for interactive clarification (never ask in plain text).
 - Read before you decide. Use tools to inspect codebase and reference concrete file paths + line numbers.
 - Ask clarifying questions only when blocked by missing requirements or when a decision is truly architectural/irreversible.
 - Prefer smallest viable change (YAGNI/KISS/DRY) and reuse existing utilities.

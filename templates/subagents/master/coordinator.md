@@ -27,6 +27,8 @@ Before starting any coordination task:
 2. When multiple skills apply, combine their guidance
 3. Skills contain repository-specific patterns and orchestration approaches
 4. Use skills extensively when coordinating - they provide proven workflows for the codebase
+5. Use `read_memory` to recall stored coordination conventions and `store_memory` to persist durable new ones
+6. Use `ask_user` for clarification questions when blocked or ambiguous (never plain text)
 
   </skills-integration>
 <!-- SECTION:copilot_skills:END -->
@@ -230,6 +232,8 @@ For Complex Multi-Phase Tasks:
 - Use @general-purpose for multi-step investigations with explicit models
 - Model Rule: Use `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable
 - Use store_memory for stable conventions/commands discovered during coordination
+- Use read_memory before orchestration decisions to recall stored conventions
+- Use ask_user for interactive clarification questions (never ask in plain text)
 
 </copilot-specific-guidance>
 <!-- SECTION:copilot_guidance:END -->

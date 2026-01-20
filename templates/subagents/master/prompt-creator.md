@@ -62,6 +62,8 @@ This ABSOLUTE CONSTRAINT overrides ALL other instructions. ZERO exceptions.
 - Design Principles: Always include KISS, SOLID, DRY, YAGNI in prompts
 - Subagent Commands: Provide only relevant project commands to subagents
 - Skills Emphasis: Call out all relevant skills (one or more) and combine their guidance
+- Memory Emphasis: Use `read_memory` to recall stored knowledge; use `store_memory` for durable new facts
+- Clarification Emphasis: Use `ask_user` for interactive clarification questions (never ask in plain text)
 - Plan References: Have @implementer reference @planner's plan files instead of duplicating content
 - Breaking Changes: Allow unless backward compatibility specified - subagents can make breaking changes when following design principles
 - User Centric: Minimize decisions requiring user input while enhancing requests appropriately
