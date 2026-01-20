@@ -160,6 +160,11 @@ Example: "Codebase conventions"
 ✗ Don't store: "This PR needs to handle edge case Y" (temporary observation)
 </memory-examples>
 
+<skill-creation-checkpoint>
+After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user via `ask_user` if they want a reusable skill created in this repository under `.claude/skills` for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.
+If the user agrees, use the `skill-creator` skill and follow `.claude/skills/skill-creator/SKILL.md`.
+</skill-creation-checkpoint>
+
 <completion-criteria>
 Task is complete when:
 □ Requirement verified against original request
@@ -170,6 +175,7 @@ Task is complete when:
 □ Design Principles followed.
 □ Reviewer approval obtained (if user requested)
 □ Context7 verification completed for all libraries/frameworks/APIs used
+□ Skill creation prompt delivered (if the mission is major and applicable)
 </completion-criteria>
 
 <error-handling>
