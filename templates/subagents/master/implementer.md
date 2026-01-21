@@ -88,12 +88,12 @@ MAINTAINABLE: Follow established patterns, add appropriate documentation, and co
 
  <setup-phase>
 
-INPUT: Plan file path (provided by coordinator)
+INPUT: Plan file path (optional, provided by coordinator if available)
 OUTPUT: Phase list and ready state
 
 Key Activities:
 
-1. Read plan file from provided path
+1. If plan file provided, read plan file from provided path
 2. Parse all phases from Implementation Plan section
 3. Extract for each phase:
    - Phase name and number
@@ -121,9 +121,9 @@ Output:
 
 EXECUTE EACH PHASE INDEPENDENTLY WITH COMMIT CHECKPOINT
 
-For each phase in plan (1 to N):
+For each phase in plan (1 to N, or single phase if no plan):
 
-1. Read phase requirements from plan file
+1. If plan provided, read phase requirements from plan file; otherwise, proceed with direct implementation
    - Confirm relevant skills (one or more) are loaded before implementing
 2. Query Context7 for every library/framework/API used in this phase:
     - Identify libraries/frameworks/APIs used in this phase

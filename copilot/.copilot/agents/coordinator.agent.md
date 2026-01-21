@@ -172,8 +172,8 @@ Workflow:
 
 Coordinator Responsibilities:
 
-- Track plan file path for implementer
-- Verify plan file exists and is readable before implementation
+- Track plan file path for implementer (if plan created)
+- If plan provided, verify plan file exists and is readable before implementation
 - Do NOT create commits for coordination
 
 </plan-file-workflow>
@@ -341,7 +341,8 @@ Process:
 
 <git-and-plan-edge-cases>
 
-- If plan file missing/corrupted: return to @planner to regenerate; do not proceed
+- If plan file expected but missing/corrupted: return to @planner to regenerate; do not proceed
+- If no plan provided: implementer can proceed with direct implementation
 - If merge conflicts: halt, request @implementer to resolve conflicts before continuing
 - If dirty git state before/after phase: require cleanup or commit before proceeding
 - If unexpected untracked files: stop and investigate scope drift
