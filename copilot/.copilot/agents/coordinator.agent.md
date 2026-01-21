@@ -263,6 +263,7 @@ For Complex Multi-Phase Tasks:
 - Use store_memory for stable conventions/commands discovered during coordination
 - Use read_memory before orchestration decisions to recall stored conventions
 - Use ask_user for interactive clarification questions (never ask in plain text)
+- Command subagents explicitly to use Context7, relevant skills, and memory tools (`read_memory`/`store_memory`)
 
 </copilot-specific-guidance>
 

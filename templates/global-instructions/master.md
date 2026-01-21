@@ -38,6 +38,7 @@ Action Checklist (Before ANY action):
 - Context7 check repeated: Verify Context7 documentation for each library/framework/API used.
 - Memory check repeated: Use `read_memory` for stored context; use `store_memory` for durable new knowledge.
 - Clarification check repeated: Use `ask_user` for missing requirements or ambiguous instructions (never plain text).
+- Subagent command check: Explicitly command subagents to use Context7, relevant skills, and memory tools in every subagent prompt.
 - Subagent model check: Use `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 - Parallel review check: For code/commit reviews, spawn parallel @reviewer calls (claude-opus-4.5 + gpt-5.2-codex) and merge findings.
 
@@ -115,6 +116,7 @@ Use `read_memory` before major decisions to recall stored conventions, workflows
 Repeat: `read_memory` for recall; `store_memory` for durable new knowledge.
 
 **When to store:**
+
 - Coding conventions and patterns that are consistent (naming styles, error handling, code organization)
 - Build and deployment workflows (commands, scripts, validation procedures)
 - Architecture and design decisions (module structure, component patterns, system flow)
@@ -125,6 +127,7 @@ Repeat: `read_memory` for recall; `store_memory` for durable new knowledge.
 - Documentation standards, comment conventions, and file naming patterns
 
 **User preferences and working patterns to store:**
+
 - Your preferred subagent usage (e.g., always run @explore first before planning, use @task for all command execution)
 - Workflow preferences discovered while working (e.g., run linter before tests, parallel investigation calls save time)
 - Code review priorities and validation sequences (e.g., check security first, then performance, then style)
@@ -133,6 +136,7 @@ Repeat: `read_memory` for recall; `store_memory` for durable new knowledge.
 - Debugging and troubleshooting approaches that worked well (e.g., how to reproduce issues, common failure modes)
 
 **Never store:**
+
 - Secrets, credentials, API keys, or sensitive data
 - Task-specific observations or temporary findings
 - One-off bugs or issues that won't recur
@@ -191,17 +195,20 @@ Structured Responses: Always provide clear, well-organized answers using proper 
 ## CRITICAL: No Shell Command Syntax in Output
 
 NEVER output command execution syntax or shell redirection:
+
 - NO `cat >`, `cat <<`, shell heredocs
 - NO `$`, `>`, `#` prompts  
 - NO `EOF` markers or file creation commands
 - NO `|` pipes or redirects shown to user
 
 When outputting file content:
+
 - Simply output the content as markdown (it's already formatted)
 - Describe the action: "The output is formatted as follows:" or "Here is the content:"
 - Let the content speak for itself—don't wrap it in shell syntax
 
 Example WRONG:
+
 ```
 $ cat > solutions.md << 'EOF'
 # Solutions Summary
@@ -211,7 +218,9 @@ EOF
 
 Example RIGHT:
 Simply output:
+
 # Solutions Summary
+
 ...
 
 Then describe: "Save this as `solutions.md`"
@@ -222,6 +231,7 @@ Then describe: "Save this as `solutions.md`"
 Subagent Invocation Rule: Always include current working directory (cwd) in every subagent prompt.
 Subagent Model Rule: Always specify model `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 Parallel Review Rule: For code/commit reviews, spawn parallel @reviewer calls using `claude-opus-4.5` and `gpt-5.2-codex`, then merge findings.
+Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`).
 <planner>
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions
