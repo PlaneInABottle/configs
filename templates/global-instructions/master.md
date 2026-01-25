@@ -282,6 +282,8 @@ Parallel Subagent Calls: When there are multiple independent discovery/review/va
 - Parallel @reviewer: split by component/commit-range/focus-area and merge into one consolidated assessment
 - Parallel @implementer: ONLY if work is strictly independent (separate modules/files) and can be validated independently
 - Parallel @task: for independent validations (lint + unit tests + typecheck) when they do not depend on each other
+
+Terminology: When the user mentions "gpa", it means "general purpose agent".
 </subagent-model-usage>
 <!-- SECTION:subagent_model_copilot:END -->
 
