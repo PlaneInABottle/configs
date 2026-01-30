@@ -27,18 +27,19 @@ Clarify Interactively: Use `ask_user` for clarification questions when blocked o
 
 Action Checklist (Before ANY action):
 
+**SKILLS & CONTEXT (Required First):**
+- Have I checked `.claude/skills/` and loaded ALL relevant skills for this task?
+- Have I queried Context7 for library/framework/API documentation?
+- Have I used `read_memory` to recall stored knowledge?
+
+**VALIDATION:**
 - Can existing code/tools solve this?
 - Is this truly necessary?
 - Am I overengineering?
-- Have I verified this claim?
-- Have I checked Context7 for any relevant library/framework/API documentation?
-- Have I identified and loaded all relevant agent skills for this task (one or more)?
-- Have I recalled relevant stored knowledge via `read_memory`?
-- Skills check repeated: Use relevant skills (one or more); combine guidance when multiple apply.
-- Context7 check repeated: Verify Context7 documentation for each library/framework/API used.
-- Memory check repeated: Use `read_memory` for stored context; use `store_memory` for durable new knowledge.
-- Clarification check repeated: Use `ask_user` for missing requirements or ambiguous instructions (never plain text).
-- Subagent command check: Explicitly command subagents to use Context7, relevant skills, and memory tools in every subagent prompt.
+- Have I verified this claim with evidence?
+
+**SUB-AGENT COMMANDS:**
+- Subagent command check: Explicitly command subagents to load skills from `.claude/skills/`, use Context7, and memory tools.
 - Subagent model check: Use `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 - Parallel review check: For code/commit reviews, spawn parallel @reviewer calls (claude-opus-4.5 + gpt-5.2-codex) and merge findings.
 
@@ -51,25 +52,68 @@ Anti-Patterns to Avoid:
 
 </fundamental-principles>
 
+<skills-first-workflow>
+**Skills are MANDATORY, not optional.** Before starting ANY task:
+
+1. **Check for project skills:**
+   ```
+   ls .claude/skills/
+   ```
+
+2. **Decision tree:**
+   - Task involves code patterns → Load matching skill(s)
+   - Task involves workflows → Load matching skill(s)
+   - Task involves tooling/integration → Load matching skill(s)
+   - No matching skill exists → Proceed without skill
+
+3. **Load all relevant skills:**
+   - Use `skill` tool to load each applicable skill
+   - When multiple skills apply, load ALL of them
+   - Combine guidance from loaded skills
+
+4. **Priority order:**
+   - Project skills (`.claude/skills/`) → FIRST
+   - Context7 documentation → SECOND
+   - Memory (`read_memory`) → THIRD
+   - General knowledge → LAST
+
+**Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
+</skills-first-workflow>
+
 <tools>
+Skills: Project-specific patterns and workflows. Check `.claude/skills/` directory FIRST. Load with `skill` tool.
 Context7 MCP: Tool for researching libraries and APIs. Required for any external library/framework/API references.
 Memory tools: `read_memory` to retrieve stored knowledge; `store_memory` to persist durable codebase facts.
 ask_user: Use for interactive clarification questions; never ask in plain text.
 </tools>
 
-<skills-integration>
-Before starting any task:
-1. Prefer using existing skills over custom implementations
-2. Use relevant skills (one or more) and combine their guidance when multiple apply
-3. Skills can include specialized patterns, tool integrations, and workflows
-4. If a skill exists for the task type, load it before proceeding
+<skills-mastery>
+**Skills Loading is MANDATORY.** Skills contain proven patterns, workflows, and integrations specific to this project.
 
-**Operational Gate:** If an existing tool/skill/system solves it, do not build custom code.
-</skills-integration>
+**Task-to-Skill Matching:**
 
-<skills-reminder>
-Use relevant skills (one or more). When multiple apply, combine their guidance.
-</skills-reminder>
+| Task Type | Action |
+|-----------|--------|
+| Debug failing tests | Load `testing-strategies` skill |
+| Add authentication | Load `security-patterns/authentication` skill |
+| API changes | Load `api-guidelines` skill |
+| Code review | Load `code-review` skill |
+| Multiple concerns | Load ALL matching skills, combine guidance |
+
+**Active Commands (not passive suggestions):**
+- CHECK `.claude/skills/` at task start
+- LOAD every skill that matches your task
+- COMBINE guidance when multiple skills apply
+- FOLLOW skill instructions over general knowledge
+
+**Example: API change with security implications**
+✓ LOAD `api-guidelines` skill
+✓ LOAD `security-patterns/authentication` skill
+✓ COMBINE both skills' guidance in implementation
+✗ NEVER ignore a relevant skill
+
+**Operational Gate:** If a project skill exists for any aspect of your task, load it. No exceptions.
+</skills-mastery>
 
 <context7-reminder>
 Context7 Required: Verify each library/framework/API against Context7 before claims, implementation, or review.
@@ -86,23 +130,6 @@ Truth Required: Never guess; verify with evidence or documentation.
 <clarification-reminder>
 Use `ask_user` for interactive clarification questions (never ask in plain text).
 </clarification-reminder>
-
-<skills-examples>
-Example: "Debug failing tests"
-✓ Check for `testing-strategies` skill first
-✓ Use skill if available
-✗ Don't build custom debugging script
-
-Example: "Add OAuth to API"
-✓ Check for `security-patterns/authentication` skill first
-✓ Use skill if available
-✗ Don't implement from scratch
-
-Example: "API change + security review"
-✓ Use `api-guidelines` + `security-patterns/authentication` together (both relevant)
-✓ Combine guidance from all relevant skills
-✗ Ignore a relevant skill
-</skills-examples>
 
 <!-- SECTION:copilot_memory:START:copilot -->
 <memory-integration>
@@ -238,6 +265,8 @@ When to use: Complex features, major refactors, architecture decisions
 Input: Feature requirements, constraints, current architecture
 Output: Detailed implementation plan with phases
 
+**Required First:** Check `.claude/skills/` and load all relevant skills before proceeding.
+
 Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (each scoped to a distinct module/concern), then aggregate findings before planning.
 </planner>
 
@@ -247,6 +276,8 @@ When to use: Security-critical code, between phases, pre-deployment
 Input: Code to review, context on changes
 Output: Issues, recommendations, approval status
 
+**Required First:** Check `.claude/skills/` and load all relevant skills before proceeding.
+
 Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel @explore calls (split by module/concern), then aggregate findings before writing the review.
 </reviewer>
 
@@ -255,6 +286,8 @@ Purpose: Build specific phases according to plan using best practices from offic
 When to use: Phased implementation with clear requirements
 Input: Phase description, requirements, constraints
 Output: Working implementation, tested, ready for next phase
+
+**Required First:** Check `.claude/skills/` and load all relevant skills before proceeding.
 
 Critical Requirements:
 
