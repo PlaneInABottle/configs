@@ -23,6 +23,10 @@ claude/.claude/plugins/installed_plugins.json
 claude/.claude/plugins/known_marketplaces.json
 claude/.claude/plugins/marketplaces/
 claude/.claude/plugins/install-counts-cache.json
+claude/.claude/session-env/
+claude/.claude/stats-cache.json
+claude/.claude/telemetry/
+claude/.claude/settings.local.json
 
 # Removed duplicate patterns - using simple filename patterns below
 
