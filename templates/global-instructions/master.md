@@ -25,6 +25,10 @@ Skills Required: Use relevant skills (one or more). When multiple apply, combine
 Memory First: Use `read_memory` to recall stored knowledge; use `store_memory` to persist durable facts
 Clarify Interactively: Use `ask_user` for clarification questions when blocked or ambiguous (never ask in plain text)
 
+<!-- SECTION:copilot_todo_requirement:START:copilot -->
+**TODO REQUIREMENT:** Before starting ANY work, create a todo checklist using `update_todo` tool. Break down the task into clear, trackable items. Update as you work. This is MANDATORY.
+<!-- SECTION:copilot_todo_requirement:END -->
+
 Action Checklist (Before ANY action):
 
 **SKILLS & CONTEXT (Required First):**
