@@ -121,75 +121,97 @@ Anti-patterns: "Setup infrastructure", "Update everything related to X", "Prepar
 Good: "Add user model with basic fields", "Update auth endpoint for email validation"
 </phase-granularity>
 
-<output-guidance>
-**Simple changes:** Bullets in chat (files, steps, validation)
+<plan-complexity-tiers>
 
-**Medium/complex changes:** Use canonical template with:
-- Commit-level granularity (when >3 phases, >5 commits, >2 days, or refactoring)
-- Summary metrics (commits, lines, time, net change)
-- Progress tracking checklist
-- Open questions section
-- Current state details (for refactoring: file + line count + problems)
+| Tier | Criteria | Format |
+|------|----------|--------|
+| **Simple** | ≤3 files, ≤1 day, single concern | Bullet list in chat |
+| **Medium** | 4-10 files, 2-5 days, ≤3 phases | Full exemplar template |
+| **Complex** | >10 files, >5 days, multi-phase, refactoring | Exemplar + commit-level granularity |
 
-**Phase-level only when:** ≤3 phases, ≤5 commits, ≤2 days, simple feature/bug fix
-</output-guidance>
+**When to use bullet list:** Bug fix, config change, single-file refactor, documentation update.
+**When to use exemplar template:** New feature, multi-file change, database/API changes, risky refactoring.
+</plan-complexity-tiers>
 
-<canonical-plan-template>
-Use this structure (trim sections that don't apply):
+<exemplar-plan-template>
+Use this structure for medium/complex plans (trim sections that don't apply):
 
 ```markdown
-# <Feature/Change> Implementation Plan
+# <Feature/Change> - Implementation Plan
 
-## Executive summary
-- Objective / Non-goals / Constraints (compatibility, perf, security, timeline)
-- Proposed approach / Estimated time / Total phases / Total commits
+## Problem Statement
+<1-3 sentences explaining what needs to change and why. Include root causes if fixing bugs.>
 
-## Current state (evidence)
-- Key files: `<path>:<line-range>` — what it does today
-- Current problems (if refactoring): list issues
-- Behavior today:
+## Approach
+<One-line strategy statement, e.g., "Test-Driven Development (TDD): Write tests first, then fix code.">
 
-## Requirements
-- Functional / Non-functional (perf, security, reliability)
-- Acceptance criteria (testable)
+## Success Criteria
+- [ ] <Measurable outcome 1>
+- [ ] <Measurable outcome 2>
+- [ ] <Testable acceptance criterion>
 
-## Proposed design
-- High-level design / Directory structure (if new module)
-- Data model / API changes (if any)
-- Failure modes & edge cases
-- Migration strategy (if refactoring)
+---
 
-## Implementation plan (phased)
+## Phase N: <Phase Name>
+**Owner**: @implementer (<specialty>)
+**Dependencies**: Phase N-1 (or "None")
+**Complexity**: LOW | MEDIUM | HIGH
 
-### Phase 1: <name> (X days, N commits)
-#### Commit 1: <name>
-- Steps / Files / Lines: ~Y / Tests / Value delivered
-- Independently committable: yes/no / Dependencies: (phase/commit refs)
+### Tasks
+- [ ] Task description with specific action
+- [ ] Another task with file paths where relevant
 
-### Phase 2: <name> (X days)
-...
+### Task N.1: <Subtask Name> (for complex phases)
+- [ ] Granular step 1
+- [ ] Granular step 2
 
-## Summary
-- Total commits: N / New: ~X lines / Removed: ~Y / Net: ~Z / Time: X days
-- Benefits: [ ] ... / Backward compatibility: [ ] ...
+### Acceptance Criteria
+- [ ] Specific, testable criterion
+- [ ] Another testable criterion
 
-## Progress tracking
-- [ ] Phase 1 (0/N) / [ ] Phase 2 (0/N) ...
+---
 
-## Questions/decisions needed
-1. ...
+## Deliverables
+| Phase | Files Created/Modified |
+|-------|----------------------|
+| Phase 1 | `src/path/file.py` |
+| Phase 2 | `src/tests/test_file.py` |
 
-## Testing strategy
-- Unit tests / Integration (only if explicitly requested) / Perf/Security checks
+## Review Gates
+**After Phase N**: @reviewer validates <what to validate>
 
-## Rollout & rollback
-- Rollout: (feature flags, staged deploy) / Rollback: (how to revert)
+## Risk Assessment
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|------------|
+| <Risk description> | LOW/MEDIUM/HIGH | LOW/MEDIUM/HIGH | <Mitigation strategy> |
 
-## Risks
-| Risk | Prob | Impact | Mitigation |
-|------|------|--------|------------|
+## Notes
+- Design constraint or decision
+- Scope exclusion ("NO new database tables")
+- Technical requirement ("Async/await required")
 ```
-</canonical-plan-template>
+</exemplar-plan-template>
+
+<plan-quality-criteria>
+Plans are evaluated on these dimensions (used by @reviewer):
+
+| Criterion | Poor | Good |
+|-----------|------|------|
+| **Clarity** | Vague tasks, missing files | Specific files, line numbers, concrete steps |
+| **Granularity** | "Update all related files" | Task 2.1, 2.2 with distinct deliverables |
+| **Testability** | "Works correctly" | "llm_usage_logs has 4+ records" |
+| **Dependencies** | Implicit ordering | Explicit "Phase 2 depends on Phase 1" |
+| **Risk Awareness** | No risks identified | Likelihood/Impact/Mitigation table |
+| **Acceptance** | Missing or vague | Checkbox per phase with specific criteria |
+| **Scope Control** | Unbounded | Notes section with exclusions |
+
+**Red flags that fail review:**
+- No file paths or line numbers
+- Phases that touch >5 files
+- Missing acceptance criteria
+- No rollback strategy for risky changes
+- "Setup infrastructure" without concrete deliverables
+</plan-quality-criteria>
 
 <plan-persistence>
 **Planner Output:** Architecture plans saved to `docs/[feature-name].plan.md` (committed to repo)
@@ -201,21 +223,18 @@ Use this structure (trim sections that don't apply):
 </plan-persistence>
 
 <quality-gates>
-Final self-check:
-- [ ] YAGNI: no speculative scope
-- [ ] KISS: simplest adequate approach
-- [ ] DRY: no parallel/redundant systems
-- [ ] SOLID: OCP and SoC followed
-- [ ] Existing systems leveraged (named)
-- [ ] Concrete file paths + line numbers
-- [ ] Each phase: deliverables, validation, independently committable
-- [ ] Commit-level granularity for medium/complex
-- [ ] Summary metrics + progress tracking + open questions (medium/complex)
-- [ ] Assumptions separated from facts
-- [ ] Failure modes + edge cases considered
-- [ ] Rollout/rollback for risky changes
-- [ ] Security covered when handling auth/data/secrets
-- [ ] Plan saved to `docs/[feature-name].plan.md`
+**Pre-submit checklist** (all must pass):
+
+| Category | Requirement |
+|----------|-------------|
+| Design | YAGNI/KISS/DRY applied, existing systems leveraged (named) |
+| Evidence | Concrete file paths + line numbers, facts vs assumptions separated |
+| Structure | Each phase: owner, dependencies, tasks, acceptance criteria |
+| Granularity | Phases touch 1-3 files, tasks numbered (2.1, 2.2), commit-level for complex |
+| Risk | Failure modes considered, rollback for risky changes, security for auth/data |
+| Output | Plan saved to `docs/[feature-name].plan.md` |
+
+**Quick validation:** Does each phase answer: "What files? What changes? How to verify? Who reviews?"
 </quality-gates>
 
 <collaboration-guidance>
