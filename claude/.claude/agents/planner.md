@@ -155,7 +155,12 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 | Phase 2 | `src/tests/test_file.py` |
 
 ## Review Gates
-**After Phase N**: @reviewer validates <what to validate>
+
+| Gate | After Phase | Focus Area |
+|------|-------------|------------|
+| **Gate 1** | Phase N | Specific validation focus for @reviewer |
+
+---
 
 ## Risk Assessment
 | Risk | Likelihood | Impact | Mitigation |
@@ -179,6 +184,7 @@ Plans are evaluated on these dimensions (used by @reviewer):
 | **Testability** | "Works correctly" | "llm_usage_logs has 4+ records" |
 | **Dependencies** | Implicit ordering | Explicit "Phase 2 depends on Phase 1" |
 | **Risk Awareness** | No risks identified | Likelihood/Impact/Mitigation table |
+| **Review Gates** | Missing or vague | Table with Gate/Phase/Focus for @reviewer |
 | **Acceptance** | Missing or vague | Checkbox per phase with specific criteria |
 | **Scope Control** | Unbounded | Notes section with exclusions |
 
@@ -208,6 +214,7 @@ Plans are evaluated on these dimensions (used by @reviewer):
 | Structure | Each phase: owner, dependencies, tasks, acceptance criteria |
 | Granularity | Phases touch 1-3 files, tasks numbered (2.1, 2.2), commit-level for complex |
 | Risk | Failure modes considered, rollback for risky changes, security for auth/data |
+| Review Gates | Table with Gate/Phase/Focus Area for @reviewer validation points |
 | Output | Plan saved to `docs/[feature-name].plan.md` |
 
 **Quick validation:** Does each phase answer: "What files? What changes? How to verify? Who reviews?"
