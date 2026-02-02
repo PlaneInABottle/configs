@@ -403,7 +403,11 @@ Note: Integration tests should only be included in the testing strategy when the
 
 </canonical-plan-template>
 
- <plan-persistence>
+<plan-persistence>
+
+**Planner Output:** Architecture plans saved to `docs/[feature-name].plan.md` (committed to repo)
+
+**Note:** This is distinct from session plan.md (~/.copilot/session-state/{id}/plan.md) used by the main agent for ephemeral task tracking during conversations. Your plans are architectural documentation.
 
 ALL PLANS MUST BE SAVED TO PERSISTENT FILES
 

@@ -57,6 +57,14 @@ Before starting any review task:
 </skills-integration>
 <!-- SECTION:copilot_skills:END -->
 
+<!-- SECTION:reviewer_session_context:START:copilot -->
+<session-workspace-usage>
+
+**Review Artifacts:** Use session files/ for detailed findings (summary in response, full details in files/ for reference).
+
+</session-workspace-usage>
+<!-- SECTION:reviewer_session_context:END -->
+
 <!-- SECTION:copilot_memory:START:copilot -->
 <memory-integration-review>
 

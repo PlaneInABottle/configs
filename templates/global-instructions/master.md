@@ -322,4 +322,30 @@ Terminology: When the user mentions "gpa", it means "general purpose agent".
 
 </subagents>
 
+<!-- SECTION:session_context:START:copilot -->
+<session-context>
+
+**Session Workspace:** `~/.copilot/session-state/{sessionId}/`
+
+**plan.md** - Ephemeral task tracking (session-bound, not committed)
+- Use for: Complex tasks, refactors, multi-file changes
+- Format: Goal + markdown checklist workplan + notes
+- User can edit; re-read after pauses
+- Distinct from docs/*.plan.md (repo-committed architecture plans by @planner)
+
+**files/** - Persistent artifacts (survive checkpoints, not committed)
+- Use for: Diagrams, research notes, cross-checkpoint state
+- Clean naming: `{topic}-{type}.{ext}`
+
+**Plan Mode (`[[PLAN]]` prefix):**
+1. Use `ask_user` to clarify ambiguity
+2. Analyze codebase first
+3. Create/update plan.md
+4. Wait for "start"/"implement" approval
+
+**Commands:** `/session`, `/session files`, `/session plan`, `/session checkpoints [n]`, `/session rename <name>`
+
+</session-context>
+<!-- SECTION:session_context:END -->
+
 </global-instructions>

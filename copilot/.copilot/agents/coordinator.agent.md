@@ -49,6 +49,12 @@ Before starting any coordination task:
 
   </skills-integration>
 
+<session-artifacts>
+
+**Cross-Phase Artifacts:** Use session files/ for coordination artifacts that persist across phases and checkpoints (not committed to repo).
+
+</session-artifacts>
+
 <design-principles>
 
 DESIGN PRINCIPLES FIRST - Coordination Foundation

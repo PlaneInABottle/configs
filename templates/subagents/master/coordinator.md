@@ -46,6 +46,14 @@ Before starting any coordination task:
   </skills-integration>
 <!-- SECTION:copilot_skills:END -->
 
+<!-- SECTION:coordinator_session_context:START:copilot -->
+<session-artifacts>
+
+**Cross-Phase Artifacts:** Use session files/ for coordination artifacts that persist across phases and checkpoints (not committed to repo).
+
+</session-artifacts>
+<!-- SECTION:coordinator_session_context:END -->
+
 <design-principles>
 
 DESIGN PRINCIPLES FIRST - Coordination Foundation

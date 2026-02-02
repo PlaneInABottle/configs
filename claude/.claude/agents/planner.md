@@ -364,7 +364,9 @@ Note: Integration tests should only be included in the testing strategy when the
 
 </canonical-plan-template>
 
- <plan-persistence>
+<plan-persistence>
+
+
 
 ALL PLANS MUST BE SAVED TO PERSISTENT FILES
 

@@ -59,6 +59,12 @@ Before starting any review task:
 
 </skills-integration>
 
+<session-workspace-usage>
+
+**Review Artifacts:** Use session files/ for detailed findings (summary in response, full details in files/ for reference).
+
+</session-workspace-usage>
+
 <memory-integration-review>
 
 Store durable facts discovered during code review that will benefit future reviews. Only store findings that are:

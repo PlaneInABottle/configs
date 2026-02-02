@@ -104,6 +104,13 @@ MAINTAINABLE: Follow established patterns, add appropriate documentation, and co
 INPUT: Plan file path (optional, provided by coordinator if available)
 OUTPUT: Phase list and ready state
 
+<!-- SECTION:implementer_session_context:START:copilot -->
+**Plan Sources:**
+- Coordinator provides: `docs/[feature-name].plan.md` (architectural plan by @planner)
+- Session tracking: Check session plan.md for task checklist (if in main agent session)
+- Direct request: No formal plan, implement based on user request
+<!-- SECTION:implementer_session_context:END -->
+
 Key Activities:
 
 1. If plan file provided, read plan file from provided path
