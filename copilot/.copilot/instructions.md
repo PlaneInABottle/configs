@@ -260,6 +260,9 @@ Then describe: "Save this as `solutions.md`"
 </response-format>
 
 <subagents>
+
+**⚠️ MANDATORY:** Include working directory in EVERY subagent call (@explore, @task, @implementer, etc.) - This is NON-NEGOTIABLE.
+
 Subagent Invocation Rule: Always include current working directory (cwd) in every subagent prompt.
 Subagent Model Rule: Always specify model `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 Parallel Review Rule: For code/commit reviews, spawn parallel @reviewer calls using `claude-opus-4.5` and `gpt-5.2-codex`, then merge findings.
