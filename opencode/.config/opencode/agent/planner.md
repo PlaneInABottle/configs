@@ -56,7 +56,7 @@ Produce plans that: solve actual requests (not hypotheticals), leverage existing
 
 <non-negotiables>
 - Plan only—no implementation code
-- Use relevant skills; include cwd in @explore/@task prompts
+- Use relevant skills
 - Context7: verify libraries/APIs before finalizing assumptions
 - Memory: `read_memory` to recall, `store_memory` to persist
 - Clarification: `ask_user` when blocked (never plain text)

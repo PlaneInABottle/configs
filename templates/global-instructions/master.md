@@ -260,11 +260,7 @@ Then describe: "Save this as `solutions.md`"
 
 <subagents>
 
-<!-- SECTION:subagent_cwd_reminder:START:copilot -->
-**⚠️ MANDATORY:** Include working directory in EVERY subagent call (@explore, @task, @implementer, etc.) - This is NON-NEGOTIABLE.
-<!-- SECTION:subagent_cwd_reminder:END -->
 
-Subagent Invocation Rule: Always include current working directory (cwd) in every subagent prompt.
 Subagent Model Rule: Always specify model `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 Parallel Review Rule: For code/commit reviews, spawn parallel @reviewer calls using `claude-opus-4.5` and `gpt-5.2-codex`, then merge findings.
 Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`).

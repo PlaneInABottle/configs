@@ -41,7 +41,6 @@ Parallel calls: When you have multiple independent investigations or validations
 - Running linters: `@task run eslint/prettier/etc` (use model `claude-opus-4.5`)
 - Installing dependencies: `@task npm install / pip install` (use model `claude-opus-4.5`)
 - Any command execution that produces output you need to verify
-- Always include cwd in every @task/@explore prompt
 
 @explore - Use for pattern discovery (use model `claude-opus-4.5`):
 

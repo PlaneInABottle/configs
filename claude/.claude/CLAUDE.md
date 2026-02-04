@@ -27,6 +27,8 @@ Skills Required: Use relevant skills (one or more). When multiple apply, combine
 Memory First: Use `read_memory` to recall stored knowledge; use `store_memory` to persist durable facts
 Clarify Interactively: Use `ask_user` for clarification questions when blocked or ambiguous (never ask in plain text)
 
+
+
 Action Checklist (Before ANY action):
 
 **SKILLS & CONTEXT (Required First):**
@@ -204,7 +206,8 @@ Then describe: "Save this as `solutions.md`"
 </response-format>
 
 <subagents>
-Subagent Invocation Rule: Always include current working directory (cwd) in every subagent prompt.
+
+
 Subagent Model Rule: Always specify model `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 Parallel Review Rule: For code/commit reviews, spawn parallel @reviewer calls using `claude-opus-4.5` and `gpt-5.2-codex`, then merge findings.
 Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`).

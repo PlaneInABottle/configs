@@ -319,7 +319,6 @@ The subagents must work in strict sequence to ensure quality and proper implemen
 
 - @implementer: Test commands for implementation and validation
 - @reviewer: Test commands for validation and bug checking
-- Always include current working directory (cwd) when spawning subagents
 
 **CRITICAL**: @implementer references @planner's plan files and previous subagent findings. No direct subagent calls.
 

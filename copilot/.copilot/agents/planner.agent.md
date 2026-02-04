@@ -25,7 +25,7 @@ BEFORE PLANNING: You MUST use @explore for codebase investigation.
 When calling @explore/@task, use model `claude-opus-4.5` (fallback: `gpt-5.2-codex`).
 
 Investigation Protocol:
-1. ALWAYS @explore first (include cwd in every prompt)
+1. ALWAYS @explore first
 2. For complex plans, run parallel @explore calls scoped to distinct modules
 3. Discover: patterns, file locations, implementations, conflicts, libraries/APIs (flag for Context7)
 4. Never assume—investigate first
@@ -52,7 +52,7 @@ Produce plans that: solve actual requests (not hypotheticals), leverage existing
 
 <non-negotiables>
 - Plan only—no implementation code
-- Use relevant skills; include cwd in @explore/@task prompts
+- Use relevant skills
 - Context7: verify libraries/APIs before finalizing assumptions
 - Memory: `read_memory` to recall, `store_memory` to persist
 - Clarification: `ask_user` when blocked (never plain text)
