@@ -137,6 +137,8 @@ Use `ask_user` for interactive clarification questions (never ask in plain text)
 
 
 
+
+
 <skill-creation-checkpoint>
 After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user via `ask_user` if they want a reusable skill created in this repository under `.claude/skills` for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.
 If the user agrees, use the `skill-creator` skill and follow `.claude/skills/skill-creator/SKILL.md`.
@@ -167,43 +169,7 @@ When encountering errors:
 **Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 </error-handling>
 
-<response-format>
-Structured Responses: Always provide clear, well-organized answers using proper markdown formatting.
 
-## CRITICAL: No Shell Command Syntax in Output
-
-NEVER output command execution syntax or shell redirection:
-
-- NO `cat >`, `cat <<`, shell heredocs
-- NO `$`, `>`, `#` prompts  
-- NO `EOF` markers or file creation commands
-- NO `|` pipes or redirects shown to user
-
-When outputting file content:
-
-- Simply output the content as markdown (it's already formatted)
-- Describe the action: "The output is formatted as follows:" or "Here is the content:"
-- Let the content speak for itself—don't wrap it in shell syntax
-
-Example WRONG:
-
-```
-$ cat > solutions.md << 'EOF'
-# Solutions Summary
-...
-EOF
-```
-
-Example RIGHT:
-Simply output:
-
-# Solutions Summary
-
-...
-
-Then describe: "Save this as `solutions.md`"
-
-</response-format>
 
 <subagents>
 
