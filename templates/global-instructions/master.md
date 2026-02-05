@@ -290,7 +290,7 @@ Output: Detailed implementation plan with phases
 Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (each scoped to a distinct module/concern), then aggregate findings before planning.
 </planner>
 
-<reviewer>
+<analyzer>
 Purpose: Security, performance, architecture audit
 When to use: Security-critical code, between phases, pre-deployment
 Input: Code to review, context on changes
@@ -299,7 +299,7 @@ Output: Issues, recommendations, approval status
 **Required First:** Check `.claude/skills/` and load all relevant skills before proceeding.
 
 Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel @explore calls (split by module/concern), then aggregate findings before writing the review.
-</reviewer>
+</analyzer>
 
 <implementer>
 Purpose: Build specific phases according to plan using best practices from official documentation
