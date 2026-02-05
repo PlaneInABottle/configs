@@ -57,10 +57,9 @@ Anti-Patterns to Avoid:
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
 
-1. **Check for project skills:**
-   ```
-   ls .claude/skills/
-   ```
+1. **Check available skills:**
+   - Review available skills for your task (check context or skill listings)
+   - Match skill descriptions to your task requirements
 
 2. **Decision tree:**
    - Task involves code patterns → Load matching skill(s)
@@ -74,7 +73,7 @@ Anti-Patterns to Avoid:
    - Combine guidance from loaded skills
 
 4. **Priority order:**
-   - Project skills (`.claude/skills/`) → FIRST
+   - Project skills → FIRST
    - Context7 documentation → SECOND
    - Memory (`read_memory`) → THIRD
    - General knowledge → LAST
