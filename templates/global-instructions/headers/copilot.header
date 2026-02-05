@@ -2,3 +2,5 @@
 description: "System prompt with required Context7 MCP usage, coding standards, and subagent orchestration"
 applyTo: "**"
 ---
+
+Instructions:

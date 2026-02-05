@@ -37,7 +37,7 @@
 | Tool | Location | Symlink |
 |------|----------|---------|
 | Claude | `~/.claude/CLAUDE.md` | ✅ Configured |
-| Copilot | `~/.copilot/instructions.md` | ✅ Configured |
+| Copilot | `~/.copilot/copilot-instructions.md` | ✅ Configured |
 | Gemini | `~/.gemini/GEMINI.md` | ✅ Configured |
 | Qwen | `~/.qwen/QWEN.md` | ✅ Configured |
 | OpenCode | `~/.opencode/OPENCODE.md` | ✅ Configured |
@@ -86,7 +86,7 @@
 
 ℹ Generating instruction files...
 ✓ Generated: claude → ~/.claude/CLAUDE.md
-✓ Generated: copilot → ~/.copilot/instructions.md
+✓ Generated: copilot → ~/.copilot/copilot-instructions.md
 ✓ Generated: gemini → ~/.gemini/GEMINI.md
 ✓ Generated: qwen → ~/.qwen/QWEN.md
 ✓ Generated: opencode → ~/.opencode/OPENCODE.md
@@ -315,9 +315,9 @@ The generated files are automatically tracked in git:
 ```bash
 # After running setup-ai-instructions.sh
 git status
-# Shows: modified claude/.claude/CLAUDE.md, copilot/.copilot/instructions.md, etc.
+# Shows: modified claude/.claude/CLAUDE.md, copilot/.copilot/copilot-instructions.md, etc.
 
-git add claude/.claude/CLAUDE.md copilot/.copilot/instructions.md ...
+git add claude/.claude/CLAUDE.md copilot/.copilot/copilot-instructions.md ...
 git commit -m "chore: Update global AI instructions"
 ```
 

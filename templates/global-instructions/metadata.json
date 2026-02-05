@@ -9,8 +9,9 @@
     },
     "copilot": {
       "requires_header": true,
-      "target_file": "copilot/.copilot/instructions.md",
-      "description": "Copilot assistant instructions (requires YAML header)"
+      "target_file": "copilot/.copilot/copilot-instructions.md",
+      "description": "Copilot assistant instructions (requires YAML header)",
+      "parser_notes": "Content must not start with XML-style tags immediately after frontmatter. Add plain text/markdown first to avoid parser failure."
     },
     "claude": {
       "requires_header": false,
