@@ -209,7 +209,7 @@ Task is complete when:
 □ New unit tests written for the implemented functionality.
 □ No security vulnerabilities introduced
 □ Design Principles followed.
-□ Reviewer approval obtained (if user requested)
+□ Reviewer or Analyzer approval obtained (if user requested)
 □ Context7 verification completed for all libraries/frameworks/APIs used
 □ Skill creation prompt delivered (if the mission is major and applicable)
 </completion-criteria>
