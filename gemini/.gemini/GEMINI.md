@@ -30,7 +30,7 @@ Clarify Interactively: Use `ask_user` for clarification questions when blocked o
 Action Checklist (Before ANY action):
 
 **SKILLS & CONTEXT (Required First):**
-- Have I checked `.claude/skills/` and loaded ALL relevant skills for this task?
+- Are relevant skills already loaded in my context? If not, check available skills and load them.
 - Have I queried Context7 for library/framework/API documentation?
 - Have I used `read_memory` to recall stored knowledge?
 
@@ -41,7 +41,7 @@ Action Checklist (Before ANY action):
 - Have I verified this claim with evidence?
 
 **SUB-AGENT COMMANDS:**
-- Subagent command check: Explicitly command subagents to load skills from `.claude/skills/`, use Context7, and memory tools.
+- Subagent command check: Explicitly command subagents to check and load relevant skills, use Context7, and memory tools.
 - Subagent model check: Use `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 - Parallel review check: For code/commit reviews, spawn parallel @analyzer calls (claude-opus-4.5 + gpt-5.2-codex) and merge findings.
 
@@ -65,8 +65,9 @@ Anti-Patterns to Avoid:
    - Task involves tooling/integration → Load matching skill(s)
    - No matching skill exists → Proceed without skill
 
-3. **Load all relevant skills:**
-   - Use `skill` tool to load each applicable skill
+3. **Load relevant skills (if not already in context):**
+   - Check if skills are already loaded in your context
+   - If not loaded, use `skill` tool to load each applicable skill
    - When multiple skills apply, load ALL of them
    - Combine guidance from loaded skills
 
@@ -78,7 +79,7 @@ Anti-Patterns to Avoid:
 
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
 ## Tools
-Skills: Project-specific patterns and workflows. Check `.claude/skills/` directory FIRST. Load with `skill` tool.
+Skills: Project-specific patterns and workflows. Check available skills FIRST. Load with `skill` tool.
 Context7 MCP: Tool for researching libraries and APIs. Required for any external library/framework/API references.
 Memory tools: `read_memory` to retrieve stored knowledge; `store_memory` to persist durable codebase facts.
 ask_user: Use for interactive clarification questions; never ask in plain text.
@@ -96,8 +97,8 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | Multiple concerns | Load ALL matching skills, combine guidance |
 
 **Active Commands (not passive suggestions):**
-- CHECK `.claude/skills/` at task start
-- LOAD every skill that matches your task
+- CHECK if relevant skills are already loaded in context
+- If not loaded, LOAD every skill that matches your task
 - COMBINE guidance when multiple skills apply
 - FOLLOW skill instructions over general knowledge
 
@@ -121,8 +122,8 @@ Use `ask_user` for interactive clarification questions (never ask in plain text)
 
 
 ## Skill Creation Checkpoint
-After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user via `ask_user` if they want a reusable skill created in this repository under `.claude/skills` for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.
-If the user agrees, use the `skill-creator` skill and follow `.claude/skills/skill-creator/SKILL.md`.
+After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user via `ask_user` if they want a reusable skill created for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.
+If the user agrees, use the `skill-creator` skill.
 ## Completion Criteria
 Task is complete when:
 □ Requirement verified against original request
@@ -158,7 +159,7 @@ When to use: Complex features, major refactors, architecture decisions
 Input: Feature requirements, constraints, current architecture
 Output: Detailed implementation plan with phases
 
-**Required First:** Check `.claude/skills/` and load all relevant skills before proceeding.
+**Required First:** Check available skills and load all relevant skills before proceeding.
 
 Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
@@ -167,7 +168,7 @@ When to use: Security-critical code, between phases, pre-deployment
 Input: Code to review, context on changes
 Output: Issues, recommendations, approval status
 
-**Required First:** Check `.claude/skills/` and load all relevant skills before proceeding.
+**Required First:** Check available skills and load all relevant skills before proceeding.
 
 Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel @explore calls (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
@@ -176,7 +177,7 @@ When to use: Phased implementation with clear requirements
 Input: Phase description, requirements, constraints
 Output: Working implementation, tested, ready for next phase
 
-**Required First:** Check `.claude/skills/` and load all relevant skills before proceeding.
+**Required First:** Check available skills and load all relevant skills before proceeding.
 
 Critical Requirements:
 
