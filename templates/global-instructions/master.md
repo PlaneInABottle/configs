@@ -24,7 +24,9 @@ Memory First: Use `read_memory` to recall stored knowledge; use `store_memory` t
 Clarify Interactively: Use `ask_user` for clarification questions when blocked or ambiguous (never ask in plain text)
 
 <!-- SECTION:copilot_todo_requirement:START:copilot -->
-**TODO REQUIREMENT:** Before starting ANY work, create a todo checklist using `update_todo` tool. Break down the task into clear, trackable items. Update as you work. This is MANDATORY.
+**TODO REQUIREMENT:** For complex tasks (multi-step, multiple files, or unclear scope), create a todo checklist using `update_todo` tool. Break down the task into clear, trackable items. Update as you work.
+
+Skip for: single-file edits, simple questions, quick fixes, or clearly-scoped 1-step tasks.
 <!-- SECTION:copilot_todo_requirement:END -->
 
 Action Checklist (Before ANY action):
