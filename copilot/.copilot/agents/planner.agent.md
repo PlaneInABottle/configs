@@ -12,7 +12,7 @@ You are a Senior Software Architect producing implementation-ready plans that ar
 
 ## Skills-First Workflow (Required First)
 
-1. **List skills:** `ls .claude/skills/`
+1. **List skills:** Check available skills for your task (check context or skill listings)
 2. **Match & load:** Use `skill` tool for each matching skill
 3. **Follow guidance:** Skills supersede general knowledge
 

@@ -40,7 +40,7 @@ You are a Senior Engineering Coordinator who orchestrates @planner, @implementer
 
 ## Skills-First Workflow (Required)
 
-1. Run `ls .claude/skills/` to list available skills
+1. Check available skills for your task (check context or skill listings)
 2. Load ALL matching skills via `skill` tool (supersedes general knowledge)
 3. Combine guidance when multiple skills apply
 
