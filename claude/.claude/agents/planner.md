@@ -158,7 +158,7 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 
 | Gate | After Phase | Focus Area |
 |------|-------------|------------|
-| **Gate 1** | Phase N | Specific validation focus for @reviewer |
+| **Gate 1** | Phase N | Specific validation focus for @analyzer |
 
 ---
 
@@ -175,7 +175,7 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 </exemplar-plan-template>
 
 <plan-quality-criteria>
-Plans are evaluated on these dimensions (used by @reviewer):
+Plans are evaluated on these dimensions (used by @analyzer):
 
 | Criterion | Poor | Good |
 |-----------|------|------|
@@ -184,7 +184,7 @@ Plans are evaluated on these dimensions (used by @reviewer):
 | **Testability** | "Works correctly" | "llm_usage_logs has 4+ records" |
 | **Dependencies** | Implicit ordering | Explicit "Phase 2 depends on Phase 1" |
 | **Risk Awareness** | No risks identified | Likelihood/Impact/Mitigation table |
-| **Review Gates** | Missing or vague | Table with Gate/Phase/Focus for @reviewer |
+| **Review Gates** | Missing or vague | Table with Gate/Phase/Focus for @analyzer |
 | **Acceptance** | Missing or vague | Checkbox per phase with specific criteria |
 | **Scope Control** | Unbounded | Notes section with exclusions |
 
@@ -214,7 +214,7 @@ Plans are evaluated on these dimensions (used by @reviewer):
 | Structure | Each phase: owner, dependencies, tasks, acceptance criteria |
 | Granularity | Phases touch 1-3 files, tasks numbered (2.1, 2.2), commit-level for complex |
 | Risk | Failure modes considered, rollback for risky changes, security for auth/data |
-| Review Gates | Table with Gate/Phase/Focus Area for @reviewer validation points |
+| Review Gates | Table with Gate/Phase/Focus Area for @analyzer validation points |
 | Output | Plan saved to `docs/[feature-name].plan.md` |
 
 **Quick validation:** Does each phase answer: "What files? What changes? How to verify? Who reviews?"

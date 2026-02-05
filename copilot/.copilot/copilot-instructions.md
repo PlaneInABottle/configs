@@ -52,7 +52,7 @@ Action Checklist (Before ANY action):
 **SUB-AGENT COMMANDS:**
 - Subagent command check: Explicitly command subagents to load skills from `.claude/skills/`, use Context7, and memory tools.
 - Subagent model check: Use `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
-- Parallel review check: For code/commit reviews, spawn parallel @reviewer calls (claude-opus-4.5 + gpt-5.2-codex) and merge findings.
+- Parallel review check: For code/commit reviews, spawn parallel @analyzer calls (claude-opus-4.5 + gpt-5.2-codex) and merge findings.
 
 Anti-Patterns to Avoid:
 
@@ -221,8 +221,8 @@ Task is complete when:
 When encountering errors:
 1. Capture full error message and stack trace
 2. Identify error type and location
-3. Use @reviewer custom agent for root cause analysis and fix recommendations
-4. Apply the fix based on @reviewer's analysis
+3. Use @analyzer custom agent for root cause analysis and fix recommendations
+4. Apply the fix based on @analyzer's analysis
 5. Verify fix doesn't break related functionality
 6. Write necessary unit tests
 
@@ -278,7 +278,7 @@ EOF
 
 
 Subagent Model Rule: Always specify model `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
-Parallel Review Rule: For code/commit reviews, spawn parallel @reviewer calls using `claude-opus-4.5` and `gpt-5.2-codex`, then merge findings.
+Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `claude-opus-4.5` and `gpt-5.2-codex`, then merge findings.
 Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`).
 <planner>
 Purpose: Architecture design and detailed planning
@@ -322,13 +322,13 @@ Parallel Validation: When you have multiple independent investigations or valida
 
 
 <subagent-model-usage>
-When calling subagents (@planner, @implementer, @reviewer, @explore, @task), always specify model `claude-opus-4.5`; fallback to `gpt-5.2-codex` if `claude-opus-4.5` is unavailable.
-For code/commit reviews, run parallel @reviewer calls with `claude-opus-4.5` and `gpt-5.2-codex` and merge results.
+When calling subagents (@planner, @implementer, @analyzer, @explore, @task), always specify model `claude-opus-4.5`; fallback to `gpt-5.2-codex` if `claude-opus-4.5` is unavailable.
+For code/commit reviews, run parallel @analyzer calls with `claude-opus-4.5` and `gpt-5.2-codex` and merge results.
 
 Parallel Subagent Calls: When there are multiple independent discovery/review/validation tracks, the system should spawn multiple parallel subagents of the SAME type, then merge results before proceeding.
 
 - Parallel @explore: split by module/pattern; run up-front before planning or during reviews
-- Parallel @reviewer: split by component/commit-range/focus-area and merge into one consolidated assessment
+- Parallel @analyzer: split by component/commit-range/focus-area and merge into one consolidated assessment
 - Parallel @implementer: ONLY if work is strictly independent (separate modules/files) and can be validated independently
 - Parallel @task: for independent validations (lint + unit tests + typecheck) when they do not depend on each other
 

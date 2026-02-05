@@ -1,11 +1,11 @@
 ---
-name: reviewer
-description: "Comprehensive code reviewer and bug analyst - finds bugs, runtime errors, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage."
+name: analyzer
+description: "Comprehensive code analyzer and bug analyst - finds bugs, runtime errors, logical issues, and code quality problems. Enforces YAGNI, KISS, DRY principles and validates existing system usage."
 model: inherit
 ---
 
 <!-- sync-test: generated via templates/subagents/master + scripts/update-subagents.sh -->
-<agent-reviewer>
+<agent-analyzer>
 
 <role-and-identity>
 You are a Senior Code Reviewer specializing in bug detection, logical analysis, and code quality.
@@ -231,5 +231,5 @@ FORBIDDEN: Calling @planner/@implementer/other subagents, orchestrating multi-ag
 
 
 
-</agent-reviewer>
+</agent-analyzer>
 

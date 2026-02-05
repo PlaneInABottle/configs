@@ -30,7 +30,7 @@ usage() {
     echo "Updates subagent files from master templates."
     echo ""
     echo "Options:"
-    echo "  --agent=NAME          Update specific agent (planner|reviewer|implementer|coordinator|prompt-creator|all)"
+    echo "  --agent=NAME          Update specific agent (planner|analyzer|implementer|coordinator|prompt-creator|all)"
     echo "  --system=NAME         Update specific system (copilot|opencode|claude|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
     echo "  --help, -h            Show this help message"
@@ -384,7 +384,7 @@ if [[ -z "$AGENT" ]]; then
 fi
 
 if [[ "$AGENT" != "all" ]] && [[ "$AGENT" != "planner" ]] && \
-   [[ "$AGENT" != "reviewer" ]] && [[ "$AGENT" != "implementer" ]] && \
+   [[ "$AGENT" != "analyzer" ]] && [[ "$AGENT" != "implementer" ]] && \
    [[ "$AGENT" != "coordinator" ]] && [[ "$AGENT" != "prompt-creator" ]]; then
     echo "Error: Invalid agent name: $AGENT"
     usage
