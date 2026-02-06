@@ -245,6 +245,35 @@ EOF
 **Failure Consequence:** Using shell wrappers for explanations wastes tokens, makes responses harder to read, and violates the "be concise and direct" principle. Users expect direct answers, not bash output.
 
 <!-- SECTION:copilot_direct_communication:END -->
+<!-- SECTION:detached_shells:START:copilot -->
+
+## Detached Shells
+
+Use `bash(command, mode="async", detach=true)` for servers, daemons, or long-running processes that must survive session shutdown. Must redirect output to logs. Stop with `kill <PID>` (not `pkill`/`killall`).
+
+```bash
+bash("npm run dev > /tmp/server.log 2>&1", mode="async", detach=true)
+```
+<!-- SECTION:detached_shells:END -->
+<!-- SECTION:background_agents:START:copilot -->
+
+## Background Agents
+
+For long-running analysis or implementation tasks, use background mode to avoid blocking. Always verify results as some agents fail silently.
+
+## Fleet Mode
+
+For parallel coordinated work: create SQL todos with dependencies, spawn background agents for independent tasks, verify all results with `read_agent()`. Silent failures occur—always check outputs.
+
+## Execution Mode Decision
+
+| Need | Use |
+|------|-----|
+| Server/daemon (persistent) | `bash(..., detach=true)` |
+| Long task (non-blocking) | `task(..., mode="background")` |
+| Quick investigation | `task(..., mode="sync")` |
+| Interactive tool | `bash(..., mode="async")` |
+<!-- SECTION:background_agents:END -->
 
 ## Subagents
 
