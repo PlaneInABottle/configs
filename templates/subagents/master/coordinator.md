@@ -106,8 +106,11 @@ SQL Todo Tracking:
 - Query ready todos: `SELECT * FROM todos WHERE status='pending' AND no pending deps`
 
 Execution Modes:
-- **Sync (default):** Wait for agent to complete before proceeding. Use for dependent tasks.
-- **Background:** Launch agent and continue. Use for independent parallel workstreams.
+- **Sync (DEFAULT):** Wait for agent to complete before proceeding. Use for all standard orchestration unless special conditions apply.
+- **Background:** Launch agent and continue. ONLY use when:
+  - User explicitly requests parallel work
+  - Long-running tasks (>2 min) that would block progress
+  - Fleet mode with multiple independent workstreams
   - Use `mode: "background"` to launch, `read_agent` to check status
   - Multiple explore/analyzer agents can run in parallel safely
   - Task/implementer agents have side effects—only parallelize if strictly independent (separate files/modules)
