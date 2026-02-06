@@ -170,6 +170,10 @@ bash("npm run dev > /tmp/server.log 2>&1", mode="async", detach=true)
 
 For long-running analysis or implementation tasks, use background mode to avoid blocking. For parallel coordinated work: create SQL todos with dependencies, spawn background agents for independent tasks, verify all results with `read_agent()`. Always verify results—some agents fail silently.
 
+### SQL Todo Tracking
+
+Use SQL for structured task management: `INSERT INTO todos (id, title, status)`. Main agent creates/updates todos; subagents update status for assigned work; background agents update their own todo. Status: `pending` → `in_progress` → `done`|`blocked`. Use plan.md for prose notes.
+
 ## Execution Mode Decision
 
 | Need | Use |
