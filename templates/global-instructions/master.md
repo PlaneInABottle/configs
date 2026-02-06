@@ -57,27 +57,13 @@ Anti-Patterns to Avoid:
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
 
-1. **Check available skills:**
-   - Review available skills for your task (check context or skill listings)
-   - Match skill descriptions to your task requirements
+1. **Check available skills:** Review and match skill descriptions to your task requirements.
 
-2. **Decision tree:**
-   - Task involves code patterns → Load matching skill(s)
-   - Task involves workflows → Load matching skill(s)
-   - Task involves tooling/integration → Load matching skill(s)
-   - No matching skill exists → Proceed without skill
+2. **Decision tree:** Code patterns / workflows / tooling-integration → Load matching skill(s). No match → Proceed without skill.
 
-3. **Load relevant skills (if not already in context):**
-   - Check if skills are already loaded in your context
-   - If not loaded, use `skill` tool to load each applicable skill
-   - When multiple skills apply, load ALL of them
-   - Combine guidance from loaded skills
+3. **Load relevant skills:** Check if already loaded; if not, use `skill` tool. Load ALL matching skills and combine guidance.
 
-4. **Priority order:**
-   - Project skills → FIRST
-   - Context7 documentation → SECOND
-   - Memory (`read_memory`) → THIRD
-   - General knowledge → LAST
+4. **Priority order:** Project skills → Context7 docs → Memory (`read_memory`) → General knowledge
 
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
 ## Tools
@@ -98,19 +84,9 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | Code review | Load `code-review` skill |
 | Multiple concerns | Load ALL matching skills, combine guidance |
 
-**Active Commands (not passive suggestions):**
-- CHECK if relevant skills are already loaded in context
-- If not loaded, LOAD every skill that matches your task
-- COMBINE guidance when multiple skills apply
-- FOLLOW skill instructions over general knowledge
+CHECK if relevant skills are already loaded → LOAD every matching skill → COMBINE guidance → FOLLOW skill instructions over general knowledge.
 
-**Example: API change with security implications**
-✓ LOAD `api-guidelines` skill
-✓ LOAD `security-patterns/authentication` skill
-✓ COMBINE both skills' guidance in implementation
-✗ NEVER ignore a relevant skill
-
-**Operational Gate:** If a project skill exists for any aspect of your task, load it. No exceptions.
+**Example:** API change with security → LOAD `api-guidelines` + `security-patterns/authentication`, COMBINE both. ✗ NEVER ignore a relevant skill.
 ### Context7 Reminder
 Context7 Required: Verify each library/framework/API against Context7 before claims, implementation, or review.
 ### Memory Reminder
@@ -127,53 +103,15 @@ Never use shell commands (cat, echo, heredocs) to display explanations. Write di
 <!-- SECTION:copilot_memory:START:copilot -->
 ### Memory Integration
 
-Store durable facts about the codebase using `store_memory` to persist knowledge across tasks.
+Use `store_memory` for durable, widely-applicable codebase knowledge that persists across tasks. Use `read_memory` before major decisions to recall stored conventions and patterns.
 
-Key principle: Record stable, widely-applicable knowledge that will remain relevant in future work. Memory persists across all tasks on this codebase.
+**Store:** Coding conventions, build/deploy workflows, architecture decisions, repo-specific tools/libraries, testing strategies, security practices, utilities, documentation standards, subagent preferences, workflow patterns, code review priorities, environment setup, coding style preferences, debugging approaches.
 
-Use `store_memory` to save durable knowledge and patterns from this codebase that persist across tasks.
-Use `read_memory` before major decisions to recall stored conventions, workflows, and patterns.
-Repeat: `read_memory` for recall; `store_memory` for durable new knowledge.
+**Never store:** Secrets/credentials, task-specific observations, one-off bugs, frequently-changing external systems.
 
-**When to store:**
+Store facts once—they remain accessible across all future work.
 
-- Coding conventions and patterns that are consistent (naming styles, error handling, code organization)
-- Build and deployment workflows (commands, scripts, validation procedures)
-- Architecture and design decisions (module structure, component patterns, system flow)
-- Repository-specific tools, libraries, and their integration patterns
-- Testing strategies and common test patterns
-- Security practices, validation approaches, and data handling conventions
-- Utilities and helper functions you discover or build that will be reused
-- Documentation standards, comment conventions, and file naming patterns
-
-**User preferences and working patterns to store:**
-
-- Your preferred subagent usage (e.g., always run @explore first before planning, use @task for all command execution)
-- Workflow preferences discovered while working (e.g., run linter before tests, parallel investigation calls save time)
-- Code review priorities and validation sequences (e.g., check security first, then performance, then style)
-- Environment setup patterns (e.g., dependency install order, config precedence, bootstrap steps)
-- Coding style preferences applied consistently (e.g., comment frequency, test coverage targets, refactoring thresholds)
-- Debugging and troubleshooting approaches that worked well (e.g., how to reproduce issues, common failure modes)
-
-**Never store:**
-
-- Secrets, credentials, API keys, or sensitive data
-- Task-specific observations or temporary findings
-- One-off bugs or issues that won't recur
-- External systems that change frequently
-
-Store facts once. They remain accessible across all future work on this codebase.
-
-### Memory Examples
-Example: "Build and test workflow"
-✓ Store: "Run `npm run build && npm run test` to validate changes" (stable, used in every task)
-✓ Store: "Always run linter before tests" (proven workflow)
-✗ Don't store: "Fixed bug in component X" (task-specific, won't recur)
-
-Example: "Codebase conventions"
-✓ Store: "Use Jest for testing, ESLint for linting, TypeScript for type safety" (established patterns)
-✓ Store: "Error handling uses custom ErrorKind wrapper pattern" (architectural pattern)
-✗ Don't store: "This PR needs to handle edge case Y" (temporary observation)
+**Examples:** ✓ `"Run npm run build && npm run test to validate"` (stable workflow) · ✓ `"Error handling uses custom ErrorKind wrapper"` (architecture) · ✗ `"Fixed bug in component X"` (task-specific)
 <!-- SECTION:copilot_memory:END -->
 
 ## Skill Creation Checkpoint
@@ -201,49 +139,20 @@ When encountering errors:
 
 **Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 <!-- SECTION:copilot_direct_communication:START:copilot -->
-## Response Format
-
 ## CRITICAL: Direct Communication Only - No Shell Wrappers
 
-**NEVER use shell commands (`cat`, `echo`, heredocs, pipes) to display explanations or information to the user.**
+**NEVER use shell commands (`cat`, `echo`, heredocs, pipes) to display explanations.**
 
-When explaining or answering questions:
-- Write directly in markdown
-- NO `cat > /tmp/file.md << 'EOF'`
-- NO `echo "content"`
-- NO shell redirection (`>`, `>>`, `|`)
-- NO temporary files for displaying information
+| Use bash for | Write directly for |
+|---|---|
+| Creating/editing repo files | Answering questions |
+| Running git, npm, build commands | Explaining concepts |
+| Searching code (grep, find) | Providing recommendations |
+| Checking system state | Summarizing findings |
 
-**When to use bash tool:**
-- ✓ Creating/editing actual repository files
-- ✓ Running git, npm, build commands
-- ✓ Searching code (grep, find)
-- ✓ Checking system state
+**Violation:** `cat > /tmp/file.md << 'EOF'` — WRONG. Write markdown directly.
 
-**When to write directly (NO bash):**
-- ✓ Answering user questions
-- ✓ Explaining concepts
-- ✓ Providing recommendations
-- ✓ Summarizing findings
-- ✓ Showing examples
-
-**Violation Example (WRONG):**
-```bash
-$ cat > /tmp/database_options.md << 'EOF'
-# Database Options
-...
-EOF
-```
-
-**Correct Example (RIGHT):**
-```markdown
-# Database Options
-
-...
-```
-
-**Failure Consequence:** Using shell wrappers for explanations wastes tokens, makes responses harder to read, and violates the "be concise and direct" principle. Users expect direct answers, not bash output.
-
+**Failure Consequence:** Shell wrappers waste tokens and violate "be concise and direct."
 <!-- SECTION:copilot_direct_communication:END -->
 <!-- SECTION:detached_shells:START:copilot -->
 
@@ -257,13 +166,9 @@ bash("npm run dev > /tmp/server.log 2>&1", mode="async", detach=true)
 <!-- SECTION:detached_shells:END -->
 <!-- SECTION:background_agents:START:copilot -->
 
-## Background Agents
+## Background Agents & Fleet Mode
 
-For long-running analysis or implementation tasks, use background mode to avoid blocking. Always verify results as some agents fail silently.
-
-## Fleet Mode
-
-For parallel coordinated work: create SQL todos with dependencies, spawn background agents for independent tasks, verify all results with `read_agent()`. Silent failures occur—always check outputs.
+For long-running analysis or implementation tasks, use background mode to avoid blocking. For parallel coordinated work: create SQL todos with dependencies, spawn background agents for independent tasks, verify all results with `read_agent()`. Always verify results—some agents fail silently.
 
 ## Execution Mode Decision
 
@@ -321,15 +226,10 @@ Subagents should inherit the main agent's model and not select or configure thei
 
 <!-- SECTION:subagent_model_copilot:START:copilot -->
 ### Subagent Model Usage
-When calling subagents (@planner, @implementer, @analyzer, @explore, @task), always specify model `claude-opus-4.5`; fallback to `gpt-5.2-codex` if `claude-opus-4.5` is unavailable.
+When calling subagents (@planner, @implementer, @analyzer, @explore, @task), always specify model `claude-opus-4.5`; fallback to `gpt-5.2-codex` if unavailable.
 For code/commit reviews, run parallel @analyzer calls with `claude-opus-4.5` and `gpt-5.2-codex` and merge results.
 
-Parallel Subagent Calls: When there are multiple independent discovery/review/validation tracks, the system should spawn multiple parallel subagents of the SAME type, then merge results before proceeding.
-
-- Parallel @explore: split by module/pattern; run up-front before planning or during reviews
-- Parallel @analyzer: split by component/commit-range/focus-area and merge into one consolidated assessment
-- Parallel @implementer: ONLY if work is strictly independent (separate modules/files) and can be validated independently
-- Parallel @task: for independent validations (lint + unit tests + typecheck) when they do not depend on each other
+Parallel Subagent Calls: Spawn multiple parallel subagents of the SAME type for independent tracks, then merge results. @explore: split by module/pattern · @analyzer: split by component/focus-area · @implementer: ONLY if strictly independent modules · @task: for independent validations (lint + tests + typecheck).
 
 Terminology: When the user mentions "gpa", it means "general purpose agent".
 <!-- SECTION:subagent_model_copilot:END -->
