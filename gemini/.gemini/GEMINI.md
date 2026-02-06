@@ -55,27 +55,13 @@ Anti-Patterns to Avoid:
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
 
-1. **Check available skills:**
-   - Review available skills for your task (check context or skill listings)
-   - Match skill descriptions to your task requirements
+1. **Check available skills:** Review and match skill descriptions to your task requirements.
 
-2. **Decision tree:**
-   - Task involves code patterns → Load matching skill(s)
-   - Task involves workflows → Load matching skill(s)
-   - Task involves tooling/integration → Load matching skill(s)
-   - No matching skill exists → Proceed without skill
+2. **Decision tree:** Code patterns / workflows / tooling-integration → Load matching skill(s). No match → Proceed without skill.
 
-3. **Load relevant skills (if not already in context):**
-   - Check if skills are already loaded in your context
-   - If not loaded, use `skill` tool to load each applicable skill
-   - When multiple skills apply, load ALL of them
-   - Combine guidance from loaded skills
+3. **Load relevant skills:** Check if already loaded; if not, use `skill` tool. Load ALL matching skills and combine guidance.
 
-4. **Priority order:**
-   - Project skills → FIRST
-   - Context7 documentation → SECOND
-   - Memory (`read_memory`) → THIRD
-   - General knowledge → LAST
+4. **Priority order:** Project skills → Context7 docs → Memory (`read_memory`) → General knowledge
 
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
 ## Tools
@@ -96,19 +82,9 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | Code review | Load `code-review` skill |
 | Multiple concerns | Load ALL matching skills, combine guidance |
 
-**Active Commands (not passive suggestions):**
-- CHECK if relevant skills are already loaded in context
-- If not loaded, LOAD every skill that matches your task
-- COMBINE guidance when multiple skills apply
-- FOLLOW skill instructions over general knowledge
+CHECK if relevant skills are already loaded → LOAD every matching skill → COMBINE guidance → FOLLOW skill instructions over general knowledge.
 
-**Example: API change with security implications**
-✓ LOAD `api-guidelines` skill
-✓ LOAD `security-patterns/authentication` skill
-✓ COMBINE both skills' guidance in implementation
-✗ NEVER ignore a relevant skill
-
-**Operational Gate:** If a project skill exists for any aspect of your task, load it. No exceptions.
+**Example:** API change with security → LOAD `api-guidelines` + `security-patterns/authentication`, COMBINE both. ✗ NEVER ignore a relevant skill.
 ### Context7 Reminder
 Context7 Required: Verify each library/framework/API against Context7 before claims, implementation, or review.
 ### Memory Reminder
@@ -147,12 +123,15 @@ When encountering errors:
 **Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 
 
+
+
 ## Subagents
 
 
 Subagent Model Rule: Always specify model `claude-opus-4.5` for subagents; fallback to `gpt-5.2-codex` if unavailable.
 Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `claude-opus-4.5` and `gpt-5.2-codex`, then merge findings.
 Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`).
+Opus 4.6 Workaround: If using `claude-opus-4.6`, add to prompt: "DO NOT USE task_complete TOOL. Return response text directly." (Bug: task_complete causes response loss)
 ### Planner
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions
