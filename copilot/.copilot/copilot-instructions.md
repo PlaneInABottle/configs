@@ -166,7 +166,7 @@ bash("npm run dev > /tmp/server.log 2>&1", mode="async", detach=true)
 
 ## Background Agents & Fleet Mode
 
-For long-running analysis or implementation tasks, use background mode to avoid blocking. For parallel coordinated work: create SQL todos with dependencies, spawn background agents for independent tasks, verify all results with `read_agent()`. Always verify results—some agents fail silently.
+**Default: Use sync mode.** Call subagents (`@planner`, `@implementer`, `@analyzer`) or `task(mode="sync")` for general-purpose/explore agents. Background mode (`task(mode="background")`) only for: long-running tasks (>2 min), user-requested parallel work, or fleet mode with independent workstreams. For parallel coordinated work: create SQL todos with dependencies, spawn background agents for independent tasks, verify all results with `read_agent()`. Always verify results—some agents fail silently.
 
 ### SQL Todo Tracking
 
