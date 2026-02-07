@@ -158,10 +158,14 @@ When encountering errors:
 
 ## Detached Shells
 
-Use `bash(command, mode="async", detach=true)` for servers, daemons, or long-running processes that must survive session shutdown. Must redirect output to logs. Stop with `kill <PID>` (not `pkill`/`killall`).
+Use `bash(command, mode="async", detach=true)` for servers, daemons, or long-running processes that must survive session shutdown. Output automatically redirected to temp log. Read output with `read_bash(shellId)`. Stop with `kill <PID>` (not `pkill`/`killall`).
 
 ```bash
-bash("npm run dev > /tmp/server.log 2>&1", mode="async", detach=true)
+# Start detached server (output auto-redirected)
+bash("npm run dev", mode="async", detach=true)  # Returns shellId
+
+# Read output
+read_bash(shellId, delay=5)
 ```
 
 ## Background Agents & Fleet Mode
