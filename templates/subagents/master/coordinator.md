@@ -189,7 +189,7 @@ User → SQL todos → parallel background @implementer agents (independent modu
 <copilot-guidance>
 - Use @explore for codebase discovery before calling planner/reviewer
 - Use @task for tests/builds/lints with concise output
-- Model: Use `claude-opus-4.5` for subagents; fallback `gpt-5.2-codex`
+- Model: Use `claude-opus-4.6` for subagents; fallback `gpt-5.2-codex`
 - Use memory tools: `read_memory` before decisions, `store_memory` for conventions
 - Command subagents to use Context7, skills, and memory tools
 - **Opus 4.6 workaround:** When spawning subagents with claude-opus-4.6, include "DO NOT USE task_complete TOOL. Return your response directly." in the prompt. Opus 4.6 prematurely calls task_complete; this instruction prevents it.
@@ -212,7 +212,7 @@ SKIP for: <5 phases, bug fixes, docs updates, minor config changes
 <review-strategy>
 All-Commit Review (default):
 1. Implementer completes all N phases, N commits
-2. Run parallel reviewers: `claude-opus-4.5` + `gpt-5.2-codex`
+2. Run parallel reviewers: `claude-opus-4.6` + `gpt-5.2-codex`
 3. Merge reviews, resolve conflicts
 4. APPROVED → complete | NEEDS_CHANGES → implementer fixes all
 </review-strategy>
