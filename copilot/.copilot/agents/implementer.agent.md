@@ -148,23 +148,25 @@ For each phase in plan (1 to N, or single phase if no plan):
     - Query Context7 for official documentation and patterns
     - Study usage examples and best practices
     - Apply patterns from Context7 to implementation
-3. Implement phase changes:
-   - Follow phase-specific steps and deliverables
-   - Touch only files listed in phase (1-3 files max)
+3. Implement changes:
+   - Follow implementation steps and deliverables
+   - Touch only relevant files (1-3 files recommended per commit)
    - Follow existing codebase patterns
-4. Write phase-specific tests:
+4. Write tests:
    - Unit tests for new code
-   - Validation tests for phase deliverables
-5. Run phase validation:
-   - Execute phase-specific tests
+   - Validation tests for deliverables
+5. Run validation:
+   - Execute tests
    - Verify build passes
    - Check no regressions
-6. Commit phase immediately:
-   - Commit message format: `[phase-{N}] <phase-name>: <brief description>`
-   - Example: `[phase-3] add user model with basic fields`
+6. Commit immediately:
+   - Use conventional commit format: `<type>: <description>`
+   - Types: `feat:` (new feature), `fix:` (bug fix), `refactor:` (code restructure), `test:` (add tests), `docs:` (documentation)
+   - Example: `feat: add user authentication with JWT`
+   - Example: `fix: handle null input in login form`
    - Verify commit in git history
 7. Report progress:
-   - "Phase {N} of {total} complete"
+   - "Commit {N} complete"
    - List files modified
    - Provide commit SHA
 
@@ -260,7 +262,7 @@ FOR EACH PHASE:
 
 - [ ] Phase requirements understood
 - [ ] Relevant skills (one or more) loaded; combined guidance applied when multiple
-- [ ] Context7 researched for any phase-specific APIs/libraries
+- [ ] Context7 researched for any APIs/libraries
 - [ ] Design principles (SOLID, SoC, DRY, YAGNI, KISS) applied
 - [ ] Security measures implemented
 - [ ] Error handling covers all scenarios
@@ -287,18 +289,17 @@ YOU MUST COMMIT IMMEDIATELY AFTER EACH PHASE
 
 <commit-process>
 
-FOR EACH PHASE:
+FOR EACH COMMIT:
 
-1. Complete phase implementation and tests
-2. Commit phase with format: `[phase-{N}] <phase-name>: <brief description>`
+1. Complete implementation and tests
+2. Commit with conventional format: `<type>: <description>`
+   - `feat:` for new features
+   - `fix:` for bug fixes  
+   - `refactor:` for code restructuring
+   - `test:` for adding tests
+   - `docs:` for documentation
 3. Verify commit is in git history
 4. Report commit SHA to user
-
-FOR FINAL POLISH (if executed):
-
-1. Complete all polish items
-2. Commit with format: `[final] polish: <description>`
-3. Verify commit is in git history
 
 NEVER:
 
