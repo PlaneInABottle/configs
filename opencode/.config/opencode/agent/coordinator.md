@@ -253,7 +253,7 @@ SKIP for: <5 phases, bug fixes, docs updates, minor config changes
 <review-strategy>
 All-Commit Review (default):
 1. Implementer completes all N phases, N commits
-2. Run parallel reviewers: `claude-opus-4.5` + `gpt-5.2-codex`
+2. Run parallel reviewers: `claude-opus-4.6` + `gpt-5.2-codex`
 3. Merge reviews, resolve conflicts
 4. APPROVED → complete | NEEDS_CHANGES → implementer fixes all
 </review-strategy>
