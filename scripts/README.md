@@ -397,5 +397,6 @@ If generation looks wrong, verify the header template and metadata instead:
 
 ## Related Documentation
 
-- [Subagent Update Script Analysis](../docs/subagent-update-script-analysis.md) - Full analysis and options
+- [Subagent Management Scripts](../docs/subagent-update-script-analysis.md) - Full analysis and options
 - [Project Instructions Generator](./generate-project-instructions.sh) - Generates project-specific AI instruction files for Claude, Gemini, Qwen, and Copilot/OpenCode
+- [Global Instructions Template System](../templates/global-instructions/README.md) - Single source of truth for system instruction files across Copilot, Claude, OpenCode, and Gemini
