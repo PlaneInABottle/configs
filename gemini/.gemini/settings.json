@@ -21,7 +21,8 @@
     "showMemoryUsage": true,
     "showLineNumbers": true,
     "showCitations": true,
-    "useFullWidth": true
+    "useFullWidth": true,
+    "showModelInfoInChat": true
   },
   "general": {
     "vimMode": true,
@@ -36,6 +37,8 @@
     }
   },
   "experimental": {
-    "useModelRouter": true
+    "useModelRouter": true,
+    "plan": true,
+    "enableAgents": true
   }
 }
