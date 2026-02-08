@@ -123,6 +123,7 @@ Analysis Steps:
 | Standard | Single component, ≤3 files, low risk | @planner → @implementer → @analyzer |
 | Complex | Multi-component, cross-cutting, needs phases | @planner → @implementer → @analyzer |
 | Major | New subsystem, arch change, security/perf critical | @planner → @analyzer → @implementer → @analyzer |
+| Diagnostic | Unclear root cause, needs profiling, feasibility assessment | @analyzer (diagnose) → reassess as Simple/Standard/Complex/Major |
 | Fleet | Multiple independent workstreams, parallelizable | SQL todos + parallel background agents |
 
 Non-code tasks (docs/config): prefer Simple tier, skip planner unless requested.
@@ -217,8 +218,14 @@ User → @planner → @analyzer (plan review) → @implementer (N phases) → @a
 **Code Refactoring:**
 User → @planner → @implementer (N phases) → @analyzer → Complete
 
-**Bug Fixing:**
-User → @analyzer (analyze) → @implementer (fix, commit) → @analyzer (validate) → Complete
+**Bug Fixing (Simple — clear cause, ≤3 files):**
+User → @analyzer (diagnose) → @implementer (fix, commit) → @analyzer (validate) → Complete
+
+**Bug Fixing (Complex — multi-file, architectural impact):**
+User → @analyzer (diagnose, recommend tier) → @planner (fix strategy) → @implementer (N phases, N commits) → @analyzer (validate) → Complete
+
+**Feasibility Assessment:**
+User → @analyzer (assess codebase + constraints) → @planner (design approach, estimate effort) → Report to user (no implementation without approval)
 
 **Simple Task:**
 User → @implementer (execute, commit) → Complete
@@ -230,6 +237,38 @@ User → @analyzer (review files/commits) → Complete
 User → SQL todos → parallel background @implementer agents (independent modules) → aggregate → @analyzer → Complete
 
 </task-patterns>
+
+<workflow-decision-tree>
+
+Bug Triage (after @analyzer diagnosis, select tier):
+
+| Signal | Tier | Action |
+|--------|------|--------|
+| Clear cause, ≤3 files, no API changes | Simple Bug | Skip @planner, direct to @implementer |
+| >3 files, interface changes, cross-cutting | Complex Bug | Add @planner for fix strategy |
+| Root cause unclear, needs profiling/reproduction | Diagnostic | Extended @analyzer investigation → reassess |
+| Security vulnerability (any scope) | Urgency | Simple/Complex path but skip plan review gate; always validate |
+
+When to use @analyzer BEFORE @planner:
+- Bug reports (always — need diagnosis before planning)
+- Feasibility assessments (need codebase assessment first)
+- Performance issues (need profiling data before planning)
+- Security concerns (need threat assessment)
+- Unknown scope (need impact analysis)
+
+When to go directly to @planner (skip initial @analyzer):
+- New feature with clear requirements
+- Refactoring with known scope
+- User provides detailed specifications
+
+When to skip @planner entirely:
+- Simple bug with clear fix (≤3 files)
+- Docs/config-only changes
+- Test-only fixes
+
+Rollback Rule: If a bug fix attempt worsens the issue, halt immediately, revert to pre-fix SHA, and escalate to user.
+
+</workflow-decision-tree>
 
 </orchestration-patterns>
 
@@ -247,7 +286,7 @@ User → SQL todos → parallel background @implementer agents (independent modu
 
 <plan-review-criteria>
 CALL @analyzer for plan when: >10 phases, architectural changes, security-critical, complex refactoring, uncertain approach
-SKIP for: <5 phases, bug fixes, docs updates, minor config changes
+SKIP for: <5 phases, simple bug fixes (≤3 files), docs updates, minor config changes
 </plan-review-criteria>
 
 <review-strategy>
