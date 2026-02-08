@@ -21,7 +21,14 @@
     "gemini": {
       "requires_header": false,
       "target_file": "gemini/.gemini/GEMINI.md",
-      "description": "Gemini CLI global instructions (no header required)"
+      "description": "Gemini CLI global instructions (no header required)",
+      "text_replacements": {
+        "@analyzer": "analyzer",
+        "@planner": "planner",
+        "@implementer": "implementer",
+        "@explore": "explore",
+        "@task": "task"
+      }
     }
   },
   "dynamic_sections": {

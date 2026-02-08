@@ -43,7 +43,7 @@ Action Checklist (Before ANY action):
 **SUB-AGENT COMMANDS:**
 - Subagent command check: Explicitly command subagents to check and load relevant skills, use Context7, and memory tools.
 - Subagent model check: Use `claude-opus-4.6-fast` for subagents; fallback to `gpt-5.2-codex` if unavailable.
-- Parallel review check: For code/commit reviews, spawn parallel @analyzer calls (claude-opus-4.6-fast + gpt-5.2-codex) and merge findings.
+- Parallel review check: For code/commit reviews, spawn parallel analyzer calls (claude-opus-4.6-fast + gpt-5.2-codex) and merge findings.
 
 Anti-Patterns to Avoid:
 
@@ -115,8 +115,8 @@ Task is complete when:
 When encountering errors:
 1. Capture full error message and stack trace
 2. Identify error type and location
-3. Use @analyzer custom agent for root cause analysis and fix recommendations
-4. Apply the fix based on @analyzer's analysis
+3. Use analyzer custom agent for root cause analysis and fix recommendations
+4. Apply the fix based on analyzer's analysis
 5. Verify fix doesn't break related functionality
 6. Write necessary unit tests
 
@@ -129,7 +129,7 @@ When encountering errors:
 
 
 Subagent Model Rule: Always specify model `claude-opus-4.6-fast` for subagents; fallback to `gpt-5.2-codex` if unavailable.
-Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `claude-opus-4.6-fast` and `gpt-5.2-codex`, then merge findings.
+Parallel Review Rule: For code/commit reviews, spawn parallel analyzer calls using `claude-opus-4.6-fast` and `gpt-5.2-codex`, then merge findings.
 Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`).
 Opus 4.6 Workaround: If using `claude-opus-4.6-fast`, add to prompt: "DO NOT USE task_complete TOOL. Return response text directly." (Bug: task_complete causes response loss)
 ### Planner
@@ -140,7 +140,7 @@ Output: Detailed implementation plan with phases
 
 **Required First:** Check available skills and load all relevant skills before proceeding.
 
-Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `claude-opus-4.6-fast`) (each scoped to a distinct module/concern), then aggregate findings before planning.
+Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel explore calls (model `claude-opus-4.6-fast`) (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
 Purpose: Security, performance, architecture audit
 When to use: Security-critical code, between phases, pre-deployment
@@ -149,7 +149,7 @@ Output: Issues, recommendations, approval status
 
 **Required First:** Check available skills and load all relevant skills before proceeding.
 
-Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel @explore calls (model `claude-opus-4.6-fast`) (split by module/concern), then aggregate findings before writing the review.
+Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel explore calls (model `claude-opus-4.6-fast`) (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
 Purpose: Build specific phases according to plan using best practices from official documentation
 When to use: Phased implementation with clear requirements
@@ -164,7 +164,7 @@ Critical Requirements:
 - Pattern Learning: Study patterns and best practices from Context7 documentation
 - Implementation Alignment: Implement according to learned patterns and official documentation
 
-Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `claude-opus-4.6-fast`) in parallel and aggregate results before proceeding.
+Parallel Validation: When you have multiple independent investigations or validations, issue multiple explore/task calls (model `claude-opus-4.6-fast`) in parallel and aggregate results before proceeding.
 ### Subagent Model Usage
 Subagents should inherit the main agent's model and not select or configure their own model. Do not specify model parameters when calling subagents to ensure consistent behavior.
 
