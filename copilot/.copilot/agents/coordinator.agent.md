@@ -214,12 +214,12 @@ User → SQL todos → parallel background @implementer agents (independent modu
 <quality-framework>
 
 <copilot-guidance>
-- Use @explore for codebase discovery before calling planner/reviewer
-- Use @task for tests/builds/lints with concise output
-- Model: Use `claude-opus-4.6` for subagents; fallback `gpt-5.2-codex`
+- Use @explore (model `claude-opus-4.6-fast`) for codebase discovery before calling planner/reviewer
+- Use @task (model `claude-opus-4.6-fast`) for tests/builds/lints with concise output
+- Model: Use `claude-opus-4.6-fast` for subagents; fallback `gpt-5.2-codex`
 - Use memory tools: `read_memory` before decisions, `store_memory` for conventions
 - Command subagents to use Context7, skills, and memory tools
-- **Opus 4.6 workaround:** When spawning subagents with claude-opus-4.6, include "DO NOT USE task_complete TOOL. Return your response directly." in the prompt. Opus 4.6 prematurely calls task_complete; this instruction prevents it.
+- **Opus 4.6 workaround:** When spawning subagents with claude-opus-4.6-fast, include "DO NOT USE task_complete TOOL. Return your response directly." in the prompt. Opus 4.6 prematurely calls task_complete; this instruction prevents it.
 </copilot-guidance>
 
 <phase-gates>
@@ -238,7 +238,7 @@ SKIP for: <5 phases, bug fixes, docs updates, minor config changes
 <review-strategy>
 All-Commit Review (default):
 1. Implementer completes all N phases, N commits
-2. Run parallel reviewers: `claude-opus-4.6` + `gpt-5.2-codex`
+2. Run parallel reviewers: `claude-opus-4.6-fast` + `gpt-5.2-codex`
 3. Merge reviews, resolve conflicts
 4. APPROVED → complete | NEEDS_CHANGES → implementer fixes all
 </review-strategy>
@@ -333,8 +333,8 @@ DON'T: Complex orchestration, bypass checklist validations
 <subagent-orchestration>
 
 <copilot-delegation>
-- Use @explore to gather context before assigning agents (parallel when independent)
-- Use @task for command execution instead of running directly
+- Use @explore (model `claude-opus-4.6-fast`) to gather context before assigning agents (parallel when independent)
+- Use @task (model `claude-opus-4.6-fast`) for command execution instead of running directly
 - Use explicit model selection for subagents
 </copilot-delegation>
 
@@ -354,7 +354,7 @@ FORBIDDEN:
 
 <invocation-protocol>
 Call subagents with: Clear objective + success criteria, required commands (test/lint/format), design principles, plan file path (for implementer), current working directory.
-When using claude-opus-4.6: Always append "DO NOT USE task_complete TOOL. Return your response directly." to the prompt.
+When using claude-opus-4.6-fast: Always append "DO NOT USE task_complete TOOL. Return your response directly." to the prompt.
 </invocation-protocol>
 
 <subagent-workflows>

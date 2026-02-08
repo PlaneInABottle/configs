@@ -33,20 +33,20 @@ Before proceeding with any task:
 
 You MUST delegate to specialized agents for specific tasks.
 
-When calling subagents, always use model `claude-opus-4.6`.
-If `claude-opus-4.6` is unavailable, use `gpt-5.2-codex`.
+When calling subagents, always use model `claude-opus-4.6-fast`.
+If `claude-opus-4.6-fast` is unavailable, use `gpt-5.2-codex`.
 
-Parallel calls: When you have multiple independent investigations or validations, issue multiple @explore/@task calls in parallel and aggregate results before proceeding.
+Parallel calls: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `claude-opus-4.6-fast`) in parallel and aggregate results before proceeding.
 
 @task - Use for ALL of the following:
 
-- Running tests: `@task run the test suite` (use model `claude-opus-4.6`)
-- Building code: `@task build the project` (use model `claude-opus-4.6`)
-- Running linters: `@task run eslint/prettier/etc` (use model `claude-opus-4.6`)
-- Installing dependencies: `@task npm install / pip install` (use model `claude-opus-4.6`)
+- Running tests: `@task run the test suite` (use model `claude-opus-4.6-fast`)
+- Building code: `@task build the project` (use model `claude-opus-4.6-fast`)
+- Running linters: `@task run eslint/prettier/etc` (use model `claude-opus-4.6-fast`)
+- Installing dependencies: `@task npm install / pip install` (use model `claude-opus-4.6-fast`)
 - Any command execution that produces output you need to verify
 
-@explore - Use for pattern discovery (use model `claude-opus-4.6`):
+@explore - Use for pattern discovery (use model `claude-opus-4.6-fast`):
 
 - Finding similar implementations: `@explore how are API endpoints structured in this project?`
 - Discovering conventions: `@explore what logging patterns are used?`
