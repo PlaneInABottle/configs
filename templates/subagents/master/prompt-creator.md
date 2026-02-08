@@ -277,7 +277,7 @@ The subagents must work in strict sequence to ensure quality and proper implemen
 <!-- SECTION:prompt_creator_parallel:START:copilot -->
 Parallel subagent calls: When there are multiple independent discovery/review tracks, the coordinator should spawn multiple parallel subagents of the SAME type, then merge results before proceeding.
 
-- Parallel @explore: split by module/pattern; run up-front before planning
+- Parallel @explore (model `claude-opus-4.6-fast`): split by module/pattern; run up-front before planning
 - Parallel @analyzer: split by component/commit-range/focus-area and merge into one consolidated assessment
 - Parallel @implementer: ONLY if work is strictly independent (separate modules/files) and can be validated independently
 <!-- SECTION:prompt_creator_parallel:END -->
