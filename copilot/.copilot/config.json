@@ -14,7 +14,7 @@
       "login": "PlaneInABottle"
     }
   ],
-  "model": "claude-haiku-4.5",
+  "model": "claude-sonnet-4.5",
   "render_markdown": true,
   "screen_reader": false,
   "theme": "auto",
@@ -53,8 +53,24 @@
     "https://builders.ikas.com",
     "https://documenter.getpostman.com",
     "https://openrouter.ai",
-    "https://deepwiki.com"
+    "https://deepwiki.com",
+    "https://skills.sh",
+    "https://www.c9083c3c-07d8-49cd-9444-1f24bef4ed29.kozmopath.com",
+    "https://www.twilio.com",
+    "https://guides.rubyonrails.org",
+    "https://www.app.kozmopath.com",
+    "https://app.kozmopath.com",
+    "https://kozmopath-files.fra1.digitaloceanspaces.com",
+    "https://docs.sendgrid.com",
+    "http://localhost:8000",
+    "https://www.lazyvim.org",
+    "https://upstash.com",
+    "https://brandfetch.com",
+    "https://www.ikas.com",
+    "https://cms.ikas.com",
+    "https://ikas.com"
   ],
   "disabled_skills": [],
-  "show_reasoning": false
+  "show_reasoning": false,
+  "experimental": true
 }
