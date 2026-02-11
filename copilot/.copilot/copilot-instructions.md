@@ -72,6 +72,7 @@ Anti-Patterns to Avoid:
 
 4. **Priority order:** Project skills → Context7 docs → Memory (`read_memory`) → General knowledge
 
+
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
 ## Tools
 Skills: Project-specific patterns and workflows. Check available skills FIRST. Load with `skill` tool.

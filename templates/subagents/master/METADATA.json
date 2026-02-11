@@ -33,6 +33,24 @@
     }
   },
   "description": "Master templates for subagent content with configuration",
+  "systems": {
+    "opencode": {
+      "text_replacements": {
+        "ask_user": "question",
+        " (model `claude-opus-4.6-fast`)": "",
+        " (fallback `gpt-5.2-codex`)": ""
+      }
+    },
+    "gemini": {
+      "text_replacements": {
+        "@analyzer": "analyzer",
+        "@planner": "planner",
+        "@implementer": "implementer",
+        "@explore": "explore",
+        "@task": "task"
+      }
+    }
+  },
   "subagents": {
 
     "implementer": {

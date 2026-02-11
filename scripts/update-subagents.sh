@@ -161,16 +161,24 @@ print(re.sub(r"<!-- INCLUDE:(.*?) -->", replace_include, content))
 }
 
 filter_sections_for_system() {
-    # Filter SECTION markers based on target system
+    # Filter SECTION markers based on target system + apply text replacements
     # Supports: all, inclusion (copilot,claude), exclusion (!copilot)
     local system="$1"
     
     python3 -c '
+import json
 import re
 import sys
 
 target_system = sys.argv[1]
+metadata_file = sys.argv[2]
 content = sys.stdin.read()
+
+# Load metadata for text replacements
+with open(metadata_file, "r", encoding="utf-8") as f:
+    metadata = json.load(f)
+
+text_replacements = metadata.get("systems", {}).get(target_system, {}).get("text_replacements", {})
 
 # Pattern to match section markers
 # <!-- SECTION:section_id:START:system1,system2 -->...<!-- SECTION:section_id:END -->
@@ -204,8 +212,12 @@ for match in re.finditer(pattern, content, re.DOTALL):
         # Remove entire section including markers
         result = result.replace(full_match, "")
 
+# Apply text replacements if configured for this system
+for old_text, new_text in text_replacements.items():
+    result = result.replace(old_text, new_text)
+
 print(result, end="")
-' "$system"
+' "$system" "$METADATA_FILE"
 }
 
 generate_header() {

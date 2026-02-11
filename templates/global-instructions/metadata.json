@@ -6,7 +6,12 @@
     "opencode": {
       "requires_header": false,
       "target_file": "opencode/.config/opencode/OPENCODE.md",
-      "description": "Opencode primary system instructions (no header required)"
+      "description": "Opencode primary system instructions (no header required)",
+      "text_replacements": {
+        "ask_user": "question",
+        " (model `claude-opus-4.6-fast`)": "",
+        " (fallback `gpt-5.2-codex`)": ""
+      }
     },
     "copilot": {
       "requires_header": true,
