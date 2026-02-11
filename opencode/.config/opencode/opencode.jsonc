@@ -11,13 +11,25 @@
     "external_directory": "ask",
     "bash": {
       "npm test*": "allow",
+      "find*": "allow",
+      "wc*": "allow",
       "rm *": "ask",
       "*": "ask"
     },
     "edit": {
-      "*.md": "allow",
       "*": "ask"
-    }
+    },
+    "read": "allow",
+    "grep": "allow",
+    "glob": "allow",
+    "list": "allow",
+    "lsp": "allow",
+    "skill": "allow",
+    "todowrite": "allow",
+    "todoread": "allow",
+    "webfetch": "allow",
+    "websearch": "allow",
+    "question": "allow"
   },
   "keybinds": {
     "messages_half_page_up": "ctrl+u",
