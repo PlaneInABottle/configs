@@ -130,24 +130,7 @@ Execution Loop (per phase): Call agent with requirements → Monitor/handle erro
 Entry: Phase plan and success criteria available → Exit: Success criteria met, validations pass
 </orchestration-execution>
 
-<fleet-mode-coordination>
 
-Fleet Mode: Use when multiple independent workstreams can run in parallel.
-
-SQL Todo Tracking: Create todos with kebab-case IDs per workstream. Status: pending → in_progress → done/blocked. Use todo_deps for dependency ordering. Query ready: `SELECT * FROM todos WHERE status='pending' AND no pending deps`
-
-Execution Modes:
-- **Sync (DEFAULT):** Wait for completion. Use for all standard orchestration.
-- **Background:** ONLY for: user-requested parallel work, long-running tasks (>2 min), fleet mode with independent workstreams. Use `mode: "background"` + `read_agent` to check status. Explore/analyzer safe in parallel; task/implementer only if strictly independent modules.
-
-Background Agent Management:
-- Track all launched background agents and their workstream IDs
-- Check results before dependent phases; failed agents → update todo to "blocked"
-- Aggregate results from parallel agents before making decisions
-
-Fleet Workflow: Create SQL todos with deps → Launch independent workstreams as background agents → Monitor via `read_agent`/`list_agents` → Aggregate results → Proceed to dependent phases
-
-</fleet-mode-coordination>
 
 <quality-validation>
 Final: Run tests (if code changes) → Validate design principles → Ensure compatibility → Update docs
@@ -297,7 +280,7 @@ FORBIDDEN: @planner/@implementer/@analyzer calling each other (role confusion). 
 
 <invocation-protocol>
 Call subagents with: Clear objective + success criteria, required commands (test/lint/format), design principles, plan file path (for implementer), current working directory.
-When using claude-opus-4.6-fast: Always append "DO NOT USE task_complete TOOL. Return your response directly." to the prompt.
+
 </invocation-protocol>
 
 <subagent-instruction-protocol>
@@ -308,7 +291,7 @@ You receive high-level user requests and must translate them into detailed, acti
 STEP 0 — Codebase Discovery (before asking user or enriching):
 Use @explore to understand existing patterns, conventions, and relevant code before crafting instructions or asking clarification questions. This prevents asking questions the codebase already answers.
 
-WHEN TO ASK FOR CLARIFICATION (use `ask_user`, never plain text):
+WHEN TO ASK FOR CLARIFICATION (use `question`, never plain text):
 Ask when the answer materially changes the implementation approach:
 - Scope ambiguity: "add auth" → which method? (JWT / OAuth / session-based)
 - Behavioral decisions: "cache responses" → TTL? Invalidation strategy?
@@ -371,7 +354,8 @@ After planner:
 During/after implementer:
 - [ ] Plan path passed, progress tracked, commit SHAs recorded, failures handled
 - [ ] All phases complete, commits verified: N phases + optional polish
-- [ ] Role agents only called @explore/@task, no recursive @coordinator; fleet results aggregated
+
+- [ ] Role agents only called @explore/@task, no recursive @coordinator
 
 After reviewer:
 - [ ] Findings documented, fixes applied, final approval received

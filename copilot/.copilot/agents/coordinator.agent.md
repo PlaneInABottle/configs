@@ -362,6 +362,7 @@ During/after implementer:
 - [ ] All phases complete, commits verified: N phases + optional polish
 - [ ] Role agents only called @explore/@task, no recursive @coordinator; fleet results aggregated
 
+
 After reviewer:
 - [ ] Findings documented, fixes applied, final approval received
 

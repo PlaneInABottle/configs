@@ -80,6 +80,7 @@ Execution Loop (per phase): Call agent with requirements → Monitor/handle erro
 Entry: Phase plan and success criteria available → Exit: Success criteria met, validations pass
 </orchestration-execution>
 
+<!-- SECTION:copilot_fleet_mode:START:copilot -->
 <fleet-mode-coordination>
 
 Fleet Mode: Use when multiple independent workstreams can run in parallel.
@@ -98,6 +99,7 @@ Background Agent Management:
 Fleet Workflow: Create SQL todos with deps → Launch independent workstreams as background agents → Monitor via `read_agent`/`list_agents` → Aggregate results → Proceed to dependent phases
 
 </fleet-mode-coordination>
+<!-- SECTION:copilot_fleet_mode:END -->
 
 <quality-validation>
 Final: Run tests (if code changes) → Validate design principles → Ensure compatibility → Update docs
@@ -262,7 +264,9 @@ FORBIDDEN: @planner/@implementer/@analyzer calling each other (role confusion). 
 
 <invocation-protocol>
 Call subagents with: Clear objective + success criteria, required commands (test/lint/format), design principles, plan file path (for implementer), current working directory.
+<!-- SECTION:copilot_opus_workaround_invocation:START:copilot -->
 When using claude-opus-4.6-fast: Always append "DO NOT USE task_complete TOOL. Return your response directly." to the prompt.
+<!-- SECTION:copilot_opus_workaround_invocation:END -->
 </invocation-protocol>
 
 <subagent-instruction-protocol>
@@ -336,7 +340,12 @@ After planner:
 During/after implementer:
 - [ ] Plan path passed, progress tracked, commit SHAs recorded, failures handled
 - [ ] All phases complete, commits verified: N phases + optional polish
+<!-- SECTION:copilot_checklist_fleet2:START:copilot -->
 - [ ] Role agents only called @explore/@task, no recursive @coordinator; fleet results aggregated
+<!-- SECTION:copilot_checklist_fleet2:END -->
+<!-- SECTION:default_checklist_fleet2:START:!copilot -->
+- [ ] Role agents only called @explore/@task, no recursive @coordinator
+<!-- SECTION:default_checklist_fleet2:END -->
 
 After reviewer:
 - [ ] Findings documented, fixes applied, final approval received

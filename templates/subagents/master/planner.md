@@ -53,8 +53,10 @@ Produce plans that: solve actual requests (not hypotheticals), leverage existing
 - Plan only—no implementation code
 - Use relevant skills
 - Context7: verify libraries/APIs before finalizing assumptions
+<!-- SECTION:copilot_planner_memory:START:copilot -->
 - Memory: `read_memory` to recall, `store_memory` to persist
 - Clarification: `ask_user` when blocked (never plain text)
+<!-- SECTION:copilot_planner_memory:END -->
 - Read before deciding—reference concrete file paths + line numbers
 - Prefer smallest viable change (YAGNI/KISS/DRY)
 - Separate facts (observed) from assumptions
