@@ -14,7 +14,7 @@
       "login": "PlaneInABottle"
     }
   ],
-  "model": "claude-sonnet-4.5",
+  "model": "claude-haiku-4.5",
   "render_markdown": true,
   "screen_reader": false,
   "theme": "auto",
@@ -68,7 +68,11 @@
     "https://brandfetch.com",
     "https://www.ikas.com",
     "https://cms.ikas.com",
-    "https://ikas.com"
+    "https://ikas.com",
+    "https://support.ikas.com",
+    "https://kamatas.myikas.com",
+    "https://api.myikas.com",
+    "https://kamatasaluminyum.com"
   ],
   "disabled_skills": [],
   "show_reasoning": false,
