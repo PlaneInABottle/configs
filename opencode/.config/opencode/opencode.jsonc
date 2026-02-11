@@ -10,11 +10,38 @@
     "doom_loop": "ask",
     "external_directory": "ask",
     "bash": {
-      "npm test*": "allow",
+      "*": "ask",
+      "cat*": "allow",
+      "cargo test*": "allow",
+      "date*": "allow",
+      "echo*": "allow",
+      "file*": "allow",
       "find*": "allow",
+      "git branch*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "git remote*": "allow",
+      "git show*": "allow",
+      "git status*": "allow",
+      "go test*": "allow",
+      "grep*": "allow",
+      "head*": "allow",
+      "less*": "allow",
+      "ls*": "allow",
+      "make*": "allow",
+      "more*": "allow",
+      "npm run*": "allow",
+      "npm test*": "allow",
+      "pwd": "allow",
+      "pytest*": "allow",
+      "rg*": "allow",
+      "tail*": "allow",
+      "tree*": "allow",
+      "type*": "allow",
+      "uname*": "allow",
       "wc*": "allow",
-      "rm *": "ask",
-      "*": "ask"
+      "which*": "allow",
+      "whereis*": "allow"
     },
     "edit": {
       "*": "ask"
@@ -45,6 +72,6 @@
       ],
       "enabled": true,
       "environment": {}
-    },
+    }
   }
 }
