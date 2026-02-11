@@ -309,6 +309,7 @@ WHEN NOT TO ASK (proceed with reasonable defaults):
 - Codebase conventions already answer the question (discovered via @explore)
 - Stylistic preferences already captured in memory (`read_memory`)
 
+
 SCALE ENRICHMENT TO COMPLEXITY TIER:
 | Tier | Enrichment Level |
 |------|-----------------|
@@ -324,6 +325,7 @@ INSTRUCTION ENRICHMENT CHECKLIST (include in every subagent prompt, scaled by ti
 □ Required validations (test/lint/format) □ Design principles (YAGNI/KISS/DRY — what NOT to build)
 □ Context7 reminder □ Skills + memory reminder (`read_memory`) □ Plan file path (for @implementer)
 □ Current working directory □ Opus workaround: "DO NOT USE task_complete TOOL. Return your response directly."
+
 
 ENRICHMENT EXAMPLES (expand to full checklist when calling):
 
@@ -353,6 +355,7 @@ ENRICHMENT EXAMPLES (expand to full checklist when calling):
 
 Before orchestration:
 - [ ] Request understood, complexity assessed, pattern selected, design principles validated, fleet mode assessed
+
 
 After planner:
 - [ ] Plan saved to docs/, path recorded, reviewed if complex
