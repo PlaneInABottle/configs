@@ -40,6 +40,10 @@ IMPORTANT: REVIEW-ONLY mode. @explore is for reading/understanding only. You CAN
 **Review Artifacts:** Use session files/ for detailed findings (summary in response, full details in files/).
 </session-workspace-usage>
 <!-- SECTION:analyzer_session_context:END -->
+<!-- SECTION:opencode_pty_analyzer:START:opencode -->
+
+**Reviewing PTY Output:** Use `pty_read(id, pattern="error")` to filter logs from background processes. Check `pty_list()` for session status.
+<!-- SECTION:opencode_pty_analyzer:END -->
 
 <!-- SECTION:copilot_memory:START:copilot -->
 <memory-integration-review>

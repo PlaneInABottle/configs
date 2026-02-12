@@ -104,6 +104,10 @@ Fleet Workflow: Create SQL todos with deps → Launch independent workstreams as
 
 </fleet-mode-coordination>
 <!-- SECTION:copilot_fleet_mode:END -->
+<!-- SECTION:opencode_pty_coordinator:START:opencode -->
+
+**PTY Session Management:** For long-running servers across phases, use `pty_spawn` in setup, track IDs in session context, monitor with `pty_read`, cleanup with `pty_kill` in final phase.
+<!-- SECTION:opencode_pty_coordinator:END -->
 
 <quality-validation>
 Final: Run tests (if code changes) → Validate design principles → Ensure compatibility → Update docs

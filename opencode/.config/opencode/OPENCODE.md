@@ -121,6 +121,29 @@ When encountering errors:
 
 
 
+## Background Processes (PTY)
+
+Use PTY tools for servers, daemons, or long-running processes that must survive session shutdown.
+
+**Tools:** `pty_spawn`, `pty_write`, `pty_read`, `pty_list`, `pty_kill`
+
+**Examples:**
+```bash
+# Start dev server
+pty_spawn(command="npm run dev", description="Dev Server")
+
+# Read output
+pty_read(id="pty_XXXXXXXX", offset=-50)
+
+# Send Ctrl+C
+pty_write(id="pty_XXXXXXXX", data="\x03")
+
+# Cleanup
+pty_kill(id="pty_XXXXXXXX", cleanup=true)
+```
+
+**Web UI:** Use `/pty-open-background-spy` command for visual log monitoring.
+
 
 ## Subagents
 
