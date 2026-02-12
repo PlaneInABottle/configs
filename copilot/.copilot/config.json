@@ -30,7 +30,8 @@
     "/home/mirza/Documents/Projects/measureApp",
     "/home/mirza/Documents/ultimate/sim-mcp",
     "/home/mirza/Documents/ultimate/sim-priv",
-    "/home/mirza/Documents/ultimate/livekit"
+    "/home/mirza/Documents/ultimate/livekit",
+    "/home/mirza/Documents/ultimate/chat-priv"
   ],
   "allowed_urls": [
     "https://github.com",
@@ -75,7 +76,8 @@
     "https://support.ikas.com",
     "https://kamatas.myikas.com",
     "https://api.myikas.com",
-    "https://kamatasaluminyum.com"
+    "https://kamatasaluminyum.com",
+    "https://opencode.ai"
   ],
   "disabled_skills": [],
   "show_reasoning": true,
