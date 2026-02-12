@@ -14,7 +14,7 @@
       "login": "PlaneInABottle"
     }
   ],
-  "model": "claude-haiku-4.5",
+  "model": "gpt-5.3-codex",
   "render_markdown": true,
   "screen_reader": false,
   "theme": "auto",
@@ -75,6 +75,8 @@
     "https://kamatasaluminyum.com"
   ],
   "disabled_skills": [],
-  "show_reasoning": false,
-  "experimental": true
+  "show_reasoning": true,
+  "experimental": true,
+  "on_air_mode": false,
+  "reasoning_effort": "high"
 }

@@ -1,0 +1,70 @@
+{
+  "locations": {
+    "/Users/Y_ALTAY1/Documents/configs": {
+      "tool_approvals": [
+        {
+          "kind": "mcp",
+          "serverName": "sim-mcp",
+          "toolName": "list_tools"
+        },
+        {
+          "kind": "mcp",
+          "serverName": "sim-mcp",
+          "toolName": "list_workflows"
+        },
+        {
+          "kind": "commands",
+          "commandIdentifiers": [
+            "python3"
+          ]
+        },
+        {
+          "kind": "commands",
+          "commandIdentifiers": [
+            "sed"
+          ]
+        }
+      ]
+    },
+    "/Users/Y_ALTAY1/Documents/simWoot/sim": {
+      "tool_approvals": [
+        {
+          "kind": "mcp",
+          "serverName": "sim-mcp",
+          "toolName": "list_workflows"
+        },
+        {
+          "kind": "mcp",
+          "serverName": "sim-mcp",
+          "toolName": "list_tools"
+        },
+        {
+          "kind": "mcp",
+          "serverName": "sim-mcp",
+          "toolName": "list_custom_tools"
+        },
+        {
+          "kind": "mcp",
+          "serverName": "sim-mcp",
+          "toolName": "get_execution_logs"
+        },
+        {
+          "kind": "mcp",
+          "serverName": "sim-mcp",
+          "toolName": "get_custom_tool"
+        },
+        {
+          "kind": "commands",
+          "commandIdentifiers": [
+            "jq"
+          ]
+        },
+        {
+          "kind": "mcp",
+          "serverName": "sim-mcp",
+          "toolName": "get_execution_log_detail"
+        }
+      ]
+    }
+  }
+}
