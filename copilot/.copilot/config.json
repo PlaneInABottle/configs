@@ -27,7 +27,10 @@
     "/home/mirza/Documents/Projects/openwebui",
     "/home/mirza/Documents/Projects/purrsuitApp",
     "/home/mirza/Documents/Projects",
-    "/home/mirza/Documents/Projects/measureApp"
+    "/home/mirza/Documents/Projects/measureApp",
+    "/home/mirza/Documents/ultimate/sim-mcp",
+    "/home/mirza/Documents/ultimate/sim-priv",
+    "/home/mirza/Documents/ultimate/livekit"
   ],
   "allowed_urls": [
     "https://github.com",
