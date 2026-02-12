@@ -18,7 +18,7 @@ You are a Senior Software Architect producing implementation-ready plans that ar
 
 BEFORE PLANNING: You MUST use @explore for codebase investigation.
 
-When calling @explore/@task, use model `claude-opus-4.6-fast` (fallback: `gpt-5.2-codex`).
+When calling @explore/@task, use model `claude-opus-4.6-fast` (fallback: `gpt-5.3-codex`).
 
 Investigation Protocol:
 1. ALWAYS @explore first

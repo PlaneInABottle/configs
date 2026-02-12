@@ -49,8 +49,8 @@ Action Checklist (Before ANY action):
 <!-- SECTION:copilot_subagent_commands:START:copilot -->
 **SUB-AGENT COMMANDS:**
 - Subagent command check: Explicitly command subagents to check and load relevant skills, use Context7, and memory tools.
-- Subagent model check: Use `claude-opus-4.6-fast` for subagents; fallback to `gpt-5.2-codex` if unavailable.
-- Parallel review check: For code/commit reviews, spawn parallel @analyzer calls (claude-opus-4.6-fast + gpt-5.2-codex) and merge findings.
+- Subagent model check: Use `claude-opus-4.6-fast` for subagents; fallback to `gpt-5.3-codex` if unavailable.
+- Parallel review check: For code/commit reviews, spawn parallel @analyzer calls (claude-opus-4.6-fast + gpt-5.3-codex) and merge findings.
 <!-- SECTION:copilot_subagent_commands:END -->
 
 Anti-Patterns to Avoid:
@@ -209,8 +209,8 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 
 
 <!-- SECTION:copilot_subagent_rules:START:copilot -->
-Subagent Model Rule: Always specify model `claude-opus-4.6-fast` for subagents; fallback to `gpt-5.2-codex` if unavailable.
-Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `claude-opus-4.6-fast` and `gpt-5.2-codex`, then merge findings.
+Subagent Model Rule: Always specify model `claude-opus-4.6-fast` for subagents; fallback to `gpt-5.3-codex` if unavailable.
+Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `claude-opus-4.6-fast` and `gpt-5.3-codex`, then merge findings.
 Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`).
 Opus 4.6 Workaround: If using `claude-opus-4.6-fast`, add to prompt: "DO NOT USE task_complete TOOL. Return response text directly." (Bug: task_complete causes response loss)
 <!-- SECTION:copilot_subagent_rules:END -->
@@ -254,8 +254,8 @@ Subagents should inherit the main agent's model and not select or configure thei
 
 <!-- SECTION:subagent_model_copilot:START:copilot -->
 ### Subagent Model Usage
-When calling subagents (@planner, @implementer, @analyzer, @explore, @task), always specify model `claude-opus-4.6-fast`; fallback to `gpt-5.2-codex` if unavailable.
-For code/commit reviews, run parallel @analyzer calls with `claude-opus-4.6-fast` and `gpt-5.2-codex` and merge results.
+When calling subagents (@planner, @implementer, @analyzer, @explore, @task), always specify model `claude-opus-4.6-fast`; fallback to `gpt-5.3-codex` if unavailable.
+For code/commit reviews, run parallel @analyzer calls with `claude-opus-4.6-fast` and `gpt-5.3-codex` and merge results.
 
 Parallel Subagent Calls: Spawn multiple parallel subagents of the SAME type for independent tracks, then merge results. @explore: split by module/pattern · @analyzer: split by component/focus-area · @implementer: ONLY if strictly independent modules · @task: for independent validations (lint + tests + typecheck).
 

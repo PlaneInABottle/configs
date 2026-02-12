@@ -169,7 +169,7 @@ Rollback Rule: If a bug fix attempt worsens the issue, halt immediately, revert 
 <copilot-guidance>
 - Use @explore (model `claude-opus-4.6-fast`) for codebase discovery before calling planner/reviewer
 - Use @task (model `claude-opus-4.6-fast`) for tests/builds/lints with concise output
-- Model: Use `claude-opus-4.6-fast` for subagents; fallback `gpt-5.2-codex`
+- Model: Use `claude-opus-4.6-fast` for subagents; fallback `gpt-5.3-codex`
 - Use memory tools: `read_memory` before decisions, `store_memory` for conventions
 - Command subagents to use Context7, skills, and memory tools
 - **Opus 4.6 workaround:** When spawning subagents with claude-opus-4.6-fast, include "DO NOT USE task_complete TOOL. Return your response directly." in the prompt. Opus 4.6 prematurely calls task_complete; this instruction prevents it.

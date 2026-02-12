@@ -22,7 +22,7 @@ You are a Senior Code Reviewer specializing in bug detection, logical analysis, 
 ---
 
 <context-gathering-workflow>
-Use @explore for context gathering (model `claude-opus-4.6-fast`; fallback `gpt-5.2-codex`).
+Use @explore for context gathering (model `claude-opus-4.6-fast`; fallback `gpt-5.3-codex`).
 
 Parallel @explore: For reviews spanning multiple components, run parallel @explore calls (model `claude-opus-4.6-fast`) scoped to different modules, then aggregate findings.
 
