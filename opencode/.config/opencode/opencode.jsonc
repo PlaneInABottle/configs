@@ -1,5 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "opencode-pty"
+  ],
   "theme": "synthwave84",
   "autoupdate": true,
   "default_agent": "plan",
@@ -32,6 +35,8 @@
       "more*": "allow",
       "npm run*": "allow",
       "npm test*": "allow",
+      "bun run*": "allow",
+      "bun test*": "allow",
       "pwd": "allow",
       "pytest*": "allow",
       "rg*": "allow",
@@ -56,7 +61,20 @@
     "todoread": "allow",
     "webfetch": "allow",
     "websearch": "allow",
-    "question": "allow"
+    "question": "allow",
+    "sim-mcp_remove_blocks": "ask",
+    "sim-mcp_remove_edge": "ask",
+    "sim-mcp_remove_variable": "ask",
+    "sim-mcp_delete_skill": "ask",
+    "sim-mcp_replace_workflow_state": "ask",
+    "sim-mcp_update_block_name": "ask",
+    "sim-mcp_toggle_block_enabled": "ask",
+    "sim-mcp_update_block_parent": "ask",
+    "sim-mcp_update_subblock": "ask",
+    "sim-mcp_update_subflow": "ask",
+    "sim-mcp_update_skill": "ask",
+    "sim-mcp_execute_workflow": "ask",
+    "sim-mcp_upsert_custom_tools": "ask"
   },
   "keybinds": {
     "messages_half_page_up": "ctrl+u",
@@ -72,6 +90,18 @@
       ],
       "enabled": true,
       "environment": {}
+    },
+    "sim-mcp": {
+      "type": "local",
+      "command": [
+        "node",
+        "/Users/Y_ALTAY1/Documents/simWoot/sim-mcp/dist/index.js",
+        "--server"
+      ],
+      "environment": {
+        "SIM_API_BASE_URL": "",
+        "SIM_API_KEY": ""
+      }
     }
   }
 }
