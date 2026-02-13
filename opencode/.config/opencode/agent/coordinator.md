@@ -282,7 +282,6 @@ FORBIDDEN: @planner/@implementer/@analyzer calling each other (role confusion). 
 
 <invocation-protocol>
 Call subagents with: Clear objective + success criteria, required commands (test/lint/format), design principles, plan file path (for implementer), current working directory.
-
 </invocation-protocol>
 
 <subagent-instruction-protocol>

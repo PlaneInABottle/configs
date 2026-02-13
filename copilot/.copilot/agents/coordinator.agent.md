@@ -127,6 +127,7 @@ Fleet Workflow: Create SQL todos with deps → Launch independent workstreams as
 
 </fleet-mode-coordination>
 
+
 <quality-validation>
 Final: Run tests (if code changes) → Validate design principles → Ensure compatibility → Update docs
 Exit: Tests/linters pass, integration gate satisfied, docs updated
@@ -191,7 +192,6 @@ Rollback Rule: If a bug fix attempt worsens the issue, halt immediately, revert 
 - Model: Use `claude-opus-4.6-fast` for subagents; fallback `gpt-5.3-codex`
 - Use memory tools: `read_memory` before decisions, `store_memory` for conventions
 - Command subagents to use Context7, skills, and memory tools
-- **Opus 4.6 workaround:** When spawning subagents with claude-opus-4.6-fast, include "DO NOT USE task_complete TOOL. Return your response directly." in the prompt. Opus 4.6 prematurely calls task_complete; this instruction prevents it.
 </copilot-guidance>
 
 <phase-gates>
@@ -286,7 +286,6 @@ FORBIDDEN: @planner/@implementer/@analyzer calling each other (role confusion). 
 
 <invocation-protocol>
 Call subagents with: Clear objective + success criteria, required commands (test/lint/format), design principles, plan file path (for implementer), current working directory.
-When using claude-opus-4.6-fast: Always append "DO NOT USE task_complete TOOL. Return your response directly." to the prompt.
 </invocation-protocol>
 
 <subagent-instruction-protocol>
@@ -324,22 +323,22 @@ INSTRUCTION ENRICHMENT CHECKLIST (include in every subagent prompt, scaled by ti
 □ Constraints (existing patterns to follow, files/APIs to use or avoid)
 □ Required validations (test/lint/format) □ Design principles (YAGNI/KISS/DRY — what NOT to build)
 □ Context7 reminder □ Skills + memory reminder (`read_memory`) □ Plan file path (for @implementer)
-□ Current working directory □ Opus workaround: "DO NOT USE task_complete TOOL. Return your response directly."
+□ Current working directory
 
 
 ENRICHMENT EXAMPLES (expand to full checklist when calling):
 
 "add authentication" → @explore existing middleware/routes → Ask auth method →
-  "@planner: Design JWT auth. Existing: [middleware in src/middleware/, routes in src/api/]. Requirements: login/register/logout, auth middleware, hashing. YAGNI: no OAuth/2FA/password reset. Check Context7 for JWT+bcrypt. Load skills; read_memory. Success: plan covers auth flow, token lifecycle, middleware. CWD: /project/root. DO NOT USE task_complete TOOL. Return your response directly."
+  "@planner: Design JWT auth. Existing: [middleware in src/middleware/, routes in src/api/]. Requirements: login/register/logout, auth middleware, hashing. YAGNI: no OAuth/2FA/password reset. Check Context7 for JWT+bcrypt. Load skills; read_memory. Success: plan covers auth flow, token lifecycle, middleware. CWD: /project/root."
 
 "fix the login bug" → Ask symptoms → Route to Diagnostic tier:
-  "@analyzer: Diagnose login failure — 'Invalid credentials' for valid passwords. Investigate: auth middleware, hashing, tokens, DB. Check git log -20 -- src/auth/. Use @explore to trace auth flow. Report: root cause, files, complexity. CWD: /project/root. DO NOT USE task_complete TOOL. Return your response directly."
+  "@analyzer: Diagnose login failure — 'Invalid credentials' for valid passwords. Investigate: auth middleware, hashing, tokens, DB. Check git log -20 -- src/auth/. Use @explore to trace auth flow. Report: root cause, files, complexity. CWD: /project/root."
 
 "make it faster" → Ask what's slow + targets → @analyzer first:
-  "@analyzer: Profile /api/users (2s→<500ms). Find: N+1 queries, missing indexes, algorithms. Check DB query patterns. Report: ranked bottlenecks + impact + complexity. CWD: /project/root. DO NOT USE task_complete TOOL. Return your response directly."
+  "@analyzer: Profile /api/users (2s→<500ms). Find: N+1 queries, missing indexes, algorithms. Check DB query patterns. Report: ranked bottlenecks + impact + complexity. CWD: /project/root."
 
 "add tests" → @explore test framework/patterns → Ask scope →
-  "@implementer: Add unit tests for src/services/payment.ts. Follow tests/ patterns (Jest). Cover: happy/error/edge cases. Check Context7. Validation: npm test passes. YAGNI: unit only. CWD: /project/root. DO NOT USE task_complete TOOL. Return your response directly."
+  "@implementer: Add unit tests for src/services/payment.ts. Follow tests/ patterns (Jest). Cover: happy/error/edge cases. Check Context7. Validation: npm test passes. YAGNI: unit only. CWD: /project/root."
 
 </subagent-instruction-protocol>
 

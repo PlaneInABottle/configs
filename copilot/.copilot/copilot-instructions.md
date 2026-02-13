@@ -169,6 +169,7 @@ bash("npm run dev", mode="async", detach=true)  # Returns shellId
 read_bash(shellId, delay=5)
 ```
 
+
 ## Background Agents & Fleet Mode
 
 **Terminology:** When user says "subagents", they mean sync mode (`@planner`, `@implementer`, `@analyzer` or `task(mode="sync")`). When user says "background agents", they mean async/non-blocking mode (`task(mode="background")`).
@@ -194,7 +195,6 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 Subagent Model Rule: Always specify model `claude-opus-4.6-fast` for subagents; fallback to `gpt-5.3-codex` if unavailable.
 Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `claude-opus-4.6-fast` and `gpt-5.3-codex`, then merge findings.
 Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`).
-Opus 4.6 Workaround: If using `claude-opus-4.6-fast`, add to prompt: "DO NOT USE task_complete TOOL. Return response text directly." (Bug: task_complete causes response loss)
 ### Planner
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions

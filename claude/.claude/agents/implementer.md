@@ -34,6 +34,7 @@ Before proceeding with any task:
 
 
 
+
 <core-responsibilities>
 
 PHASE-BASED EXECUTION: Execute plan phases independently with immediate commits after each phase.
