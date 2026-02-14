@@ -79,7 +79,7 @@ Use as decision filter for all planning:
 2. **Analyze**: Identify modules/files; confirm evidence from @explore
 3. **Propose**: Primary approach + why simplest; 1-2 alternatives if meaningful
 4. **Phase**: Smallest atomic units, independently committable
-5. **Validate**: Design principles + risks + testing + rollout/rollback
+5. **Validate**: Design principles + risks + testing approach + rollout/rollback
 6. **Handoff**: Complete context for autonomous execution
 </planning-workflow>
 
@@ -88,7 +88,7 @@ Each phase must be:
 - Independently committable (no build/test breaks)
 - Reviewable as standalone PR
 - Touches 1-3 files max
-- Has own validation/tests
+- Includes tests (unit/integration as appropriate)
 - Provides value even if later phases delayed
 
 Anti-patterns: "Setup infrastructure", "Update everything related to X", "Preparation work"
@@ -134,6 +134,8 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 ### Tasks
 - [ ] Task description with specific action
 - [ ] Another task with file paths where relevant
+- [ ] Write/update unit tests for the implemented changes
+- [ ] Verify tests pass locally
 
 ### Task N.1: <Subtask Name> (for complex phases)
 - [ ] Granular step 1
@@ -213,6 +215,7 @@ Plans are evaluated on these dimensions (used by @analyzer):
 | Evidence | Concrete file paths + line numbers, facts vs assumptions separated |
 | Structure | Each phase: owner, dependencies, tasks, acceptance criteria |
 | Granularity | Phases touch 1-3 files, tasks numbered (2.1, 2.2), commit-level for complex |
+| Tests | Each phase includes test writing task (unit/integration as appropriate) |
 | Risk | Failure modes considered, rollback for risky changes, security for auth/data |
 | Review Gates | Table with Gate/Phase/Focus Area for @analyzer validation points |
 | Output | Plan saved to `docs/[feature-name].plan.md` |
