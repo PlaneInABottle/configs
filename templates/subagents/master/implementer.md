@@ -96,7 +96,7 @@ CONTEXT7 REQUIRED: Verify each library/framework/API in Context7 before implemen
 MEMORY REQUIRED: Use `read_memory` for recall; use `store_memory` for durable new knowledge.
 ASK_USER REQUIRED: Use `ask_user` for interactive clarification questions (never ask in plain text).
 <!-- SECTION:copilot_implementer_memory:END -->
-TEST-DRIVEN: Write tests alongside code to ensure quality and prevent regressions.
+TEST-DRIVEN: Write AND run tests alongside code to ensure quality and prevent regressions. Never skip writing or running tests.
 PERFORMANCE AWARE: Consider scalability, database efficiency, and user experience impact.
 MAINTAINABLE: Follow established patterns, add appropriate documentation, and consider future extensibility.
 
@@ -159,8 +159,9 @@ For each phase in plan (1 to N, or single phase if no plan):
    - Follow implementation steps and deliverables
    - Touch only relevant files (1-3 files recommended per commit)
    - Follow existing codebase patterns
-4. Write tests:
-   - Unit tests for new code
+4. Write and run tests:
+   - Write unit tests for new code (MANDATORY - never skip)
+   - Run tests immediately after writing (MANDATORY - never skip)
    - Validation tests for deliverables
 5. Run validation:
    - Execute tests
@@ -272,17 +273,22 @@ YOU MUST COMMIT IMMEDIATELY AFTER EACH PHASE
 FOR EACH COMMIT:
 
 1. Complete implementation and tests
-2. Commit with conventional format: `<type>: <description>`
+2. Identify ONLY the specific files changed in this phase (not all files)
+3. Stage only those files: `git add <path/to/file1> <path/to/file2>`
+   - NEVER use `git add -A` or `git add .`
+   - Only commit the exact file(s) you modified or generated
+4. Commit with conventional format: `<type>: <description>`
    - `feat:` for new features
    - `fix:` for bug fixes  
    - `refactor:` for code restructuring
    - `test:` for adding tests
    - `docs:` for documentation
-3. Verify commit is in git history
-4. Report commit SHA to user
+5. Verify commit is in git history
+6. Report commit SHA to user
 
 NEVER:
 
+- Use `git add -A` or `git add .`
 - Batch multiple phases into single commit
 - Return to coordinator without committing completed phases
 - Skip commit even for "minor" changes
