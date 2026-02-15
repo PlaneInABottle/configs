@@ -76,6 +76,7 @@ codex/.codex/skills/
 copilot/.copilot/command-history-state.json
 copilot/.copilot/permissions-config.json
 copilot/.copilot/mcp-config.json
+copilot/.copilot/config.json
 copilot/.copilot/history-session-state/
 copilot/.copilot/logs/
 copilot/.copilot/session-state/
@@ -90,6 +91,9 @@ gemini/.gemini/oauth_creds.json
 gemini/.gemini/mcp-oauth-tokens-v2.json
 gemini/.gemini/settings.json.orig
 gemini/.gemini/tmp/
+
+# Agents - Exclude auto-generated lock files
+agents/.agents/.skill-lock.json
 
 # Backup Files
 backups
