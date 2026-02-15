@@ -90,18 +90,6 @@
       ],
       "enabled": true,
       "environment": {}
-    },
-    "sim-mcp": {
-      "type": "local",
-      "command": [
-        "node",
-        "/Users/Y_ALTAY1/Documents/simWoot/sim-mcp/dist/index.js",
-        "--server"
-      ],
-      "environment": {
-        "SIM_API_BASE_URL": "",
-        "SIM_API_KEY": ""
-      }
     }
   }
 }
