@@ -31,7 +31,8 @@
     "/home/mirza/Documents/ultimate/sim-mcp",
     "/home/mirza/Documents/ultimate/sim-priv",
     "/home/mirza/Documents/ultimate/livekit",
-    "/home/mirza/Documents/ultimate/chat-priv"
+    "/home/mirza/Documents/ultimate/chat-priv",
+    "/home/mirza/Documents/ultimate/voiceWith"
   ],
   "allowed_urls": [
     "https://github.com",
@@ -77,7 +78,8 @@
     "https://kamatas.myikas.com",
     "https://api.myikas.com",
     "https://kamatasaluminyum.com",
-    "https://opencode.ai"
+    "https://opencode.ai",
+    "https://docs.pytest.org"
   ],
   "disabled_skills": [],
   "show_reasoning": true,
