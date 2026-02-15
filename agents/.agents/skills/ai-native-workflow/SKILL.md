@@ -16,6 +16,11 @@ Guide for establishing and maintaining AI-managed development workflows across a
 - **Optimizing workflow:** Want to improve AI collaboration
 - **Creating skills:** Discovered a pattern worth codifying
 
+## Related Skills Reference
+
+This workflow references these specialized skills:
+- **pexels-media**: Source royalty-free images/videos from Pexels API (load with `skill` tool when needed)
+
 ## The 5 Phases
 
 | # | Phase | Goal | Key Deliverable |
@@ -154,10 +159,19 @@ Everything works?
   - Database access
   - File system operations
   - Browser automation (`agent-browser` for frontend verification)
+  - Asset sourcing via `pexels-media` skill (images, videos for UI/content)
 - [ ] Test CRUD operations through each interface (Create, Read, Update, Delete)
 - [ ] Verify execution capabilities (run workflows, read logs, diagnose failures, apply fixes)
 - [ ] Confirm monitoring access (logs, metrics, error detection)
 - [ ] Verify real-time UI sync (programmatic changes reflect immediately)
+- [ ] Source assets with `pexels-media` skill when building UI features:
+  ```bash
+  # Load the pexels-media skill, then request images for your feature
+  # The skill handles search, download, and sidecar metadata generation
+  # Example: sourcing a hero image during feature implementation
+  # → Search for relevant imagery → Download preferred resolution
+  # → Sidecar .meta.json created automatically for attribution
+  ```
 - [ ] Validate frontend behavior with `agent-browser`:
   ```bash
   # Verify a programmatic change reflects in the UI
@@ -190,6 +204,8 @@ Make change → Run tests → Pass? Proceed. Fail? Fix immediately.
 - Add tests for new functionality (including edge cases)
 - Tests are the primary safety net for AI-driven changes
 - Use `agent-browser` for frontend regression checks after UI changes
+- Track media assets alongside code: version sidecar metadata files (`.meta.json`) with commits
+- Reference `pexels-media` sidecar files for asset audit trails and attribution compliance
 
 **Frontend Verification Loop:**
 ```
@@ -303,6 +319,64 @@ agent-browser get text @e3              # Check output content
 # Capture visual proof
 agent-browser screenshot
 ```
+
+## Media & Asset Sourcing: Pexels Integration
+
+**Goal:** Provide AI agents with standardized access to royalty-free images and videos for UI development, design assets, and content generation.
+
+> **This integration is optional but recommended for any project involving UI or design work.**
+
+### When to Use pexels-media
+
+| Scenario | Use pexels-media? | Why |
+|----------|-------------------|-----|
+| UI placeholder images during development | ✅ Yes | Realistic placeholders improve design feedback |
+| Hero images for landing pages | ✅ Yes | High-quality, royalty-free, attribution-tracked |
+| Design assets for mockups/prototypes | ✅ Yes | Fast sourcing with consistent metadata |
+| Content generation (blog posts, docs) | ✅ Yes | Relevant imagery with sidecar metadata |
+| Proprietary brand imagery | ❌ No | Use brand asset library instead |
+| Licensed/copyrighted content | ❌ No | Pexels is royalty-free only |
+| Icons or vector graphics | ❌ No | Use icon libraries (e.g., Lucide, Heroicons) |
+| AI-generated imagery | ❌ No | Use image generation tools instead |
+
+### Integration Pattern
+
+Load the `pexels-media` skill when you need image/video assets:
+
+1. **Load the skill:** Use the `skill` tool to load `pexels-media`
+2. **Configure credentials:** Ensure `PEXELS_API_KEY` is set in `.env.pexels`
+3. **Search and download:** The skill handles search, resolution selection, and download
+4. **Sidecar metadata:** Every asset gets a `.meta.json` file automatically with attribution, source URL, and license info
+
+### Example Workflow (Phase 4–5)
+
+```
+Building a feature with UI components:
+  1. Implement feature code (Phase 4)
+  2. Identify image needs (hero banner, thumbnails, backgrounds)
+  3. Load pexels-media skill
+  4. Search for relevant imagery → Download preferred resolution
+  5. Sidecar .meta.json created automatically
+  6. Reference images in code → Run tests → Browser verify
+  7. Commit code + assets + sidecar metadata together
+```
+
+### Asset Management Best Practices
+
+- [ ] Store downloaded assets in a consistent directory (e.g., `public/assets/`, `static/images/`)
+- [ ] Always commit sidecar `.meta.json` files alongside assets for attribution tracking
+- [ ] Use descriptive filenames from the skill output (not generic `image1.jpg`)
+- [ ] Review sidecar metadata for license compliance before production deployment
+- [ ] Version assets with code: asset changes should be part of feature commits
+- [ ] Use `pexels-media` curated/popular endpoints for high-quality defaults
+
+### Checklist
+
+- [ ] `PEXELS_API_KEY` configured in `.env.pexels`
+- [ ] Asset output directory established and documented
+- [ ] Sidecar metadata files committed to version control
+- [ ] Attribution requirements reviewed for production use
+- [ ] Assets referenced in code with correct paths
 
 ## Verification Workflows
 
@@ -449,6 +523,7 @@ How `agent-browser` fits into each phase of the workflow:
 | Parallel agents for analysis | Spawn multiple explorers for independent areas |
 | Re-snapshot after navigation | Refs invalidate on page change; always get fresh refs |
 | Screenshot at checkpoints | Visual proof of state for debugging and audit |
+| Use pexels-media for image assets | Standardized sourcing, sidecar metadata, attribution compliance |
 
 ## Anti-Patterns
 
