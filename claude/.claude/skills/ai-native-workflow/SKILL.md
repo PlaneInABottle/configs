@@ -127,10 +127,17 @@ Everything works?
 - [ ] Test detached mode: services survive session boundaries
 - [ ] Test full lifecycle: `Start → Verify → Use → Restart → Verify → Stop → Verify stopped`
 - [ ] Test edge cases: port conflicts, migration needed, stale containers, missing env vars
+- [ ] Verify frontend rendering with `agent-browser`:
+  ```bash
+  agent-browser open http://localhost:3000
+  agent-browser snapshot -i          # Verify interactive elements render
+  agent-browser screenshot           # Capture visual state for review
+  ```
 
 ### Verification
 
 > Can the AI agent recover from failures without human intervention?
+> Can the AI agent verify the frontend loads and renders correctly?
 
 🎯 **Skill Checkpoint:** Update your runtime skill with failure modes hit during verification. A skill that only covers the happy path is incomplete.
 
@@ -146,14 +153,25 @@ Everything works?
   - CLI commands
   - Database access
   - File system operations
+  - Browser automation (`agent-browser` for frontend verification)
 - [ ] Test CRUD operations through each interface (Create, Read, Update, Delete)
 - [ ] Verify execution capabilities (run workflows, read logs, diagnose failures, apply fixes)
 - [ ] Confirm monitoring access (logs, metrics, error detection)
 - [ ] Verify real-time UI sync (programmatic changes reflect immediately)
+- [ ] Validate frontend behavior with `agent-browser`:
+  ```bash
+  # Verify a programmatic change reflects in the UI
+  agent-browser open http://localhost:3000/feature
+  agent-browser snapshot -i
+  agent-browser click @e1               # Interact with the new feature
+  agent-browser wait --load networkidle
+  agent-browser snapshot -i              # Confirm updated state
+  ```
 
 ### Verification
 
 > Can the AI agent build a complete feature end-to-end without human intervention?
+> Can the AI agent verify that backend changes appear correctly in the frontend?
 
 🎯 **Skill Checkpoint:** Create a skill for programmatic operations — document tool inventory, common patterns, error handling, and workarounds.
 
@@ -171,6 +189,16 @@ Make change → Run tests → Pass? Proceed. Fail? Fix immediately.
 - Fix broken tests immediately (don't batch)
 - Add tests for new functionality (including edge cases)
 - Tests are the primary safety net for AI-driven changes
+- Use `agent-browser` for frontend regression checks after UI changes
+
+**Frontend Verification Loop:**
+```
+Make UI change → Run unit tests → Browser verify → Pass? Proceed. Fail? Fix immediately.
+```
+- After frontend changes, verify visually with `agent-browser`
+- Check interactive elements still work (forms, buttons, navigation)
+- Screenshot before/after for visual regression tracking
+- Re-snapshot after every navigation or DOM mutation
 
 **Structured Debugging:**
 1. Read error message + stack trace
@@ -224,18 +252,203 @@ Make change → Run tests → Pass? Proceed. Fail? Fix immediately.
 - **Keep skills focused** — `deployment-staging`, `deployment-production`, `deployment-rollback`
 - **Update continuously** — when process changes, failure reveals gap, or better approach found
 
+## Frontend Development & Testing
+
+**Goal:** Enable AI agents to develop, test, and verify frontend features using browser automation.
+
+### When to Use agent-browser
+
+| Scenario | Tool | Why |
+|----------|------|-----|
+| Unit logic (pure functions, state) | Jest/Vitest/etc. | Fast, deterministic, no browser needed |
+| Component rendering | Testing library | Lightweight DOM assertions |
+| User flow verification | `agent-browser` | Real browser, real interactions, real results |
+| Visual regression | `agent-browser screenshot` | Capture and compare visual state |
+| Form/auth flow testing | `agent-browser` | Fill, submit, verify redirect and state |
+| Cross-page navigation | `agent-browser` | Follow links, verify routing works |
+
+### Development Workflow
+
+```
+1. Implement feature (code changes)
+2. Run unit tests (fast feedback)
+3. Start dev server (detached shell)
+4. Browser verify with agent-browser (real user simulation)
+5. Fix issues found → repeat from step 2
+6. Screenshot final state for records
+```
+
+### Example: Verify a New Feature End-to-End
+
+```bash
+# Start the dev server (detached so it persists)
+npm run dev &
+
+# Navigate to the feature
+agent-browser open http://localhost:3000/new-feature
+
+# Inspect what's rendered
+agent-browser snapshot -i
+# Output: @e1 [input type="text"] "Name", @e2 [button] "Submit", @e3 [div] "Results"
+
+# Interact like a real user
+agent-browser fill @e1 "Test Input"
+agent-browser click @e2
+agent-browser wait --load networkidle
+
+# Verify the result
+agent-browser snapshot -i
+agent-browser get text @e3              # Check output content
+
+# Capture visual proof
+agent-browser screenshot
+```
+
+## Verification Workflows
+
+**Goal:** Use `agent-browser` to confirm features work from the user's perspective, not just pass tests.
+
+### Pattern: Post-Deploy Verification
+
+```bash
+# After deploying a change, verify it works in the running app
+agent-browser open http://localhost:3000
+agent-browser snapshot -i
+
+# Check critical elements exist
+agent-browser get text @e1              # Verify heading text
+agent-browser click @e2                 # Navigate to key page
+agent-browser wait --load networkidle
+agent-browser snapshot -i               # Re-snapshot after navigation
+
+# Screenshot for audit trail
+agent-browser screenshot --full
+```
+
+### Pattern: Form Submission Verification
+
+```bash
+# Verify a form works end-to-end
+agent-browser open http://localhost:3000/contact
+agent-browser snapshot -i
+
+# Fill and submit
+agent-browser fill @e1 "Test User"
+agent-browser fill @e2 "test@example.com"
+agent-browser fill @e3 "This is a test message"
+agent-browser click @e4                 # Submit button
+agent-browser wait --load networkidle
+
+# Verify success state
+agent-browser snapshot -i
+agent-browser get text body             # Check for success message
+```
+
+### Pattern: Auth Flow Verification
+
+```bash
+# Verify login → protected page → logout cycle
+agent-browser open http://localhost:3000/login
+agent-browser snapshot -i
+agent-browser fill @e1 "$TEST_USER"
+agent-browser fill @e2 "$TEST_PASS"
+agent-browser click @e3
+agent-browser wait --url "**/dashboard"
+
+# Verify protected content loads
+agent-browser snapshot -i
+agent-browser get title                 # Should be "Dashboard"
+
+# Save auth state for reuse in other tests
+agent-browser state save test-auth.json
+```
+
+### Pattern: Error State Verification
+
+```bash
+# Verify error handling works correctly
+agent-browser open http://localhost:3000/form
+agent-browser snapshot -i
+agent-browser click @e5                 # Submit empty form
+agent-browser wait 1000
+
+# Check validation errors appear
+agent-browser snapshot -i               # Should show error messages
+agent-browser get text @e6              # Read error text
+```
+
+## Browser Automation Integration by Phase
+
+How `agent-browser` fits into each phase of the workflow:
+
+| Phase | agent-browser Usage | Example |
+|-------|-------------------|---------|
+| 1 — Runtime Setup | Not typically needed | — |
+| 2 — Skill Creation | Document browser test patterns | Add verification commands to skill |
+| 3 — Implementation & Verification | Verify frontend renders after setup | `open` → `snapshot` → `screenshot` |
+| 4 — Programmatic Operations | Validate UI reflects API/data changes | Change data → browser verify → confirm |
+| 5 — Continuous Iteration | Frontend regression checks after changes | Test flows after every UI change |
+
+### Integration Checklist
+
+- [ ] Dev server starts in detached mode before browser tests
+- [ ] `agent-browser` is available in the environment
+- [ ] Test URLs are known and documented in skills
+- [ ] Auth credentials for test accounts are available (env vars, not hardcoded)
+- [ ] Screenshots are saved to a consistent location for review
+- [ ] Refs are re-snapshotted after every navigation or DOM change
+
+## Testing Best Practices with AI Agents
+
+### Test Pyramid for AI-Managed Development
+
+```
+         ╱  Browser Tests  ╲        ← agent-browser (few, critical paths)
+        ╱  Integration Tests ╲       ← API + DB tests (moderate count)
+       ╱    Unit Tests        ╲      ← Fast, many, run after every change
+```
+
+- **Unit tests** run after every code change (fast, deterministic)
+- **Integration tests** run after feature completion (API, DB, services)
+- **Browser tests** run for user-facing flows (forms, auth, navigation)
+
+### Patterns That Work
+
+| Pattern | Description |
+|---------|-------------|
+| Smoke test after startup | `agent-browser open` + `snapshot` to confirm app loads |
+| Screenshot before/after | Capture visual state before and after changes |
+| Re-snapshot after interaction | Always `snapshot -i` after clicks, fills, or navigation |
+| State persistence for auth | `state save` / `state load` to avoid repeated logins |
+| Scoped snapshots | `snapshot -s "#component"` to focus on specific areas |
+| Wait for network | `wait --load networkidle` before asserting state |
+
+### Patterns to Avoid
+
+| Anti-Pattern | Why | Do Instead |
+|-------------|-----|------------|
+| Browser test for logic | Slow, flaky | Unit test pure logic |
+| Stale refs after navigation | Refs invalidate on DOM change | Re-snapshot after every interaction |
+| Hardcoded credentials | Security risk | Use env vars: `$TEST_USER` |
+| No waits between actions | Race conditions | `wait --load networkidle` or `wait @element` |
+| Testing everything in browser | Slow test suite | Reserve for critical user flows |
+| Skipping screenshots | Lose visual context | Screenshot at verification points |
+
 ## Best Practices Summary
 
 | Practice | Why |
 |----------|-----|
 | Skill-first approach | Document before automating; skills are cheaper than code |
 | Test continuously | Unit tests after every code change; tests are guardrails |
+| Browser verify critical flows | `agent-browser` catches what unit tests miss |
 | Inspect state | Read errors, don't guess; use verbose logging |
 | Iterate rapidly | Small focused changes, test immediately, commit often |
 | Build reusable skills | Every discovery codified saves 30+ min on reuse |
 | Detached shells for servers | Attached shells die with session |
 | Health checks over log parsing | HTTP endpoints are faster and more reliable |
 | Parallel agents for analysis | Spawn multiple explorers for independent areas |
+| Re-snapshot after navigation | Refs invalidate on page change; always get fresh refs |
+| Screenshot at checkpoints | Visual proof of state for debugging and audit |
 
 ## Anti-Patterns
 
@@ -251,6 +464,10 @@ Make change → Run tests → Pass? Proceed. Fail? Fix immediately.
 | Batch changes without testing | Test after each change |
 | Defer skill creation | Create during development |
 | Fix symptoms | Trace to root cause |
+| Use stale refs after navigation | Re-snapshot to get fresh `@e` refs |
+| Browser test pure logic | Use unit tests for non-UI logic |
+| Hardcode test credentials | Use environment variables |
+| Skip browser verification for UI | `agent-browser` catches rendering issues |
 
 ---
 
