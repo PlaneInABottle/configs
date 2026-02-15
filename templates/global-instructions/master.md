@@ -95,6 +95,11 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | Add authentication | Load `security-patterns/authentication` skill |
 | API changes | Load `api-guidelines` skill |
 | Code review | Load `code-review` skill |
+| Frontend/UI development | Load `ai-native-workflow` skill (frontend testing sections) |
+| Browser automation / E2E testing | Load `agent-browser` skill |
+| Visual regression / UI validation | Load `agent-browser` + `ai-native-workflow` skills |
+| Component testing (React, Vue, etc.) | Load `ai-native-workflow` skill |
+| New project setup / workflow design | Load `ai-native-workflow` skill |
 | Multiple concerns | Load ALL matching skills, combine guidance |
 
 CHECK if relevant skills are already loaded → LOAD every matching skill → COMBINE guidance → FOLLOW skill instructions over general knowledge.
