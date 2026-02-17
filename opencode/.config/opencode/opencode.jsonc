@@ -40,6 +40,7 @@
       "pwd": "allow",
       "pytest*": "allow",
       "rg*": "allow",
+      "sed -n*": "allow",
       "tail*": "allow",
       "tree*": "allow",
       "type*": "allow",

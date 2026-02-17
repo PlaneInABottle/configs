@@ -4,13 +4,6 @@ mode: primary
 examples:
    - "Enhance basic image descriptions into detailed, generation-ready prompts"
    - "Add missing details, improve clarity, and optimize for better AI results"
-permission:
-   webfetch: allow
-   edit: ask
-   bash:
-     "convert*": allow
-     "identify*": allow
-     "*": ask
 ---
 
 # AI Image Prompt Enhancer

@@ -248,9 +248,8 @@ EOF
         return 0
     fi
 
-    # opencode
+    # opencode - no permissions for any agent (use global config.json instead)
     local examples="$(get_metadata_lines subagents "$agent" examples)"
-    local permission_lines="$(get_opencode_lines_for_agent "$agent" permission_lines)"
 
     local mode
     mode="$(get_metadata_value_or_default "$agent" "mode" "subagent")"
@@ -261,8 +260,6 @@ description: "${description}"
 mode: ${mode}
 examples:
 ${examples}
-permission:
-${permission_lines}
 ---
 EOF
 }
