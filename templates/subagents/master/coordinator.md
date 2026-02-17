@@ -126,7 +126,7 @@ Every subagent command must include:
 4) Context7 verification requirement
 5) Skills-loading requirement
 6) Memory requirement (if copilot)
-7) File/path constraints + cwd
+7) File/path constraints
 8) Expected output format (status, evidence, artifacts)
 Model policy: claude-opus-4.6-fast (fallback gpt-5.3-codex).
 </subagent-command-requirements>
@@ -138,13 +138,12 @@ Model policy: claude-opus-4.6-fast (fallback gpt-5.3-codex).
 </agent-command-checklists>
 
 <delegation-prompt-skeleton>
-Command @&lt;agent&gt; to: &lt;objective&gt;
-Scope: &lt;in/out&gt;
-Constraints: &lt;patterns/files/apis&gt;
+Command @<agent> to: <objective>
+Scope: <in/out>
+Constraints: <patterns/files/apis>
 Requirements: include all items from <subagent-command-requirements>
-Validation: &lt;commands/tests&gt;
-Deliverable: &lt;artifact + format&gt;
-CWD: &lt;path&gt;
+Validation: <commands/tests>
+Deliverable: <artifact + format>
 </delegation-prompt-skeleton>
 
 <subagent-instruction-protocol>
@@ -166,7 +165,7 @@ WHEN NOT TO ASK:
 SCALE ENRICHMENT TO COMPLEXITY TIER:
 | Tier | Enrichment Level |
 |------|-----------------|
-| Simple | Objective + validations + cwd |
+| Simple | Objective + validations |
 | Standard | Full command requirements checklist |
 | Complex/Major | Full checklist + explicit constraints + architecture context |
 | Diagnostic | Symptoms + investigation scope + reporting format |
@@ -343,7 +342,7 @@ FORBIDDEN: @planner/@implementer/@analyzer calling each other (role confusion). 
 </primary-agent-status>
 
 <invocation-protocol>
-Call subagents with: Clear objective + success criteria, required commands (test/lint/format), design principles, plan file path (for implementer), current working directory.
+Call subagents with: Clear objective + success criteria, required commands (test/lint/format), design principles, plan file path (for implementer).
 </invocation-protocol>
 
 <subagent-workflows>
@@ -363,7 +362,7 @@ Before orchestration:
 <!-- SECTION:default_checklist_fleet1:START:!copilot -->
 - [ ] Request understood, complexity assessed, pattern selected, design principles validated
 <!-- SECTION:default_checklist_fleet1:END -->
-- [ ] Subagent command completeness verified before delegation (objective/scope/validation/outputs/cwd)
+- [ ] Subagent command completeness verified before delegation (objective/scope/validation/outputs)
 
 After planner:
 - [ ] Plan saved to docs/, path recorded, reviewed if complex
