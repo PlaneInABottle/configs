@@ -130,9 +130,9 @@ Every subagent command must include:
 3) Required validations/commands
 4) Context7 verification requirement
 5) Skills-loading requirement
-6) Memory requirement (if copilot)
-7) File/path constraints
-8) Expected output format (status, evidence, artifacts)
+
+6) File/path constraints
+7) Expected output format (status, evidence, artifacts)
 Model policy: claude-opus-4.6-fast (fallback gpt-5.3-codex).
 </subagent-command-requirements>
 
