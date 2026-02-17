@@ -35,7 +35,7 @@ Follow global Skills-First workflow; include skill-loading requirement in every 
 
 INPUT: User request and project context → OUTPUT: Task breakdown with agent assignments
 
-Steps: Parse request → Assess complexity tier → Decompose into phases → Match to agents → Define success criteria → Context7 Gate (verify libraries/APIs) → Skills Gate (load relevant skills)
+Steps: Parse request → Assess complexity tier → Decompose into phases → Match to agents → Define success criteria → Define validation commands
 
 <complexity-tiers>
 | Tier | Criteria | Pattern |
@@ -80,7 +80,7 @@ Model policy: claude-opus-4.6-fast (fallback gpt-5.3-codex).
 Command @&lt;agent&gt; to: &lt;objective&gt;
 Scope: &lt;in/out&gt;
 Constraints: &lt;patterns/files/apis&gt;
-Requirements: Context7 + skills (+ memory if applicable)
+Requirements: include all items from <subagent-command-requirements>
 Validation: &lt;commands/tests&gt;
 Deliverable: &lt;artifact + format&gt;
 CWD: &lt;path&gt;
@@ -127,22 +127,9 @@ Entry: Phase plan and success criteria available → Exit: Success criteria met,
 
 <!-- SECTION:copilot_fleet_mode:START:copilot -->
 <fleet-mode-coordination>
-
-Fleet Mode: Use when multiple independent workstreams can run in parallel.
-
-SQL Todo Tracking: Create todos with kebab-case IDs per workstream. Status: pending → in_progress → done/blocked. Use todo_deps for dependency ordering. Query ready: `SELECT * FROM todos WHERE status='pending' AND no pending deps`
-
-Execution Modes:
-- **Sync (DEFAULT):** Wait for completion. Use for all standard orchestration.
-- **Background:** ONLY for: user-requested parallel work, long-running tasks (>2 min), fleet mode with independent workstreams. Use `mode: "background"` + `read_agent` to check status. Explore/analyzer safe in parallel; task/implementer only if strictly independent modules.
-
-Background Agent Management:
-- Track all launched background agents and their workstream IDs
-- Check results before dependent phases; failed agents → update todo to "blocked"
-- Aggregate results from parallel agents before making decisions
-
-Fleet Workflow: Create SQL todos with deps → Launch independent workstreams as background agents → Monitor via `read_agent`/`list_agents` → Aggregate results → Proceed to dependent phases
-
+Use only for independent workstreams.
+Steps: define workstreams + dependencies → launch eligible background agents → monitor → aggregate results → continue dependent phases.
+Do not use for coupled code paths requiring shared mutable context.
 </fleet-mode-coordination>
 <!-- SECTION:copilot_fleet_mode:END -->
 <!-- SECTION:opencode_pty_coordinator:START:opencode -->
@@ -209,16 +196,6 @@ Rollback Rule: If a bug fix attempt worsens the issue, halt immediately, revert 
 </orchestration-patterns>
 
 <quality-framework>
-
-<!-- SECTION:copilot_guidance:START:copilot -->
-<copilot-guidance>
-- Use @explore (model `claude-opus-4.6-fast`) for codebase discovery before calling planner/reviewer
-- Use @task (model `claude-opus-4.6-fast`) for tests/builds/lints with concise output
-- Model: Use `claude-opus-4.6-fast` for subagents; fallback `gpt-5.3-codex`
-- Use memory tools: `read_memory` before decisions, `store_memory` for conventions
-- Command subagents to use Context7, skills, and memory tools
-</copilot-guidance>
-<!-- SECTION:copilot_guidance:END -->
 
 <phase-gates>
 - Planning Gate: Plan validates YAGNI/KISS/DRY compliance, is implementable
@@ -343,7 +320,7 @@ After reviewer:
 - [ ] Findings documented, fixes applied, final approval received
 
 Before completion:
-- [ ] Quality gates passed, commits tracked, integration gate satisfied, Context7 verified, user notified
+- [ ] Quality gates passed, commits tracked, integration gate satisfied, user notified
 
 Escalate: 3+ failure cycles, arch flaws, unclear specs, security issues, perf problems, blocking deps
 
