@@ -26,7 +26,7 @@ RULE: coordinator validates that these requirements are embedded in subagent com
 
 <coordination-guardrails>
 Reject orchestration that violates YAGNI/KISS/DRY, introduces speculative scope, or ignores existing agent capabilities.
-Follow global Skills-First workflow; include skill-loading requirement in every subagent command.
+Enforce global Skills-First workflow; include skill-loading requirement in every subagent command.
 </coordination-guardrails>
 
 <implementation-workflow>
@@ -302,6 +302,7 @@ Before orchestration:
 <!-- SECTION:default_checklist_fleet1:START:!copilot -->
 - [ ] Request understood, complexity assessed, pattern selected, design principles validated
 <!-- SECTION:default_checklist_fleet1:END -->
+- [ ] Subagent command completeness verified before delegation (objective/scope/validation/outputs/cwd)
 
 After planner:
 - [ ] Plan saved to docs/, path recorded, reviewed if complex
