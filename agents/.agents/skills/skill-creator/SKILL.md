@@ -54,10 +54,10 @@ Think of an AI assistant as exploring a path: a narrow bridge with cliffs needs 
 
 <anatomy-of-a-skill>
 
-Every skill consists of a required SKILL.md file and optional bundled resources:
+Every skill consists of a required SKILL.md file and optional bundled resources. All skills are organized under `.agents/skills/`:
 
 ```
-skill-name/
+.agents/skills/skill-name/
 ├── SKILL.md (required)
 │   ├── YAML frontmatter metadata (required)
 │   │   ├── name: (required)
@@ -261,7 +261,7 @@ Example: When building a `pdf-editor` skill to handle queries like "Help me rota
 Example: When designing a `frontend-webapp-builder` skill for queries like "Build me a todo app" or "Build me a dashboard to track my steps," the analysis shows:
 
 1. Writing a frontend webapp requires the same boilerplate HTML/React each time
-2. An `assets/hello-world/` template containing the boilerplate HTML/React project files would be helpful to store in the skill
+2. An `assets/hello-world/` template in `.agents/skills/frontend-webapp-builder/assets/hello-world/` containing the boilerplate HTML/React project files would be helpful to store in the skill
 
 Example: When building a `big-query` skill to handle queries like "How many users have logged in today?" the analysis shows:
 
@@ -269,6 +269,21 @@ Example: When building a `big-query` skill to handle queries like "How many user
 2. A `references/schema.md` file documenting the table schemas would be helpful to store in the skill
 
 To establish the skill's contents, analyze each concrete example to create a list of the reusable resources to include: scripts, references, and assets.
+
+### Skill Directory Structure
+
+All skills in your project are stored under `.agents/skills/` for centralized management and discovery:
+
+```
+.agents/
+└── skills/
+    ├── ai-native-workflow/
+    ├── agent-browser/
+    ├── my-new-skill/         ← Your new skill goes here
+    └── ...
+```
+
+When creating a new skill, use `init_skill.py` with `--path ./.agents/skills` to automatically place it in the correct location.
 
 </step-2-planning-the-reusable-skill-contents>
 
@@ -284,16 +299,20 @@ When creating a new skill from scratch, always run the `init_skill.py` script. T
 
 Usage:
 
+To create a skill in the standard location (.agents/skills/):
+
 ```bash
-scripts/init_skill.py <skill-name> --path <output-directory>
+scripts/init_skill.py <skill-name> --path ./.agents/skills
 ```
 
 The script:
 
-- Creates the skill directory at the specified path
+- Creates the skill directory under .agents/skills/
 - Generates a SKILL.md template with proper frontmatter and TODO placeholders
 - Creates example resource directories: `scripts/`, `references/`, and `assets/`
 - Adds example files in each directory that can be customized or deleted
+
+Skills should be created under .agents/skills/ for consistency and centralized management.
 
 After initialization, customize or remove the generated SKILL.md and example files as needed.
 
