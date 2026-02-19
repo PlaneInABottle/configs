@@ -91,6 +91,9 @@ gemini/.gemini/oauth_creds.json
 gemini/.gemini/mcp-oauth-tokens-v2.json
 gemini/.gemini/settings.json.orig
 gemini/.gemini/tmp/
+gemini/.gemini/trustedFolders.json
+gemini/.gemini/history/
+gemini/.gemini/projects.json
 
 # Agents - Exclude auto-generated lock files
 agents/.agents/.skill-lock.json
