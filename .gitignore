@@ -73,6 +73,9 @@ codex/.codex/version.json
 codex/.codex/skills/
 
 # Copilot CLI - Exclude runtime state and logs
+copilot/.copilot/session-store.db
+copilot/.copilot/session-store.db-shm
+copilot/.copilot/session-store.db-wal
 copilot/.copilot/command-history-state.json
 copilot/.copilot/permissions-config.json
 copilot/.copilot/mcp-config.json
