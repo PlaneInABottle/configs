@@ -60,6 +60,7 @@ Anti-Patterns to Avoid:
 - Over-Abstraction: Creating unnecessary layers for simple operations
 - NIH Syndrome: "Not Invented Here" - building instead of reusing
 - Premature Optimization: Optimizing without performance issues
+- Large Batch Edit: Writing entire files or multiple functions/classes in a single edit action; always implement one function/method/class at a time
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:

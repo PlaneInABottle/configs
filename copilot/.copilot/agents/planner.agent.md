@@ -116,6 +116,7 @@ Each phase must be:
 - Touches 1-3 files max
 - Includes tests (unit/integration as appropriate)
 - Provides value even if later phases delayed
+- For complex phases, break tasks to function/class level: e.g., Task 1.1: implement `calculate_total()`, Task 1.2: implement `validate_input()`
 
 Anti-patterns: "Setup infrastructure", "Update everything related to X", "Preparation work"
 Good: "Add user model with basic fields", "Update auth endpoint for email validation"
@@ -205,7 +206,7 @@ Plans are evaluated on these dimensions (used by @analyzer):
 | Criterion | Poor | Good |
 |-----------|------|------|
 | **Clarity** | Vague tasks, missing files | Specific files, line numbers, concrete steps |
-| **Granularity** | "Update all related files" | Task 2.1, 2.2 with distinct deliverables |
+| **Granularity** | "Update all related files" | Task 2.1, 2.2 with distinct deliverables; complex phases scoped to single function/class per task |
 | **Testability** | "Works correctly" | "llm_usage_logs has 4+ records" |
 | **Dependencies** | Implicit ordering | Explicit "Phase 2 depends on Phase 1" |
 | **Risk Awareness** | No risks identified | Likelihood/Impact/Mitigation table |

@@ -111,10 +111,12 @@ For each phase in plan (1 to N, or single phase if no plan):
     - Query Context7 for official documentation and patterns
     - Study usage examples and best practices
     - Apply patterns from Context7 to implementation
-3. Implement changes:
+3. Implement changes incrementally — one atomic unit at a time:
    - Follow implementation steps and deliverables
    - Touch only relevant files (1-3 files recommended per commit)
    - Follow existing codebase patterns
+   - **ATOMIC EDITS**: Implement one function, class, or method per edit action — never write entire file contents in a single edit
+   - Verify each unit is syntactically coherent before moving to the next
 4. Write and run tests:
    - Write unit tests for new code (MANDATORY - never skip)
    - Run tests immediately after writing (MANDATORY - never skip)
@@ -246,6 +248,26 @@ FINAL CHECKLIST (after all phases complete):
 - [ ] Ready for deployment
 
 </completion-checklist>
+
+<incremental-edit-protocol>
+
+MANDATORY: All code edits must be atomic. Never write large blocks in a single action.
+
+Atomic unit = one of: function/method, class definition, interface, config block, import section.
+
+Protocol:
+1. List all units to implement for the current phase
+2. Implement ONE unit at a time using a single edit/create action
+3. Verify the unit is syntactically coherent before proceeding
+4. Move to next unit only after current is verified
+5. For new files: create a skeleton (imports + empty stubs) first, then fill each function/method one by one
+
+FORBIDDEN:
+- Writing an entire file's worth of content in a single create/edit action
+- Implementing multiple unrelated functions in one tool call
+- "Draft the full class then fix it" — implement correctly the first time, unit by unit
+
+</incremental-edit-protocol>
 
 <mandatory-commit-workflow>
 
