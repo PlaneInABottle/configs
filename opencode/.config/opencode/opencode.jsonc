@@ -47,6 +47,8 @@
       "uname*": "allow",
       "wc*": "allow",
       "which*": "allow",
+      "true*": "allow",
+      "uv*": "allow",
       "whereis*": "allow"
     },
     "edit": {
