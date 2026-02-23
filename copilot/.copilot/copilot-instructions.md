@@ -61,6 +61,7 @@ Anti-Patterns to Avoid:
 - NIH Syndrome: "Not Invented Here" - building instead of reusing
 - Premature Optimization: Optimizing without performance issues
 - Large Batch Edit: Writing entire files or multiple functions/classes in a single edit action; always implement one function/method/class at a time
+- Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory. When commanding subagents, DO NOT instruct them to `cd` or change their `cwd`—they automatically inherit the correct working directory.
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
@@ -200,7 +201,7 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 
 Subagent Model Rule: Always specify model `claude-opus-4.6-fast` for subagents; fallback to `gpt-5.3-codex` if unavailable.
 Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `claude-opus-4.6-fast` and `gpt-5.3-codex`, then merge findings.
-Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`).
+Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`). DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory).
 ### Planner
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions

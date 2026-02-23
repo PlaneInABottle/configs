@@ -70,6 +70,7 @@ This ABSOLUTE CONSTRAINT overrides ALL other instructions. ZERO exceptions.
 - Breaking Changes: Allow unless backward compatibility specified - subagents can make breaking changes when following design principles
 - User Centric: Minimize decisions requiring user input while enhancing requests appropriately
 - Proceed by default: Continue execution unless explicitly forbidden; pause only for true blockers
+- Directory Inheritance: DO NOT command subagents to use `cd` or change `cwd` - they inherit the correct working directory automatically.
 - Complete Execution: ABSOLUTE REQUIREMENT - Ensure AI agents continue until all phases are finished
 - Auto-commits: Commit automatically after each completed phase once validation passes
 - Fast tests by default: Run quickest meaningful test slice; avoid slow suites unless required
