@@ -191,7 +191,6 @@ Steps: define workstreams + dependencies → launch eligible background agents �
 Do not use for coupled code paths requiring shared mutable context.
 </fleet-mode-coordination>
 
-
 <quality-validation>
 Final: Require @implementer/@task to execute tests (if code changes) → Require @analyzer to validate design principles → Ensure all agents report compatibility → Require assignee to update docs
 Exit: Tests/linters pass, integration gate satisfied, docs updated

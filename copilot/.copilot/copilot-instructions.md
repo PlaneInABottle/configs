@@ -176,7 +176,6 @@ bash("npm run dev", mode="async", detach=true)  # Returns shellId
 read_bash(shellId, delay=5)
 ```
 
-
 ## Background Agents & Fleet Mode
 
 **Terminology:** When user says "subagents", they mean sync mode (`@planner`, `@implementer`, `@analyzer` or `task(mode="sync")`). When user says "background agents", they mean async/non-blocking mode (`task(mode="background")`).

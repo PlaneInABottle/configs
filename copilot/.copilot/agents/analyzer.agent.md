@@ -40,7 +40,6 @@ IMPORTANT: REVIEW-ONLY mode. @explore is for reading/understanding only. You CAN
 **Review Artifacts:** Use session files/ for detailed findings (summary in response, full details in files/).
 </session-workspace-usage>
 
-
 <memory-integration-review>
 Store durable facts for future reviews: established patterns, common issues, best practices, architecture patterns.
 Do NOT store one-off bugs or task-specific findings.

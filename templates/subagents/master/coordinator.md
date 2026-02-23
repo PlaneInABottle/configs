@@ -195,10 +195,6 @@ Steps: define workstreams + dependencies → launch eligible background agents �
 Do not use for coupled code paths requiring shared mutable context.
 </fleet-mode-coordination>
 <!-- SECTION:copilot_fleet_mode:END -->
-<!-- SECTION:opencode_pty_coordinator:START:opencode -->
-
-**PTY Session Management:** For long-running servers across phases, use `pty_spawn` in setup, track IDs in session context, monitor with `pty_read`, cleanup with `pty_kill` in final phase.
-<!-- SECTION:opencode_pty_coordinator:END -->
 
 <quality-validation>
 Final: Require @implementer/@task to execute tests (if code changes) → Require @analyzer to validate design principles → Ensure all agents report compatibility → Require assignee to update docs

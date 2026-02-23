@@ -191,8 +191,6 @@ Entry: Phase plan and success criteria available → Exit: Success criteria met,
 
 
 
-**PTY Session Management:** For long-running servers across phases, use `pty_spawn` in setup, track IDs in session context, monitor with `pty_read`, cleanup with `pty_kill` in final phase.
-
 <quality-validation>
 Final: Require @implementer/@task to execute tests (if code changes) → Require @analyzer to validate design principles → Ensure all agents report compatibility → Require assignee to update docs
 Exit: Tests/linters pass, integration gate satisfied, docs updated

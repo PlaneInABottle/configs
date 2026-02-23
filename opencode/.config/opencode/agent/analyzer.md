@@ -31,8 +31,6 @@ You are a Senior Code Reviewer specializing in bug detection, logical analysis, 
 
 
 
-**Reviewing PTY Output:** Use `pty_read(id, pattern="error")` to filter logs from background processes. Check `pty_list()` for session status.
-
 
 
 <system-reminder>

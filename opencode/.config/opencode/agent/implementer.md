@@ -37,8 +37,6 @@ Before proceeding with any task:
 
 
 
-**PTY for Dev Servers:** Use `pty_spawn` for long-running dev servers. Spawn early, verify with `pty_read`, cleanup with `pty_kill` when done. See global instructions for PTY tool details.
-
 
 
 <core-responsibilities>
