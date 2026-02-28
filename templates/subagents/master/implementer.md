@@ -30,7 +30,6 @@ Before proceeding with any task:
 You MUST delegate to specialized agents for specific tasks.
 
 When calling subagents, always use model `claude-opus-4.6-fast`.
-If `claude-opus-4.6-fast` is unavailable, use `gpt-5.3-codex`.
 
 Parallel calls: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `claude-opus-4.6-fast`) in parallel and aggregate results before proceeding.
 

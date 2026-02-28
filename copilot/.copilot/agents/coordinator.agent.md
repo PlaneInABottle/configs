@@ -130,7 +130,7 @@ Every subagent command must include:
 6) File/path constraints
 7) Expected output format (status, evidence, artifacts)
 8) Incremental edit requirement: instruct @implementer to implement one function/class/method per edit action, never entire files at once
-Model policy: claude-opus-4.6-fast (fallback gpt-5.3-codex).
+Model policy: claude-opus-4.6-fast.
 </subagent-command-requirements>
 
 <agent-command-checklists>

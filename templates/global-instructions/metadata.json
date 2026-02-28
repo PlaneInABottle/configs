@@ -9,8 +9,7 @@
       "description": "Opencode primary system instructions (no header required)",
       "text_replacements": {
         "ask_user": "question",
-        " (model `claude-opus-4.6-fast`)": "",
-        " (fallback `gpt-5.3-codex`)": ""
+        " (model `claude-opus-4.6-fast`)": ""
       }
     },
     "copilot": {
