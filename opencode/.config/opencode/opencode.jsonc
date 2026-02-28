@@ -1,7 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "plugin": [],
-  "theme": "synthwave84",
   "autoupdate": true,
   "default_agent": "plan",
   "instructions": [
@@ -76,10 +75,6 @@
     "sim-mcp_update_skill": "ask",
     "sim-mcp_execute_workflow": "ask",
     "sim-mcp_upsert_custom_tools": "ask"
-  },
-  "keybinds": {
-    "messages_half_page_up": "ctrl+u",
-    "messages_half_page_down": "ctrl+d"
   },
   "mcp": {
     "context7": {
