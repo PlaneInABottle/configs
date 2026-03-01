@@ -23,7 +23,7 @@ Don't skip straight to automation. A well-written skill often eliminates the nee
 AI agents move fast. Tests are the guardrails, but you must use the right tools:
 
 - **Unit logic tests after code changes.** Run the relevant language-specific suite (`pytest`, `Jest`, `cargo test`) after modifying pure functions or internal logic.
-- **NEVER write new language-specific integration tests under ANY circumstances.** Use the Universal Toolkit (`.hurl`, `psql`, `agent-browser`) to test APIs, DBs, and UIs.
+- **NEVER write, modify, or append to language-specific integration tests under ANY circumstances.** Use the Universal Toolkit (`.hurl`, `psql`, `agent-browser`) to test APIs, DBs, and UIs.
 - **Fix broken tests immediately.** A failing test is a signal, not noise.
 - **Reference the Playbooks:** See `../playbooks/api-contract-testing.md` and `../playbooks/universal-data-generation.md` for proper testing patterns.
 
@@ -77,7 +77,7 @@ Always use language-agnostic tools to verify system state.
 
 When executing commands autonomously, agents must use robust patterns:
 
-- **Strict Output Redirection:** When running native servers detached, `&` is not enough. You must prevent stdout from corrupting the tool response. **Always use: `npm run dev > app.log 2>&1 &`**
+- **Strict Output Redirection & PID Tracking:** When running native servers detached, `&` is not enough. You must prevent stdout from corrupting the tool response, and you must track the PID to prevent port exhaustion (Zombie processes). **Always use: `npm run dev > .app.log 2>&1 & echo $! > .app.pid`**
 - **Strict Bash Pipelines:** Bash pipelines like `curl | jq | cut` will silently swallow errors if a middle command fails. Always prefix multi-step bash commands with `set -euo pipefail` to ensure fail-fast behavior.
 - **Headless Polling Loops:** Never assume a service starts instantly. Never use a single `curl` or a manual bash `while` loop. Always use `curl`'s built-in retry flags:
   ```bash
@@ -99,7 +99,7 @@ When executing commands autonomously, agents must use robust patterns:
 
 ### Using Attached Shells for Servers
 **Harm:** Services die when AI session ends, or `stdout` streams infinitely and breaks the JSON parser.
-**Fix:** Always use `docker compose -d` or `> log 2>&1 &` for native processes.
+**Fix:** Always use `docker compose -d` or `> .app.log 2>&1 & echo $! > .app.pid` for native processes.
 
 ### Log Parsing for Health Checks
 **Harm:** Fragile, slow, format-dependent.

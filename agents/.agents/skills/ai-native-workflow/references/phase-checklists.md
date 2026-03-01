@@ -30,11 +30,24 @@ AI agents need:
 - **Headless Management:** Agents must start/stop processes detached with output redirection.
 - **Machine-Readable Readiness Probes:** Instead of parsing logs, use `curl -sSf` for HTTP, `pg_isready` for Postgres, etc.
 
+### Step 1.4 — Inventory Boundaries
+- [ ] Network / HTTP (`hurl`, `curl`)
+- [ ] gRPC / WebSockets (`grpcurl`, `wscat`)
+- [ ] Persistence Layers (`psql`, `mongosh`, `sqlite3`, `redis-cli`)
+- [ ] File/Media Systems (MinIO S3 mock, `../playbooks/media-file-handling.md`)
+
 ---
 
 ## Phase 2: Skill Creation & Environment Bootstrapping
 
-### Step 2.1 — Write the Startup Sequence
+### Step 2.1 — Bootstrapping & Dependencies
+Before starting services, explicitly install dependencies and prepare the environment:
+```bash
+npm install
+cp .env.example .env
+```
+
+### Step 2.2 — Write the Startup Sequence
 
 Create the runtime skill document using structured, AI-parseable formats.
 **CRITICAL: Never assume a human is watching the terminal. Use headless tools.**
@@ -44,14 +57,14 @@ Create the runtime skill document using structured, AI-parseable formats.
 Command: `docker compose up -d db`
 Verify (Polling loop): 
 ```bash
-curl --retry 30 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf http://localhost:5432 || true
+until docker exec db pg_isready; do sleep 1; done
 ```
-Failure: If port occupied, kill headless: `lsof -ti :5432 | xargs -r kill -9`
+Failure: `docker compose logs db` to inspect crashes
 ```
 
-### Step 2.2 — Test Detached Mode
+### Step 2.3 — Test Detached Mode
 Services must survive session boundaries.
-1. Start services in detached mode (`docker compose -d` or `npm run dev > app.log 2>&1 &`).
+1. Start services in detached mode (e.g. `docker compose -d` or `npm run dev > .app.log 2>&1 & echo $! > .app.pid`).
 2. Simulate session end (kill the current bash session).
 3. Start a new session and verify the services are still running via readiness probes.
 
@@ -66,22 +79,16 @@ Once the environment is running, NEVER write language-specific integration tests
 2. **Inject State:** Generate specific deterministic payloads using environment-native Faker scripts, and pipe them directly into the API or DB (See `../playbooks/universal-data-generation.md`).
 3. **Execute & Assert:** Use `.hurl` to trigger the network boundary (See `../playbooks/api-contract-testing.md`), or use native datastore clients to assert persistence changes directly. 
 
+### Step 3.2 — Interactive Interface Verification
+If the application has a UI, verify it headlessly:
+- **Web UI:** Use `agent-browser open` and `agent-browser snapshot -i` to verify DOM state.
+- **CLI App:** Run standard Unix streams (`mycli --dry-run > out.txt`) and assert the exit code `echo $?`.
+
 ---
 
 ## Phase 4: Programmatic Operations
 
-Ensure you can manage the application programmatically without a human.
-
-### Step 4.1 — Inventory Boundaries
-- [ ] Network / HTTP (`hurl`, `curl`)
-- [ ] gRPC / WebSockets (`grpcurl`, `wscat`)
-- [ ] Persistence Layers (`psql`, `mongosh`, `sqlite3`, `redis-cli`)
-- [ ] File/Media Systems (MinIO S3 mock, `../playbooks/media-file-handling.md`)
-
-### Step 4.2 — Interactive Interface Verification
-If the application has a UI, verify it headlessly:
-- **Web UI:** Use `agent-browser open` and `agent-browser snapshot -i` to verify DOM state.
-- **CLI App:** Run standard Unix streams (`mycli --dry-run > out.txt`) and assert the exit code `echo $?`.
+Ensure you can manage the application programmatically without a human. Confirm you can trigger all flows via APIs, CLI, or DOM events.
 
 ---
 
@@ -92,7 +99,7 @@ If the application has a UI, verify it headlessly:
 1. **Implement Core Logic:** Write pure functions/methods.
 2. **Unit Test Pure Logic:** Use the language's native runner (`pytest`, `Jest`, `cargo test`) **ONLY** for pure, isolated unit logic. 
 3. **Implement Boundaries:** Expose the logic via HTTP/gRPC/CLI.
-4. **Integration Verification:** NEVER write new `pytest` or `Jest` files to test the API or Database under ANY circumstances. NEVER write Cypress, Playwright, or React Testing Library (RTL) test scripts. All UI testing MUST be done interactively via `agent-browser` against the running dev server. You MUST use `.hurl`, `agent-browser`, or database injection to verify the integration.
+4. **Integration Verification:** NEVER write, modify, or append to `pytest` or `Jest` files for API/Database testing. NEVER use, write, or modify Cypress, Playwright, or React Testing Library (RTL) test scripts. All UI testing MUST be done interactively via `agent-browser` against the running dev server. You MUST use `.hurl`, `agent-browser`, or database injection to verify the integration.
 
 ### Robust Debugging Workflow
 
@@ -104,3 +111,10 @@ If the application has a UI, verify it headlessly:
 # Example AI-safe verification loop
 curl --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf http://localhost:3000/health > /dev/null
 ```
+
+---
+
+## Phase 6: Teardown
+Never leave detached processes or unmanaged state running indefinitely.
+- If using Docker: `docker compose down`
+- If using native detached shells: `kill $(cat .app.pid) && rm .app.pid`

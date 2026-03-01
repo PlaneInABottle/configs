@@ -82,13 +82,15 @@ If your application uploads files to AWS S3, verify the actual upload bypasses t
 
    # Set AWS credentials for the Dockerized CLI
    export AWS_ENV="-e AWS_ACCESS_KEY_ID=local_admin -e AWS_SECRET_ACCESS_KEY=local_password -e AWS_REGION=us-east-1"
-   export AWS_CMD="docker run --rm --network host $AWS_ENV amazon/aws-cli"
+   export AWS_CMD="docker run --rm $AWS_ENV amazon/aws-cli"
 
    # Create the test bucket (do this before testing your app!)
-   $AWS_CMD --endpoint-url http://localhost:9000 s3 mb s3://my-app-bucket
+   # Note: use host.docker.internal if running Docker Desktop on macOS/Windows
+   export S3_HOST=$(uname -s | grep -q Darwin && echo "host.docker.internal" || echo "localhost")
+   $AWS_CMD --endpoint-url http://$S3_HOST:9000 s3 mb s3://my-app-bucket
    
    # ... RUN YOUR APP UPLOAD TEST HERE ...
    
    # Verify the upload succeeded directly in S3
-   $AWS_CMD --endpoint-url http://localhost:9000 s3 ls s3://my-app-bucket/avatars/
+   $AWS_CMD --endpoint-url http://$S3_HOST:9000 s3 ls s3://my-app-bucket/avatars/
    ```

@@ -12,16 +12,16 @@ You must interact with the application across standard boundaries (HTTP, SQL, DO
 
 ## The Universal Agent Toolkit
 
-When verifying your implementations, **never** default to writing brittle, language-specific test suites unless the user explicitly names a test framework (e.g., "write a pytest suite"). Generic requests for testing MUST use the following universal tools based on the system boundary:
+When verifying your implementations, **never** default to writing language-specific test suites. Generic requests for testing MUST use the following universal tools based on the system boundary:
 
 | Boundary | Universal Tool | Agent Action |
 |---|---|---|
 | **Infrastructure** | **Docker Compose** | Standardizes "start/stop/reset". Follow YAGNI: only add auxiliary services (Redis, Mailpit) when explicitly needed. |
-| **Data Generation** | **Env-Native Faker** | Use environment-native scripting (e.g., Python `faker`, Node `faker`) to generate deterministic JSON, test fixtures, or DB payloads. The principle is isolated scripts, not the specific language. |
+| **Data Generation** | **Env-Native Faker** | Use environment-native scripting (e.g., Python `faker`, Node `faker`) to generate deterministic JSON, test fixtures, or DB payloads. Data generation scripts MUST ONLY output standard formats (JSON/SQL/CSV) to stdout. They MUST NOT contain network requests, database connections, or test assertions. All outputs must be piped to the Universal Toolkit (e.g., `.hurl`, `psql`). |
 | **Dependencies** | **json-server / Prism** | Spin up instant fake APIs to mock 3rd party dependencies. Use environment variables to swap real URLs for local fakes. |
 | **Network / API** | **Network Boundaries** | Use `hurl` for REST/GraphQL, `grpcurl` for gRPC, and `wscat` for WebSockets. |
 | **Interface (Web/CLI)** | **`agent-browser`** | Use `agent-browser` as an Interactive REPL for Web UIs. For CLI apps, use standard Unix streams (`stdout/stderr`) or `expect` scripts. |
-| **Persistence / DB** | **Native Clients** | Bypass the app layer. Use native datastore clients (`psql`, `mongosh`, `sqlite3`, `redis-cli`) directly to assert state changes. |
+| **Persistence / DB** | **Native Clients** | Bypass the app layer. Use native datastore clients (`psql`, `mongosh`, `sqlite3`, `redis-cli`) directly to assert state changes. If a native CLI client is unavailable, write a minimalist, single-file headless script to execute the query and print JSON to stdout. Do not write assertions inside this script; pipe the stdout to `jq` or `grep`. |
 | **Async / Events** | **`redis-cli` / `rpk`** | Inject messages directly into queues and verify worker side-effects. |
 | **Media / Files** | **`pexels-media` skill** | Download real, valid binary fixtures for upload testing. Never pass corrupted mock bytes. |
 
@@ -53,7 +53,7 @@ For exact implementation details, code snippets, and CLI commands for the toolki
 4. **Phase 4: Programmatic Operations**
    Ensure you can manage the application programmatically without a human (e.g., manipulating UI state using `agent-browser`).
 5. **Phase 5: Continuous Iteration & Debugging**
-   Run existing unit tests after every code change. Tests are your guardrails. **NEVER write language-specific integration tests under ANY circumstances. Use pytest/cargo test/Jest ONLY for pure logic unit testing.** (Note: Do not use Jest/pytest to test functions that import web frameworks like Express/FastAPI, ORMs, or rely on I/O. If you must mock HTTP or DB calls to test a function, it is an integration test. Use `.hurl` instead). You MUST use the Universal Toolkit (`.hurl`, `agent-browser`, `psql`) for all new test assertions. During UI changes, run `agent-browser snapshot -i` and screenshot to track visual regressions. Re-snapshot after every navigation. You MUST read the output of `agent-browser snapshot -i` before interacting with ANY UI element; NEVER blindly guess element IDs. Always wait for async data fetching or specific state changes (using `agent-browser wait`) before re-snapshotting. Do not snapshot immediately after a click if a loading state or async mutation is expected.
+   Run existing unit tests after every code change. Tests are your guardrails. **NEVER write, modify, or append to language-specific integration tests under ANY circumstances. Use pytest/cargo test/Jest ONLY for pure logic unit testing.** (Note: Do not use Jest/pytest to test functions that import web frameworks like Express/FastAPI, ORMs, or rely on I/O. If testing a function requires mocking external modules, database connections, or HTTP clients, it is an integration boundary. Do NOT write a unit test for it; test it end-to-end via `.hurl` or native clients). You MUST use the Universal Toolkit (`.hurl`, `agent-browser`, `psql`) for all new test assertions. During UI changes, run `agent-browser snapshot -i` and screenshot to track visual regressions. Re-snapshot after every navigation. You MUST read the output of `agent-browser snapshot -i` before interacting with ANY UI element; NEVER blindly guess element IDs. Always wait for async data fetching or specific state changes (using `agent-browser wait`) before re-snapshotting. Do not snapshot immediately after a click if a loading state or async mutation is expected.
 
 *(For detailed, step-by-step checklists for each phase, see `references/phase-checklists.md`)*
 
@@ -64,8 +64,8 @@ For exact implementation details, code snippets, and CLI commands for the toolki
 Instead of writing rigid test scripts, act as a real user. Use `agent-browser` for fast feedback during active implementation.
 
 ```bash
-# Start dev server detached
-npm run dev &
+# Start dev server detached with strict PID tracking and log redirection
+npm run dev > .app.log 2>&1 & echo $! > .app.pid
 
 # Verify rendering and state
 agent-browser open http://localhost:3000/login
@@ -89,7 +89,7 @@ agent-browser screenshot
 |---|---|
 | **Use Environment Variables** | Swap real external services with local CLI fakes (e.g. `STRIPE_URL=http://localhost:4010`) |
 | **Health Checks > Logs** | Always prefer querying an HTTP health endpoint over fragile bash `grep`s of container logs. |
-| **Detached Shells** | Start persistent services with `&` or Docker's `-d`. Attached shells die with your session. |
+| **Detached Shells** | Start persistent services with `> .app.log 2>&1 & echo $! > .app.pid` or Docker's `-d`. Attached shells die with your session. |
 | **Skill-First** | Check available skills *before* implementing. Load every matching skill and combine their guidance. |
 
 | Anti-Pattern | Do Instead |
