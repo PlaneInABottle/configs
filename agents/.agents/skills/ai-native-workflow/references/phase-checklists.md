@@ -8,293 +8,99 @@ Detailed guidance for each phase of the AI-native workflow. Use alongside the ma
 
 ### Step 1.1 — Analyze Project Characteristics
 
-Profile the project before choosing a runtime:
+Profile the project before choosing a runtime using robust, non-hanging bash commands:
 
-| Dimension | How to Measure | Why It Matters |
+| Dimension | AI-Safe Command | Why It Matters |
 |-----------|---------------|----------------|
-| File count | `find . -type f \| wc -l` | Affects Docker volume performance |
-| Dependency size | `du -sh node_modules/` | Large deps slow container builds |
+| File count | `find . -type f -not -path "*/node_modules/*" -not -path "*/\.git/*" -not -path "*/\.venv/*" -not -path "*/target/*" \| wc -l` | Affects Docker volume performance |
+| Dependency size | `[ -d node_modules ] && du -sh node_modules/ \|\| echo "0"` | Large deps slow container builds |
 | Native binaries | Check for `.node`, `.so`, compiled deps | May not work across architectures |
-| Hot-reload mechanism | Webpack, Vite, Turbopack, etc. | File watching differs in containers |
+| Hot-reload | JS/TS (Vite), Rust (cargo watch), Go (Air) | File watching differs in containers |
 | Stateful services | Databases, caches, queues | Containers excel here |
-| Build time | Time a full build | Baseline for optimization |
 
 ### Step 1.2 — Compare Runtime Options
 
-**Option A: Full Docker**
-- ✅ Reproducible, isolated, matches production
-- ❌ File watching unreliable on macOS (polling fallback)
-- ❌ Native binaries may need rebuilding
-- ❌ HMR latency from volume I/O
-
-**Option B: Fully Native**
-- ✅ Fastest HMR, native file watching
-- ❌ Database/service setup varies per machine
-- ❌ Version conflicts with system packages
-
-**Option C: Hybrid (Usually Best)**
-- ✅ Fast HMR + reliable stateful services
-- ✅ File watching works natively
-- ✅ Database isolation without app performance cost
-- ❌ Slightly more complex setup
+**Option A: Full Docker** (Reproducible but slow HMR on macOS)
+**Option B: Fully Native** (Fast HMR but inconsistent database setup)
+**Option C: Hybrid (Usually Best)** (Fast native HMR + reliable stateful Docker services)
 
 ### Step 1.3 — AI-Specific Requirements
 
 AI agents need:
-- **Log access:** Agents parse logs to detect errors. Ensure logs accessible via shell or API.
-- **Health check endpoints:** HTTP health checks beat log parsing — faster and more reliable.
-- **Process management:** Agents must start, stop, restart services. Detached shells essential.
-- **Deterministic startup:** Scriptable with clear success/failure signals.
-
-### Step 1.4 — Document the Decision
-
-Record:
-- Which option was chosen and why
-- What tradeoffs were accepted
-- What project characteristics drove the decision
-
-**Analysis method:** Spawn parallel agents to evaluate each option against project characteristics. Agents return structured comparisons; coordinator makes the final call.
+- **Headless Management:** Agents must start/stop processes detached with output redirection.
+- **Machine-Readable Readiness Probes:** Instead of parsing logs, use `curl -sSf` for HTTP, `pg_isready` for Postgres, etc.
 
 ---
 
-## Phase 2: Skill Creation
+## Phase 2: Skill Creation & Environment Bootstrapping
 
-### Step 2.1 — Initialize Skill Structure
+### Step 2.1 — Write the Startup Sequence
 
-```
-skill-name/
-├── skill.md          # Primary knowledge document
-├── scripts/          # Automation scripts (optional)
-└── README.md         # Human-readable overview
-```
-
-### Step 2.2 — Document Core Operations
-
-Every runtime skill must cover:
-
-| Section | Format |
-|---------|--------|
-| Prerequisites | List: tool, version, env var |
-| Startup Sequence | `Command → Expected output → Failure → Resolution` |
-| Health Checks | `Endpoint/command → Expected response` |
-| Monitoring | Log locations, common error patterns |
-| Troubleshooting | `Symptom → Cause → Fix` |
-| Shutdown | Ordered stop sequence |
-
-### Step 2.3 — Write for Machines
-
-Optimize for AI parseability. Use structured formats:
+Create the runtime skill document using structured, AI-parseable formats.
+**CRITICAL: Never assume a human is watching the terminal. Use headless tools.**
 
 ```markdown
-## Start PostgreSQL
-Command: `docker compose -f docker-compose.local.yml up -d`
-Verify: `docker compose -f docker-compose.local.yml ps` → status "Up"
-Health: `curl -s http://localhost:5432` or check container logs
-Failure: If port 5432 occupied, run `lsof -i :5432` and kill the process
-```
-
-Avoid narrative explanations. Command → expected → failure → resolution.
-
-### Step 2.4 — Include Automation Scripts
-
-For complex operations, include executable scripts:
-
+## Start Database (Example: Postgres)
+Command: `docker compose up -d db`
+Verify (Polling loop): 
 ```bash
-#!/bin/bash
-# health-check.sh - Verify all services are operational
-check_service() {
-  local name="$1" url="$2"
-  if curl -sf "$url" > /dev/null 2>&1; then
-    echo "✓ $name"; return 0
-  else
-    echo "✗ $name"; return 1
-  fi
-}
-
-check_service "Application" "http://localhost:3000/api/health"
-check_service "WebSocket"   "http://localhost:3001/health"
+curl --retry 30 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf http://localhost:5432 || true
+```
+Failure: If port occupied, kill headless: `lsof -ti :5432 | xargs -r kill -9`
 ```
 
-### Step 2.5 — Commit to Version Control
-
-Skills are project artifacts:
-```bash
-git add .skills/project-runtime/
-git commit -m "feat: add project-runtime skill for AI-managed development"
-```
+### Step 2.2 — Test Detached Mode
+Services must survive session boundaries.
+1. Start services in detached mode (`docker compose -d` or `npm run dev > app.log 2>&1 &`).
+2. Simulate session end (kill the current bash session).
+3. Start a new session and verify the services are still running via readiness probes.
 
 ---
 
-## Phase 3: Implementation & Verification
+## Phase 3: Implementation & Verification (The Universal Toolkit)
 
-### Step 3.1 — Agent-Driven Startup
+Once the environment is running, NEVER write language-specific integration tests under ANY circumstances. Use the Universal Playbooks.
 
-Don't start services manually. Have an AI agent follow the skill:
-
-```
-Agent prompt: "Use the project-runtime skill to start the full development
-environment. Verify all services are healthy before reporting success."
-```
-
-This tests both the skill's accuracy and the agent's ability to execute it.
-
-### Step 3.2 — Service Verification
-
-After startup, confirm every service:
-
-| Check | Method | Expected |
-|-------|--------|----------|
-| Database | Container status or connection test | Running, accepting connections |
-| Application | HTTP health endpoint | 200 OK |
-| Auxiliary services | Protocol-specific check | Healthy response |
-
-Automated health checks are non-negotiable.
-
-### Step 3.3 — Detached Mode Testing
-
-Services must survive session boundaries:
-1. Start services in detached mode
-2. Confirm running
-3. Simulate session end (start new agent)
-4. Verify services still running
-
-If services die when the session ends, the setup is not production-ready for AI.
-
-### Step 3.4 — Full Lifecycle Test
-
-```
-Start → Verify → Use → Restart → Verify → Stop → Verify stopped
-```
-
-Test edge cases:
-- Port already in use
-- Database migration needed
-- Stale containers from previous session
-- Missing environment variables
+### Step 3.1 — Verify via Universal Boundaries
+1. **Mock Dependencies:** Spin up WireMock or Prism if the feature requires external APIs (See `../playbooks/mocking-dependencies.md`).
+2. **Inject State:** Generate specific deterministic payloads using environment-native Faker scripts, and pipe them directly into the API or DB (See `../playbooks/universal-data-generation.md`).
+3. **Execute & Assert:** Use `.hurl` to trigger the network boundary (See `../playbooks/api-contract-testing.md`), or use native datastore clients to assert persistence changes directly. 
 
 ---
 
 ## Phase 4: Programmatic Operations
 
-### Step 4.1 — Inventory APIs and Tools
+Ensure you can manage the application programmatically without a human.
 
-Catalog every programmatic interface:
-- MCP tools (Model Context Protocol servers)
-- REST/GraphQL APIs
-- CLI commands
-- Database access
-- File system operations
+### Step 4.1 — Inventory Boundaries
+- [ ] Network / HTTP (`hurl`, `curl`)
+- [ ] gRPC / WebSockets (`grpcurl`, `wscat`)
+- [ ] Persistence Layers (`psql`, `mongosh`, `sqlite3`, `redis-cli`)
+- [ ] File/Media Systems (MinIO S3 mock, `../playbooks/media-file-handling.md`)
 
-### Step 4.2 — Test CRUD Operations
-
-| Operation | Test |
-|-----------|------|
-| Create | Build a new entity from scratch |
-| Read | Retrieve and inspect existing entities |
-| Update | Modify an entity and verify changes |
-| Delete | Remove an entity and confirm removal |
-
-### Step 4.3 — Execution Capabilities
-
-Beyond CRUD:
-- Run workflows/pipelines/tests
-- Read execution logs and results
-- Detect and diagnose failures
-- Apply fixes and re-run
-
-### Step 4.4 — Monitoring and Logging
-
-Confirm AI can observe system behavior:
-- Access application logs
-- Query metrics endpoints
-- Detect anomalies or errors
-- Correlate events across services
+### Step 4.2 — Interactive Interface Verification
+If the application has a UI, verify it headlessly:
+- **Web UI:** Use `agent-browser open` and `agent-browser snapshot -i` to verify DOM state.
+- **CLI App:** Run standard Unix streams (`mycli --dry-run > out.txt`) and assert the exit code `echo $?`.
 
 ---
 
 ## Phase 5: Continuous Iteration
 
-### Test-Driven Development Cycle
+### Test-Driven Development Cycle (Revised for AI)
 
+1. **Implement Core Logic:** Write pure functions/methods.
+2. **Unit Test Pure Logic:** Use the language's native runner (`pytest`, `Jest`, `cargo test`) **ONLY** for pure, isolated unit logic. 
+3. **Implement Boundaries:** Expose the logic via HTTP/gRPC/CLI.
+4. **Integration Verification:** NEVER write new `pytest` or `Jest` files to test the API or Database under ANY circumstances. NEVER write Cypress, Playwright, or React Testing Library (RTL) test scripts. All UI testing MUST be done interactively via `agent-browser` against the running dev server. You MUST use `.hurl`, `agent-browser`, or database injection to verify the integration.
+
+### Robust Debugging Workflow
+
+1. Read error message + stack trace.
+2. Form hypothesis.
+3. Apply targeted fix.
+4. **Verify safely:** Do not write infinite `while` loops to check logs. Use curl's built-in retry flags to assert the fix worked.
+```bash
+# Example AI-safe verification loop
+curl --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf http://localhost:3000/health > /dev/null
 ```
-1. Make a change to a module
-2. Run unit tests immediately
-3. Tests fail → fix code or update tests
-4. Tests pass → proceed to next change
-```
-
-| Scenario | Action |
-|----------|--------|
-| Test fails, behavior changed intentionally | Update the test |
-| Test fails due to bug in change | Fix the code |
-| Test is flaky or unrelated | Note it, investigate separately |
-
-### Debugging Workflow
-
-1. Read error message + stack trace
-2. Identify failing component
-3. Inspect relevant code/config
-4. Form hypothesis
-5. Test with targeted fix
-6. Verify no new failures introduced
-
-Principles:
-- Enable debug logging during investigation
-- Compare expected vs. actual at each step
-- Check all relevant service logs
-- Trace to root cause, not symptom
-
-### Performance Optimization
-
-1. Establish baselines (execution time, resource usage, response times)
-2. Profile before optimizing — don't guess
-3. One change at a time, measure impact
-4. Run tests after each optimization
-5. Document: what changed, improvement, tradeoffs
-
-### Expanding Capabilities
-
-| Priority | Criteria |
-|----------|----------|
-| High | Done daily, takes >5 min, error-prone |
-| Medium | Done weekly, moderate complexity |
-| Low | Rare, simple, or already fast enough |
-
-### Monitoring and Observability
-
-- Define key health indicators
-- Set up automated health checks on schedule
-- Alert on degradation, not just failure
-- Review execution logs for error patterns
-- Track operation success rates over time
-- Feed monitoring findings back into skills
-
----
-
-## Startup Sequence Template
-
-```
-1. Start stateful services (Docker)     → Verify via container status
-2. Wait for services to accept traffic  → Verify via health endpoint
-3. Run migrations if needed             → Verify via exit code
-4. Start application (detached)         → Verify via health endpoint
-5. Start auxiliary services (detached)  → Verify via health endpoint
-6. Final integration check              → All endpoints healthy
-```
-
-## Project-Specific Considerations
-
-When adapting to a new project, evaluate:
-
-| Concern | Questions |
-|---------|-----------|
-| Package manager | Workspaces? Lock file format? |
-| Build system | Incremental? Watch mode? |
-| Hot reload | Native file watching or polling? |
-| Test runner | Parallel execution? Watch mode? |
-| Type checking | Separate step or integrated? |
-| Native deps | Compile native code? Work in Docker? |
-| File watching | `fs.watch`, `chokidar`, `inotify`? Polling in Docker? |
-| Ports | List all ports, conflict resolution |
-| Env vars | Required vars, secrets vs config, `.env.example` |
-| Database | Migration strategy, seed data, reset procedure |
