@@ -251,6 +251,7 @@ Apply these patterns to ensure maintainability and testability:
 - Comprehensive error handling and validation
 - Security considerations in every implementation
 - Tests written alongside code (not after)
+- Process Cleanup: You MUST NOT leave orphaned background processes running (test servers, daemons). Use Docker or cleanly kill processes before your task ends.
 
 </code-quality-standards>
 
