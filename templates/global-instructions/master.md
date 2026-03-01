@@ -176,20 +176,27 @@ When encountering errors:
 
 **Failure Consequence:** Shell wrappers waste tokens and violate "be concise and direct."
 <!-- SECTION:copilot_direct_communication:END -->
+## Running Applications (Background Processes)
+
+Context compaction causes agents to forget background PIDs, leading to zombie processes and port exhaustion (`EADDRINUSE`). Always use this prioritized strategy based on the type of service:
+
+### 1. Application Dev Servers (Priority 1)
+For application code (e.g., `npm run dev`, `uvicorn`), use native execution to benefit from Hot Module Replacement (HMR) and fast iteration. 
+
 <!-- SECTION:detached_shells:START:copilot -->
-
-## Detached Shells
-
-Use `bash(command, mode="async", detach=true)` for servers, daemons, or long-running processes that must survive session shutdown. Output automatically redirected to temp log. Read output with `read_bash(shellId)`. Stop with `kill <PID>` (not `pkill`/`killall`).
-
-```bash
-# Start detached server (output auto-redirected)
-bash("npm run dev", mode="async", detach=true)  # Returns shellId
-
-# Read output
-read_bash(shellId, delay=5)
-```
+**Copilot Native:** Use the built-in async execution `bash(..., detach=true)`. Read output with `read_bash(shellId)`. Stop with `kill <PID>`.
 <!-- SECTION:detached_shells:END -->
+<!-- SECTION:detached_shells_fallback:START:!copilot -->
+**Strict PID Tracking:** You MUST write output and PID to disk to survive session loss:
+`npm run dev > .app.log 2>&1 & echo $! > .app.pid`
+Cleanup: `kill $(cat .app.pid) && rm .app.pid`.
+<!-- SECTION:detached_shells_fallback:END -->
+
+**Port Recovery:** If you ever encounter `EADDRINUSE` (port in use), forcefully reclaim it: `lsof -ti :<PORT> | xargs -r kill -9`.
+
+### 2. Infrastructure & Databases (Priority 2)
+For databases (Postgres, Redis) or complex dependencies, use Docker.
+**Docker:** Run state-independent containers (`docker compose up -d` or `docker run -d --name db`). Cleanup is idempotent: `docker rm -f db`.
 <!-- SECTION:background_agents:START:copilot -->
 
 ## Background Agents & Fleet Mode
@@ -218,7 +225,7 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 <!-- SECTION:copilot_subagent_rules:START:copilot -->
 Subagent Model Rule: Always specify model `claude-opus-4.6-fast` for subagents.
 Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `claude-opus-4.6-fast`, then merge findings.
-Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`). DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory).
+Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`). DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 <!-- SECTION:copilot_subagent_rules:END -->
 ### Planner
 Purpose: Architecture design and detailed planning
@@ -251,6 +258,7 @@ Critical Requirements:
 - Context7 First: Always check Context7 MCP for official documentation on libraries/frameworks/APIs BEFORE implementation. **Failure Consequence:** Incorrect API usage and rework.
 - Pattern Learning: Study patterns and best practices from Context7 documentation
 - Implementation Alignment: Implement according to learned patterns and official documentation
+- Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
 Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `claude-opus-4.6-fast`) in parallel and aggregate results before proceeding.
 <!-- SECTION:subagent_model_default:START:!copilot -->

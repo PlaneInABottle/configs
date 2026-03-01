@@ -126,7 +126,23 @@ When encountering errors:
 
 **Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 
+## Running Applications (Background Processes)
 
+Context compaction causes agents to forget background PIDs, leading to zombie processes and port exhaustion (`EADDRINUSE`). Always use this prioritized strategy based on the type of service:
+
+### 1. Application Dev Servers (Priority 1)
+For application code (e.g., `npm run dev`, `uvicorn`), use native execution to benefit from Hot Module Replacement (HMR) and fast iteration. 
+
+
+**Strict PID Tracking:** You MUST write output and PID to disk to survive session loss:
+`npm run dev > .app.log 2>&1 & echo $! > .app.pid`
+Cleanup: `kill $(cat .app.pid) && rm .app.pid`.
+
+**Port Recovery:** If you ever encounter `EADDRINUSE` (port in use), forcefully reclaim it: `lsof -ti :<PORT> | xargs -r kill -9`.
+
+### 2. Infrastructure & Databases (Priority 2)
+For databases (Postgres, Redis) or complex dependencies, use Docker.
+**Docker:** Run state-independent containers (`docker compose up -d` or `docker run -d --name db`). Cleanup is idempotent: `docker rm -f db`.
 
 
 ## Subagents
@@ -164,6 +180,7 @@ Critical Requirements:
 - Context7 First: Always check Context7 MCP for official documentation on libraries/frameworks/APIs BEFORE implementation. **Failure Consequence:** Incorrect API usage and rework.
 - Pattern Learning: Study patterns and best practices from Context7 documentation
 - Implementation Alignment: Implement according to learned patterns and official documentation
+- Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
 Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `claude-opus-4.6-fast`) in parallel and aggregate results before proceeding.
 ### Subagent Model Usage
