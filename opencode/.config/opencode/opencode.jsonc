@@ -1,6 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": [],
+  "plugin": [
+    "@mohak34/opencode-notifier@latest"
+  ],
   "autoupdate": true,
   "default_agent": "plan",
   "instructions": [
