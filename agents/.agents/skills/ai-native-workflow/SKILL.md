@@ -64,7 +64,7 @@ For exact implementation details, code snippets, and CLI commands for the toolki
 Instead of writing rigid test scripts, act as a real user. Use `agent-browser` for fast feedback during active implementation.
 
 ```bash
-# Start dev server detached with strict PID tracking and log redirection
+# Start application dev server in the background with strict PID tracking and log redirection
 npm run dev > .app.log 2>&1 & echo $! > .app.pid
 
 # Verify rendering and state
@@ -89,7 +89,7 @@ agent-browser screenshot
 |---|---|
 | **Use Environment Variables** | Swap real external services with local CLI fakes (e.g. `STRIPE_URL=http://localhost:4010`) |
 | **Health Checks > Logs** | Always prefer querying an HTTP health endpoint over fragile bash `grep`s of container logs. |
-| **Detached Shells** | Start persistent services with `> .app.log 2>&1 & echo $! > .app.pid` or Docker's `-d`. Attached shells die with your session. |
+| **Background Processes** | Start persistent services with `> .app.log 2>&1 & echo $! > .app.pid` or Docker's `-d`. Attached shells die with your session. |
 | **Skill-First** | Check available skills *before* implementing. Load every matching skill and combine their guidance. |
 
 | Anti-Pattern | Do Instead |

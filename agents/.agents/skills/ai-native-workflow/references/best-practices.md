@@ -32,7 +32,7 @@ AI agents move fast. Tests are the guardrails, but you must use the right tools:
 When something doesn't work, inspect rather than guess:
 
 - Read the actual error output.
-- **Check Detached Logs:** If a background Docker service (like a DB, `json-server`, or Prism mock) is failing, always run `docker logs --tail 50 <container_name>` to see why.
+- **Check Background Logs:** If a background Docker service (like a DB, `json-server`, or Prism mock) is failing, always run `docker logs --tail 50 <container_name>` to see why.
 - Use Universal Tools to see real entity state (e.g., query Postgres directly instead of assuming the ORM failed).
 - Enable verbose/debug logging during investigation.
 - Compare expected vs. actual output at each step.
@@ -77,7 +77,7 @@ Always use language-agnostic tools to verify system state.
 
 When executing commands autonomously, agents must use robust patterns:
 
-- **Strict Output Redirection & PID Tracking:** When running native servers detached, `&` is not enough. You must prevent stdout from corrupting the tool response, and you must track the PID to prevent port exhaustion (Zombie processes). **Always use: `npm run dev > .app.log 2>&1 & echo $! > .app.pid`**
+- **Strict Output Redirection & PID Tracking:** When running application servers in the background using standard bash, `&` is not enough. You must prevent stdout from corrupting the tool response, and you must track the PID to prevent port exhaustion (Zombie processes). **Always use: `npm run dev > .app.log 2>&1 & echo $! > .app.pid`**
 - **Strict Bash Pipelines:** Bash pipelines like `curl | jq | cut` will silently swallow errors if a middle command fails. Always prefix multi-step bash commands with `set -euo pipefail` to ensure fail-fast behavior.
 - **Headless Polling Loops:** Never assume a service starts instantly. Never use a single `curl` or a manual bash `while` loop. Always use `curl`'s built-in retry flags:
   ```bash
@@ -99,7 +99,7 @@ When executing commands autonomously, agents must use robust patterns:
 
 ### Using Attached Shells for Servers
 **Harm:** Services die when AI session ends, or `stdout` streams infinitely and breaks the JSON parser.
-**Fix:** Always use `docker compose -d` or `> .app.log 2>&1 & echo $! > .app.pid` for native processes.
+**Fix:** Always use `docker compose -d` or your environment's native background execution method (`> .app.log 2>&1 & echo $! > .app.pid`) for persistent processes.
 
 ### Log Parsing for Health Checks
 **Harm:** Fragile, slow, format-dependent.

@@ -60,7 +60,7 @@ When you need to mock a strict, complex 3rd-party API (like Stripe or GitHub) an
 *(Prism will now return dynamic, realistic mock data based on the OAS schema, and throw errors if your app sends invalid requests).*
 
 ### Debugging Prism Mocks
-Because Prism is running detached, if your application fails to communicate with the mock (e.g., throwing 400 Bad Request), you **must** read the container logs to see the strict schema validation errors:
+Because Prism is running in the background, if your application fails to communicate with the mock (e.g., throwing 400 Bad Request), you **must** read the container logs to see the strict schema validation errors:
 ```bash
 docker logs --tail 50 mock_prism
 ```
@@ -73,7 +73,7 @@ When you need to verify how your application handles timeouts, 500 errors, or ma
 
 ### Action: Simulating a Timeout
 
-1. Start WireMock via Docker (YAGNI: only do this if specifically testing faults). **Always use `-d` (detached) rather than `-it` to prevent blocking the agent's shell:**
+1. Start WireMock via Docker (YAGNI: only do this if specifically testing faults). **Always use `-d` (background) rather than `-it` to prevent blocking the agent's shell:**
    ```bash
    docker rm -f wiremock_test 2>/dev/null || true
    docker run -d --name wiremock_test --rm -p 8080:8080 wiremock/wiremock:latest

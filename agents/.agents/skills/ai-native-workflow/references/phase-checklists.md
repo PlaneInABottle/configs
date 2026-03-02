@@ -27,7 +27,7 @@ Profile the project before choosing a runtime using robust, non-hanging bash com
 ### Step 1.3 — AI-Specific Requirements
 
 AI agents need:
-- **Headless Management:** Agents must start/stop processes detached with output redirection.
+- **Headless Management:** Agents must start/stop processes in the background with output redirection.
 - **Machine-Readable Readiness Probes:** Instead of parsing logs, use `curl -sSf` for HTTP, `pg_isready` for Postgres, etc.
 
 ### Step 1.4 — Inventory Boundaries
@@ -62,9 +62,9 @@ until docker exec db pg_isready; do sleep 1; done
 Failure: `docker compose logs db` to inspect crashes
 ```
 
-### Step 2.3 — Test Detached Mode
+### Step 2.3 — Test Background Mode
 Services must survive session boundaries.
-1. Start services in detached mode (e.g. `docker compose -d` or `npm run dev > .app.log 2>&1 & echo $! > .app.pid`).
+1. Start services in the background (e.g. `docker compose -d` or `npm run dev > .app.log 2>&1 & echo $! > .app.pid`).
 2. Simulate session end (kill the current bash session).
 3. Start a new session and verify the services are still running via readiness probes.
 
@@ -115,6 +115,6 @@ curl --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf htt
 ---
 
 ## Phase 6: Teardown
-Never leave detached processes or unmanaged state running indefinitely.
+Never leave background processes or unmanaged state running indefinitely.
 - If using Docker: `docker compose down`
-- If using native detached shells: `kill $(cat .app.pid) && rm .app.pid`
+- If using native background processes: `kill $(cat .app.pid) && rm .app.pid`

@@ -37,7 +37,7 @@ Each phase has a natural skill creation checkpoint. These are moments where oper
 
 **Examples:**
 - "Database needs 5 seconds before accepting connections after Docker start"
-- "Detached shells (`detach: true`) are required — attached shells kill services on session end"
+- "Background shells are required — attached shells kill services on session end"
 - "Port 3000 conflict: `lsof -i :3000 | grep LISTEN` then `kill <PID>`"
 - "Stale Docker containers from previous session cause port conflicts — run `docker compose down` first"
 
