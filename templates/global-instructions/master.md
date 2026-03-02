@@ -185,6 +185,7 @@ For application code (e.g., `npm run dev`, `uvicorn`), use native execution to b
 
 <!-- SECTION:detached_shells:START:copilot -->
 **Copilot Native:** Use the built-in async execution `bash(..., detach=true)`. Read output with `read_bash(shellId)`. Stop with `kill <PID>`.
+**CRITICAL:** If you read instructions from a skill (like `ai-native-workflow`) that tell you to run `npm run dev > .app.log 2>&1 & echo $! > .app.pid`, **IGNORE the bash backgrounding `&` syntax**. Run the foreground command (`npm run dev`) using your native `detach=true` argument instead.
 <!-- SECTION:detached_shells:END -->
 <!-- SECTION:detached_shells_fallback:START:!copilot -->
 **Strict PID Tracking:** You MUST write output and PID to disk to survive session loss:

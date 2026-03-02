@@ -171,6 +171,7 @@ Context compaction causes agents to forget background PIDs, leading to zombie pr
 For application code (e.g., `npm run dev`, `uvicorn`), use native execution to benefit from Hot Module Replacement (HMR) and fast iteration. 
 
 **Copilot Native:** Use the built-in async execution `bash(..., detach=true)`. Read output with `read_bash(shellId)`. Stop with `kill <PID>`.
+**CRITICAL:** If you read instructions from a skill (like `ai-native-workflow`) that tell you to run `npm run dev > .app.log 2>&1 & echo $! > .app.pid`, **IGNORE the bash backgrounding `&` syntax**. Run the foreground command (`npm run dev`) using your native `detach=true` argument instead.
 
 
 **Port Recovery:** If you ever encounter `EADDRINUSE` (port in use), forcefully reclaim it: `lsof -ti :<PORT> | xargs -r kill -9`.
