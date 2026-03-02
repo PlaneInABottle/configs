@@ -39,6 +39,9 @@ Action Checklist (Before ANY action):
 <!-- SECTION:copilot_memory_checklist:START:copilot -->
 - Have I used `read_memory` to recall stored knowledge?
 <!-- SECTION:copilot_memory_checklist:END -->
+<!-- SECTION:copilot_lsp_checklist:START:copilot -->
+- For code navigation/edits on supported file types: use `lsp` (goToDefinition, findReferences, hover) before grep/glob.
+<!-- SECTION:copilot_lsp_checklist:END -->
 
 **VALIDATION:**
 - Can existing code/tools solve this?
@@ -85,6 +88,9 @@ Context7 MCP: Tool for researching libraries and APIs. Required for any external
 <!-- SECTION:copilot_tools_memory:START:copilot -->
 Memory tools: `read_memory` to retrieve stored knowledge; `store_memory` to persist durable codebase facts.
 <!-- SECTION:copilot_tools_memory:END -->
+<!-- SECTION:copilot_lsp_tools:START:copilot -->
+LSP tools: Use `lsp` for code intelligence on `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.lua`, `.sh`, `.bash`, `.zsh` files. Prefer over grep/glob for symbol navigation. Operations: `goToDefinition`, `findReferences`, `hover` (type info), `documentSymbol` (file outline), `rename` (safe cross-file rename), `incomingCalls`/`outgoingCalls` (call graph).
+<!-- SECTION:copilot_lsp_tools:END -->
 ask_user: Use for interactive clarification questions; never ask in plain text.
 ## Skills Mastery
 **Skills Loading is MANDATORY.** Skills contain proven patterns, workflows, and integrations specific to this project.

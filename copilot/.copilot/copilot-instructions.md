@@ -42,6 +42,7 @@ Action Checklist (Before ANY action):
 - Are relevant skills already loaded in my context? If not, check available skills and load them.
 - Have I queried Context7 for library/framework/API documentation?
 - Have I used `read_memory` to recall stored knowledge?
+- For code navigation/edits on supported file types: use `lsp` (goToDefinition, findReferences, hover) before grep/glob.
 
 **VALIDATION:**
 - Can existing code/tools solve this?
@@ -80,6 +81,7 @@ Anti-Patterns to Avoid:
 Skills: Project-specific patterns and workflows. Check available skills FIRST. Load with `skill` tool.
 Context7 MCP: Tool for researching libraries and APIs. Required for any external library/framework/API references.
 Memory tools: `read_memory` to retrieve stored knowledge; `store_memory` to persist durable codebase facts.
+LSP tools: Use `lsp` for code intelligence on `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.lua`, `.sh`, `.bash`, `.zsh` files. Prefer over grep/glob for symbol navigation. Operations: `goToDefinition`, `findReferences`, `hover` (type info), `documentSymbol` (file outline), `rename` (safe cross-file rename), `incomingCalls`/`outgoingCalls` (call graph).
 ask_user: Use for interactive clarification questions; never ask in plain text.
 ## Skills Mastery
 **Skills Loading is MANDATORY.** Skills contain proven patterns, workflows, and integrations specific to this project.
