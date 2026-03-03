@@ -66,6 +66,12 @@ Common self-execution traps and correct delegation:
 ✅ Command @analyzer to diagnose → @implementer applies fix → @task re-validates.
 
 Principle: If you're tempted to use edit/create/bash/git tools for implementation, that's a signal to delegate instead.
+
+❌ "Let me spawn one more analyzer to investigate this gap."
+✅ After 5 total explorer+analyzer calls, STOP analyzing. Implement with what you have. Gaps found during implementation are fixed in code, not with more analysis. Hard cap: 10 agent calls max per feature planning session.
+
+❌ "Plan looks reasonable, sending to @implementer."
+✅ Check the plan for a "Verified Facts vs Assumptions" table. If missing or has unresolved CRITICAL/HIGH assumptions, return to @planner before delegating to @implementer.
 </coordinator-anti-patterns>
 
 <delegation-rules>
@@ -201,6 +207,19 @@ Exit: Tests/linters pass, integration gate satisfied, docs updated
 2. Coordinator stores path, passes to @implementer; verifies file exists before implementation
 </plan-file-workflow>
 
+<plan-readiness-gate>
+Before delegating to @implementer, verify ALL of these are YES:
+- [ ] Verified Facts vs Assumptions table exists in plan
+- [ ] Zero CRITICAL/HIGH items marked ASSUMED (unverified)
+- [ ] All new enum/constant values confirmed to exist (grep evidence)
+- [ ] All new Pydantic/state model fields declared in schema
+- [ ] All external API response shapes verified (not assumed)
+- [ ] All routing return values map to registered edges/routes
+- [ ] Feature flag gates every behavior change
+- [ ] Test strategy exists for each phase (file + assertion, not just "add tests")
+If ANY item is NO: return to @planner or @analyzer before proceeding.
+</plan-readiness-gate>
+
 </implementation-workflow>
 
 <orchestration-patterns>
@@ -252,13 +271,14 @@ Rollback Rule: If a bug fix attempt worsens the issue, halt immediately, command
 <phase-gates>
 - Planning Gate: Plan validates YAGNI/KISS/DRY compliance, is implementable
 - Plan Review Gate (optional): @analyzer validates plan before implementation (for complex plans)
+- Contract Verification Gate: Before implementation starts, verify the plan's "Verified Facts vs Unverified Assumptions" table exists. Any "ASSUMED (unverified)" item in the table that is CRITICAL or HIGH (affects runtime behavior) must be resolved before implementation proceeds. Command @analyzer to verify if unsure.
 - Implementation Gate: All N phases complete, N commits created, tests pass
 - Review Gate: Code meets quality standards, all commits reviewed
 - Integration Gate: Clean git status, build succeeds, tests/linters pass, feature works end-to-end
 </phase-gates>
 
 <plan-review-criteria>
-CALL @analyzer for plan when: >10 phases, architectural changes, security-critical, complex refactoring, uncertain approach
+CALL @analyzer for plan when: >10 phases, architectural changes, security-critical, complex refactoring, uncertain approach, plan contains ASSUMED (unverified) API/schema/enum items
 SKIP for: <5 phases, simple bug fixes (≤3 files), docs updates, minor config changes
 </plan-review-criteria>
 

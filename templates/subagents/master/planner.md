@@ -34,6 +34,33 @@ Example parallel @explore queries:
 - "Show database models and data persistence patterns"
 
 </mandatory-investigation-workflow>
+
+<mandatory-runtime-contract-verification>
+BEFORE finalizing any plan, you MUST verify these runtime contracts with `file:line` evidence.
+Unverified assumptions are BLOCKING — label them explicitly as "ASSUMED (unverified)" if you cannot verify them.
+
+**Required verification checklist (every item must be checked):**
+
+1. **Enum/constant completeness** — For every enum value, constant, or status string the plan references or uses (error types, status values, reason codes): confirm it EXISTS in its definition file with `grep`. List any that are missing as tasks to add.
+
+2. **Schema/model field existence** — For every new state field, model property, or data structure field the plan introduces: confirm it's declared in the model/type definition. For strict models that reject unknown fields (e.g., `extra="forbid"` in Pydantic, sealed classes, strict TypeScript interfaces): accessing an undeclared field crashes at runtime — declare it first.
+
+3. **API response contracts** — For every external API call the plan relies on (response body, status codes, headers): verify the actual response shape via Context7, official docs, or real response inspection. Never assume based on "typical REST behavior." Document the verified shape or label as "ASSUMED."
+
+4. **Framework routing constraints** — For frameworks with explicit edge/routing rules (e.g., LangGraph, state machines, FSMs, router registries): verify that any new routing return value has a corresponding registered route/edge. A routing function returning an unregistered key causes a runtime error.
+
+5. **Library behavior** — For any library method the plan calls: query Context7 for the actual return type and side effects. Do not assume.
+
+6. **Existing code path traces** — For every existing function the plan modifies or calls: read its current signature, return type, and callers. State the `file:line` for each.
+
+7. **Test coverage state** — Check for orphaned build artifacts (e.g., `.pyc`, `.class`, `.js` from deleted source) for any test files that were deleted without replacement. List any coverage gaps as tasks.
+
+**Output format:** Include a "Verified Facts vs Unverified Assumptions" table in the plan:
+| Item | Verified at | Evidence / Note |
+|------|------------|-----------------|
+| `ErrorType.FOO` exists | `src/models/errors.py:45` | ✅ confirmed |
+| `POST /sendMail` response body | — | ⚠️ ASSUMED — must verify |
+</mandatory-runtime-contract-verification>
 <!-- SECTION:copilot_explore:END -->
 
 <mission>
@@ -171,6 +198,11 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 - Design constraint or decision
 - Scope exclusion ("NO new database tables")
 - Technical requirement ("Async/await required")
+
+## Decision Log
+| Decision | Chosen | Rejected | Rationale | Evidence |
+|----------|--------|----------|-----------|---------|
+| Example | approach A | approach B | reason | `file:line` |
 ```
 </exemplar-plan-template>
 

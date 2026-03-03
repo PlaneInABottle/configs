@@ -147,27 +147,33 @@ For each phase in plan (1 to N, or single phase if no plan):
     - Query Context7 for official documentation and patterns
     - Study usage examples and best practices
     - Apply patterns from Context7 to implementation
-3. Implement changes incrementally — one atomic unit at a time:
+3. Pre-implementation verification — before writing any code for this phase:
+   - Enumerate every enum value, error type, constant, or status string this phase uses: grep to confirm each exists in its definition
+   - Enumerate every state/model/schema field this phase reads or writes: confirm each is declared in the type definition
+   - For any external API response this phase parses: confirm the response shape matches what you expect (check docs or Context7)
+   - If any item fails verification: STOP, add a fix task before the current phase, report to coordinator
+   This takes < 5 minutes and prevents runtime crashes from invalid references.
+4. Implement changes incrementally — one atomic unit at a time:
    - Follow implementation steps and deliverables
    - Touch only relevant files (1-3 files recommended per commit)
    - Follow existing codebase patterns
    - **ATOMIC EDITS**: Implement one function, class, or method per edit action — never write entire file contents in a single edit
    - Verify each unit is syntactically coherent before moving to the next
-4. Write and run tests:
+5. Write and run tests:
    - Write unit tests for new code (MANDATORY - never skip)
    - Run tests immediately after writing (MANDATORY - never skip)
    - Validation tests for deliverables
-5. Run validation:
+6. Run validation:
    - Execute tests
    - Verify build passes
    - Check no regressions
-6. Commit immediately:
+7. Commit immediately:
    - Use conventional commit format: `<type>: <description>`
    - Types: `feat:` (new feature), `fix:` (bug fix), `refactor:` (code restructure), `test:` (add tests), `docs:` (documentation)
    - Example: `feat: add user authentication with JWT`
    - Example: `fix: handle null input in login form`
    - Verify commit in git history
-7. Report progress:
+8. Report progress:
    - "Commit {N} complete"
    - List files modified
    - Provide commit SHA

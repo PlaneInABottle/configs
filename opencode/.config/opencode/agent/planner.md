@@ -176,6 +176,11 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 - Design constraint or decision
 - Scope exclusion ("NO new database tables")
 - Technical requirement ("Async/await required")
+
+## Decision Log
+| Decision | Chosen | Rejected | Rationale | Evidence |
+|----------|--------|----------|-----------|---------|
+| Example | approach A | approach B | reason | `file:line` |
 ```
 </exemplar-plan-template>
 

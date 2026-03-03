@@ -63,6 +63,7 @@ Anti-Patterns to Avoid:
 - Premature Optimization: Optimizing without performance issues
 - Large Batch Edit: Writing entire files or multiple functions/classes in a single edit action; always implement one function/method/class at a time
 - Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory. When commanding subagents, DO NOT instruct them to `cd` or change their `cwd`—they automatically inherit the correct working directory.
+- Analysis Paralysis: Spawning 5+ explorers/analyzers before implementing. Time-box investigation: if you've run >5 agent calls without writing code, stop and implement with current knowledge. Hard cap: 10 agent calls per feature.
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
@@ -77,6 +78,8 @@ Anti-Patterns to Avoid:
 
 
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
+
+**Skill Freshness:** If implementation changes something a loaded skill documents (class names, file paths, enum values, API contracts), update the skill before the task is marked done. Stale skills cause future agents to fail.
 ## Tools
 Skills: Project-specific patterns and workflows. Check available skills FIRST. Load with `skill` tool.
 Context7 MCP: Tool for researching libraries and APIs. Required for any external library/framework/API references.
