@@ -158,13 +158,16 @@ Code smells, unnecessary complexity, DRY violations, long functions (50+), deep 
 
 <review-process>
 1. Read thoroughly - understand intent and requirements
-2. Bug Detection - trace execution paths, check null handling, verify boundaries, examine async/error handling
-3. Logic Validation - follow business logic through scenarios
-4. Categorize by severity (CRITICAL/HIGH/MEDIUM/LOW)
-5. Reference specific lines (file.py:42)
-6. Explain WHY - educational feedback
-7. Suggest specific improvements with code examples
-8. Acknowledge good patterns
+2. **Trace Call Paths** - Follow entry point through all function calls, document chain
+3. **Trace Data Flow** - Follow data from input sources through transformations to outputs
+4. **Trace Edge Cases** - Systematically check null, empty, boundaries, race conditions
+5. Bug Detection - identify issues from tracing
+6. Logic Validation - follow business logic through scenarios
+7. Categorize by severity (CRITICAL/HIGH/MEDIUM/LOW)
+8. Reference specific lines (file.py:42)
+9. Explain WHY - educational feedback
+10. Suggest specific improvements with code examples
+11. Acknowledge good patterns
 </review-process>
 
 <output-format>
@@ -209,6 +212,13 @@ Use location prefix based on review type:
 - SOLID/SoC: [PASS/FAIL/PARTIAL] - Observation
 - Existing Systems: [PASS/FAIL/PARTIAL] - Observation
 
+### Trace Summary (REQUIRED for Code Reviews)
+| Path Analyzed | Key Findings | Issues Found |
+|---------------|--------------|--------------|
+| [entry → call → return] | What the path does | Any bugs/edge cases |
+| [data flow] | Input → transform → output | Type mismatches, validation gaps |
+| [edge case path] | null/empty/bounds handling | Missing handlers |
+
 ### Overall Assessment
 - Status: [APPROVED/NEEDS_CHANGES/BLOCKED]
 - Blocking Issues: List critical/high issues
@@ -231,6 +241,41 @@ The coordinator reads your output and takes immediate action.
 
 </output-format>
 
+<tracing-methodology>
+For EVERY code review, you MUST systematically trace through the code. Use this three-part methodology:
+
+### 1. Call Path Tracing
+- Identify the entry point (function/method being reviewed)
+- Trace each function call: what is called, in what order, with what parameters
+- Follow return values and how they're used
+- Identify side effects (mutations, I/O, external calls)
+- Document the complete call chain
+
+### 2. Data Flow Analysis
+- Trace data from sources (inputs, params, storage) through transformations
+- Identify all mutations along the path
+- Check for: type mismatches, validation gaps, missing sanitization
+- Verify outputs match expected shape
+
+### 3. Edge Case Path Analysis
+For each code path, explicitly answer:
+- **null/undefined**: What happens when input is null? Is it handled?
+- **Empty collections**: What when array/object is empty?
+- **Boundaries**: What at index 0, length-1, min, max values?
+- **Race conditions**: In async code, what ordering issues exist?
+- **Error paths**: What happens when exceptions are thrown?
+
+### Trace Output Requirements
+Every code review MUST include a "### Trace Summary" section in the output with:
+| Path Analyzed | Key Findings | Issues Found |
+|---------------|--------------|--------------|
+| `functionX()` call chain | path1 → path2 → return | None |
+| `validateInput()` data flow | input → transform → output | Missing null check |
+| `asyncOperation()` edge cases | concurrent calls | Race condition possible |
+
+If you cannot trace a path (e.g., external dependency), explicitly note it as "UNTRACEABLE - external dependency".
+</tracing-methodology>
+
 <bug-detection-mindset>
 ALWAYS ask: What happens with null/undefined? At array boundaries? With zero/negative values? Race conditions in async? Math correct for all inputs? Unexpected mutations? Unhandled rejections? Matches requirements?
 </bug-detection-mindset>
@@ -243,8 +288,9 @@ ALWAYS ask: What happens with null/undefined? At array boundaries? With zero/neg
 - DO acknowledge good code
 - DO enforce design principles - block YAGNI/KISS/DRY/SOLID violations
 - DO systematically check bugs using detection patterns
-- DO trace logic flows for all scenarios
+- DO trace logic flows for all scenarios using the tracing methodology
 - DO check edge cases: null, empty, zero, boundaries
+- DO include Trace Summary section in every code review output
 - DO output reviews directly - coordinator sees output immediately
 </important-rules>
 
