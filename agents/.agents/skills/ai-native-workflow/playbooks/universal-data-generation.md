@@ -10,7 +10,81 @@
 
 Use lightweight TypeScript scripts executed via an ephemeral Docker container to generate deterministic payloads for API requests, mock server responses (`db.json`), or file fixtures. **Never require a local Node.js installation or a host `package.json`.**
 
-### Action: Generating Specific Edge-Case Payloads
+### Node.js (Faker.js)
+
+```typescript
+// scripts/generate-bulk.ts
+import { faker } from "@faker-js/faker";
+
+// CRITICAL: Always use a seed for deterministic, reproducible output across CI runs!
+faker.seed(42); 
+
+const users = Array.from({ length: 50 }, () => ({
+  name: faker.person.fullName(),
+  email: faker.internet.email(),
+  role: faker.helpers.arrayElement(["admin", "user"]),
+}));
+
+console.log(JSON.stringify(users, null, 2));
+```
+
+```bash
+# Pipe directly to the API boundary using a pristine node container
+set -euo pipefail
+docker run --rm -v "$(pwd)/scripts:/scripts" node:lts-alpine npx -y -p tsx -p @faker-js/faker tsx /scripts/generate-bulk.ts | curl -sSf -X POST http://localhost:8000/api/users/bulk -H "Content-Type: application/json" -d @-
+```
+
+### Python (Faker)
+
+```python
+# scripts/generate_bulk.py
+import json
+import sys
+try:
+    from faker import Faker
+except ImportError:
+    # Install if not present
+    import subprocess
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "faker"])
+    from faker import Faker
+
+# CRITICAL: Always use a seed for deterministic, reproducible output!
+fake = Faker()
+Faker.seed(42)
+
+users = [
+    {
+        "name": fake.name(),
+        "email": fake.email(),
+        "role": fake.random_element(["admin", "user"]),
+        "address": {
+            "city": fake.city(),
+            "country": fake.country(),
+        }
+    }
+    for _ in range(50)
+]
+
+print(json.dumps(users, indent=2))
+```
+
+```bash
+# Run with Python Docker container
+set -euo pipefail
+docker run --rm -v "$(pwd)/scripts:/scripts" python:3.11-slim python /scripts/generate_bulk.py | curl -sSf -X POST http://localhost:8000/api/users/bulk -H "Content-Type: application/json" -d @-
+
+# Or generate SQL inserts
+docker run --rm -v "$(pwd)/scripts:/scripts" python:3.11-slim \
+  python -c "
+from faker import Faker
+fake = Faker()
+Faker.seed(42)
+for i in range(10):
+    print(f\"INSERT INTO users (name, email) VALUES ('{fake.name()}', '{fake.email()}');\")
+" > tests/fixtures/users.sql
+```
+
+### Generating Specific Edge-Case Payloads
 When you need exact, hardcoded data to trigger specific business logic branches:
 
 ```typescript

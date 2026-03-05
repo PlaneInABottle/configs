@@ -35,9 +35,13 @@ Because you have a persistent terminal, build complex assertions iteratively. Us
 
 For exact implementation details, code snippets, and CLI commands for the toolkit above, reference the following playbooks:
 
-- [playbooks/api-contract-testing.md](playbooks/api-contract-testing.md) (Hurl syntax, iterative bash assertions, handling async state)
-- [playbooks/universal-data-generation.md](playbooks/universal-data-generation.md) (Universal Node/Faker.js for DB seeds, API mock payloads, and test fixtures)
-- [playbooks/mocking-dependencies.md](playbooks/mocking-dependencies.md) (JSON-Server, Prism, Wiremock - payloads generated via Faker.js)
+- [playbooks/api-contract-testing.md](playbooks/api-contract-testing.md) (REST: auth, file uploads, webhooks, negative testing)
+- [playbooks/graphql-testing.md](playbooks/graphql-testing.md) (GraphQL queries, mutations, variables)
+- [playbooks/websocket-testing.md](playbooks/websocket-testing.md) (WebSocket connection, messaging, auth)
+- [playbooks/load-testing.md](playbooks/load-testing.md) (hey, k6, wrk for performance testing)
+- [playbooks/debugging-profiling.md](playbooks/debugging-profiling.md) (Logs, remote debug, CPU/memory profiling)
+- [playbooks/universal-data-generation.md](playbooks/universal-data-generation.md) (Faker.js, Python Faker for test data)
+- [playbooks/mocking-dependencies.md](playbooks/mocking-dependencies.md) (JSON-Server, Prism, Wiremock)
 - [playbooks/media-file-handling.md](playbooks/media-file-handling.md) (Pexels, MinIO S3 mocking)
 
 ---
