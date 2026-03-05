@@ -77,7 +77,32 @@ Always use language-agnostic tools to verify system state.
 
 When executing commands autonomously, agents must use robust patterns:
 
-- **Strict Output Redirection & PID Tracking:** When running application servers in the background using standard bash, `&` is not enough. You must prevent stdout from corrupting the tool response, and you must track the PID to prevent port exhaustion (Zombie processes). **Always use: `npm run dev > .app.log 2>&1 & echo $! > .app.pid`**
+### Process Management (PM2)
+
+**PM2 is the recommended process manager** for application servers. It handles PID tracking, log rotation, and crash recovery automatically.
+
+```bash
+# Start app server
+pm2 start npm --name "project" -- run dev
+
+# View logs
+pm2 logs project
+
+# Stop
+pm2 stop project
+
+# Restart after code changes
+pm2 restart project
+
+# Install log rotation
+pm2 install pm2-logrotate
+```
+
+### Fallback: Bash Patterns
+
+Only use bash for quick experiments. For reliable process management, use PM2.
+
+- **Strict Output Redirection & PID Tracking:** When running application servers in the background using standard bash (fallback only), `&` is not enough. You must prevent stdout from corrupting the tool response, and you must track the PID to prevent port exhaustion (Zombie processes). **Use PM2 instead of: `npm run dev > .app.log 2>&1 & echo $! > .app.pid`**
 - **Strict Bash Pipelines:** Bash pipelines like `curl | jq | cut` will silently swallow errors if a middle command fails. Always prefix multi-step bash commands with `set -euo pipefail` to ensure fail-fast behavior.
 - **Headless Polling Loops:** Never assume a service starts instantly. Never use a single `curl` or a manual bash `while` loop. Always use `curl`'s built-in retry flags:
   ```bash
@@ -99,7 +124,7 @@ When executing commands autonomously, agents must use robust patterns:
 
 ### Using Attached Shells for Servers
 **Harm:** Services die when AI session ends, or `stdout` streams infinitely and breaks the JSON parser.
-**Fix:** Always use `docker compose -d` or your environment's native background execution method (`> .app.log 2>&1 & echo $! > .app.pid`) for persistent processes.
+**Fix:** Use **PM2** for app servers (`pm2 start npm -- run dev`) or Docker's `-d` for databases.
 
 ### Log Parsing for Health Checks
 **Harm:** Fragile, slow, format-dependent.

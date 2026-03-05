@@ -27,7 +27,8 @@ Profile the project before choosing a runtime using robust, non-hanging bash com
 ### Step 1.3 — AI-Specific Requirements
 
 AI agents need:
-- **Headless Management:** Agents must start/stop processes in the background with output redirection.
+- **Process Management:** Use PM2 for app servers (auto-restart, log rotation, named processes)
+- **Headless Management:** Agents must start/stop processes in the background with proper tracking.
 - **Machine-Readable Readiness Probes:** Instead of parsing logs, use `curl -sSf` for HTTP, `pg_isready` for Postgres, etc.
 
 ### Step 1.4 — Inventory Boundaries
@@ -50,7 +51,7 @@ cp .env.example .env
 ### Step 2.2 — Write the Startup Sequence
 
 Create the runtime skill document using structured, AI-parseable formats.
-**CRITICAL: Never assume a human is watching the terminal. Use headless tools.**
+**CRITICAL: Use PM2 for app servers. Use Docker for databases.**
 
 ```markdown
 ## Start Database (Example: Postgres)
@@ -60,13 +61,26 @@ Verify (Polling loop):
 until docker exec db pg_isready; do sleep 1; done
 ```
 Failure: `docker compose logs db` to inspect crashes
+
+## Start Application Server (Example: Node.js)
+Command: `pm2 start npm --name "myapp" -- run dev`
+Verify (Polling loop):
+```bash
+curl --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf http://localhost:3000/health
+```
+Failure: `pm2 logs myapp` to inspect errors
 ```
 
 ### Step 2.3 — Test Background Mode
 Services must survive session boundaries.
-1. Start services in the background (e.g. `docker compose -d` or `npm run dev > .app.log 2>&1 & echo $! > .app.pid`).
+
+1. Start services using PM2 (app servers) or Docker.
+   - App: `pm2 start npm --name "myapp" -- run dev`
+   - Database: `docker compose up -d db`
 2. Simulate session end (kill the current bash session).
-3. Start a new session and verify the services are still running via readiness probes.
+3. Start a new session and verify the services are still running:
+   - PM2: `pm2 list` to check status
+   - Docker: `docker compose ps`
 
 ---
 
@@ -116,5 +130,7 @@ curl --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf htt
 
 ## Phase 6: Teardown
 Never leave background processes or unmanaged state running indefinitely.
-- If using Docker: `docker compose down`
-- If using native background processes: `kill $(cat .app.pid) && rm .app.pid`
+
+- PM2 app servers: `pm2 delete all` or `pm2 delete <app-name>`
+- Docker services: `docker compose down`
+- Both combined: `pm2 delete all && docker compose down`

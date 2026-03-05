@@ -190,23 +190,36 @@ When encountering errors:
 Context compaction causes agents to forget background PIDs, leading to zombie processes and port exhaustion (`EADDRINUSE`). Always use this prioritized strategy based on the type of service:
 
 ### 1. Application Dev Servers (Priority 1)
-For application code (e.g., `npm run dev`, `uvicorn`), use native execution to benefit from Hot Module Replacement (HMR) and fast iteration. 
+For application code (e.g., `npm run dev`, `uvicorn`), use **PM2** for process management:
 
-<!-- SECTION:detached_shells:START:copilot -->
-**Copilot Native:** Use the built-in async execution `bash(..., detach=true)`. Read output with `read_bash(shellId)`. Stop with `kill <PID>`.
-**CRITICAL:** If you read instructions from a skill (like `ai-native-workflow`) that tell you to run `npm run dev > .app.log 2>&1 & echo $! > .app.pid`, **IGNORE the bash backgrounding `&` syntax**. Run the foreground command (`npm run dev`) using your native `detach=true` argument instead.
-<!-- SECTION:detached_shells:END -->
-<!-- SECTION:detached_shells_fallback:START:!copilot -->
-**Strict PID Tracking:** You MUST write output and PID to disk to survive session loss:
-`npm run dev > .app.log 2>&1 & echo $! > .app.pid`
-Cleanup: `kill $(cat .app.pid) && rm .app.pid`.
-<!-- SECTION:detached_shells_fallback:END -->
+**PM2** (recommended):
+```bash
+# Start app server
+pm2 start npm --name "project-name" -- run dev
 
-**Port Recovery:** If you ever encounter `EADDRINUSE` (port in use), forcefully reclaim it: `lsof -ti :<PORT> | xargs -r kill -9`.
+# View logs
+pm2 logs project-name
+
+# Stop/restart
+pm2 stop project-name
+pm2 restart project-name
+pm2 delete project-name
+
+# Install log rotation (one-time)
+pm2 install pm2-logrotate
+```
+
+**Prerequisite:** PM2 must be installed globally: `npm install -g pm2`
 
 ### 2. Infrastructure & Databases (Priority 2)
 For databases (Postgres, Redis) or complex dependencies, use Docker.
 **Docker:** Run state-independent containers (`docker compose up -d` or `docker run -d --name db`). Cleanup is idempotent: `docker rm -f db`.
+
+### Port Recovery
+If you encounter `EADDRINUSE` (port in use):
+1. Check PM2: `pm2 list`
+2. Check Docker: `docker compose ps`
+3. Force reclaim: `lsof -ti :<PORT> | xargs -r kill -9`
 <!-- SECTION:background_agents:START:copilot -->
 
 ## Background Agents & Fleet Mode

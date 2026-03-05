@@ -59,13 +59,91 @@ For exact implementation details, code snippets, and CLI commands for the toolki
 
 ---
 
+## PM2 Process Management
+
+PM2 is the **recommended process manager** for running application servers. It provides log rotation, auto-restart on crash, named processes for easy targeting, and real-time log streaming.
+
+**Prerequisite:** PM2 must be installed globally: `npm install -g pm2`
+
+### Commands
+
+```bash
+# Start app server (Node.js)
+pm2 start npm --name "project-name" -- run dev
+
+# Start Python app
+pm2 start main.py --interpreter python3 --name "python-api"
+
+# Start with arguments
+pm2 start "uvicorn main:app --host 0.0.0.0 --port 8000" --name "fastapi"
+
+# View real-time logs
+pm2 logs project-name
+
+# View last 50 lines (no streaming)
+pm2 logs project-name --lines 50 --nostream
+
+# View all processes
+pm2 list
+
+# Stop
+pm2 stop project-name
+
+# Restart after code changes
+pm2 restart project-name
+
+# Delete completely
+pm2 delete project-name
+
+# Stop all
+pm2 delete all
+
+# Install log rotation (run once)
+pm2 install pm2-logrotate
+
+# Configure rotation
+pm2 set pm2-logrotate:max_size 10M
+pm2 set pm2-logrotate:retain 7
+pm2 set pm2-logrotate:compress true
+```
+
+### Multi-Language Support
+
+PM2 auto-detects interpreter by file extension:
+| Extension | Interpreter |
+|-----------|-------------|
+| `.py` | Python |
+| `.rb` | Ruby |
+| `.sh` | Bash |
+| `.js` | Node |
+
+### Hybrid Pattern with Docker
+
+Use PM2 for app servers, Docker for databases:
+
+```bash
+# Start database (Docker)
+docker compose up -d db
+
+# Start app server (PM2)
+pm2 start npm --name "myapp" -- run dev
+
+# Verify both running
+pm2 list && docker compose ps
+```
+
+---
+
 ## Interactive UI Verification (`agent-browser`)
 
 Instead of writing rigid test scripts, act as a real user. Use `agent-browser` for fast feedback during active implementation.
 
 ```bash
-# Start application dev server in the background with strict PID tracking and log redirection
-npm run dev > .app.log 2>&1 & echo $! > .app.pid
+# Start application dev server with PM2
+pm2 start npm --name "myapp" -- run dev
+
+# Wait for server to be ready (health check)
+curl --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf http://localhost:3000/health
 
 # Verify rendering and state
 agent-browser open http://localhost:3000/login
@@ -89,7 +167,7 @@ agent-browser screenshot
 |---|---|
 | **Use Environment Variables** | Swap real external services with local CLI fakes (e.g. `STRIPE_URL=http://localhost:4010`) |
 | **Health Checks > Logs** | Always prefer querying an HTTP health endpoint over fragile bash `grep`s of container logs. |
-| **Background Processes** | Start persistent services with `> .app.log 2>&1 & echo $! > .app.pid` or Docker's `-d`. Attached shells die with your session. |
+| **Background Processes** | Use **PM2** for app servers (Node, Python, etc.). Use Docker for databases. |
 | **Skill-First** | Check available skills *before* implementing. Load every matching skill and combine their guidance. |
 
 | Anti-Pattern | Do Instead |
