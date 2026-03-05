@@ -119,8 +119,10 @@ Use `timeout` or `websocat` features to wait for responses:
 # Wait up to 5 seconds for a response after sending
 { echo '{"type": "getData"}'; sleep 5; } | wscat -c ws://localhost:8080/ws
 
-# With websocat: timeout after no activity
-websocat --timeout 5 ws://localhost:8080/ws
+# With websocat: timeout after no activity (use ping-timeout or shell timeout)
+websocat --ping-timeout 5 ws://localhost:8080/ws
+# OR use shell timeout
+timeout 5s websocat ws://localhost:8080/ws
 ```
 
 ---

@@ -31,7 +31,10 @@ console.log(JSON.stringify(users, null, 2));
 ```bash
 # Pipe directly to the API boundary using a pristine node container
 set -euo pipefail
-docker run --rm -v "$(pwd)/scripts:/scripts" node:lts-alpine npx -y -p tsx -p @faker-js/faker tsx /scripts/generate-bulk.ts | curl -sSf -X POST http://localhost:8000/api/users/bulk -H "Content-Type: application/json" -d @-
+docker run --rm -v "$(pwd)/scripts:/scripts" node:lts-alpine sh -c "
+  npm install -g tsx @faker-js/faker > /dev/null 2>&1
+  tsx /scripts/generate-bulk.ts
+" | curl -sSf -X POST http://localhost:8000/api/users/bulk -H "Content-Type: application/json" -d @-
 ```
 
 ### Python (Faker)
@@ -104,7 +107,7 @@ fs.writeFileSync('tests/fixtures/test-payload.json', JSON.stringify(exactPayload
 ```
 
 ### Action: Generating Randomized Bulk Mocks (Faker.js)
-When you need volume for load testing or list UI verification. Note that `@faker-js/faker` and `tsx` are loaded dynamically by `npx -y` inside the Docker container, so you don't need a host `package.json`.
+When you need volume for load testing or list UI verification. Packages are installed inside the Docker container, so you don't need a host `package.json`.
 
 ```typescript
 // scripts/generate-bulk.ts
@@ -126,7 +129,10 @@ console.log(JSON.stringify(users, null, 2));
 ```bash
 # Pipe directly to the API boundary using a pristine node container
 set -euo pipefail
-docker run --rm -v "$(pwd)/scripts:/scripts" node:lts-alpine npx -y -p tsx -p @faker-js/faker tsx /scripts/generate-bulk.ts | curl -sSf -X POST http://localhost:8000/api/users/bulk -H "Content-Type: application/json" -d @-
+docker run --rm -v "$(pwd)/scripts:/scripts" node:lts-alpine sh -c "
+  npm install -g tsx @faker-js/faker > /dev/null 2>&1
+  tsx /scripts/generate-bulk.ts
+" | curl -sSf -X POST http://localhost:8000/api/users/bulk -H "Content-Type: application/json" -d @-
 ```
 
 ---
@@ -141,7 +147,10 @@ Generate the event payload using Dockerized Node, and pipe it directly into the 
 ```bash
 # Assuming the script outputs a JSON event string
 set -euo pipefail
-docker run --rm -v "$(pwd)/scripts:/scripts" node:lts-alpine npx -y -p tsx -p @faker-js/faker tsx /scripts/generate-event.ts | docker exec -i my_redis redis-cli -x LPUSH worker_queue
+docker run --rm -v "$(pwd)/scripts:/scripts" node:lts-alpine sh -c "
+  npm install -g tsx @faker-js/faker > /dev/null 2>&1
+  tsx /scripts/generate-event.ts
+" | docker exec -i my_redis redis-cli -x LPUSH worker_queue
 ```
 
 ---
@@ -167,7 +176,10 @@ for (let i = 0; i < 50; i++) {
 ```bash
 # Execute directly against the container, bypassing host files
 set -euo pipefail
-docker run --rm -v "$(pwd)/scripts:/scripts" node:lts-alpine npx -y -p tsx -p @faker-js/faker tsx /scripts/generate-sql.ts | docker exec -i my_postgres_container psql -v ON_ERROR_STOP=1 -U postgres -d my_app_db
+docker run --rm -v "$(pwd)/scripts:/scripts" node:lts-alpine sh -c "
+  npm install -g tsx @faker-js/faker > /dev/null 2>&1
+  tsx /scripts/generate-sql.ts
+" | docker exec -i my_postgres_container psql -v ON_ERROR_STOP=1 -U postgres -d my_app_db
 ```
 
 ---
