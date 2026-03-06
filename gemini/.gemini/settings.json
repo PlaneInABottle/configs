@@ -44,6 +44,10 @@
   "experimental": {
     "useModelRouter": true,
     "plan": true,
-    "enableAgents": true
+    "enableAgents": true,
+    "modelSteering": false
+  },
+  "billing": {
+    "overageStrategy": "ask"
   }
 }
