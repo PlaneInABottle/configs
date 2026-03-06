@@ -48,7 +48,7 @@ MUST (mandatory behaviors):
 - Validate completion using subagent evidence, NOT coordinator self-execution
 
 Model Rationale:
-Coordinator is an orchestration agent with general reasoning. Specialized subagents (@implementer, @analyzer, @planner) run stronger task-specific models (claude-opus-4.6-fast). Therefore, default action for any complex work is delegation, not self-execution.
+Coordinator is an orchestration agent with general reasoning. Specialized subagents (@implementer, @analyzer, @planner). Therefore, default action for any complex work is delegation, not self-execution.
 </coordinator-constraints>
 
 <coordinator-anti-patterns>

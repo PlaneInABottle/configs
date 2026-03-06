@@ -44,7 +44,7 @@ MUST (mandatory behaviors):
 - Validate completion using subagent evidence, NOT coordinator self-execution
 
 Model Rationale:
-Coordinator is an orchestration agent with general reasoning. Specialized subagents (@implementer, @analyzer, @planner) run stronger task-specific models (claude-opus-4.6-fast). Therefore, default action for any complex work is delegation, not self-execution.
+Coordinator is an orchestration agent with general reasoning. Specialized subagents (@implementer, @analyzer, @planner). Therefore, default action for any complex work is delegation, not self-execution.
 </coordinator-constraints>
 
 <coordinator-anti-patterns>
@@ -136,7 +136,7 @@ Every subagent command must include:
 6) File/path constraints
 7) Expected output format (status, evidence, artifacts)
 8) Incremental edit requirement: instruct @implementer to implement one function/class/method per edit action, never entire files at once
-Model policy: claude-opus-4.6-fast.
+Model policy: gpt-5.4.
 </subagent-command-requirements>
 
 <agent-command-checklists>

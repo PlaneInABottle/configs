@@ -52,8 +52,8 @@ Action Checklist (Before ANY action):
 
 **SUB-AGENT COMMANDS:**
 - Subagent command check: Explicitly command subagents to check and load relevant skills, use Context7, and memory tools.
-- Subagent model check: Use `claude-opus-4.6-fast` for subagents.
-- Parallel review check: For code/commit reviews, spawn parallel @analyzer calls (claude-opus-4.6-fast) and merge findings.
+- Subagent model check: Use `gpt-5.4` for subagents.
+- Parallel review check: For code/commit reviews, spawn parallel @analyzer calls (gpt-5.4) and merge findings.
 
 Anti-Patterns to Avoid:
 
@@ -226,8 +226,8 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 ## Subagents
 
 
-Subagent Model Rule: Always specify model `claude-opus-4.6-fast` for subagents.
-Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `claude-opus-4.6-fast`, then merge findings.
+Subagent Model Rule: Always specify model `gpt-5.4` for subagents.
+Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `gpt-5.4`, then merge findings.
 Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`). DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 ### Planner
 Purpose: Architecture design and detailed planning
@@ -237,7 +237,7 @@ Output: Detailed implementation plan with phases
 
 **Required First:** Check available skills and load all relevant skills before proceeding.
 
-Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `claude-opus-4.6-fast`) (each scoped to a distinct module/concern), then aggregate findings before planning.
+Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.4`) (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
 Purpose: Security, performance, architecture audit
 When to use: Security-critical code, between phases, pre-deployment
@@ -246,7 +246,7 @@ Output: Issues, recommendations, approval status
 
 **Required First:** Check available skills and load all relevant skills before proceeding.
 
-Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel @explore calls (model `claude-opus-4.6-fast`) (split by module/concern), then aggregate findings before writing the review.
+Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel @explore calls (model `gpt-5.4`) (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
 Purpose: Build specific phases according to plan using best practices from official documentation
 When to use: Phased implementation with clear requirements
@@ -262,12 +262,12 @@ Critical Requirements:
 - Implementation Alignment: Implement according to learned patterns and official documentation
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
-Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `claude-opus-4.6-fast`) in parallel and aggregate results before proceeding.
+Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `gpt-5.4`) in parallel and aggregate results before proceeding.
 
 
 ### Subagent Model Usage
-When calling subagents (@planner, @implementer, @analyzer, @explore, @task), always specify model `claude-opus-4.6-fast`.
-For code/commit reviews, run parallel @analyzer calls with `claude-opus-4.6-fast` and merge results.
+When calling subagents (@planner, @implementer, @analyzer, @explore, @task), always specify model `gpt-5.4`.
+For code/commit reviews, run parallel @analyzer calls with `gpt-5.4` and merge results.
 
 Parallel Subagent Calls: Spawn multiple parallel subagents of the SAME type for independent tracks, then merge results. @explore: split by module/pattern · @analyzer: split by component/focus-area · @implementer: ONLY if strictly independent modules · @task: for independent validations (lint + tests + typecheck).
 
