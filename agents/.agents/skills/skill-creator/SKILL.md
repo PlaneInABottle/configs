@@ -73,7 +73,7 @@ Every skill consists of a required SKILL.md file and optional bundled resources.
 
 Every SKILL.md consists of:
 
-- **Frontmatter** (YAML): Contains `name` and `description` fields. These are the only fields that the AI assistant reads to determine when the skill gets used, thus it is very important to be clear and comprehensive in describing what the skill is, and when it should be used.
+- **Frontmatter** (YAML): Always include `name` and `description`. The current repository validator also accepts `license`, `allowed-tools`, and `metadata`; treat `scripts/quick_validate.py` and `references/skill-maintenance.md` as the authority before changing that contract. Only `name` and `description` determine when the skill gets used, so they must stay clear and comprehensive.
 - **Body** (Markdown): Instructions and guidance for using the skill. Only loaded AFTER the skill triggers (if at all).
 
 #### Bundled Resources (optional)
@@ -83,7 +83,7 @@ Every SKILL.md consists of:
 Executable code (Python/Bash/etc.) for tasks that require deterministic reliability or are repeatedly rewritten.
 
 - **When to include**: When the same code is being rewritten repeatedly or deterministic reliability is needed
-- **Example**: `scripts/rotate_pdf.py` for PDF rotation tasks
+- **Example**: a dedicated script for repetitive PDF rotation tasks
 - **Benefits**: Token efficient, deterministic, may be executed without loading into context
 - **Note**: Scripts may still need to be read by the AI assistant for patching or environment-specific adjustments
 
@@ -92,7 +92,7 @@ Executable code (Python/Bash/etc.) for tasks that require deterministic reliabil
 Documentation and reference material intended to be loaded as needed into context to inform the AI assistant's process and thinking.
 
 - **When to include**: For documentation that the AI assistant should reference while working
-- **Examples**: `references/finance.md` for financial schemas, `references/mnda.md` for company NDA template, `references/policies.md` for company policies, `references/api_docs.md` for API specifications
+- **Examples**: financial schema references, company NDA templates, policy references, API specification references
 - **Use cases**: Database schemas, API documentation, domain knowledge, company policies, detailed workflow guides
 - **Benefits**: Keeps SKILL.md lean, loaded only when the AI assistant determines it's needed
 - **Best practice**: If files are large (>10k words), include grep search patterns in SKILL.md
@@ -146,12 +146,12 @@ Extract text with pdfplumber:
 
 ## Advanced features
 
-- **Form filling**: See [FORMS.md](FORMS.md) for complete guide
-- **API reference**: See [REFERENCE.md](REFERENCE.md) for all methods
-- **Examples**: See [EXAMPLES.md](EXAMPLES.md) for common patterns
+- **Form filling**: Move the full procedure into a dedicated reference file
+- **API reference**: Keep exhaustive method details in a separate reference file
+- **Examples**: Store longer examples outside `SKILL.md`
 ```
 
-The AI assistant loads FORMS.md, REFERENCE.md, or EXAMPLES.md only when needed.
+The AI assistant loads the dedicated reference file only when that detail is needed.
 
 **Pattern 2: Domain-specific organization**
 
@@ -160,14 +160,14 @@ For Skills with multiple domains, organize content by domain to avoid loading ir
 ```
 bigquery-skill/
 ├── SKILL.md (overview and navigation)
-└── reference/
-    ├── finance.md (revenue, billing metrics)
-    ├── sales.md (opportunities, pipeline)
-    ├── product.md (API usage, features)
-    └── marketing.md (campaigns, attribution)
+└── references/
+    ├── finance reference
+    ├── sales reference
+    ├── product reference
+    └── marketing reference
 ```
 
-When a user asks about sales metrics, the AI assistant only reads sales.md.
+When a user asks about sales metrics, the AI assistant only reads the sales reference.
 
 Similarly, for skills supporting multiple frameworks or variants, organize by variant:
 
@@ -175,12 +175,12 @@ Similarly, for skills supporting multiple frameworks or variants, organize by va
 cloud-deploy/
 ├── SKILL.md (workflow + provider selection)
 └── references/
-    ├── aws.md (AWS deployment patterns)
-    ├── gcp.md (GCP deployment patterns)
-    └── azure.md (Azure deployment patterns)
+    ├── AWS reference
+    ├── GCP reference
+    └── Azure reference
 ```
 
-When the user chooses AWS, the AI assistant only reads aws.md.
+When the user chooses AWS, the AI assistant only reads the AWS reference.
 
 **Pattern 3: Conditional details**
 
@@ -191,17 +191,17 @@ Show basic content, link to advanced content:
 
 ## Creating documents
 
-Use docx-js for new documents. See [DOCX-JS.md](DOCX-JS.md).
+Use docx-js for new documents and keep advanced creation details in a sibling reference file.
 
 ## Editing documents
 
 For simple edits, modify the XML directly.
 
-**For tracked changes**: See [REDLINING.md](REDLINING.md)
-**For OOXML details**: See [OOXML.md](OOXML.md)
+**For tracked changes**: Load a dedicated tracked-changes reference file
+**For file-format internals**: Load a dedicated OOXML reference file
 ```
 
-The AI assistant reads REDLINING.md or OOXML.md only when the user needs those features.
+The AI assistant reads the dedicated reference file only when the user needs those features.
 
 <important-guidelines>
 
@@ -256,7 +256,7 @@ To turn concrete examples into an effective skill, analyze each example by:
 Example: When building a `pdf-editor` skill to handle queries like "Help me rotate this PDF," the analysis shows:
 
 1. Rotating a PDF requires re-writing the same code each time
-2. A `scripts/rotate_pdf.py` script would be helpful to store in the skill
+2. A dedicated rotation script would be helpful to store in the skill
 
 Example: When designing a `frontend-webapp-builder` skill for queries like "Build me a todo app" or "Build me a dashboard to track my steps," the analysis shows:
 
@@ -266,7 +266,7 @@ Example: When designing a `frontend-webapp-builder` skill for queries like "Buil
 Example: When building a `big-query` skill to handle queries like "How many users have logged in today?" the analysis shows:
 
 1. Querying BigQuery requires re-discovering the table schemas and relationships each time
-2. A `references/schema.md` file documenting the table schemas would be helpful to store in the skill
+2. A dedicated schema reference file would be helpful to store in the skill
 
 To establish the skill's contents, analyze each concrete example to create a list of the reusable resources to include: scripts, references, and assets.
 
@@ -326,12 +326,7 @@ When editing the (newly-generated or existing) skill, remember that the skill is
 
 #### Learn Proven Design Patterns
 
-Consult these helpful guides based on your skill's needs:
-
-- **Multi-step processes**: See references/workflows.md for sequential workflows and conditional logic
-- **Specific output formats or quality standards**: See references/output-patterns.md for template and example patterns
-
-These files contain established best practices for effective skill design.
+Consult `references/skill-maintenance.md` before changing an existing skill. It documents the active validator contract, local validation workflow, and the repository rule that every file referenced from `SKILL.md` must exist.
 
 #### Start with Reusable Skill Contents
 
@@ -347,15 +342,17 @@ Any example files and directories not needed for the skill should be deleted. Th
 
 ##### Frontmatter
 
-Write the YAML frontmatter with `name` and `description`:
+Write YAML frontmatter that matches the active validator:
 
 - `name`: The skill name
-- `description`: This is the primary triggering mechanism for your skill, and helps the AI assistant understand when to use the skill.
+- `description`: This is the primary triggering mechanism for your skill, and helps the AI assistant understand when to use it.
   - Include both what the Skill does and specific triggers/contexts for when to use it.
   - Include all "when to use" information here - Not in the body. The body is only loaded after triggering, so "When to Use This Skill" sections in the body are not helpful to the AI assistant.
   - Example description for a `docx` skill: "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. Use when the AI assistant needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks"
 
-Do not include any other fields in YAML frontmatter.
+- `license`, `allowed-tools`, `metadata`: Optional keys that are currently accepted by `scripts/quick_validate.py`. Use them only when they add real value to the skill.
+
+Do not introduce any other frontmatter fields unless you intentionally update `scripts/quick_validate.py`, then run the local validation workflow in `references/skill-maintenance.md`.
 
 ##### Body
 
