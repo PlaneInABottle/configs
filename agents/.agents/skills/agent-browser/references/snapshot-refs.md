@@ -1,44 +1,47 @@
 # Snapshot and Refs
 
-Compact element references that reduce context usage dramatically for AI agents.
+Compact element references that keep browser interaction precise and token-efficient.
 
-**Related**: [commands.md](commands.md) for full command reference, [SKILL.md](../SKILL.md) for quick start.
+**Related**: [commands.md](commands.md) for syntax, [SKILL.md](../SKILL.md) for quick start.
 
 ## Contents
 
 - [How Refs Work](#how-refs-work)
-- [Snapshot Command](#the-snapshot-command)
+- [Taking Snapshots](#taking-snapshots)
 - [Using Refs](#using-refs)
 - [Ref Lifecycle](#ref-lifecycle)
+- [Scoped Snapshots](#scoped-snapshots)
 - [Best Practices](#best-practices)
-- [Ref Notation Details](#ref-notation-details)
 - [Troubleshooting](#troubleshooting)
 
 ## How Refs Work
 
 Traditional approach:
-```
-Full DOM/HTML → AI parses → CSS selector → Action (~3000-5000 tokens)
+
+```text
+Full DOM/HTML -> AI parses -> selector guess -> action
 ```
 
-agent-browser approach:
-```
-Compact snapshot → @refs assigned → Direct interaction (~200-400 tokens)
+`agent-browser` approach:
+
+```text
+snapshot -> @refs assigned -> direct action
 ```
 
-## The Snapshot Command
+## Taking Snapshots
 
 ```bash
-# Basic snapshot (shows page structure)
 agent-browser snapshot
-
-# Interactive snapshot (-i flag) - RECOMMENDED
 agent-browser snapshot -i
+agent-browser snapshot -c
+agent-browser snapshot -s "#main"
 ```
 
-### Snapshot Output Format
+Use `snapshot -i` for most interactive work.
 
-```
+Example output:
+
+```text
 Page: Example Site - Home
 URL: https://example.com
 
@@ -46,149 +49,81 @@ URL: https://example.com
   @e2 [nav]
     @e3 [a] "Home"
     @e4 [a] "Products"
-    @e5 [a] "About"
-  @e6 [button] "Sign In"
+  @e5 [button] "Sign In"
 
-@e7 [main]
-  @e8 [h1] "Welcome"
-  @e9 [form]
-    @e10 [input type="email"] placeholder="Email"
-    @e11 [input type="password"] placeholder="Password"
-    @e12 [button type="submit"] "Log In"
-
-@e13 [footer]
-  @e14 [a] "Privacy Policy"
+@e6 [main]
+  @e7 [form]
+    @e8 [input type="email"] placeholder="Email"
+    @e9 [input type="password"] placeholder="Password"
+    @e10 [button type="submit"] "Log In"
 ```
 
 ## Using Refs
 
-Once you have refs, interact directly:
-
 ```bash
-# Click the "Sign In" button
-agent-browser click @e6
-
-# Fill email input
-agent-browser fill @e10 "user@example.com"
-
-# Fill password
-agent-browser fill @e11 "password123"
-
-# Submit the form
-agent-browser click @e12
+agent-browser click @e5
+agent-browser fill @e8 "user@example.com"
+agent-browser fill @e9 "password123"
+agent-browser click @e10
 ```
 
 ## Ref Lifecycle
 
-**IMPORTANT**: Refs are invalidated when the page changes!
+Refs are disposable. Refs from an older snapshot can point at the wrong thing after the page changes.
 
 ```bash
-# Get initial snapshot
 agent-browser snapshot -i
 # @e1 [button] "Next"
 
-# Click triggers page change
 agent-browser click @e1
-
-# MUST re-snapshot to get new refs!
+agent-browser wait --load networkidle
 agent-browser snapshot -i
-# @e1 [h1] "Page 2"  ← Different element now!
+# @e1 may now be a different element
 ```
+
+Re-snapshot after:
+- navigation
+- form submit
+- opening a dialog or dropdown
+- async rendering or filtering
+- manual interaction in a headed browser
+
+## Scoped Snapshots
+
+Use a smaller snapshot when the full page is noisy.
+
+```bash
+agent-browser snapshot -s "form"
+```
+
+Some versions may accept `snapshot @eN`, but this update did not re-confirm that ref-scoped snapshots reliably narrow the output. Prefer `snapshot -s` in shared or portable workflows.
 
 ## Best Practices
 
-### 1. Always Snapshot Before Interacting
-
-```bash
-# CORRECT
-agent-browser open https://example.com
-agent-browser snapshot -i          # Get refs first
-agent-browser click @e1            # Use ref
-
-# WRONG
-agent-browser open https://example.com
-agent-browser click @e1            # Ref doesn't exist yet!
-```
-
-### 2. Re-Snapshot After Navigation
-
-```bash
-agent-browser click @e5            # Navigates to new page
-agent-browser snapshot -i          # Get new refs
-agent-browser click @e1            # Use new refs
-```
-
-### 3. Re-Snapshot After Dynamic Changes
-
-```bash
-agent-browser click @e1            # Opens dropdown
-agent-browser snapshot -i          # See dropdown items
-agent-browser click @e7            # Select item
-```
-
-### 4. Snapshot Specific Regions
-
-For complex pages, snapshot specific areas:
-
-```bash
-# Snapshot just the form
-agent-browser snapshot @e9
-```
-
-## Ref Notation Details
-
-```
-@e1 [tag type="value"] "text content" placeholder="hint"
-│    │   │             │               │
-│    │   │             │               └─ Additional attributes
-│    │   │             └─ Visible text
-│    │   └─ Key attributes shown
-│    └─ HTML tag name
-└─ Unique ref ID
-```
-
-### Common Patterns
-
-```
-@e1 [button] "Submit"                    # Button with text
-@e2 [input type="email"]                 # Email input
-@e3 [input type="password"]              # Password input
-@e4 [a href="/page"] "Link Text"         # Anchor link
-@e5 [select]                             # Dropdown
-@e6 [textarea] placeholder="Message"     # Text area
-@e7 [div class="modal"]                  # Container (when relevant)
-@e8 [img alt="Logo"]                     # Image
-@e9 [checkbox] checked                   # Checked checkbox
-@e10 [radio] selected                    # Selected radio
-```
+1. Snapshot before the first interaction.
+2. Re-snapshot after every meaningful DOM change.
+3. Prefer refs over guessed selectors.
+4. Use scoped snapshots to cut noise on large pages.
+5. If a ref stops working, assume the page changed and snapshot again.
 
 ## Troubleshooting
 
-### "Ref not found" Error
+### "Ref not found"
 
 ```bash
-# Ref may have changed - re-snapshot
 agent-browser snapshot -i
 ```
 
-### Element Not Visible in Snapshot
+### Element not visible yet
 
 ```bash
-# Scroll to reveal element
-agent-browser scroll --bottom
-agent-browser snapshot -i
-
-# Or wait for dynamic content
 agent-browser wait 1000
 agent-browser snapshot -i
 ```
 
-### Too Many Elements
+### Too many elements in the output
 
 ```bash
-# Snapshot specific container
-agent-browser snapshot @e5
-
-# Or use get text for content-only extraction
-agent-browser get text @e5
+agent-browser snapshot -s "main"
+agent-browser get text @e7
 ```

@@ -31,6 +31,20 @@ Because you have a persistent terminal, build complex assertions iteratively. Us
 
 ---
 
+## Required Binary Checks
+
+Before following a playbook, verify the required CLI tools are installed and on `PATH`.
+
+```bash
+command -v hurl >/dev/null || echo "Install hurl before running API or GraphQL playbooks"
+command -v agent-browser >/dev/null || echo "Install agent-browser before running UI playbooks"
+command -v docker >/dev/null || echo "Install Docker before running infrastructure flows"
+```
+
+If a required binary is missing, stop and install it with your operating system package manager or the tool's official installation instructions before continuing.
+
+---
+
 ## Action-Oriented Playbooks
 
 For exact implementation details, code snippets, and CLI commands for the toolkit above, reference the following playbooks:
@@ -46,7 +60,7 @@ For exact implementation details, code snippets, and CLI commands for the toolki
 
 ---
 
-## The 5 Phases of AI-Managed Development
+## The 6 Phases of AI-Managed Development
 
 1. **Phase 1: Runtime Setup Analysis (YAGNI Infrastructure)**
    Determine the optimal dev environment. Prefer a **Hybrid** approach: Docker for stateful services (DB), native execution for app code (fast HMR). Keep `docker-compose.yml` minimal. Only add what you need.
@@ -58,6 +72,8 @@ For exact implementation details, code snippets, and CLI commands for the toolki
    Ensure you can manage the application programmatically without a human (e.g., manipulating UI state using `agent-browser`).
 5. **Phase 5: Continuous Iteration & Debugging**
    Run existing unit tests after every code change. Tests are your guardrails. **NEVER write, modify, or append to language-specific integration tests under ANY circumstances. Use pytest/cargo test/Jest ONLY for pure logic unit testing.** (Note: Do not use Jest/pytest to test functions that import web frameworks like Express/FastAPI, ORMs, or rely on I/O. If testing a function requires mocking external modules, database connections, or HTTP clients, it is an integration boundary. Do NOT write a unit test for it; test it end-to-end via `.hurl` or native clients). You MUST use the Universal Toolkit (`.hurl`, `agent-browser`, `psql`) for all new test assertions. During UI changes, run `agent-browser snapshot -i` and screenshot to track visual regressions. Re-snapshot after every navigation. You MUST read the output of `agent-browser snapshot -i` before interacting with ANY UI element; NEVER blindly guess element IDs. Always wait for async data fetching or specific state changes (using `agent-browser wait`) before re-snapshotting. Do not snapshot immediately after a click if a loading state or async mutation is expected.
+6. **Phase 6: Teardown**
+   Stop managed background processes and clean up temporary runtime state once validation is complete.
 
 *(For detailed, step-by-step checklists for each phase, see `references/phase-checklists.md`)*
 
@@ -142,6 +158,8 @@ pm2 list && docker compose ps
 
 Instead of writing rigid test scripts, act as a real user. Use `agent-browser` for fast feedback during active implementation.
 
+For browser-specific semantics such as `--session` vs `--session-name`, saved state handling, headed/manual debugging, and advanced command patterns, load the dedicated `agent-browser` skill and follow its reference files instead of re-deriving behavior from memory.
+
 ```bash
 # Start application dev server with PM2
 pm2 start npm --name "myapp" -- run dev
@@ -183,5 +201,5 @@ agent-browser screenshot
 
 ---
 
-See [references/phase-checklists.md](references/phase-checklists.md) for granular breakdowns of the 5 phases.
+See [references/phase-checklists.md](references/phase-checklists.md) for granular breakdowns of the 6 phases.
 See [references/best-practices.md](references/best-practices.md) for extended guidance and testing pyramids.

@@ -8,6 +8,14 @@
 
 Use `.hurl` files to define declarative, language-agnostic API tests.
 
+Before running these examples, verify Hurl is installed and on `PATH`:
+
+```bash
+command -v hurl >/dev/null || { echo "Install hurl before running these examples"; exit 1; }
+```
+
+If the command reports `hurl` as missing, stop here and install it with your operating system package manager or the official Hurl installation instructions before continuing.
+
 ### Creating a Hurl Test
 
 ```hurl

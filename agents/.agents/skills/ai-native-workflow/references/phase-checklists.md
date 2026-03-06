@@ -42,10 +42,29 @@ AI agents need:
 ## Phase 2: Skill Creation & Environment Bootstrapping
 
 ### Step 2.1 — Bootstrapping & Dependencies
-Before starting services, explicitly install dependencies and prepare the environment:
+Before starting services, explicitly install the project's dependencies with its native package manager, verify mandatory binaries are available, and bootstrap `.env` only if it does not already exist:
 ```bash
+command -v hurl >/dev/null || echo "Install hurl before running API playbooks"
+command -v agent-browser >/dev/null || echo "Install agent-browser before running UI playbooks"
+command -v docker >/dev/null || echo "Install Docker before running docker compose services"
+[ -f .env ] || cp .env.example .env
+```
+
+Dependency installation examples:
+
+```bash
+# JavaScript / TypeScript
 npm install
-cp .env.example .env
+pnpm install
+yarn install
+
+# Python
+pip install -r requirements.txt
+uv sync
+
+# Rust / Go
+cargo build
+go mod download
 ```
 
 ### Step 2.2 — Write the Startup Sequence
@@ -53,12 +72,19 @@ cp .env.example .env
 Create the runtime skill document using structured, AI-parseable formats.
 **CRITICAL: Use PM2 for app servers. Use Docker for databases.**
 
-```markdown
+````markdown
 ## Start Database (Example: Postgres)
 Command: `docker compose up -d db`
-Verify (Polling loop): 
+Verify (bounded readiness): 
 ```bash
-until docker exec db pg_isready; do sleep 1; done
+for attempt in {1..30}; do
+  docker compose exec -T db pg_isready && break
+  sleep 1
+  if [ "$attempt" -eq 30 ]; then
+    echo "Postgres did not become ready in time" >&2
+    exit 1
+  fi
+done
 ```
 Failure: `docker compose logs db` to inspect crashes
 
@@ -69,7 +95,7 @@ Verify (Polling loop):
 curl --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf http://localhost:3000/health
 ```
 Failure: `pm2 logs myapp` to inspect errors
-```
+````
 
 ### Step 2.3 — Test Background Mode
 Services must survive session boundaries.
@@ -96,13 +122,38 @@ Once the environment is running, NEVER write language-specific integration tests
 ### Step 3.2 — Interactive Interface Verification
 If the application has a UI, verify it headlessly:
 - **Web UI:** Use `agent-browser open` and `agent-browser snapshot -i` to verify DOM state.
+- **Web UI browser semantics:** Follow the dedicated `agent-browser` skill references for session persistence, headed/manual debugging, and ref handling instead of relying on memory.
 - **CLI App:** Run standard Unix streams (`mycli --dry-run > out.txt`) and assert the exit code `echo $?`.
 
 ---
 
 ## Phase 4: Programmatic Operations
 
-Ensure you can manage the application programmatically without a human. Confirm you can trigger all flows via APIs, CLI, or DOM events.
+### Step 4.1 — Enumerate Machine-Controllable Flows
+
+List the flows that must work without human intervention:
+- [ ] HTTP / GraphQL endpoints (See `../playbooks/api-contract-testing.md` or `../playbooks/graphql-testing.md`)
+- [ ] CLI entry points and flags
+- [ ] Web UI actions reachable through DOM events (`agent-browser`)
+- [ ] Async entry points such as queues, cron-style jobs, or WebSockets when applicable (See `../playbooks/websocket-testing.md`)
+
+### Step 4.2 — Verify Non-Interactive Control
+
+For each flow, confirm an agent can execute it end-to-end without manual clicks, prompts, or hidden setup:
+- [ ] Inputs can be injected by command, file, HTTP request, or browser action
+- [ ] The command is bounded and does not hang indefinitely
+- [ ] Success can be verified via exit code, HTTP status, DOM snapshot, or datastore query
+- [ ] Failure output is inspectable via logs, stderr, or response body
+
+### Step 4.3 — Confirm Automation Readiness
+
+Run at least one concrete verification per surface:
+- [ ] API flows can be triggered from `.hurl`, `curl`, or another scriptable client
+- [ ] CLI flows support flags, stdin, or environment variables instead of interactive-only prompts
+- [ ] UI flows can be driven through `agent-browser open`, `snapshot -i`, `click`, `fill`, and `wait`
+- [ ] Resulting state can be asserted through the appropriate playbook boundary rather than manual observation
+
+If a flow needs deeper protocol-specific coverage, use the relevant playbook instead of duplicating procedures here.
 
 ---
 

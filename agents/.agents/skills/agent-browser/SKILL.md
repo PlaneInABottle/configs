@@ -4,273 +4,163 @@ description: Browser automation CLI for AI agents. Use when the user needs to in
 allowed-tools: Bash(agent-browser:*)
 ---
 
-# Browser Automation with agent-browser
+# Browser Automation with `agent-browser`
 
-## Core Workflow
+Use `agent-browser` as an interactive browser REPL: open a page, inspect it with `snapshot -i`, interact using refs, then re-snapshot whenever the DOM changes.
 
-Every browser automation follows this pattern:
-
-1. **Navigate**: `agent-browser open <url>`
-2. **Snapshot**: `agent-browser snapshot -i` (get element refs like `@e1`, `@e2`)
-3. **Interact**: Use refs to click, fill, select
-4. **Re-snapshot**: After navigation or DOM changes, get fresh refs
+## Quick Start
 
 ```bash
-agent-browser open https://example.com/form
+agent-browser open https://example.com/login
 agent-browser snapshot -i
-# Output: @e1 [input type="email"], @e2 [input type="password"], @e3 [button] "Submit"
+# Output: @e1 [input type="email"], @e2 [input type="password"], @e3 [button] "Sign in"
 
 agent-browser fill @e1 "user@example.com"
 agent-browser fill @e2 "password123"
 agent-browser click @e3
-agent-browser wait --load networkidle
-agent-browser snapshot -i  # Check result
+agent-browser wait --url "**/dashboard"
+agent-browser snapshot -i
 ```
+
+## Core Workflow
+
+1. **Open** the target page with `agent-browser open <url>`.
+2. **Inspect** with `agent-browser snapshot -i`.
+3. **Interact** using refs like `@e1`, `@e2`, `@e3`.
+4. **Wait** for navigation, async data, or UI transitions.
+5. **Re-snapshot** after any DOM or page change.
 
 ## Essential Commands
 
 ```bash
 # Navigation
-agent-browser open <url>              # Navigate (aliases: goto, navigate)
-agent-browser close                   # Close browser
+agent-browser open <url>
+agent-browser close
 
-# Snapshot
-agent-browser snapshot -i             # Interactive elements with refs (recommended)
-agent-browser snapshot -i -C          # Include cursor-interactive elements (divs with onclick, cursor:pointer)
-agent-browser snapshot -s "#selector" # Scope to CSS selector
-
-# Interaction (use @refs from snapshot)
-agent-browser click @e1               # Click element
-agent-browser fill @e2 "text"         # Clear and type text
-agent-browser type @e2 "text"         # Type without clearing
-agent-browser select @e1 "option"     # Select dropdown option
-agent-browser check @e1               # Check checkbox
-agent-browser press Enter             # Press key
-agent-browser scroll down 500         # Scroll page
-
-# Get information
-agent-browser get text @e1            # Get element text
-agent-browser get url                 # Get current URL
-agent-browser get title               # Get page title
-
-# Wait
-agent-browser wait @e1                # Wait for element
-agent-browser wait --load networkidle # Wait for network idle
-agent-browser wait --url "**/page"    # Wait for URL pattern
-agent-browser wait 2000               # Wait milliseconds
-
-# Capture
-agent-browser screenshot              # Screenshot to temp dir
-agent-browser screenshot --full       # Full page screenshot
-agent-browser pdf output.pdf          # Save as PDF
-```
-
-## Common Patterns
-
-### Form Submission
-
-```bash
-agent-browser open https://example.com/signup
+# Inspect
 agent-browser snapshot -i
-agent-browser fill @e1 "Jane Doe"
-agent-browser fill @e2 "jane@example.com"
-agent-browser select @e3 "California"
+agent-browser snapshot -s "#main"
+
+# Interact
+agent-browser click @e1
+agent-browser fill @e2 "text"
+agent-browser type @e2 "text"
+agent-browser select @e3 "option"
 agent-browser check @e4
-agent-browser click @e5
+agent-browser press Enter
+
+# Wait and verify
+agent-browser wait @e1
+agent-browser wait --url "**/dashboard"
 agent-browser wait --load networkidle
+agent-browser get text @e1
+agent-browser get url
+agent-browser screenshot
 ```
 
-### Authentication with State Persistence
+## Non-Negotiable Guardrails
+
+- Always run `snapshot -i` before interacting with a page.
+- Never guess refs from memory; use the current snapshot output.
+- Re-snapshot after navigation, modal opens, async mutations, or any DOM change.
+- Prefer refs over handwritten selectors for day-to-day interaction.
+- In headed/manual flows, re-snapshot after the human finishes interacting.
+
+## Choose the Right Persistence Mode
+
+| If you need... | Use | Why |
+|---|---|---|
+| Separate live browser contexts | `--session <name>` | Isolates the active browser session |
+| Persist a full browser profile directory | `--profile <path>` | Reuses browser-level profile data for long-lived or manual flows |
+| Persist named browser state across restarts | `--session-name <name>` | CLI-managed named persistence |
+| Save state to a specific file | `state save` / `state load` | Explicit, portable persistence |
+| Load a saved file during startup | `--state <path>` | Shortcut for known-good state files |
+
+Quick examples:
 
 ```bash
-# Login once and save state
+# Isolated active session
+agent-browser --session qa open https://example.com
+
+# Reuse a persistent browser profile directory
+agent-browser --profile ~/.agent-browser/profiles/billing open https://app.example.com/login
+
+# CLI-managed persistent named state
+agent-browser --session-name billing open https://app.example.com/login
+agent-browser close
+agent-browser --session-name billing open https://app.example.com/dashboard
+
+# Explicit file-based persistence
+agent-browser state save ./auth-state.json
+agent-browser --state ./auth-state.json open https://app.example.com/dashboard
+```
+
+Choose `--profile <path>` when you need a durable browser profile directory for repeated manual debugging or browser-level state. Choose `--session-name <name>` when local help's CLI-managed persistence for cookies and `localStorage` fits your case; this skill locally re-confirmed save-on-close, and you should verify restore behavior on your installed version if it matters. Choose `state save/load` or `--state <path>` when you need an explicit JSON artifact you can name, inspect, or move.
+
+Read [references/session-management.md](references/session-management.md) before making assumptions about `close`, persistence paths, encryption, or cleanup.
+
+## Authentication and Manual Debugging
+
+Use the browser normally for auth flows, but choose persistence intentionally.
+
+```bash
 agent-browser open https://app.example.com/login
 agent-browser snapshot -i
-agent-browser fill @e1 "$USERNAME"
-agent-browser fill @e2 "$PASSWORD"
+agent-browser fill @e1 "$APP_USERNAME"
+agent-browser fill @e2 "$APP_PASSWORD"
 agent-browser click @e3
 agent-browser wait --url "**/dashboard"
-agent-browser state save auth.json
-
-# Reuse in future sessions
-agent-browser state load auth.json
-agent-browser open https://app.example.com/dashboard
 ```
 
-### Session Persistence
+For manual verification or 2FA:
 
 ```bash
-# Auto-save/restore cookies and localStorage across browser restarts
-agent-browser --session-name myapp open https://app.example.com/login
-# ... login flow ...
-agent-browser close  # State auto-saved to ~/.agent-browser/sessions/
-
-# Next time, state is auto-loaded
-agent-browser --session-name myapp open https://app.example.com/dashboard
-
-# Encrypt state at rest
-export AGENT_BROWSER_ENCRYPTION_KEY=$(openssl rand -hex 32)
-agent-browser --session-name secure open https://app.example.com
-
-# Manage saved states
-agent-browser state list
-agent-browser state show myapp-default.json
-agent-browser state clear myapp
-agent-browser state clean --older-than 7
-```
-
-### Data Extraction
-
-```bash
-agent-browser open https://example.com/products
+agent-browser --headed open https://app.example.com/login
 agent-browser snapshot -i
-agent-browser get text @e5           # Get specific element text
-agent-browser get text body > page.txt  # Get all page text
-
-# JSON output for parsing
-agent-browser snapshot -i --json
-agent-browser get text @e1 --json
 ```
 
-### Parallel Sessions
+`--headed` only makes the browser visible. It does **not** replace `--session-name` or `state save/load`.
 
-```bash
-agent-browser --session site1 open https://site-a.com
-agent-browser --session site2 open https://site-b.com
+## Useful Alternatives
 
-agent-browser --session site1 snapshot -i
-agent-browser --session site2 snapshot -i
+### Semantic locators
 
-agent-browser session list
-```
-
-### Connect to Existing Chrome
-
-```bash
-# Auto-discover running Chrome with remote debugging enabled
-agent-browser --auto-connect open https://example.com
-agent-browser --auto-connect snapshot
-
-# Or with explicit CDP port
-agent-browser --cdp 9222 snapshot
-```
-
-### Visual Browser (Debugging)
-
-```bash
-agent-browser --headed open https://example.com
-agent-browser highlight @e1          # Highlight element
-agent-browser record start demo.webm # Record session
-```
-
-### Local Files (PDFs, HTML)
-
-```bash
-# Open local files with file:// URLs
-agent-browser --allow-file-access open file:///path/to/document.pdf
-agent-browser --allow-file-access open file:///path/to/page.html
-agent-browser screenshot output.png
-```
-
-### iOS Simulator (Mobile Safari)
-
-```bash
-# List available iOS simulators
-agent-browser device list
-
-# Launch Safari on a specific device
-agent-browser -p ios --device "iPhone 16 Pro" open https://example.com
-
-# Same workflow as desktop - snapshot, interact, re-snapshot
-agent-browser -p ios snapshot -i
-agent-browser -p ios tap @e1          # Tap (alias for click)
-agent-browser -p ios fill @e2 "text"
-agent-browser -p ios swipe up         # Mobile-specific gesture
-
-# Take screenshot
-agent-browser -p ios screenshot mobile.png
-
-# Close session (shuts down simulator)
-agent-browser -p ios close
-```
-
-**Requirements:** macOS with Xcode, Appium (`npm install -g appium && appium driver install xcuitest`)
-
-**Real devices:** Works with physical iOS devices if pre-configured. Use `--device "<UDID>"` where UDID is from `xcrun xctrace list devices`.
-
-## Ref Lifecycle (Important)
-
-Refs (`@e1`, `@e2`, etc.) are invalidated when the page changes. Always re-snapshot after:
-
-- Clicking links or buttons that navigate
-- Form submissions
-- Dynamic content loading (dropdowns, modals)
-
-```bash
-agent-browser click @e5              # Navigates to new page
-agent-browser snapshot -i            # MUST re-snapshot
-agent-browser click @e1              # Use new refs
-```
-
-## Semantic Locators (Alternative to Refs)
-
-When refs are unavailable or unreliable, use semantic locators:
+When refs are unavailable or a page is changing rapidly:
 
 ```bash
 agent-browser find text "Sign In" click
-agent-browser find label "Email" fill "user@test.com"
+agent-browser find label "Email" fill "user@example.com"
 agent-browser find role button click --name "Submit"
-agent-browser find placeholder "Search" type "query"
-agent-browser find testid "submit-btn" click
 ```
 
-## JavaScript Evaluation (eval)
+### JavaScript evaluation
 
-Use `eval` to run JavaScript in the browser context. **Shell quoting can corrupt complex expressions** -- use `--stdin` or `-b` to avoid issues.
+Use `eval --stdin` or `eval -b` for complex scripts so the shell does not corrupt the JavaScript.
 
 ```bash
-# Simple expressions work with regular quoting
-agent-browser eval 'document.title'
-agent-browser eval 'document.querySelectorAll("img").length'
-
-# Complex JS: use --stdin with heredoc (RECOMMENDED)
 agent-browser eval --stdin <<'EVALEOF'
-JSON.stringify(
-  Array.from(document.querySelectorAll("img"))
-    .filter(i => !i.alt)
-    .map(i => ({ src: i.src.split("/").pop(), width: i.width }))
-)
+JSON.stringify(Array.from(document.querySelectorAll('a')).map(a => a.href))
 EVALEOF
-
-# Alternative: base64 encoding (avoids all shell escaping issues)
-agent-browser eval -b "$(echo -n 'Array.from(document.querySelectorAll("a")).map(a => a.href)' | base64)"
 ```
 
-**Why this matters:** When the shell processes your command, inner double quotes, `!` characters (history expansion), backticks, and `$()` can all corrupt the JavaScript before it reaches agent-browser. The `--stdin` and `-b` flags bypass shell interpretation entirely.
+## Read This Next
 
-**Rules of thumb:**
-- Single-line, no nested quotes -> regular `eval 'expression'` with single quotes is fine
-- Nested quotes, arrow functions, template literals, or multiline -> use `eval --stdin <<'EVALEOF'`
-- Programmatic/generated scripts -> use `eval -b` with base64
+| Need | Read |
+|---|---|
+| Common command syntax plus the locally re-checked flags used in this skill | [references/commands.md](references/commands.md) |
+| `--session` vs `--profile` vs `--session-name` vs `--state` vs `state save/load` | [references/session-management.md](references/session-management.md) |
+| Login flows, OAuth, 2FA, reusable auth state | [references/authentication.md](references/authentication.md) |
+| Ref invalidation and documented scoped snapshots | [references/snapshot-refs.md](references/snapshot-refs.md) |
+| Headed debugging, recording, traces | [references/video-recording.md](references/video-recording.md) and [references/session-management.md](references/session-management.md) |
+| Proxy usage and TLS/proxy troubleshooting | [references/proxy-support.md](references/proxy-support.md) |
 
-## Deep-Dive Documentation
+## Templates and Starter Scripts
 
-| Reference | When to Use |
-|-----------|-------------|
-| [references/commands.md](references/commands.md) | Full command reference with all options |
-| [references/snapshot-refs.md](references/snapshot-refs.md) | Ref lifecycle, invalidation rules, troubleshooting |
-| [references/session-management.md](references/session-management.md) | Parallel sessions, state persistence, concurrent scraping |
-| [references/authentication.md](references/authentication.md) | Login flows, OAuth, 2FA handling, state reuse |
-| [references/video-recording.md](references/video-recording.md) | Recording workflows for debugging and documentation |
-| [references/proxy-support.md](references/proxy-support.md) | Proxy configuration, geo-testing, rotating proxies |
-
-## Ready-to-Use Templates
-
-| Template | Description |
-|----------|-------------|
-| [templates/form-automation.sh](templates/form-automation.sh) | Form filling with validation |
-| [templates/authenticated-session.sh](templates/authenticated-session.sh) | Login once, reuse state |
-| [templates/capture-workflow.sh](templates/capture-workflow.sh) | Content extraction with screenshots |
+| Template | Purpose |
+|---|---|
+| [templates/form-automation.sh](templates/form-automation.sh) | Guided form filling workflow |
+| [templates/authenticated-session.sh](templates/authenticated-session.sh) | Discovery-first auth scaffold; customize refs, then save and reuse state |
+| [templates/capture-workflow.sh](templates/capture-workflow.sh) | Capture text and screenshots |
 
 ```bash
 ./templates/form-automation.sh https://example.com/form

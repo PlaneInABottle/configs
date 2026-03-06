@@ -1,188 +1,126 @@
 # Proxy Support
 
-Proxy configuration for geo-testing, rate limiting avoidance, and corporate environments.
+Proxy configuration for geo-testing, corporate networks, and scraping workflows.
 
 **Related**: [commands.md](commands.md) for global options, [SKILL.md](../SKILL.md) for quick start.
 
 ## Contents
 
+- [Preferred Pattern](#preferred-pattern)
 - [Basic Proxy Configuration](#basic-proxy-configuration)
 - [Authenticated Proxy](#authenticated-proxy)
-- [SOCKS Proxy](#socks-proxy)
-- [Proxy Bypass](#proxy-bypass)
 - [Common Use Cases](#common-use-cases)
 - [Verifying Proxy Connection](#verifying-proxy-connection)
 - [Troubleshooting](#troubleshooting)
 - [Best Practices](#best-practices)
 
-## Basic Proxy Configuration
+## Preferred Pattern
 
-Set proxy via environment variable before starting:
+Local CLI help exposes the global `--proxy <url>` option, so this file uses that as the primary documented pattern.
 
 ```bash
-# HTTP proxy
-export HTTP_PROXY="http://proxy.example.com:8080"
-agent-browser open https://example.com
+agent-browser --proxy http://proxy.example.com:8080 open https://example.com
+```
 
-# HTTPS proxy
-export HTTPS_PROXY="https://proxy.example.com:8080"
-agent-browser open https://example.com
+If your environment also depends on shell-level proxy environment variables, verify that behavior locally before standardizing on it.
 
-# Both
-export HTTP_PROXY="http://proxy.example.com:8080"
-export HTTPS_PROXY="http://proxy.example.com:8080"
-agent-browser open https://example.com
+## Basic Proxy Configuration
+
+```bash
+agent-browser --proxy http://proxy.example.com:8080 open https://example.com
+agent-browser --proxy https://proxy.example.com:8080 open https://example.com
 ```
 
 ## Authenticated Proxy
 
-For proxies requiring authentication:
-
 ```bash
-# Include credentials in URL
-export HTTP_PROXY="http://username:password@proxy.example.com:8080"
-agent-browser open https://example.com
-```
-
-## SOCKS Proxy
-
-```bash
-# SOCKS5 proxy
-export ALL_PROXY="socks5://proxy.example.com:1080"
-agent-browser open https://example.com
-
-# SOCKS5 with auth
-export ALL_PROXY="socks5://user:pass@proxy.example.com:1080"
-agent-browser open https://example.com
-```
-
-## Proxy Bypass
-
-Skip proxy for specific domains:
-
-```bash
-# Bypass proxy for local addresses
-export NO_PROXY="localhost,127.0.0.1,.internal.company.com"
-agent-browser open https://internal.company.com  # Direct connection
-agent-browser open https://external.com          # Via proxy
+agent-browser --proxy http://username:password@proxy.example.com:8080 open https://example.com
 ```
 
 ## Common Use Cases
 
-### Geo-Location Testing
+### Geo-testing
 
 ```bash
-#!/bin/bash
-# Test site from different regions using geo-located proxies
+agent-browser --proxy http://us-proxy.example.com:8080 open https://example.com
+agent-browser screenshot ./us.png
+agent-browser close
 
-PROXIES=(
-    "http://us-proxy.example.com:8080"
-    "http://eu-proxy.example.com:8080"
-    "http://asia-proxy.example.com:8080"
-)
-
-for proxy in "${PROXIES[@]}"; do
-    export HTTP_PROXY="$proxy"
-    export HTTPS_PROXY="$proxy"
-
-    region=$(echo "$proxy" | grep -oP '^\w+-\w+')
-    echo "Testing from: $region"
-
-    agent-browser --session "$region" open https://example.com
-    agent-browser --session "$region" screenshot "./screenshots/$region.png"
-    agent-browser --session "$region" close
-done
+agent-browser --proxy http://eu-proxy.example.com:8080 open https://example.com
+agent-browser screenshot ./eu.png
+agent-browser close
 ```
 
-### Rotating Proxies for Scraping
+### Rotating proxies for scraping
 
 ```bash
 #!/bin/bash
-# Rotate through proxy list to avoid rate limiting
+set -euo pipefail
 
-PROXY_LIST=(
-    "http://proxy1.example.com:8080"
-    "http://proxy2.example.com:8080"
-    "http://proxy3.example.com:8080"
+PROXIES=(
+  "http://proxy1.example.com:8080"
+  "http://proxy2.example.com:8080"
+  "http://proxy3.example.com:8080"
 )
 
 URLS=(
-    "https://site.com/page1"
-    "https://site.com/page2"
-    "https://site.com/page3"
+  "https://site.com/page1"
+  "https://site.com/page2"
+  "https://site.com/page3"
 )
 
 for i in "${!URLS[@]}"; do
-    proxy_index=$((i % ${#PROXY_LIST[@]}))
-    export HTTP_PROXY="${PROXY_LIST[$proxy_index]}"
-    export HTTPS_PROXY="${PROXY_LIST[$proxy_index]}"
-
-    agent-browser open "${URLS[$i]}"
-    agent-browser get text body > "output-$i.txt"
-    agent-browser close
-
-    sleep 1  # Polite delay
+  proxy_index=$((i % ${#PROXIES[@]}))
+  agent-browser --proxy "${PROXIES[$proxy_index]}" open "${URLS[$i]}"
+  agent-browser get text body > "output-$i.txt"
+  agent-browser close
+  sleep 1
 done
 ```
 
-### Corporate Network Access
+### Corporate access via a fixed proxy
 
 ```bash
-#!/bin/bash
-# Access internal sites via corporate proxy
-
-export HTTP_PROXY="http://corpproxy.company.com:8080"
-export HTTPS_PROXY="http://corpproxy.company.com:8080"
-export NO_PROXY="localhost,127.0.0.1,.company.com"
-
-# External sites go through proxy
-agent-browser open https://external-vendor.com
-
-# Internal sites bypass proxy
-agent-browser open https://intranet.company.com
+agent-browser --proxy http://corpproxy.company.com:8080 open https://external-vendor.com
+agent-browser --proxy http://corpproxy.company.com:8080 open https://status.vendor.com
 ```
 
 ## Verifying Proxy Connection
 
 ```bash
-# Check your apparent IP
-agent-browser open https://httpbin.org/ip
+agent-browser --proxy http://proxy.example.com:8080 open https://httpbin.org/ip
 agent-browser get text body
-# Should show proxy's IP, not your real IP
 ```
+
+The reported IP should match the proxy egress, not your local machine.
 
 ## Troubleshooting
 
-### Proxy Connection Failed
+### Proxy connection failed
 
 ```bash
-# Test proxy connectivity first
 curl -x http://proxy.example.com:8080 https://httpbin.org/ip
-
-# Check if proxy requires auth
-export HTTP_PROXY="http://user:pass@proxy.example.com:8080"
+agent-browser --proxy http://proxy.example.com:8080 open https://example.com
 ```
 
-### SSL/TLS Errors Through Proxy
+### TLS inspection or certificate errors
 
-Some proxies perform SSL inspection. If you encounter certificate errors:
+Some corporate proxies intercept TLS. For temporary debugging only:
 
 ```bash
-# For testing only - not recommended for production
-agent-browser open https://example.com --ignore-https-errors
+agent-browser --proxy http://proxy.example.com:8080 --ignore-https-errors open https://example.com
 ```
 
-### Slow Performance
+### Slow performance
 
-```bash
-# Use proxy only when necessary
-export NO_PROXY="*.cdn.com,*.static.com"  # Direct CDN access
-```
+- Use a proxy only for the requests that actually need it.
+- Reuse the same proxy long enough to complete a single flow before rotating.
+- Capture screenshots or `get text body` output early so a flaky proxy does not force a full rerun.
 
 ## Best Practices
 
-1. **Use environment variables** - Don't hardcode proxy credentials
-2. **Set NO_PROXY appropriately** - Avoid routing local traffic through proxy
-3. **Test proxy before automation** - Verify connectivity with simple requests
-4. **Handle proxy failures gracefully** - Implement retry logic for unstable proxies
-5. **Rotate proxies for large scraping jobs** - Distribute load and avoid bans
+1. Prefer the documented `--proxy` flag in shared examples.
+2. Keep credentials out of committed scripts when possible.
+3. Verify a proxy with a simple page before running a long workflow.
+4. Treat `--ignore-https-errors` as a debugging escape hatch, not a default.
+5. When comparing regions, save screenshots or text output immediately after load.

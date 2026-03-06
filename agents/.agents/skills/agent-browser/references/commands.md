@@ -1,6 +1,35 @@
 # Command Reference
 
-Complete reference for all agent-browser commands. For quick start and common patterns, see SKILL.md.
+Reference for commonly used `agent-browser` syntax that was re-checked against local help during this update. Keep `SKILL.md` for quick start, and use `agent-browser <command> --help` to confirm less-common options on your installed version.
+
+**Related**: [session-management.md](session-management.md) for persistence semantics, [snapshot-refs.md](snapshot-refs.md) for ref lifecycle, [SKILL.md](../SKILL.md) for quick start.
+
+## Contents
+
+- [Style Note](#style-note)
+- [Navigation](#navigation)
+- [Snapshot](#snapshot)
+- [Interactions](#interactions)
+- [Get Information](#get-information)
+- [Check State](#check-state)
+- [Capture Output](#capture-output)
+- [Wait](#wait)
+- [JavaScript Evaluation](#javascript-evaluation)
+- [Semantic Locators](#semantic-locators)
+- [Cookies](#cookies)
+- [State and Session Commands](#state-and-session-commands)
+- [Browser Settings](#browser-settings)
+- [Debugging](#debugging)
+- [Global Options](#global-options)
+- [Environment Variables](#environment-variables)
+
+## Style Note
+
+Examples in this file place global options before the command for consistency:
+
+```bash
+agent-browser --session qa snapshot -i
+```
 
 ## Navigation
 
@@ -15,17 +44,21 @@ agent-browser close           # Close browser (aliases: quit, exit)
 agent-browser connect 9222    # Connect to browser via CDP port
 ```
 
-## Snapshot (page analysis)
+## Snapshot
 
 ```bash
-agent-browser snapshot            # Full accessibility tree
-agent-browser snapshot -i         # Interactive elements only (recommended)
-agent-browser snapshot -c         # Compact output
-agent-browser snapshot -d 3       # Limit depth to 3
-agent-browser snapshot -s "#main" # Scope to CSS selector
+agent-browser snapshot             # Full accessibility tree
+agent-browser snapshot -i          # Interactive elements only (recommended)
+agent-browser snapshot -c          # Compact output
+agent-browser snapshot -d 3        # Limit depth to 3
+agent-browser snapshot -s "#main"  # Scope to CSS selector
 ```
 
-## Interactions (use @refs from snapshot)
+Use `snapshot -i` before interacting. Re-run it after navigation, modals, async loads, or any DOM change that could invalidate refs.
+
+Prefer `snapshot -s "#selector"` for documented scoped snapshots. Some versions may accept `snapshot @eN`, but this update did not re-confirm ref-scoped narrowing behavior.
+
+## Interactions
 
 ```bash
 agent-browser click @e1           # Click
@@ -59,7 +92,7 @@ agent-browser get title           # Get page title
 agent-browser get url             # Get current URL
 agent-browser get count ".item"   # Count matching elements
 agent-browser get box @e1         # Get bounding box
-agent-browser get styles @e1      # Get computed styles (font, color, bg, etc.)
+agent-browser get styles @e1      # Get computed styles
 ```
 
 ## Check State
@@ -70,20 +103,15 @@ agent-browser is enabled @e1      # Check if enabled
 agent-browser is checked @e1      # Check if checked
 ```
 
-## Screenshots and PDF
+## Capture Output
 
 ```bash
-agent-browser screenshot          # Save to temporary directory
-agent-browser screenshot path.png # Save to specific path
-agent-browser screenshot --full   # Full page
+agent-browser screenshot          # Save to a temporary directory
+agent-browser screenshot path.png # Save to a specific path
+agent-browser screenshot --full   # Full-page screenshot
 agent-browser pdf output.pdf      # Save as PDF
-```
 
-## Video Recording
-
-```bash
 agent-browser record start ./demo.webm    # Start recording
-agent-browser click @e1                   # Perform actions
 agent-browser record stop                 # Stop and save video
 agent-browser record restart ./take2.webm # Stop current + start new
 ```
@@ -93,27 +121,34 @@ agent-browser record restart ./take2.webm # Stop current + start new
 ```bash
 agent-browser wait @e1                     # Wait for element
 agent-browser wait 2000                    # Wait milliseconds
-agent-browser wait --text "Success"        # Wait for text (or -t)
-agent-browser wait --url "**/dashboard"    # Wait for URL pattern (or -u)
-agent-browser wait --load networkidle      # Wait for network idle (or -l)
-agent-browser wait --fn "window.ready"     # Wait for JS condition (or -f)
+agent-browser wait --text "Success"        # Wait for text
+agent-browser wait --url "**/dashboard"    # Wait for URL pattern
+agent-browser wait --load networkidle      # Wait for network idle
+agent-browser wait --fn "window.ready"     # Wait for JS condition
+agent-browser wait --download ./file.pdf   # Wait for download and save it
+agent-browser wait --download ./file.pdf --timeout 30000
 ```
 
-## Mouse Control
+Local `wait --help` re-confirmed the forms above. In local help, `--timeout <ms>` is shown with `--download`; if you want to combine `--timeout` with other wait forms used elsewhere in this skill, re-check `agent-browser wait --help` on your installed version first.
+
+## JavaScript Evaluation
 
 ```bash
-agent-browser mouse move 100 200      # Move mouse
-agent-browser mouse down left         # Press button
-agent-browser mouse up left           # Release button
-agent-browser mouse wheel 100         # Scroll wheel
+agent-browser eval "document.title"                 # Evaluate inline JavaScript
+agent-browser eval -b "ZG9jdW1lbnQudGl0bGU="        # Evaluate base64-encoded JavaScript
+agent-browser eval --stdin <<'EVALEOF'              # Read JavaScript from stdin
+document.title
+EVALEOF
 ```
 
-## Semantic Locators (alternative to refs)
+Local `eval --help` re-confirmed `-b`, `--base64`, and `--stdin`.
+
+## Semantic Locators
 
 ```bash
 agent-browser find role button click --name "Submit"
 agent-browser find text "Sign In" click
-agent-browser find text "Sign In" click --exact      # Exact match only
+agent-browser find text "Sign In" click --exact
 agent-browser find label "Email" fill "user@test.com"
 agent-browser find placeholder "Search" type "query"
 agent-browser find alt "Logo" click
@@ -123,6 +158,52 @@ agent-browser find first ".item" click
 agent-browser find last ".item" click
 agent-browser find nth 2 "a" hover
 ```
+
+Use refs when possible; use semantic locators when refs are unavailable or the page is highly dynamic.
+
+## Cookies
+
+```bash
+agent-browser cookies get
+agent-browser cookies set session_id "abc123" --url https://app.example.com
+agent-browser cookies set auth_token "xyz789" --domain example.com --path /api --httpOnly --secure
+agent-browser cookies set pref "dark" --sameSite Lax --expires 1767225600
+agent-browser cookies clear
+```
+
+Local `cookies --help` re-confirmed these operations:
+
+- `get`
+- `set <name> <value> [options]`
+- `clear`
+
+Local help also states: if `--url`, `--domain`, and `--path` are all omitted, the cookie is set for the current page URL.
+
+## State and Session Commands
+
+```bash
+agent-browser session                    # Show current session name
+agent-browser session list               # List active sessions
+
+agent-browser state save auth.json       # Save current state to a file
+agent-browser state load auth.json       # Load state from a file
+agent-browser state list                 # List saved state files
+agent-browser state show myapp.json      # Show state summary
+agent-browser state rename old new       # Rename state file
+agent-browser state clear myapp          # Clear saved states for a name
+agent-browser state clear --all          # Clear all saved states
+agent-browser state clean --older-than 7 # Delete expired state files
+```
+
+Use these four persistence mechanisms intentionally:
+
+- `--session <name>`: choose an isolated active browser session.
+- `--profile <path>`: reuse a persistent browser profile directory.
+- `--session-name <name>`: local help documents CLI-managed persisted state for cookies and `localStorage`; this update re-confirmed save-on-close, and restore behavior should be verified locally when it matters.
+- `state save` / `state load`: explicit file-based persistence.
+- `--state <path>`: load a state file up front before the command runs.
+
+For behavior details, persistence paths, cleanup, and close semantics, read [session-management.md](session-management.md).
 
 ## Browser Settings
 
@@ -134,126 +215,54 @@ agent-browser set offline on                  # Toggle offline mode
 agent-browser set headers '{"X-Key":"v"}'     # Extra HTTP headers
 agent-browser set credentials user pass       # HTTP basic auth (alias: auth)
 agent-browser set media dark                  # Emulate color scheme
-agent-browser set media light reduced-motion  # Light mode + reduced motion
-```
-
-## Cookies and Storage
-
-```bash
-agent-browser cookies                     # Get all cookies
-agent-browser cookies set name value      # Set cookie
-agent-browser cookies clear               # Clear cookies
-agent-browser storage local               # Get all localStorage
-agent-browser storage local key           # Get specific key
-agent-browser storage local set k v       # Set value
-agent-browser storage local clear         # Clear all
-```
-
-## Network
-
-```bash
-agent-browser network route <url>              # Intercept requests
-agent-browser network route <url> --abort      # Block requests
-agent-browser network route <url> --body '{}'  # Mock response
-agent-browser network unroute [url]            # Remove routes
-agent-browser network requests                 # View tracked requests
-agent-browser network requests --filter api    # Filter requests
-```
-
-## Tabs and Windows
-
-```bash
-agent-browser tab                 # List tabs
-agent-browser tab new [url]       # New tab
-agent-browser tab 2               # Switch to tab by index
-agent-browser tab close           # Close current tab
-agent-browser tab close 2         # Close tab by index
-agent-browser window new          # New window
-```
-
-## Frames
-
-```bash
-agent-browser frame "#iframe"     # Switch to iframe
-agent-browser frame main          # Back to main frame
-```
-
-## Dialogs
-
-```bash
-agent-browser dialog accept [text]  # Accept dialog
-agent-browser dialog dismiss        # Dismiss dialog
-```
-
-## JavaScript
-
-```bash
-agent-browser eval "document.title"          # Simple expressions only
-agent-browser eval -b "<base64>"             # Any JavaScript (base64 encoded)
-agent-browser eval --stdin                   # Read script from stdin
-```
-
-Use `-b`/`--base64` or `--stdin` for reliable execution. Shell escaping with nested quotes and special characters is error-prone.
-
-```bash
-# Base64 encode your script, then:
-agent-browser eval -b "ZG9jdW1lbnQucXVlcnlTZWxlY3RvcignW3NyYyo9Il9uZXh0Il0nKQ=="
-
-# Or use stdin with heredoc for multiline scripts:
-cat <<'EOF' | agent-browser eval --stdin
-const links = document.querySelectorAll('a');
-Array.from(links).map(a => a.href);
-EOF
-```
-
-## State Management
-
-```bash
-agent-browser state save auth.json    # Save cookies, storage, auth state
-agent-browser state load auth.json    # Restore saved state
-```
-
-## Global Options
-
-```bash
-agent-browser --session <name> ...    # Isolated browser session
-agent-browser --json ...              # JSON output for parsing
-agent-browser --headed ...            # Show browser window (not headless)
-agent-browser --full ...              # Full page screenshot (-f)
-agent-browser --cdp <port> ...        # Connect via Chrome DevTools Protocol
-agent-browser -p <provider> ...       # Cloud browser provider (--provider)
-agent-browser --proxy <url> ...       # Use proxy server
-agent-browser --headers <json> ...    # HTTP headers scoped to URL's origin
-agent-browser --executable-path <p>   # Custom browser executable
-agent-browser --extension <path> ...  # Load browser extension (repeatable)
-agent-browser --ignore-https-errors   # Ignore SSL certificate errors
-agent-browser --help                  # Show help (-h)
-agent-browser --version               # Show version (-V)
-agent-browser <command> --help        # Show detailed help for a command
+agent-browser set media light reduced-motion  # Multiple media settings
 ```
 
 ## Debugging
 
 ```bash
-agent-browser --headed open example.com   # Show browser window
-agent-browser --cdp 9222 snapshot         # Connect via CDP port
-agent-browser connect 9222                # Alternative: connect command
-agent-browser console                     # View console messages
-agent-browser console --clear             # Clear console
-agent-browser errors                      # View page errors
-agent-browser errors --clear              # Clear errors
+agent-browser --headed open example.com   # Show browser window for debugging
+agent-browser --cdp 9222 snapshot         # Connect via a Chrome DevTools Protocol port
 agent-browser highlight @e1               # Highlight element
-agent-browser trace start                 # Start recording trace
-agent-browser trace stop trace.zip        # Stop and save trace
+agent-browser console                     # View console messages
+agent-browser console --clear             # Clear console messages
+agent-browser errors                      # View page errors
+agent-browser errors --clear              # Clear page errors
+agent-browser trace start                 # Start recording a trace
+agent-browser trace stop trace.zip        # Stop trace and save it
+```
+
+Use `--headed` only to make the browser visible. It does not replace explicit persistence decisions; use `--session-name` or `state save/load` when you need state to survive restarts.
+
+## Global Options
+
+```bash
+agent-browser --session <name> ...           # Use an isolated active session
+agent-browser --profile <path> ...           # Use a persistent browser profile directory
+agent-browser --session-name <name> ...      # CLI-managed persisted state name for cookies and localStorage
+agent-browser --state <path> ...             # Load storage state from JSON before running
+agent-browser --json ...                     # Output as JSON
+agent-browser --headed ...                   # Show browser window
+agent-browser --full ...                     # Full-page screenshot shortcut
+agent-browser --cdp <port> ...               # Connect via Chrome DevTools Protocol
+agent-browser -p <provider> ...              # Browser provider (--provider)
+agent-browser --proxy <url> ...              # Use a proxy server
+agent-browser --headers <json> ...           # Extra HTTP headers
+agent-browser --executable-path <path> ...   # Custom browser executable
+agent-browser --extension <path> ...         # Load browser extension (repeatable)
+agent-browser --ignore-https-errors ...      # Ignore SSL certificate errors
+agent-browser --help                         # Show help
+agent-browser --version                      # Show version
+agent-browser <command> --help               # Show help for a command
 ```
 
 ## Environment Variables
 
+Verified from local help:
+
 ```bash
-AGENT_BROWSER_SESSION="mysession"            # Default session name
-AGENT_BROWSER_EXECUTABLE_PATH="/path/chrome" # Custom browser path
-AGENT_BROWSER_EXTENSIONS="/ext1,/ext2"       # Comma-separated extension paths
-AGENT_BROWSER_PROVIDER="browserbase"         # Cloud browser provider
-AGENT_BROWSER_STREAM_PORT="9223"             # WebSocket streaming port
-AGENT_BROWSER_HOME="/path/to/agent-browser"  # Custom install location
+AGENT_BROWSER_SESSION             # Default isolated session name
+AGENT_BROWSER_SESSION_NAME        # Default CLI-managed persistence name
+AGENT_BROWSER_ENCRYPTION_KEY      # 64-char hex key for AES-256-GCM state encryption
+AGENT_BROWSER_STATE_EXPIRE_DAYS   # Auto-delete states older than N days (default: 30)
 ```

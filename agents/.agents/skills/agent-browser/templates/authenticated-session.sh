@@ -1,53 +1,56 @@
 #!/bin/bash
 # Template: Authenticated Session Workflow
-# Purpose: Login once, save state, reuse for subsequent runs
+# Purpose: Discovery-first auth session scaffold; customize refs before saving reusable state
 # Usage: ./authenticated-session.sh <login-url> [state-file]
 #
 # Environment variables:
 #   APP_USERNAME - Login username/email
 #   APP_PASSWORD - Login password
 #
-# Two modes:
-#   1. Discovery mode (default): Shows form structure so you can identify refs
-#   2. Login mode: Performs actual login after you update the refs
+# Workflow:
+#   1. If a saved state file exists, load it and test whether it still works
+#   2. If not, open the login page in discovery mode so you can map refs
+#   3. Replace the LOGIN FLOW section with site-specific refs
+#   4. Save state explicitly with `state save`
 #
-# Setup steps:
-#   1. Run once to see form structure (discovery mode)
-#   2. Update refs in LOGIN FLOW section below
-#   3. Set APP_USERNAME and APP_PASSWORD
-#   4. Delete the DISCOVERY section
+# Optional shortcut once the state file exists:
+#   agent-browser --state ./auth-state.json open https://app.example.com/dashboard
 
 set -euo pipefail
 
 LOGIN_URL="${1:?Usage: $0 <login-url> [state-file]}"
 STATE_FILE="${2:-./auth-state.json}"
 
+is_login_like_url() {
+    local url="$1"
+    [[ "$url" == *"login"* ]] || [[ "$url" == *"signin"* ]] || [[ "$url" == *"auth"* ]]
+}
+
 echo "Authentication workflow: $LOGIN_URL"
 
 # ================================================================
-# SAVED STATE: Skip login if valid saved state exists
+# SAVED STATE: Reuse explicit state file when it is still valid
 # ================================================================
 if [[ -f "$STATE_FILE" ]]; then
     echo "Loading saved state from $STATE_FILE..."
-    if agent-browser --state "$STATE_FILE" open "$LOGIN_URL" 2>/dev/null; then
-        agent-browser wait --load networkidle
+    agent-browser state load "$STATE_FILE"
+    agent-browser open "$LOGIN_URL"
+    agent-browser wait --load networkidle
 
-        CURRENT_URL=$(agent-browser get url)
-        if [[ "$CURRENT_URL" != *"login"* ]] && [[ "$CURRENT_URL" != *"signin"* ]]; then
-            echo "Session restored successfully"
-            agent-browser snapshot -i
-            exit 0
-        fi
-        echo "Session expired, performing fresh login..."
-        agent-browser close 2>/dev/null || true
-    else
-        echo "Failed to load state, re-authenticating..."
+    CURRENT_URL="$(agent-browser get url)"
+    if ! is_login_like_url "$CURRENT_URL"; then
+        echo "Session restored successfully"
+        agent-browser snapshot -i
+        exit 0
     fi
+
+    echo "Saved session appears expired; removing stale state and continuing to discovery/login flow..."
     rm -f "$STATE_FILE"
+    agent-browser close || true
 fi
 
 # ================================================================
-# DISCOVERY MODE: Shows form structure (delete after setup)
+# DISCOVERY MODE: Show form structure so you can map refs safely
 # ================================================================
 echo "Opening login page..."
 agent-browser open "$LOGIN_URL"
@@ -61,9 +64,9 @@ echo "---"
 echo ""
 echo "Next steps:"
 echo "  1. Note the refs: username=@e?, password=@e?, submit=@e?"
-echo "  2. Update the LOGIN FLOW section below with your refs"
+echo "  2. Update the LOGIN FLOW section below with those refs"
 echo "  3. Set: export APP_USERNAME='...' APP_PASSWORD='...'"
-echo "  4. Delete this DISCOVERY MODE section"
+echo "  4. Delete this DISCOVERY MODE section once your refs are stable"
 echo ""
 agent-browser close
 exit 0
@@ -82,19 +85,18 @@ exit 0
 # agent-browser fill @e1 "$APP_USERNAME"
 # agent-browser fill @e2 "$APP_PASSWORD"
 # agent-browser click @e3
-# agent-browser wait --load networkidle
+# agent-browser wait --url "**/dashboard"
+# agent-browser snapshot -i
 #
-# # Verify login succeeded
-# FINAL_URL=$(agent-browser get url)
-# if [[ "$FINAL_URL" == *"login"* ]] || [[ "$FINAL_URL" == *"signin"* ]]; then
-#     echo "Login failed - still on login page"
+# FINAL_URL="$(agent-browser get url)"
+# if is_login_like_url "$FINAL_URL"; then
+#     echo "Login failed - still on login/auth page"
 #     agent-browser screenshot /tmp/login-failed.png
 #     agent-browser close
 #     exit 1
 # fi
 #
-# # Save state for future runs
-# echo "Saving state to $STATE_FILE"
+# echo "Saving explicit state to $STATE_FILE"
 # agent-browser state save "$STATE_FILE"
 # echo "Login successful"
-# agent-browser snapshot -i
+# echo "Future shortcut: agent-browser --state $STATE_FILE open https://app.example.com/dashboard"
