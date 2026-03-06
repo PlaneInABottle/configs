@@ -1,7 +1,6 @@
 ---
 name: skill-creator
 description: Comprehensive guide for creating and managing AI skills - modular packages that extend AI assistants with specialized knowledge, workflows, and tool integrations. Use this skill when you need to write, update, or package AI skills that transform general-purpose AI agents into specialized experts for specific domains, tasks, or workflows.
-license: Complete terms in LICENSE.txt
 ---
 
 # Skill Creator
@@ -295,7 +294,7 @@ At this point, it is time to actually create the skill.
 
 Skip this step only if the skill being developed already exists, and iteration or packaging is needed. In this case, continue to the next step.
 
-When creating a new skill from scratch, always run the `init_skill.py` script. The script conveniently generates a new template skill directory that automatically includes everything a skill requires, making the skill creation process much more efficient and reliable.
+When creating a new skill from scratch, always run the `init_skill.py` script. It creates the base skill directory and `SKILL.md` template, then optionally adds resource directories and placeholder files when you request them.
 
 Usage:
 
@@ -309,12 +308,12 @@ The script:
 
 - Creates the skill directory under .agents/skills/
 - Generates a SKILL.md template with proper frontmatter and TODO placeholders
-- Creates example resource directories: `scripts/`, `references/`, and `assets/`
-- Adds example files in each directory that can be customized or deleted
+- Creates only the resource directories requested through `--resources`
+- Adds placeholder files only when `--examples` is passed together with `--resources`
 
 Skills should be created under .agents/skills/ for consistency and centralized management.
 
-After initialization, customize or remove the generated SKILL.md and example files as needed.
+After initialization, customize or remove the generated SKILL.md and any optional placeholder files as needed.
 
 </step-3-initializing-the-skill>
 
@@ -334,7 +333,7 @@ To begin implementation, start with the reusable resources identified above: `sc
 
 Added scripts must be tested by actually running them to ensure there are no bugs and that the output matches what is expected. If there are many similar scripts, only a representative sample needs to be tested to ensure confidence that they all work while balancing time to completion.
 
-Any example files and directories not needed for the skill should be deleted. The initialization script creates example files in `scripts/`, `references/`, and `assets/` to demonstrate structure, but most skills won't need all of them.
+Any example files and directories not needed for the skill should be deleted. `init_skill.py` creates resource directories only when `--resources` is supplied, and creates placeholder files inside those directories only when `--examples` is also supplied.
 
 #### Update SKILL.md
 
@@ -364,7 +363,7 @@ Write instructions for using the skill and its bundled resources.
 
 ### Step 5: Packaging a Skill
 
-Once development of the skill is complete, it must be packaged into a distributable .skill file that gets shared with the user. The packaging process automatically validates the skill first to ensure it meets all requirements:
+Once development of the skill is complete, it must be packaged into a distributable .skill file that gets shared with the user. The packaging process first checks that the folder exists and contains `SKILL.md`, then runs `scripts/quick_validate.py` before writing the archive:
 
 ```bash
 scripts/package_skill.py <path/to/skill-folder>
@@ -380,12 +379,13 @@ The packaging script will:
 
 1. **Validate** the skill automatically, checking:
 
-   - YAML frontmatter format and required fields
-   - Skill naming conventions and directory structure
-   - Description completeness and quality
-   - File organization and resource references
+   - `SKILL.md` contains YAML frontmatter and the frontmatter parses successfully
+   - Only `name`, `description`, `license`, `allowed-tools`, and `metadata` appear in frontmatter
+   - `name` and `description` are present
+   - `name` satisfies the current hyphen-case and length rules
+   - `description` is a string, stays within the current length limit, and does not contain angle brackets
 
-2. **Package** the skill if validation passes, creating a .skill file named after the skill (e.g., `my-skill.skill`) that includes all files and maintains the proper directory structure for distribution. The .skill file is a zip file with a .skill extension.
+2. **Package** the skill if validation passes, creating a `.skill` zip archive named after the skill directory (for example, `my-skill.skill`) and including all files beneath that directory while preserving the top-level skill folder inside the archive.
 
 If validation fails, the script will report the errors and exit without creating a package. Fix any validation errors and run the packaging command again.
 
