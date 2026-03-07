@@ -6,13 +6,10 @@ Use these patterns as conservative defaults and re-check local help when version
 
 ### Start
 
-```bash
-pm2 start npm --name project-web -- run dev
-pm2 start main.py --interpreter python3 --name project-api
-pm2 start "uvicorn main:app --host 0.0.0.0 --port 8000" --name project-api
-```
-
 Prefer the command form the app already uses and always supply a stable process name.
+
+- For common `npm`, Python, and `uvicorn` start examples, follow the PM2 section in `ai-native-workflow`.
+- Keep this reference focused on PM2-specific inspection, lifecycle decisions, and cleanup after the process is under PM2 control.
 
 ### Inspect
 
@@ -23,8 +20,8 @@ pm2 logs project-api --lines 100 --nostream
 pm2 logs project-api
 ```
 
-- `list` gives the summary table.
-- `show` gives one process view.
+- `list` typically gives the summary table.
+- `show` typically gives one-process details.
 - `logs --nostream` is safer for bounded snapshots.
 - `logs` without `--nostream` is for live follow mode.
 
@@ -36,9 +33,9 @@ pm2 stop project-api
 pm2 delete project-api
 ```
 
-- `restart` keeps the process registered and running.
-- `stop` keeps it registered but inactive.
-- `delete` removes it from the PM2 list.
+- `restart` typically keeps the process registered and returns it to a running state.
+- `stop` typically keeps it registered but inactive.
+- `delete` typically removes it from the PM2 list.
 
 Prefer process names over numeric ids when you control naming.
 
@@ -82,4 +79,4 @@ Keep broader runtime setup and end-to-end verification in `ai-native-workflow`, 
 
 ## Local evidence
 
-This session locally verified `pm2 --version`, `pm2 start --help`, `pm2 list`, `pm2 show --help`, `pm2 logs --help`, `pm2 restart --help`, `pm2 stop --help`, and `pm2 delete --help`. Other flags or semantics should stay conservative until verified on the target install.
+Local spot-checks on one install confirmed `pm2 --version`, `pm2 --help`, `pm2 start --help`, `pm2 show --help`, `pm2 logs --help`, `pm2 restart --help`, `pm2 stop --help`, and `pm2 delete --help` on PM2 6.0.14. Treat runtime semantics, `pm2 list` output, and other flags as install-sensitive until you verify them on the target machine.

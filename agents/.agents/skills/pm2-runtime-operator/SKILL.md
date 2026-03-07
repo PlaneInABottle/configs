@@ -21,7 +21,7 @@ Operate local runtimes through PM2 with conservative, target-by-name commands. K
    - `pm2 delete <name>`
 5. Confirm teardown with `pm2 list` before leaving the session.
 
-The reference file records what this session checked locally; treat other flags or behaviors as version-sensitive until you verify them on the target install.
+Use the reference file for PM2-specific inspection and cleanup patterns. For baseline multi-language start examples, Docker topology, and wider runtime verification, defer to `ai-native-workflow`.
 
 ## Naming guidance
 
@@ -36,16 +36,9 @@ The reference file records what this session checked locally; treat other flags 
 
 Use the smallest command that clearly identifies the entrypoint and process name.
 
-```bash
-# Node package script
-pm2 start npm --name project-web -- run dev
-
-# Python entrypoint with explicit interpreter
-pm2 start main.py --interpreter python3 --name project-api
-
-# Shell command form when the app is normally launched as one command
-pm2 start "uvicorn main:app --host 0.0.0.0 --port 8000" --name project-api
-```
+- Reuse the app's normal launch form instead of inventing a PM2-only wrapper.
+- Always supply a stable `--name` so later `show`, `logs`, `restart`, `stop`, and `delete` commands stay precise.
+- For baseline `npm`, Python, or `uvicorn` start examples, follow the PM2 quickstart in `ai-native-workflow`; keep this skill focused on what to do after a process exists in PM2.
 
 After `start`, verify readiness with the app's own health check or expected port behavior instead of relying on logs alone.
 
