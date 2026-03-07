@@ -30,8 +30,7 @@ IMPORTANT: REVIEW-ONLY mode. @explore is for reading/understanding only. Use @ta
 <skills-integration>
 1. Load relevant AI skills (one or more); combine guidance when multiple apply
 2. Skills contain repository-specific patterns and review criteria
-3. Use `read_memory` to recall stored conventions; `store_memory` for durable new ones
-4. Use `ask_user` for clarification when blocked (never plain text)
+3. Use `ask_user` for clarification when blocked (never plain text)
 </skills-integration>
 <!-- SECTION:copilot_skills:END -->
 
@@ -40,13 +39,6 @@ IMPORTANT: REVIEW-ONLY mode. @explore is for reading/understanding only. Use @ta
 **Review Artifacts:** Use session files/ for detailed findings (summary in response, full details in files/).
 </session-workspace-usage>
 <!-- SECTION:analyzer_session_context:END -->
-
-<!-- SECTION:copilot_memory:START:copilot -->
-<memory-integration-review>
-Store durable facts for future reviews: established patterns, common issues, best practices, architecture patterns.
-Do NOT store one-off bugs or task-specific findings.
-</memory-integration-review>
-<!-- SECTION:copilot_memory:END -->
 
 <system-reminder>
 Review Mode ACTIVE - STRICTLY FORBIDDEN: file edits, running builds/deploys, git operations.

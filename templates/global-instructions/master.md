@@ -20,9 +20,6 @@ Context7 Required: Query Context7 for any library/framework/API usage before imp
 Quality Over Speed: Code is read more than it's written
 AI Skills Awareness: Use AI skills written by the user when applicable to the task
 Skills Required: Use relevant skills (one or more). When multiple apply, combine their guidance
-<!-- SECTION:copilot_memory_principle:START:copilot -->
-Memory First: Use `read_memory` to recall stored knowledge; use `store_memory` to persist durable facts
-<!-- SECTION:copilot_memory_principle:END -->
 Clarify Interactively: Use `ask_user` for clarification questions when blocked or ambiguous (never ask in plain text)
 
 <!-- SECTION:copilot_todo_requirement:START:copilot -->
@@ -36,9 +33,6 @@ Action Checklist (Before ANY action):
 **SKILLS & CONTEXT (Required First):**
 - Are relevant skills already loaded in my context? If not, check available skills and load them.
 - Have I queried Context7 for library/framework/API documentation?
-<!-- SECTION:copilot_memory_checklist:START:copilot -->
-- Have I used `read_memory` to recall stored knowledge?
-<!-- SECTION:copilot_memory_checklist:END -->
 <!-- SECTION:copilot_lsp_checklist:START:copilot -->
 - For code navigation/edits on supported file types: use `lsp` (goToDefinition, findReferences, hover) before grep/glob.
 <!-- SECTION:copilot_lsp_checklist:END -->
@@ -51,7 +45,7 @@ Action Checklist (Before ANY action):
 
 <!-- SECTION:copilot_subagent_commands:START:copilot -->
 **SUB-AGENT COMMANDS:**
-- Subagent command check: Explicitly command subagents to check and load relevant skills, use Context7, and memory tools.
+- Subagent command check: Explicitly command subagents to check and load relevant skills and use Context7.
 - Subagent model check: Use `gpt-5.4` for subagents.
 - Parallel review check: For code/commit reviews, spawn parallel @analyzer calls (gpt-5.4) and merge findings.
 <!-- SECTION:copilot_subagent_commands:END -->
@@ -75,12 +69,7 @@ Anti-Patterns to Avoid:
 
 3. **Load relevant skills:** Check if already loaded; if not, use `skill` tool. Load ALL matching skills and combine guidance.
 
-<!-- SECTION:copilot_priority_order:START:copilot -->
-4. **Priority order:** Project skills → Context7 docs → Memory (`read_memory`) → General knowledge
-<!-- SECTION:copilot_priority_order:END -->
-<!-- SECTION:default_priority_order:START:!copilot -->
 4. **Priority order:** Project skills → Context7 docs → General knowledge
-<!-- SECTION:default_priority_order:END -->
 
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
 
@@ -88,9 +77,6 @@ Anti-Patterns to Avoid:
 ## Tools
 Skills: Project-specific patterns and workflows. Check available skills FIRST. Load with `skill` tool.
 Context7 MCP: Tool for researching libraries and APIs. Required for any external library/framework/API references.
-<!-- SECTION:copilot_tools_memory:START:copilot -->
-Memory tools: `read_memory` to retrieve stored knowledge; `store_memory` to persist durable codebase facts.
-<!-- SECTION:copilot_tools_memory:END -->
 <!-- SECTION:copilot_lsp_tools:START:copilot -->
 LSP tools: Use `lsp` for code intelligence on `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.lua`, `.sh`, `.bash`, `.zsh` files. Prefer over grep/glob for symbol navigation. Operations: `goToDefinition`, `findReferences`, `hover` (type info), `documentSymbol` (file outline), `rename` (safe cross-file rename), `incomingCalls`/`outgoingCalls` (call graph).
 <!-- SECTION:copilot_lsp_tools:END -->
@@ -118,10 +104,6 @@ CHECK if relevant skills are already loaded → LOAD every matching skill → CO
 **Example:** API change with security → LOAD `api-guidelines` + `security-patterns/authentication`, COMBINE both. ✗ NEVER ignore a relevant skill.
 ### Context7 Reminder
 Context7 Required: Verify each library/framework/API against Context7 before claims, implementation, or review.
-<!-- SECTION:copilot_memory_reminder:START:copilot -->
-### Memory Reminder
-Use `read_memory` to recall stored knowledge; use `store_memory` to persist durable facts.
-<!-- SECTION:copilot_memory_reminder:END -->
 ### Truth Reminder
 Truth Required: Never guess; verify with evidence or documentation.
 ### Clarification Reminder
@@ -130,20 +112,6 @@ Use `ask_user` for interactive clarification questions (never ask in plain text)
 ### Direct Communication Reminder
 Never use shell commands (cat, echo, heredocs) to display explanations. Write directly in markdown. Use bash only for actual file operations and system commands.
 <!-- SECTION:copilot_direct_communication_reminder:END -->
-
-<!-- SECTION:copilot_memory:START:copilot -->
-### Memory Integration
-
-Use `store_memory` for durable, widely-applicable codebase knowledge that persists across tasks. Use `read_memory` before major decisions to recall stored conventions and patterns.
-
-**Store:** Coding conventions, build/deploy workflows, architecture decisions, repo-specific tools/libraries, testing strategies, security practices, utilities, documentation standards, subagent preferences, workflow patterns, code review priorities, environment setup, coding style preferences, debugging approaches.
-
-**Never store:** Secrets/credentials, task-specific observations, one-off bugs, frequently-changing external systems.
-
-Store facts once—they remain accessible across all future work.
-
-**Examples:** ✓ `"Run npm run build && npm run test to validate"` (stable workflow) · ✓ `"Error handling uses custom ErrorKind wrapper"` (architecture) · ✗ `"Fixed bug in component X"` (task-specific)
-<!-- SECTION:copilot_memory:END -->
 
 ## Skill Creation Checkpoint
 After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user via `ask_user` if they want a reusable skill created for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.
@@ -248,7 +216,7 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 <!-- SECTION:copilot_subagent_rules:START:copilot -->
 Subagent Model Rule: Always specify model `gpt-5.4` for subagents.
 Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `gpt-5.4`, then merge findings.
-Subagent Command Rule: Every subagent prompt must explicitly command use of Context7, relevant skills, and memory tools (`read_memory`/`store_memory`). DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
+Subagent Command Rule: Every subagent prompt must explicitly command use of Context7 and relevant skills. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 <!-- SECTION:copilot_subagent_rules:END -->
 ### Planner
 Purpose: Architecture design and detailed planning

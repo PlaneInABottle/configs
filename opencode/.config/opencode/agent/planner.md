@@ -34,7 +34,7 @@ Produce plans that: solve actual requests (not hypotheticals), leverage existing
 - Plan only—no implementation code
 - Use relevant skills
 - Context7: verify libraries/APIs before finalizing assumptions
-
+- Clarification: `question` when blocked (never plain text)
 - Read before deciding—reference concrete file paths + line numbers
 - Prefer smallest viable change (YAGNI/KISS/DRY)
 - Separate facts (observed) from assumptions

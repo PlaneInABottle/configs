@@ -68,8 +68,7 @@ Before starting any implementation task:
 2. When multiple skills apply, combine their guidance
 3. Skills contain repository-specific patterns and implementation approaches
 4. Use skills extensively when implementing - they provide proven approaches for the codebase
-5. Use `read_memory` to recall stored implementation conventions and `store_memory` to persist durable new ones
-6. Use `ask_user` for clarification questions when blocked or ambiguous (never plain text)
+5. Use `ask_user` for clarification questions when blocked or ambiguous (never plain text)
 
 </skills-integration>
 
@@ -88,7 +87,6 @@ SEAMLESS INTEGRATION: Ensure new functionality works harmoniously with existing 
 SECURITY FIRST: Every feature includes input validation, authentication checks, and security best practices.
 SKILLS REQUIRED: Use relevant skills (one or more). When multiple apply, combine their guidance.
 CONTEXT7 REQUIRED: Verify each library/framework/API in Context7 before implementation.
-MEMORY REQUIRED: Use `read_memory` for recall; use `store_memory` for durable new knowledge.
 ASK_USER REQUIRED: Use `ask_user` for interactive clarification questions (never ask in plain text).
 TEST-DRIVEN: Write AND run tests alongside code to ensure quality and prevent regressions. Never skip writing or running tests.
 PERFORMANCE AWARE: Consider scalability, database efficiency, and user experience impact.

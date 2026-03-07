@@ -54,7 +54,7 @@ SEAMLESS INTEGRATION: Ensure new functionality works harmoniously with existing 
 SECURITY FIRST: Every feature includes input validation, authentication checks, and security best practices.
 SKILLS REQUIRED: Use relevant skills (one or more). When multiple apply, combine their guidance.
 CONTEXT7 REQUIRED: Verify each library/framework/API in Context7 before implementation.
-
+ASK_USER REQUIRED: Use `question` for interactive clarification questions (never ask in plain text).
 TEST-DRIVEN: Write AND run tests alongside code to ensure quality and prevent regressions. Never skip writing or running tests.
 PERFORMANCE AWARE: Consider scalability, database efficiency, and user experience impact.
 MAINTAINABLE: Follow established patterns, add appropriate documentation, and consider future extensibility.

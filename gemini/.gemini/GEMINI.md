@@ -22,7 +22,6 @@ Context7 Required: Query Context7 for any library/framework/API usage before imp
 Quality Over Speed: Code is read more than it's written
 AI Skills Awareness: Use AI skills written by the user when applicable to the task
 Skills Required: Use relevant skills (one or more). When multiple apply, combine their guidance
-
 Clarify Interactively: Use `ask_user` for clarification questions when blocked or ambiguous (never ask in plain text)
 
 
@@ -32,7 +31,6 @@ Action Checklist (Before ANY action):
 **SKILLS & CONTEXT (Required First):**
 - Are relevant skills already loaded in my context? If not, check available skills and load them.
 - Have I queried Context7 for library/framework/API documentation?
-
 
 
 **VALIDATION:**
@@ -62,7 +60,6 @@ Anti-Patterns to Avoid:
 
 3. **Load relevant skills:** Check if already loaded; if not, use `skill` tool. Load ALL matching skills and combine guidance.
 
-
 4. **Priority order:** Project skills → Context7 docs → General knowledge
 
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
@@ -71,7 +68,6 @@ Anti-Patterns to Avoid:
 ## Tools
 Skills: Project-specific patterns and workflows. Check available skills FIRST. Load with `skill` tool.
 Context7 MCP: Tool for researching libraries and APIs. Required for any external library/framework/API references.
-
 
 ask_user: Use for interactive clarification questions; never ask in plain text.
 ## Skills Mastery
@@ -97,13 +93,10 @@ CHECK if relevant skills are already loaded → LOAD every matching skill → CO
 **Example:** API change with security → LOAD `api-guidelines` + `security-patterns/authentication`, COMBINE both. ✗ NEVER ignore a relevant skill.
 ### Context7 Reminder
 Context7 Required: Verify each library/framework/API against Context7 before claims, implementation, or review.
-
 ### Truth Reminder
 Truth Required: Never guess; verify with evidence or documentation.
 ### Clarification Reminder
 Use `ask_user` for interactive clarification questions (never ask in plain text).
-
-
 
 
 ## Skill Creation Checkpoint
