@@ -1,12 +1,12 @@
 # CLI Patterns
 
-## Verified Locally In This Session
+## Local Verification Notes
 
-- `sqlite3 --help` confirmed `-batch`, `-json`, `-tabs`, `-noheader`, `-readonly`, and `-cmd`.
-- `psql --help` confirmed `-c`, `-X`, `-v ON_ERROR_STOP=1`, `-A`, `-t`, `-F`, and `--csv`.
-- `redis-cli --help` confirmed `-x`, `--raw`, `--csv`, `--json`, `-n`, `-u`, and `-e` on the local `redis-cli 8.4.0`.
-- `docker exec --help` confirmed `-i` keeps stdin open; `docker compose exec --help` confirmed `-T` disables TTY allocation.
-- `mongosh` was not installed locally, so its non-interactive examples below are based on official CLI docs rather than local execution.
+- In one local environment, `sqlite3 --help` showed `-batch`, `-json`, `-tabs`, `-noheader`, `-readonly`, and `-cmd`.
+- In one local environment, `psql --help` showed `-c`, `-X`, `-v ON_ERROR_STOP=1`, `-A`, `-t`, `-F`, and `--csv`.
+- In one local environment, `redis-cli --help` showed `-x`, `--raw`, `--csv`, `--json`, `-n`, `-u`, and `-e` on `redis-cli 8.4.0`.
+- In one local environment, `docker exec --help` showed `-i` keeps stdin open, and `docker compose exec --help` showed `-T` disables TTY allocation.
+- `mongosh` was not installed in that environment, so its non-interactive examples below remain conservative, pattern-based suggestions rather than locally executed commands.
 
 ## Tool-Specific Patterns
 
@@ -38,14 +38,14 @@ Use `-X` to avoid local `~/.psqlrc` surprises. Use `--csv` or `-A -t` to avoid p
 
 Verify exact option support with `mongosh --help` in the target environment before relying on it.
 
-Context7-backed CLI docs confirm `--quiet`, `--eval`, and `--json[=canonical|relaxed]` for scripted use, so prefer patterns such as:
+If the target environment supports `--quiet`, `--eval`, and `--json[=canonical|relaxed]`, conservative scripted patterns may look like:
 
 ```bash
 mongosh --quiet --json=canonical "$MONGODB_URI/app" --eval 'db.jobs.find({}, { _id: 1, status: 1 }).sort({ _id: 1 }).toArray()'
 mongosh --quiet --json=canonical --eval 'db.jobs.countDocuments({ status: "done" })' "$MONGODB_URI/app"
 ```
 
-Keep the wording around `mongosh` conservative if you cannot run it locally.
+Keep the wording around `mongosh` conservative unless you can verify it locally in the target environment.
 
 ### redis-cli
 

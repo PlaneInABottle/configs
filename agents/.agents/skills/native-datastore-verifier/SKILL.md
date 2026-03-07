@@ -1,6 +1,6 @@
 ---
 name: native-datastore-verifier
-description: "Focused playbook for direct datastore and state verification during AI-native workflows. Use when API, worker, or UI actions should be confirmed by querying local or containerized state with native clients such as psql, sqlite3, mongosh, or redis-cli, especially for non-interactive output shaping, before/after diffs, and local evidence checks."
+description: "Companion playbook for direct datastore and state inspection after actions in an AI-native workflow. Use alongside ai-native-workflow when API, worker, or UI actions should be confirmed by querying local or containerized state with native clients such as psql, sqlite3, mongosh, or redis-cli, especially for non-interactive output shaping, before/after diffs, and environment-specific evidence checks."
 ---
 
 # Native Datastore Verifier
@@ -9,9 +9,9 @@ description: "Focused playbook for direct datastore and state verification durin
 
 Use native datastore clients to inspect state directly after app actions instead of trusting logs, ORM assumptions, or agent guesses.
 
-Keep this skill narrow: load it for direct state verification patterns, then fall back to `../ai-native-workflow/SKILL.md` for broader runtime setup, HTTP verification, UI verification, and non-datastore tooling.
+Keep this skill narrow: load it alongside `../ai-native-workflow/SKILL.md` when you need post-action datastore inspection, and leave broader runtime setup, HTTP verification, UI verification, and non-datastore tooling to that umbrella workflow.
 
-## Verification Loop
+## Post-Action Inspection Loop
 
 1. Confirm the datastore CLI exists locally before relying on memory:
    - `command -v psql sqlite3 mongosh redis-cli`
@@ -27,7 +27,7 @@ Keep this skill narrow: load it for direct state verification patterns, then fal
 - Prefer one-liners and stdout pipelines over ad hoc helper programs.
 - Keep assertions outside any fallback scripts; scripts may fetch data and print it, but should not decide pass/fail.
 - Avoid interactive shells, pagers, and TTY formatting when the output must be diffed or piped.
-- Treat local command help and observed output as the authority for option support in the current environment.
+- Treat local command help and observed output as the best environment-specific evidence for option support.
 
 ## Docker and Container Boundaries
 
@@ -39,4 +39,4 @@ When the datastore runs in Docker, keep commands non-interactive:
 
 ## References
 
-- Load [references/cli-patterns.md](references/cli-patterns.md) for verified command patterns, output-shaping options, before/after diffing, and tool-specific cautions.
+- Load [references/cli-patterns.md](references/cli-patterns.md) for command patterns with local verification notes, output-shaping options, before/after diffing, and tool-specific cautions.
