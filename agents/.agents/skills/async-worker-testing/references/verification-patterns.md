@@ -6,8 +6,8 @@
 - Worker consumption checks
 - Retry, backoff, and dead-letter inspection
 - Idempotency and duplicate-delivery checks
-- Waiting for side effects safely
-- Log and state correlation
+
+For bounded waiting and log or state correlation support patterns, load [observation-patterns.md](observation-patterns.md).
 
 ## Enqueue or publish verification
 
