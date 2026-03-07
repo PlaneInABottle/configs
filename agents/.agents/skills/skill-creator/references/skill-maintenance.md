@@ -7,6 +7,7 @@ Treat shipped repository files as the source of truth for skill behavior:
 - `scripts/quick_validate.py` defines the active validation contract.
 - `scripts/package_skill.py` reuses `quick_validate.py` before creating a `.skill` archive.
 - `SKILL.md` should describe the same contract instead of inventing stricter or broader rules.
+- When `SKILL.md` or `references/` make factual or operational claims, verify them against current files, shipped tooling output, or other local evidence before treating them as repository guidance.
 
 Current validated frontmatter contract:
 
@@ -65,3 +66,4 @@ python3 scripts/package_skill.py /path/to/skill-folder
 5. Keep trigger guidance primarily in frontmatter `description`, not a body-only usage section.
 6. Run the edited-skill validation command.
 7. Run the repo-level validation loop so active skills still satisfy the shared validator.
+8. When live session work confirms or disproves current instructions, make the smallest evidence-backed update and re-validate the affected skill.

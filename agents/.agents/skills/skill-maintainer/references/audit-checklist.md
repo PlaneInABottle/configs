@@ -6,6 +6,7 @@
 
 - [Structural checks](#structural-checks)
 - [Content quality checks](#content-quality-checks)
+- [Claim validation](#claim-validation)
 - [Scope and split decisions](#scope-and-split-decisions)
 - [Validation workflow](#validation-workflow)
 
@@ -25,6 +26,13 @@
 - Verify examples, commands, and linked sibling files still match the repository layout.
 - Record whether the skill is focused on one concern or has started to absorb unrelated workflow guidance.
 
+## Claim validation
+
+- Treat shipped files and scripts as the primary authority for repository-specific claims.
+- Reproduce tool or workflow behavior with local commands when feasible instead of assuming prose is still correct.
+- Classify each meaningful factual or operational claim as `verified`, `contradicted`, or `unverified`.
+- When real session evidence changes your understanding, update the skill so the next run reflects what actually happened.
+
 ## Scope and split decisions
 
 - Keep a skill unified when its resources support one coherent concern and the references stay navigable.
@@ -39,4 +47,5 @@
 2. Read the flagged `SKILL.md` and linked references before proposing fixes.
 3. Validate the edited skill with `python3 ../skill-creator/scripts/quick_validate.py <skill-dir>` or the repository-local equivalent.
 4. Re-run the audit to confirm the issue list shrank and no new structural regressions appeared.
-5. If the fix requires new files, packaging, or broader authoring changes, continue with `skill-creator`.
+5. If recent session work triggered the update, capture the observed failure, inefficiency, or confirmation in the skill change while it is still concrete.
+6. If the fix requires new files, packaging, or broader authoring changes, continue with `skill-creator`.

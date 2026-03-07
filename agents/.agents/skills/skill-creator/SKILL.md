@@ -326,6 +326,7 @@ When editing the (newly-generated or existing) skill, remember that the skill is
 #### Learn Proven Design Patterns
 
 Consult `references/skill-maintenance.md` before changing an existing skill. It documents the active validator contract, local validation workflow, and the repository rule that every file referenced from `SKILL.md` must exist.
+Keep repository-specific factual or operational guidance evidence-based: only state claims that local files, shipped tooling output, session findings, or other workspace evidence support.
 
 #### Start with Reusable Skill Contents
 
@@ -396,12 +397,13 @@ If validation fails, the script will report the errors and exit without creating
 ### Step 6: Iterate
 
 After testing the skill, users may request improvements. Often this happens right after using the skill, with fresh context of how the skill performed.
+Treat live work as maintenance input: when a session confirms, contradicts, or narrows existing instructions, update the skill with the smallest evidence-backed change that improves the next run.
 
 **Iteration workflow:**
 
 1. Use the skill on real tasks
 2. Notice struggles or inefficiencies
-3. Identify how SKILL.md or bundled resources should be updated
+3. Identify how SKILL.md or bundled resources should be updated based on what the session actually proved or disproved
 4. Implement changes and test again
 
 </step-6-iterate>
