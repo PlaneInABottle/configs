@@ -56,7 +56,7 @@ Think of an AI assistant as exploring a path: a narrow bridge with cliffs needs 
 Every skill consists of a required SKILL.md file and optional bundled resources. All skills are organized under `.agents/skills/`:
 
 ```
-.agents/skills/skill-name/
+.agents/skills/<skill-name>/
 ├── SKILL.md (required)
 │   ├── YAML frontmatter metadata (required)
 │   │   ├── name: (required)
@@ -157,7 +157,7 @@ The AI assistant loads the dedicated reference file only when that detail is nee
 For Skills with multiple domains, organize content by domain to avoid loading irrelevant context:
 
 ```
-bigquery-skill/
+<analytics-skill>/
 ├── SKILL.md (overview and navigation)
 └── references/
     ├── finance reference
@@ -171,7 +171,7 @@ When a user asks about sales metrics, the AI assistant only reads the sales refe
 Similarly, for skills supporting multiple frameworks or variants, organize by variant:
 
 ```
-cloud-deploy/
+<cloud-deploy-skill>/
 ├── SKILL.md (workflow + provider selection)
 └── references/
     ├── AWS reference
@@ -260,7 +260,7 @@ Example: When building a `pdf-editor` skill to handle queries like "Help me rota
 Example: When designing a `frontend-webapp-builder` skill for queries like "Build me a todo app" or "Build me a dashboard to track my steps," the analysis shows:
 
 1. Writing a frontend webapp requires the same boilerplate HTML/React each time
-2. An `assets/hello-world/` template in `.agents/skills/frontend-webapp-builder/assets/hello-world/` containing the boilerplate HTML/React project files would be helpful to store in the skill
+2. An `assets/hello-world/` template stored inside that skill containing the boilerplate HTML/React project files would be helpful to store in the skill
 
 Example: When building a `big-query` skill to handle queries like "How many users have logged in today?" the analysis shows:
 
@@ -276,9 +276,9 @@ All skills in your project are stored under `.agents/skills/` for centralized ma
 ```
 .agents/
 └── skills/
-    ├── ai-native-workflow/
-    ├── agent-browser/
-    ├── my-new-skill/         ← Your new skill goes here
+    ├── <existing-skill>/
+    ├── <another-existing-skill>/
+    ├── <my-new-skill>/       ← Your new skill goes here
     └── ...
 ```
 
