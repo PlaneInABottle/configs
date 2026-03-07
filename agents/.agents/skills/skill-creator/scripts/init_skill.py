@@ -6,10 +6,10 @@ Usage:
     init_skill.py <skill-name> --path <path> [--resources scripts,references,assets] [--examples]
 
 Examples:
-    init_skill.py my-new-skill --path skills/public
-    init_skill.py my-new-skill --path skills/public --resources scripts,references
-    init_skill.py my-api-helper --path skills/private --resources scripts --examples
-    init_skill.py custom-skill --path /custom/location
+    init_skill.py my-new-skill --path ./.agents/skills
+    init_skill.py my-new-skill --path ./.agents/skills --resources scripts,references
+    init_skill.py my-api-helper --path ./.agents/skills --resources scripts --examples
+    init_skill.py custom-skill --path ./sandbox/skills
 """
 
 import argparse
@@ -22,7 +22,7 @@ ALLOWED_RESOURCES = {"scripts", "references", "assets"}
 
 SKILL_TEMPLATE = """---
 name: {skill_name}
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: "TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it."
 ---
 
 # {skill_title}
@@ -312,7 +312,7 @@ def init_skill(skill_name, path, resources, include_examples):
             print("2. Add resources to scripts/, references/, and assets/ as needed")
     else:
         print("2. Create resource directories only if needed (scripts/, references/, assets/)")
-    print("3. Run the validator when ready to check the skill structure")
+    print("3. Run python3 scripts/quick_validate.py <skill-directory> when ready to validate it")
 
     return skill_dir
 
