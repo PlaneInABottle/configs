@@ -65,7 +65,7 @@ Common self-execution traps and correct delegation:
 Principle: If you're tempted to use edit/create/bash/git tools for implementation, that's a signal to delegate instead.
 
 ❌ "Let me spawn one more analyzer to investigate this gap."
-✅ After 5 total explorer+analyzer calls, STOP analyzing. Implement with what you have. Gaps found during implementation are fixed in code, not with more analysis. Hard cap: 10 agent calls max per feature planning session.
+✅ Avoid open-ended investigation loops. When recent explorer/analyzer calls are no longer surfacing materially new information, move into implementation and resolve the remaining gaps there.
 
 ❌ "Plan looks reasonable, sending to @implementer."
 ✅ Check the plan for a "Verified Facts vs Assumptions" table. If missing or has unresolved CRITICAL/HIGH assumptions, return to @planner before delegating to @implementer.
