@@ -11,6 +11,8 @@ Source high-quality, royalty-free images and videos from Pexels for design work,
 
 This skill requires the `PEXELS_API_KEY` environment variable to be set.
 
+**Machine-local note:** On this machine, `PEXELS_API_KEY` is loaded from `~/.zshrc`. If `echo $PEXELS_API_KEY` is empty, run `source ~/.zshrc` or open a new shell.
+
 ```bash
 # Check if API key is available
 echo $PEXELS_API_KEY
