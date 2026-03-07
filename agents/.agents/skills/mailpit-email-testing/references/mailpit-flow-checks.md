@@ -96,8 +96,8 @@ done
 
 Keep waits short, print the last observed mailbox state on timeout, and stop rather than widening the polling window indefinitely.
 
-When Mailpit is absent, auth-protected, or replaced by another inbox tool:
+When Mailpit is absent, auth-protected, or replaced by another inbox tool in the current environment:
 
 - Report what you actually verified locally.
 - Keep command patterns generic and configurable.
-- Reuse the same workflow: confirm service, isolate inbox if needed, trigger app action, search for the message, inspect body parts, and extract the link or token.
+- Keep the same email-verification sequence: confirm the inbox service, isolate inbox state if needed, trigger the mail-producing action, search for the message, inspect body parts, and extract the link or token.

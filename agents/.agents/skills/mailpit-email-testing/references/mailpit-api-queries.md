@@ -14,7 +14,7 @@ Confirm the service before triggering mail flows:
 curl -fsS "$MAILPIT_BASE_URL/api/v1/info" | jq .
 ```
 
-If that fails, stop and report the missing or unreachable service. In this session, `mailpit` was not on `PATH` and `http://localhost:8025/` was not reachable, so treat localhost examples as defaults to verify, not facts to assume.
+If that fails, stop and report the missing, unreachable, or auth-protected service. Treat localhost examples as defaults to verify in the current run, not facts to assume.
 
 Use basic auth only when the local instance requires it:
 
@@ -23,7 +23,7 @@ curl -fsS -u "$MAILPIT_USER:$MAILPIT_PASSWORD" \
   "$MAILPIT_BASE_URL/api/v1/info" | jq .
 ```
 
-Mailpit documents the `/api/v1/info` endpoint and notes that API requests must use basic auth when the server is configured that way.
+If your installed Mailpit version exposes `/api/v1/info`, use it as a lightweight availability check. When the local service is configured with basic auth, include credentials on API requests.
 
 ## Inbox state and message selection
 
@@ -41,7 +41,7 @@ curl -fsS "$MAILPIT_BASE_URL/api/v1/search?query=subject:\"Reset your password\"
 curl -fsS "$MAILPIT_BASE_URL/api/v1/search?query=has:attachment" | jq .
 ```
 
-Useful documented Mailpit filters include `to:`, `from:`, `subject:`, `has:attachment`, `has:inline`, `is:read`, `before:`, and `after:`.
+Common Mailpit search filters include `to:`, `from:`, `subject:`, `has:attachment`, `has:inline`, `is:read`, `before:`, and `after:`. Confirm supported filters on the installed version if a query behaves differently.
 
 Delete all messages only when the test needs a clean inbox:
 
