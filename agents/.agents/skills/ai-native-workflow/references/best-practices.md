@@ -6,18 +6,6 @@ Extended guidance for AI-native development workflows. Use alongside the main [S
 
 ## Core Principles
 
-### Skill-First Approach
-
-Before building complex automation, capture knowledge in a skill. Skills are cheaper than code — faster to write, easier to update, immediately useful.
-
-```
-Discover how something works → Write it down as a skill →
-AI agents use the skill → Skill proves its value →
-Automate further if needed
-```
-
-Don't skip straight to automation. A well-written skill often eliminates the need for custom tooling.
-
 ### Test Continuously (The AI Pyramid)
 
 AI agents move fast. Tests are the guardrails, but you must use the right tools:
@@ -51,12 +39,13 @@ Leverage this speed:
 - Assert immediately after each change using Universal Playbooks.
 - Commit working increments frequently.
 
-### Create Skills During Development
+### Capture Runtime Findings During Development
 
 Don't wait until "done":
-- **After debugging:** Document failure mode and resolution.
-- **After integration:** Document API patterns and gotchas.
-- **After onboarding a tool:** Document setup, configuration, common operations.
+- **After debugging:** Document the failure mode and resolution in runtime notes.
+- **After integration:** Document API patterns and gotchas in the relevant playbook or reference.
+- **After onboarding a tool:** Document setup, configuration, and common operations needed to run or verify the system.
+- **If those findings become repository-level skill guidance:** Hand the authoring and governance work to `skill-maintainer` / `skill-creator` instead of expanding this runtime reference into a skill-management workflow.
 
 ---
 
@@ -133,10 +122,6 @@ Only use bash for quick experiments. For reliable process management, use PM2.
 ### Guessing Instead of Analyzing
 **Harm:** Incorrect assumptions compound into larger failures.
 **Fix:** Spawn agents to investigate and report facts before deciding.
-
-### Monolithic Skills
-**Harm:** Hard to maintain, hard to reuse.
-**Fix:** One skill per concern. 
 
 ### Writing Pytest for Integration
 **Harm:** Traps the AI in brittle, language-specific syntax that is hard to maintain.

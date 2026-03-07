@@ -39,7 +39,7 @@ AI agents need:
 
 ---
 
-## Phase 2: Skill Creation & Environment Bootstrapping
+## Phase 2: Environment Bootstrapping
 
 ### Step 2.1 — Bootstrapping & Dependencies
 Before starting services, explicitly install the project's dependencies with its native package manager, verify mandatory binaries are available, and bootstrap `.env` only if it does not already exist:
@@ -69,7 +69,7 @@ go mod download
 
 ### Step 2.2 — Write the Startup Sequence
 
-Create the runtime skill document using structured, AI-parseable formats.
+Document the startup sequence using structured, AI-parseable runtime notes.
 **CRITICAL: Use PM2 for app servers. Use Docker for databases.**
 
 ````markdown
