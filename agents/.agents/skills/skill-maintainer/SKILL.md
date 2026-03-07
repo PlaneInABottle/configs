@@ -15,13 +15,15 @@ Use this skill to inventory the active skills tree, surface deterministic struct
 2. Run `scripts/audit_skills.py` to catch deterministic structural issues first.
 3. Read `references/audit-checklist.md` to inspect overlap, contradictions, progressive disclosure, split boundaries, and claim-validation steps.
 4. Verify important claims against shipped files, validator output, and reproducible local commands when feasible; mark them as verified, contradicted, or unverified.
-5. Use real session evidence to decide whether guidance should be corrected, narrowed, or expanded.
-6. Decide whether each issue needs a fix in place, a split, deduplication, or escalation.
-7. Hand off mechanical skill authoring or packaging work to [`skill-creator`](../skill-creator/SKILL.md).
+5. When session work confirms, contradicts, or narrows existing guidance, update the affected skill with the smallest evidence-backed change that makes the next run more accurate.
+6. Use real session evidence to decide whether guidance should be corrected, narrowed, or expanded.
+7. Decide whether each issue needs a fix in place, a split, deduplication, or escalation.
+8. Hand off mechanical skill authoring or packaging work to [`skill-creator`](../skill-creator/SKILL.md).
 
 ## Load These Resources As Needed
 
 - Load [`references/audit-checklist.md`](references/audit-checklist.md) when you need the review rubric and split-vs-keep heuristics.
+- Load [`references/phase-3-audit-baseline.md`](references/phase-3-audit-baseline.md) when you need the retained Phase 3 audit-output/sign-off baseline for the active skills tree.
 - Run `python3 scripts/audit_skills.py <skills-root>` for a deterministic inventory of missing `SKILL.md`, missing linked local references, validator failures, trigger-duplication headings, and size warnings.
 
 ## Expected Audit Output
