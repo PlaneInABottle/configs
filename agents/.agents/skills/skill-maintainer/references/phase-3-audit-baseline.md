@@ -6,7 +6,7 @@ Retain this file as the committed Phase 3 audit-output/sign-off artifact for the
 
 ## Commands Observed
 
-Run these commands from `/Users/Y_ALTAY1/Documents/configs/agents/.agents/skills`:
+Run these commands from `agents/.agents/skills`:
 
 ```bash
 python3 skill-creator/scripts/quick_validate.py skill-maintainer

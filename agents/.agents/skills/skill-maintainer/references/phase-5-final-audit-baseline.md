@@ -9,10 +9,10 @@ Retain this file as the committed final audit-output/sign-off artifact for the a
 Run these commands from the listed working directories:
 
 ```bash
-cd /Users/Y_ALTAY1/Documents/configs
+cd <repo-root>
 git --no-pager status --short && printf '\n---\n\n' && git --no-pager status
 
-cd /Users/Y_ALTAY1/Documents/configs/agents/.agents/skills
+cd agents/.agents/skills
 python3 skill-maintainer/scripts/audit_skills.py .
 for skill_dir in */; do
   [ -f "$skill_dir/SKILL.md" ] || continue

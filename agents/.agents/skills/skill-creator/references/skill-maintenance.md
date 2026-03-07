@@ -36,14 +36,14 @@ Use frontmatter `description` as the primary trigger surface for when a skill sh
 Validate the edited skill first:
 
 ```bash
-cd /Users/Y_ALTAY1/Documents/configs/agents/.agents/skills/skill-creator
-python3 scripts/quick_validate.py /Users/Y_ALTAY1/Documents/configs/agents/.agents/skills/skill-creator
+cd agents/.agents/skills/skill-creator
+python3 scripts/quick_validate.py .
 ```
 
 Then run a repo-level validation pass for all local skills:
 
 ```bash
-cd /Users/Y_ALTAY1/Documents/configs/agents/.agents/skills
+cd agents/.agents/skills
 for skill_dir in */; do
   [ -f "$skill_dir/SKILL.md" ] || continue
   python3 skill-creator/scripts/quick_validate.py "$skill_dir" || exit 1
@@ -53,7 +53,7 @@ done
 Package only after validation passes:
 
 ```bash
-cd /Users/Y_ALTAY1/Documents/configs/agents/.agents/skills/skill-creator
+cd agents/.agents/skills/skill-creator
 python3 scripts/package_skill.py /path/to/skill-folder
 ```
 
