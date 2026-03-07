@@ -64,8 +64,8 @@ For exact implementation details, code snippets, and CLI commands for the toolki
 
 1. **Phase 1: Runtime Setup Analysis (YAGNI Infrastructure)**
    Determine the optimal dev environment. Prefer a **Hybrid** approach: Docker for stateful services (DB), native execution for app code (fast HMR). Keep `docker-compose.yml` minimal. Only add what you need.
-2. **Phase 2: Skill Creation**
-   Codify operational knowledge immediately. If a setup requires non-obvious steps, undocumented workarounds, or repeated explanations, use the `skill-creator` to document it. **Skills are cheaper than code.**
+2. **Phase 2: Runtime Knowledge Handoff**
+   Keep this skill focused on runtime setup and verification. If session findings turn into repository skill-governance work (for example: auditing overlap, deciding split boundaries, or updating shared skill guidance), hand that work to [`skill-maintainer`](../skill-maintainer/SKILL.md) for boundary decisions and [`skill-creator`](../skill-creator/SKILL.md) for authoring/package mechanics instead of expanding this skill into a governance playbook.
 3. **Phase 3: Implementation & Verification**
    Build the feature and immediately verify it using the **Universal Toolkit Playbooks** linked above.
 4. **Phase 4: Programmatic Operations**

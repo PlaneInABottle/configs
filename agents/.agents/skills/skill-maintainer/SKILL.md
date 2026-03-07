@@ -24,6 +24,7 @@ Use this skill to inventory the active skills tree, surface deterministic struct
 
 - Load [`references/audit-checklist.md`](references/audit-checklist.md) when you need the review rubric and split-vs-keep heuristics.
 - Load [`references/phase-3-audit-baseline.md`](references/phase-3-audit-baseline.md) when you need the retained Phase 3 audit-output/sign-off baseline for the active skills tree.
+- Load [`references/split-boundaries.md`](references/split-boundaries.md) when you need the repository rule for keeping `ai-native-workflow` unified as the runtime-verification umbrella while moving meta-skill governance into `skill-maintainer` and `skill-creator`.
 - Run `python3 scripts/audit_skills.py <skills-root>` for a deterministic inventory of missing `SKILL.md`, missing linked local references, validator failures, trigger-duplication headings, and size warnings.
 
 ## Expected Audit Output
