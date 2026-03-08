@@ -22,6 +22,7 @@
       "find*": "allow",
       "git branch*": "allow",
       "git diff*": "allow",
+      "git fetch*": "allow",
       "git grep*": "allow",
       "git log*": "allow",
       "git ls-files*": "allow",
