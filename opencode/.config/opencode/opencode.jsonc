@@ -13,6 +13,7 @@
     "external_directory": "ask",
     "bash": {
       "*": "ask",
+      "agent-browser*": "allow",
       "cat*": "allow",
       "cargo test*": "allow",
       "date*": "allow",
@@ -78,7 +79,6 @@
     "webfetch": "allow",
     "websearch": "allow",
     "question": "allow",
-    "agent-browser*": "allow",
     "sim-mcp_remove_blocks": "ask",
     "sim-mcp_remove_edge": "ask",
     "sim-mcp_remove_variable": "ask",
