@@ -37,6 +37,7 @@
       "ls*": "allow",
       "make*": "allow",
       "more*": "allow",
+      "npm*": "allow",
       "npm run*": "allow",
       "npm test*": "allow",
       "bun run*": "allow",
