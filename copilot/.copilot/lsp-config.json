@@ -32,6 +32,13 @@
       "fileExtensions": {
         ".py": "python"
       }
+    },
+    "rust": {
+      "command": "rust-analyzer",
+      "args": ["--stdio"],
+      "fileExtensions": {
+        ".rs": "rust"
+      }
     }
   }
 }
