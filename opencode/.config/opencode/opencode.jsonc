@@ -16,6 +16,8 @@
       "agent-browser*": "allow",
       "cat*": "allow",
       "cargo test*": "allow",
+      "curl *127.0.0.1*": "allow",
+      "curl *localhost*": "allow",
       "date*": "allow",
       "echo*": "allow",
       "file*": "allow",
