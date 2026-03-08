@@ -62,6 +62,7 @@
       "test*": "allow",
       "pytest*": "allow",
       "rg*": "allow",
+      "sort*": "allow",
       "stat*": "allow",
       "sed -n*": "allow",
       "sed -i*": "deny",
