@@ -82,6 +82,11 @@
       "docker*": "allow",
       "docker compose*": "allow",
       "kill*": "allow",
+      "npx*": "allow",
+      "pnpm*": "allow",
+      "yarn*": "allow",
+      "watchexec*": "allow",
+      "entr*": "allow",
       "whereis*": "allow"
     },
     "edit": {
