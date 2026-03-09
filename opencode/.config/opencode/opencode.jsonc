@@ -78,6 +78,10 @@
       "which*": "allow",
       "true*": "allow",
       "uv*": "allow",
+      "hurl*": "allow",
+      "docker*": "allow",
+      "docker compose*": "allow",
+      "kill*": "allow",
       "whereis*": "allow"
     },
     "edit": {
