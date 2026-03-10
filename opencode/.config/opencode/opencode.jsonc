@@ -53,6 +53,7 @@
       "npm*": "allow",
       "npm run*": "allow",
       "npm test*": "allow",
+      "python *": "deny",
       "bun run*": "allow",
       "bun test*": "allow",
       "command -v*": "allow",
