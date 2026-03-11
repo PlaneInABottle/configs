@@ -250,7 +250,7 @@ Critical Requirements:
 - Implementation Alignment: Implement according to learned patterns and official documentation
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
-Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `gpt-5.4`) in parallel and aggregate results before proceeding.
+Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.4`) in parallel and aggregate results before proceeding.
 
 
 ### Subagent Model Usage
