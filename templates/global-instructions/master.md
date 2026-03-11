@@ -194,6 +194,19 @@ If you encounter `EADDRINUSE` (port in use):
 1. Check PM2: `pm2 list`
 2. Check Docker: `docker compose ps`
 3. Force reclaim: `lsof -ti :<PORT> | xargs -r kill -9`
+
+## Version Control Best Practices
+
+**Commit Style:**
+- Make small, focused commits with one logical change each
+- Separate concerns: don't mix refactors with feature additions in the same commit
+- Write clear, concise commit messages that explain the "why" not just the "what"
+- Commit early and often rather than large monolithic commits
+
+**Commit Message Format:**
+- First line: Brief summary (under 50 chars)
+- Body: Explain motivation and approach, not just diff details
+
 <!-- SECTION:background_agents:START:copilot -->
 
 ## Background Agents & Fleet Mode
