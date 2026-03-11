@@ -16,7 +16,17 @@
   "ui": {
     "theme": "ANSI",
     "footer": {
-      "hideContextPercentage": false
+      "hideContextPercentage": false,
+      "showLabels": true,
+      "items": [
+        "workspace",
+        "git-branch",
+        "model-name",
+        "context-used",
+        "quota",
+        "memory-usage",
+        "token-count"
+      ]
     },
     "showMemoryUsage": true,
     "showLineNumbers": true,
