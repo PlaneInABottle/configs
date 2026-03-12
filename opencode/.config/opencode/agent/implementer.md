@@ -39,9 +39,7 @@ Before proceeding with any task:
 
 Before implementing, use @explore to discover existing patterns, relevant files, integration points, and local conventions.
 
-<!-- SECTION:implementer_explore_opencode:START:opencode -->
 If @explore is unavailable in the current CLI/session, perform the same discovery with your own available read/search tools before editing.
-<!-- SECTION:implementer_explore_opencode:END -->
 
 - Check similar implementations before writing code.
 - For multiple independent investigations, run parallel @explore calls and aggregate findings before editing.

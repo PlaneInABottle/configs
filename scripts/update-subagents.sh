@@ -198,19 +198,19 @@ def should_include_section(enabled_for_str, target):
     # Otherwise, check inclusions
     return target in inclusions or "all" in inclusions
 
-result = content
-for match in re.finditer(pattern, content, re.DOTALL):
-    section_id = match.group(1)
+def replace_section(match):
     enabled_for = match.group(2)
     section_content = match.group(3)
-    full_match = match.group(0)
-    
     if should_include_section(enabled_for, target_system):
-        # Keep section content but remove markers
-        result = result.replace(full_match, section_content)
-    else:
-        # Remove entire section including markers
-        result = result.replace(full_match, "")
+        return section_content
+    return ""
+
+result = content
+while True:
+    new_result = re.sub(pattern, replace_section, result, flags=re.DOTALL)
+    if new_result == result:
+        break
+    result = new_result
 
 # Apply text replacements if configured for this system
 for old_text, new_text in text_replacements.items():
