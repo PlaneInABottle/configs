@@ -216,8 +216,13 @@ Before delegating to @implementer, verify ALL of these are YES:
 - [ ] All new Pydantic/state model fields declared in schema
 - [ ] All external API response shapes verified (not assumed)
 - [ ] All routing return values map to registered edges/routes
+- [ ] Blast radius / affected callers and entry points are listed
+- [ ] Invariants section exists with verification method for each invariant
+- [ ] Behavior-that-must-not-change section exists and is concrete
+- [ ] Legacy / malformed persisted-state handling is covered where relevant
 - [ ] Feature flag gates every behavior change
 - [ ] Test strategy exists for each phase (file + assertion, not just "add tests")
+- [ ] Validation matrix includes exact regression path, edge/legacy case, and preservation checks where relevant
 If ANY item is NO: return to @planner or @analyzer before proceeding.
 </plan-readiness-gate>
 
@@ -273,6 +278,7 @@ Rollback Rule: If a bug fix attempt worsens the issue, halt immediately, ask @im
 - Planning Gate: Plan validates YAGNI/KISS/DRY compliance, is implementable
 - Plan Review Gate (optional): @analyzer validates plan before implementation (for complex plans)
 - Contract Verification Gate: Before implementation starts, verify the plan's "Verified Facts vs Unverified Assumptions" table exists. Any "ASSUMED (unverified)" item in the table that is CRITICAL or HIGH (affects runtime behavior) must be resolved before implementation proceeds. Ask @analyzer to verify if unsure.
+- Invariant Gate: Before implementation starts, verify the plan explicitly lists invariants, unchanged behavior, blast radius, and any relevant legacy-state handling.
 - Implementation Gate: All N phases complete, N commits created, tests pass
 - Review Gate: Code meets quality standards, all commits reviewed
 - Integration Gate: Clean git status, build succeeds, tests/linters pass, feature works end-to-end

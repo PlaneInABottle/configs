@@ -92,14 +92,20 @@ Key Activities:
    - Files to modify
    - Steps and deliverables
    - Tests/validation requirements
-4. Verify phase independence (each marked as independently committable)
-5. Run git status check:
-   - Verify working directory is clean
-   - Report any uncommitted changes
-6. Report:
-   - Total phase count
-   - Git status summary
-   - Ready to begin phase execution
+4. If plan file provided, also extract and keep visible during implementation:
+   - Blast Radius / Affected Entry Points
+   - Invariants
+   - Behavior That Must Not Change
+   - Validation Matrix
+   - Any legacy / malformed persisted-state handling notes
+5. Verify phase independence (each marked as independently committable)
+6. Run git status check:
+    - Verify working directory is clean
+    - Report any uncommitted changes
+7. Report:
+    - Total phase count
+    - Git status summary
+    - Ready to begin phase execution
 
 Output:
 
@@ -123,11 +129,14 @@ For each phase in plan (1 to N, or single phase if no plan):
     - Study usage examples and best practices
     - Apply patterns from Context7 to implementation
 3. Pre-implementation verification — before writing any code for this phase:
-   - Enumerate every enum value, error type, constant, or status string this phase uses: grep to confirm each exists in its definition
-   - Enumerate every state/model/schema field this phase reads or writes: confirm each is declared in the type definition
-   - For any external API response this phase parses: confirm the response shape matches what you expect (check docs or Context7)
-   - If any item fails verification: STOP, add a fix task before the current phase, report to coordinator
-   This takes < 5 minutes and prevents runtime crashes from invalid references.
+    - Enumerate every enum value, error type, constant, or status string this phase uses: grep to confirm each exists in its definition
+    - Enumerate every state/model/schema field this phase reads or writes: confirm each is declared in the type definition
+    - For any external API response this phase parses: confirm the response shape matches what you expect (check docs or Context7)
+    - If shared logic or persisted data is touched: review blast radius, affected callers/entry points, and write/read paths before editing
+    - If the plan declares invariants or unchanged behavior: restate them before coding and treat them as mandatory constraints
+    - If storage, queues, or persisted JSON/state are touched: verify legacy rows, malformed payloads, null roots, mixed shapes, and partial migrations are handled as planned
+    - If any item fails verification: STOP, add a fix task before the current phase, report to coordinator
+    This takes < 5 minutes and prevents runtime crashes from invalid references.
 4. Implement changes incrementally — one atomic unit at a time:
    - Follow implementation steps and deliverables
    - Touch only relevant files (1-3 files recommended per commit)
@@ -139,9 +148,12 @@ For each phase in plan (1 to N, or single phase if no plan):
    - Run tests immediately after writing (MANDATORY - never skip)
    - Validation tests for deliverables
 6. Run validation:
-   - Execute tests
-   - Verify build passes
-   - Check no regressions
+    - Execute tests
+    - Verify build passes
+    - Check no regressions
+    - If plan provides a Validation Matrix: run the exact regression-path, edge/legacy-state, and behavior-preservation checks listed there
+    - Verify declared invariants still hold after the change
+    - Verify blast-radius callers/entry points remain compatible or are intentionally updated
 7. Commit immediately:
    - Use conventional commit format: `<type>: <description>`
    - Types: `feat:` (new feature), `fix:` (bug fix), `refactor:` (code restructure), `test:` (add tests), `docs:` (documentation)
@@ -250,6 +262,10 @@ FOR EACH PHASE:
 - [ ] Design principles (SOLID, SoC, DRY, YAGNI, KISS) applied
 - [ ] Security measures implemented
 - [ ] Error handling covers all scenarios
+- [ ] Blast radius / affected callers reviewed before changing shared logic
+- [ ] Declared invariants preserved
+- [ ] Behaviors that must not change preserved
+- [ ] Legacy / malformed persisted-state handling covered where relevant
 - [ ] Phase-specific tests written
 - [ ] Phase validation tests passing
 - [ ] No regressions introduced

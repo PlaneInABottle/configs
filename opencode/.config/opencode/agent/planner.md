@@ -179,6 +179,26 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 | Phase 1 | `src/path/file.py` |
 | Phase 2 | `src/tests/test_file.py` |
 
+## Blast Radius / Affected Entry Points
+- `<entry point / caller>` - why this path is affected
+- `<background job / webhook / cron / shared helper>` - what must remain compatible
+
+## Invariants
+| Invariant | Why it matters | How to verify |
+|-----------|----------------|---------------|
+| `<invariant>` | `<risk if broken>` | `<test/check>` |
+
+## Behavior That Must Not Change
+- `<unchanged behavior>` - validated by `<test/check>`
+- `<counter / response / classification / logging behavior>` - validated by `<test/check>`
+
+## Validation Matrix
+| Check | Command / Method | Proves |
+|------|-------------------|--------|
+| Exact regression path | `<command or scenario>` | `<reported bug is fixed>` |
+| Edge / legacy state | `<command or scenario>` | `<mixed-shape or malformed data is safe>` |
+| Behavior preservation | `<command or scenario>` | `<existing behavior remains unchanged>` |
+
 ## Review Gates
 
 | Gate | After Phase | Focus Area |
@@ -245,10 +265,13 @@ Plans are evaluated on these dimensions (used by @analyzer):
 | Granularity | Phases touch 1-3 files, tasks numbered (2.1, 2.2), commit-level for complex |
 | Tests | Each phase includes test writing task (unit/integration as appropriate) |
 | Risk | Failure modes considered, rollback for risky changes, security for auth/data |
+| Blast Radius | Affected callers/entry points listed, including background/shared paths |
+| Invariants | Invariants and unchanged behaviors listed with verification method |
+| Data Compatibility | Legacy/malformed persisted state handling explicitly covered where relevant |
 | Review Gates | Table with Gate/Phase/Focus Area for @analyzer validation points |
 | Output | Plan saved to `docs/[feature-name].plan.md` |
 
-**Quick validation:** Does each phase answer: "What files? What changes? How to verify? Who reviews?"
+**Quick validation:** Does each phase answer: "What files? What changes? How to verify? Who reviews? What must not break?"
 </quality-gates>
 
 <collaboration-guidance>

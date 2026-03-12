@@ -61,6 +61,14 @@ Unverified assumptions are BLOCKING — label them explicitly as "ASSUMED (unver
 
 7. **Test coverage state** — Check for orphaned build artifacts (e.g., `.pyc`, `.class`, `.js` from deleted source) for any test files that were deleted without replacement. List any coverage gaps as tasks.
 
+8. **Write-path / mutation symmetry** — For every structure the plan updates or persists, verify both read paths and write/mutation helpers. If reads already sanitize mixed shapes (e.g., null/scalar/object), confirm writes/mutations do not assume a narrower shape.
+
+9. **Legacy / malformed persisted state** — For any persisted or queued data the plan touches, explicitly check whether legacy rows, partial migrations, null roots, scalar JSON, or malformed payloads can exist. State how the implementation must behave for those shapes.
+
+10. **Blast radius / entry points** — Enumerate all affected callers and entry points that rely on the modified behavior: HTTP routes, background jobs, cron tasks, webhooks, CLI/admin tooling, shared helpers, and indirect callers.
+
+11. **Invariants and preserved behavior** — Write down the invariants the implementation must preserve and the behaviors that must not change (response shape, counters, classifications, logging/metrics semantics, idempotency, status transitions, etc.), plus how each will be verified.
+
 **Output format:** Include a "Verified Facts vs Unverified Assumptions" table in the plan:
 | Item | Verified at | Evidence / Note |
 |------|------------|-----------------|
@@ -207,6 +215,26 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 | Phase 1 | `src/path/file.py` |
 | Phase 2 | `src/tests/test_file.py` |
 
+## Blast Radius / Affected Entry Points
+- `<entry point / caller>` - why this path is affected
+- `<background job / webhook / cron / shared helper>` - what must remain compatible
+
+## Invariants
+| Invariant | Why it matters | How to verify |
+|-----------|----------------|---------------|
+| `<invariant>` | `<risk if broken>` | `<test/check>` |
+
+## Behavior That Must Not Change
+- `<unchanged behavior>` - validated by `<test/check>`
+- `<counter / response / classification / logging behavior>` - validated by `<test/check>`
+
+## Validation Matrix
+| Check | Command / Method | Proves |
+|------|-------------------|--------|
+| Exact regression path | `<command or scenario>` | `<reported bug is fixed>` |
+| Edge / legacy state | `<command or scenario>` | `<mixed-shape or malformed data is safe>` |
+| Behavior preservation | `<command or scenario>` | `<existing behavior remains unchanged>` |
+
 ## Review Gates
 
 | Gate | After Phase | Focus Area |
@@ -274,10 +302,13 @@ Plans are evaluated on these dimensions (used by @analyzer):
 | Granularity | Phases touch 1-3 files, tasks numbered (2.1, 2.2), commit-level for complex |
 | Tests | Each phase includes test writing task (unit/integration as appropriate) |
 | Risk | Failure modes considered, rollback for risky changes, security for auth/data |
+| Blast Radius | Affected callers/entry points listed, including background/shared paths |
+| Invariants | Invariants and unchanged behaviors listed with verification method |
+| Data Compatibility | Legacy/malformed persisted state handling explicitly covered where relevant |
 | Review Gates | Table with Gate/Phase/Focus Area for @analyzer validation points |
 | Output | Plan saved to `docs/[feature-name].plan.md` |
 
-**Quick validation:** Does each phase answer: "What files? What changes? How to verify? Who reviews?"
+**Quick validation:** Does each phase answer: "What files? What changes? How to verify? Who reviews? What must not break?"
 </quality-gates>
 
 <collaboration-guidance>

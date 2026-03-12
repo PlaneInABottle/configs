@@ -126,6 +126,9 @@ During plan review, you MUST cross-check plan assumptions against actual code â€
 - Every external API call: is the assumed response shape labeled "verified" or "assumed"? Flag any unverified API assumptions as HIGH.
 - Every routing/edge return value (state machines, graph frameworks, router registries, etc.): does a corresponding registered route or edge exist?
 - Every template key the plan adds: does the template system match the plan's assumption (file-based vs YAML-based vs string)?
+- Every declared invariant and "must not change" behavior: is it concrete, testable, and paired with a verification method?
+- Blast radius coverage: does the plan list affected callers/entry points including background jobs, cron tasks, webhooks, shared helpers, and admin/CLI flows?
+- Data compatibility: does the plan explicitly address legacy rows, malformed persisted state, mixed JSON shapes, null roots, partial migrations, and idempotency where relevant?
 - Flag any item labeled "ASSUMED (unverified)" in the plan's facts table as at least MEDIUM severity.
 - If 3+ HIGH/CRITICAL items are ASSUMED (unverified), status = BLOCKED; return to planner for verification before any review passes.
 </plan-reviews>
@@ -147,6 +150,10 @@ Runtime Errors: off-by-one, null/undefined, type coercion, logic errors, array b
 Data Flow: type mismatches, validation gaps, async/await bugs, concurrency issues.
 
 Business Logic: incorrect calculations, workflow violations, data integrity, permission gaps.
+
+Behavior Preservation: counters, response shapes, classification logic, logging/metrics semantics, idempotency, status/state transitions, caller expectations.
+
+Persistence Compatibility: mixed-shape JSON, legacy rows, malformed payloads, partial migrations, read-path vs write-path normalization mismatches.
 </bug-detection>
 
 <security-review>
@@ -170,13 +177,15 @@ Code smells, unnecessary complexity, DRY violations, long functions (50+), deep 
 2. **Trace Call Paths** - Follow entry point through all function calls, document chain
 3. **Trace Data Flow** - Follow data from input sources through transformations to outputs
 4. **Trace Edge Cases** - Systematically check null, empty, boundaries, race conditions
-5. Bug Detection - identify issues from tracing
-6. Logic Validation - follow business logic through scenarios
-7. Categorize by severity (CRITICAL/HIGH/MEDIUM/LOW)
-8. Reference specific lines (file.py:42)
-9. Explain WHY - educational feedback
-10. Suggest specific improvements with code examples
-11. Acknowledge good patterns
+5. **Check Invariants** - Compare implementation against declared invariants and behaviors that must not change
+6. **Check Blast Radius** - Verify affected callers/entry points still behave correctly or are updated intentionally
+7. Bug Detection - identify issues from tracing
+8. Logic Validation - follow business logic through scenarios
+9. Categorize by severity (CRITICAL/HIGH/MEDIUM/LOW)
+10. Reference specific lines (file.py:42)
+11. Explain WHY - educational feedback
+12. Suggest specific improvements with code examples
+13. Acknowledge good patterns
 </review-process>
 
 <output-format>
@@ -221,6 +230,11 @@ Use location prefix based on review type:
 - SOLID/SoC: [PASS/FAIL/PARTIAL] - Observation
 - Existing Systems: [PASS/FAIL/PARTIAL] - Observation
 
+### Invariants & Behavior Preservation
+- Declared invariants preserved: [Yes/No/PARTIAL] - Observation
+- Behaviors that must not change preserved: [Yes/No/PARTIAL] - Observation
+- Blast radius covered: [Yes/No/PARTIAL] - Observation
+
 ### Trace Summary (REQUIRED for Code Reviews)
 | Path Analyzed | Key Findings | Issues Found |
 |---------------|--------------|--------------|
@@ -263,7 +277,7 @@ For EVERY code review, you MUST systematically trace through the code. Use this 
 ### 2. Data Flow Analysis
 - Trace data from sources (inputs, params, storage) through transformations
 - Identify all mutations along the path
-- Check for: type mismatches, validation gaps, missing sanitization
+- Check for: type mismatches, validation gaps, missing sanitization, read/write normalization mismatches
 - Verify outputs match expected shape
 
 ### 3. Edge Case Path Analysis
@@ -273,6 +287,14 @@ For each code path, explicitly answer:
 - **Boundaries**: What at index 0, length-1, min, max values?
 - **Race conditions**: In async code, what ordering issues exist?
 - **Error paths**: What happens when exceptions are thrown?
+- **Legacy/malformed state**: What happens with old rows, mixed JSON roots, partial migrations, malformed payloads?
+
+### 4. Invariant / Preservation Analysis
+For each declared invariant or preserved behavior, explicitly answer:
+- Is the invariant enforced on both read and write paths?
+- Are callers/entry points outside the main path still compatible?
+- Does the implementation change response shape, counters, classifications, or logging semantics?
+- Does the exact regression test cover the original failure mode rather than only a nearby happy path?
 
 ### Trace Output Requirements
 Every code review MUST include a "### Trace Summary" section in the output with:
@@ -299,6 +321,8 @@ ALWAYS ask: What happens with null/undefined? At array boundaries? With zero/neg
 - DO systematically check bugs using detection patterns
 - DO trace logic flows for all scenarios using the tracing methodology
 - DO check edge cases: null, empty, zero, boundaries
+- DO check invariants, blast radius, and behaviors that must not change
+- DO check legacy/malformed persisted state when storage or queues are involved
 - DO include Trace Summary section in every code review output
 - DO output reviews directly - coordinator sees output immediately
 </important-rules>
