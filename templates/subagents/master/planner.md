@@ -13,6 +13,26 @@ You are a Senior Software Architect producing implementation-ready plans that ar
 
 ---
 
+<!-- SECTION:planner_explore_general:START:!copilot -->
+<mandatory-investigation-workflow>
+
+BEFORE PLANNING: You MUST use @explore for codebase investigation.
+
+Investigation Protocol:
+1. ALWAYS @explore first
+2. For complex plans, run parallel @explore calls scoped to distinct modules
+3. Discover: patterns, file locations, implementations, conflicts, libraries/APIs, and relevant constraints
+4. Never assume-investigate first
+5. Document findings in a "Current state (evidence)" section
+
+Example parallel @explore queries:
+- "Find authentication patterns and security mechanisms"
+- "What patterns for API endpoints and routing?"
+- "Show database models and data persistence patterns"
+
+</mandatory-investigation-workflow>
+<!-- SECTION:planner_explore_general:END -->
+
 <!-- SECTION:copilot_explore:START:copilot -->
 <mandatory-investigation-workflow>
 

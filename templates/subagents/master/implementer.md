@@ -24,6 +24,19 @@ Before proceeding with any task:
 
 ---
 
+<!-- SECTION:implementer_explore_general:START:!copilot -->
+<discovery-workflow>
+
+Before implementing, use @explore to discover existing patterns, relevant files, integration points, and local conventions.
+
+- Check similar implementations before writing code.
+- For multiple independent investigations, run parallel @explore calls and aggregate findings before editing.
+- Treat @explore as read-only context gathering.
+- If discovered patterns answer the question, follow them instead of inventing a new structure.
+
+</discovery-workflow>
+<!-- SECTION:implementer_explore_general:END -->
+
 <!-- SECTION:copilot_delegation:START:copilot -->
 <mandatory-delegation-workflow>
 
