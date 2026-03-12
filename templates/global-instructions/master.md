@@ -137,8 +137,8 @@ Task is complete when:
 When encountering errors:
 1. Capture full error message and stack trace
 2. Identify error type and location
-3. Use @analyzer custom agent for root cause analysis and fix recommendations
-4. Apply the fix based on @analyzer's analysis
+3. Use the analyzer subagent for root cause analysis and fix recommendations
+4. Apply the fix based on the analyzer subagent's findings
 5. Verify fix doesn't break related functionality
 6. Write necessary unit tests
 
