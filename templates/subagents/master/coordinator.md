@@ -304,6 +304,15 @@ All-Commit Review (default):
 4. APPROVED → complete | NEEDS_CHANGES → implementer fixes all
 </review-strategy>
 
+<review-acceptance-gate>
+Do not accept analyzer approval unless the review includes:
+- Evidence Reviewed
+- Coverage Verdict
+- Plan Adherence / Scope Drift
+
+If any of those sections are missing, incomplete, or show missing proof for required regression/negative/preservation coverage, treat the review as NEEDS_CHANGES or BLOCKED.
+</review-acceptance-gate>
+
 </quality-framework>
 
 <error-recovery>

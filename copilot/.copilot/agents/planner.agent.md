@@ -165,9 +165,21 @@ Good: "Add user model with basic fields", "Update auth endpoint for email valida
 | **Medium** | 4-10 files, 2-5 days, ≤3 phases | Full exemplar template |
 | **Complex** | >10 files, >5 days, multi-phase, refactoring | Exemplar + commit-level granularity |
 
-**When to use bullet list:** Bug fix, config change, single-file refactor, documentation update.
+**When to use bullet list:** Docs-only, config-only, or truly local code changes with no shared-logic blast radius.
 **When to use exemplar template:** New feature, multi-file change, database/API changes, risky refactoring.
 </plan-complexity-tiers>
+
+<simple-plan-minimum-contract>
+Even for a Simple plan, you MUST still provide:
+- files expected to change
+- exact regression path or primary use case
+- one negative / edge / malformed case (if relevant)
+- one behavior that must not change
+- blast radius note if shared logic, persistence, routing, or public interfaces are touched
+- validation commands or checks that prove the changed path
+
+If a "simple" change touches shared helpers, persisted state, background jobs, routing, external APIs, or multiple callers, do NOT use a loose bullet list-use the fuller template.
+</simple-plan-minimum-contract>
 
 <exemplar-plan-template>
 Use this structure for medium/complex plans (trim sections that don't apply):
@@ -219,6 +231,10 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 - `<entry point / caller>` - why this path is affected
 - `<background job / webhook / cron / shared helper>` - what must remain compatible
 
+## Allowed Scope / Forbidden Scope
+- Allowed: `<expected files/modules/behaviors allowed to change>`
+- Forbidden: `<behaviors/files/interfaces that must not change in this plan>`
+
 ## Invariants
 | Invariant | Why it matters | How to verify |
 |-----------|----------------|---------------|
@@ -234,6 +250,15 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 | Exact regression path | `<command or scenario>` | `<reported bug is fixed>` |
 | Edge / legacy state | `<command or scenario>` | `<mixed-shape or malformed data is safe>` |
 | Behavior preservation | `<command or scenario>` | `<existing behavior remains unchanged>` |
+
+## Evidence Owners
+| Item | Owner | Proof Required |
+|------|-------|----------------|
+| `<invariant / behavior / validation>` | `@implementer` / `@analyzer` | `<command, test, trace, or review proof>` |
+
+## Failure Signals
+- `<signal that means the plan is wrong or incomplete>`
+- `<scope drift, missing proof, broken preservation path, or unexpected caller impact>`
 
 ## Review Gates
 
@@ -303,12 +328,15 @@ Plans are evaluated on these dimensions (used by @analyzer):
 | Tests | Each phase includes test writing task (unit/integration as appropriate) |
 | Risk | Failure modes considered, rollback for risky changes, security for auth/data |
 | Blast Radius | Affected callers/entry points listed, including background/shared paths |
+| Scope Contract | Allowed scope / forbidden scope clearly stated |
 | Invariants | Invariants and unchanged behaviors listed with verification method |
+| Evidence Ownership | Each important check has a named owner and proof type |
+| Failure Signals | Plan states what evidence would show the approach is wrong or incomplete |
 | Data Compatibility | Legacy/malformed persisted state handling explicitly covered where relevant |
 | Review Gates | Table with Gate/Phase/Focus Area for @analyzer validation points |
 | Output | Plan saved to `docs/[feature-name].plan.md` |
 
-**Quick validation:** Does each phase answer: "What files? What changes? How to verify? Who reviews? What must not break?"
+**Quick validation:** Does each phase answer: "What files? What changes? How to verify? Who proves it? What must not break? What would show this plan is wrong?"
 </quality-gates>
 
 <collaboration-guidance>
