@@ -75,14 +75,14 @@ Anti-Patterns to Avoid:
 
 3. **Load relevant skills:** Check if already loaded; if not, use `skill` tool. Load ALL matching skills and combine guidance.
 
-4. **Priority order:** Project skills → Context7 docs → General knowledge
+4. **Priority order:** Project skills → Local code/patterns → Context7 docs (when needed) → General knowledge
 
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
 
 **Skill Freshness:** If implementation changes something a loaded skill documents (class names, file paths, enum values, API contracts), update the skill before the task is marked done. Stale skills cause future agents to fail.
 ## Tools
 Skills: Project-specific patterns and workflows. Check available skills FIRST. Load with `skill` tool.
-Context7 MCP: Tool for researching libraries and APIs. Required for any external library/framework/API references.
+Context7 MCP: Tool for researching external APIs and unfamiliar or ambiguous library behavior when local code/patterns are not enough.
 <!-- SECTION:copilot_lsp_tools:START:copilot -->
 LSP tools: Use `lsp` for code intelligence on `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.lua`, `.sh`, `.bash`, `.zsh` files. Prefer over grep/glob for symbol navigation. Operations: `goToDefinition`, `findReferences`, `hover` (type info), `documentSymbol` (file outline), `rename` (safe cross-file rename), `incomingCalls`/`outgoingCalls` (call graph).
 <!-- SECTION:copilot_lsp_tools:END -->
@@ -131,7 +131,7 @@ Task is complete when:
 □ No security vulnerabilities introduced
 □ Design Principles followed.
 □ Reviewer or Analyzer approval obtained (if user requested)
-□ Context7 verification completed for all libraries/frameworks/APIs used
+□ Context7 verification completed where needed for external or unclear behavior
 □ Skill creation prompt delivered (if the mission is major and applicable)
 ## Error Handling
 When encountering errors:
@@ -235,7 +235,7 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 <!-- SECTION:copilot_subagent_rules:START:copilot -->
 Subagent Model Rule: Always specify model `gpt-5.4` for subagents.
 Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `gpt-5.4`, then merge findings.
-Subagent Command Rule: Every subagent prompt must explicitly command use of Context7 and relevant skills. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
+Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 <!-- SECTION:copilot_subagent_rules:END -->
 ### Planner
 Purpose: Architecture design and detailed planning
@@ -265,8 +265,8 @@ Output: Working implementation, tested, ready for next phase
 
 Critical Requirements:
 
-- Context7 First: Always check Context7 MCP for official documentation on libraries/frameworks/APIs BEFORE implementation. **Failure Consequence:** Incorrect API usage and rework.
-- Pattern Learning: Study patterns and best practices from Context7 documentation
+- Context7 When Needed: Check Context7 MCP when implementation depends on external APIs, unfamiliar libraries, or ambiguous behavior not resolved by local code/patterns. **Failure Consequence:** Incorrect API usage and rework.
+- Pattern Learning: Study official patterns and best practices from Context7 documentation when needed for correctness
 - Implementation Alignment: Implement according to learned patterns and official documentation
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 

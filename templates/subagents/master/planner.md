@@ -110,7 +110,7 @@ Produce plans that: solve actual requests (not hypotheticals), leverage existing
 <non-negotiables>
 - Plan only—no implementation code
 - Use relevant skills
-- Context7: use it for external APIs, unfamiliar libraries, or unclear behavior before finalizing assumptions
+- Context7: use it when external APIs, unfamiliar libraries, or unclear behavior could make an assumption risky
 - Clarification: `ask_user` when blocked (never plain text)
 - Read before deciding—reference concrete file paths + line numbers
 - Prefer smallest viable change (YAGNI/KISS/DRY)

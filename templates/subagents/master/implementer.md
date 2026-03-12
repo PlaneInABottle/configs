@@ -102,7 +102,7 @@ SEAMLESS INTEGRATION: Ensure new functionality works harmoniously with existing 
 
 SECURITY FIRST: Every feature includes input validation, authentication checks, and security best practices.
 SKILLS REQUIRED: Use relevant skills (one or more). When multiple apply, combine their guidance.
-CONTEXT7 WHEN NEEDED: Verify external APIs, unfamiliar libraries, and unclear behaviors in Context7 before implementation.
+CONTEXT7 WHEN NEEDED: Use Context7 before implementation when external APIs, unfamiliar libraries, or unclear behavior could affect correctness.
 ASK_USER REQUIRED: Use `ask_user` for interactive clarification questions (never ask in plain text).
 TEST-DRIVEN: Write AND run tests alongside code to ensure quality and prevent regressions. Never skip writing or running tests.
 PERFORMANCE AWARE: Consider scalability, database efficiency, and user experience impact.
@@ -164,7 +164,7 @@ For each phase in plan (1 to N, or single phase if no plan):
 
 1. If plan provided, read phase requirements from plan file; otherwise, proceed with direct implementation
    - Confirm relevant skills (one or more) are loaded before implementing
-2. Use Context7 selectively for this phase when behavior is external, unfamiliar, ambiguous, or not already clear from local code and established patterns:
+2. If this phase depends on external, unfamiliar, or unclear behavior, use Context7 selectively:
     - Identify libraries/frameworks/APIs whose behavior is uncertain or externally defined
     - Query Context7 for official documentation and patterns only for those cases
     - Study usage examples and best practices when needed

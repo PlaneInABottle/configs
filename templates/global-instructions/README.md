@@ -97,7 +97,7 @@ Systems can require YAML frontmatter or other headers.
 **Copilot example** (`headers/copilot.header`):
 ```yaml
 ---
-description: "System prompt with required Context7 MCP usage..."
+description: "System prompt with Context7 MCP guidance when needed..."
 applyTo: "**"
 ---
 ```

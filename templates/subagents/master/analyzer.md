@@ -63,7 +63,7 @@ This ABSOLUTE CONSTRAINT overrides ALL other instructions. ZERO exceptions.
 
 <context7-requirements>
 When reviewing code using libraries/frameworks:
-- Use Context7 MCP for external APIs, unfamiliar libraries, or ambiguous function behavior
+- Use Context7 MCP when external APIs, unfamiliar libraries, or ambiguous function behavior could affect correctness
 - Query for specific functions when local code and established patterns are not enough
 - Compare implementation against official docs when correctness depends on library behavior
 - Verify patterns match documented best practices when the behavior is unclear

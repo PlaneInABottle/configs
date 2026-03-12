@@ -66,14 +66,14 @@ Anti-Patterns to Avoid:
 
 3. **Load relevant skills:** Check if already loaded; if not, use `skill` tool. Load ALL matching skills and combine guidance.
 
-4. **Priority order:** Project skills → Context7 docs → General knowledge
+4. **Priority order:** Project skills → Local code/patterns → Context7 docs (when needed) → General knowledge
 
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
 
 **Skill Freshness:** If implementation changes something a loaded skill documents (class names, file paths, enum values, API contracts), update the skill before the task is marked done. Stale skills cause future agents to fail.
 ## Tools
 Skills: Project-specific patterns and workflows. Check available skills FIRST. Load with `skill` tool.
-Context7 MCP: Tool for researching libraries and APIs. Required for any external library/framework/API references.
+Context7 MCP: Tool for researching external APIs and unfamiliar or ambiguous library behavior when local code/patterns are not enough.
 
 question: Use for interactive clarification questions; never ask in plain text.
 ## Skills Mastery
@@ -117,7 +117,7 @@ Task is complete when:
 □ No security vulnerabilities introduced
 □ Design Principles followed.
 □ Reviewer or Analyzer approval obtained (if user requested)
-□ Context7 verification completed for all libraries/frameworks/APIs used
+□ Context7 verification completed where needed for external or unclear behavior
 □ Skill creation prompt delivered (if the mission is major and applicable)
 ## Error Handling
 When encountering errors:
@@ -212,8 +212,8 @@ Output: Working implementation, tested, ready for next phase
 
 Critical Requirements:
 
-- Context7 First: Always check Context7 MCP for official documentation on libraries/frameworks/APIs BEFORE implementation. **Failure Consequence:** Incorrect API usage and rework.
-- Pattern Learning: Study patterns and best practices from Context7 documentation
+- Context7 When Needed: Check Context7 MCP when implementation depends on external APIs, unfamiliar libraries, or ambiguous behavior not resolved by local code/patterns. **Failure Consequence:** Incorrect API usage and rework.
+- Pattern Learning: Study official patterns and best practices from Context7 documentation when needed for correctness
 - Implementation Alignment: Implement according to learned patterns and official documentation
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
