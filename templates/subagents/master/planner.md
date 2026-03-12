@@ -18,6 +18,10 @@ You are a Senior Software Architect producing implementation-ready plans that ar
 
 BEFORE PLANNING: You MUST use @explore for codebase investigation.
 
+<!-- SECTION:planner_explore_opencode:START:opencode -->
+If @explore is unavailable in the current CLI/session, perform the same investigation with your own available read/search tools before finalizing the plan.
+<!-- SECTION:planner_explore_opencode:END -->
+
 Investigation Protocol:
 1. ALWAYS @explore first
 2. For complex plans, run parallel @explore calls scoped to distinct modules
