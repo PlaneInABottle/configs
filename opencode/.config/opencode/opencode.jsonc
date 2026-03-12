@@ -101,7 +101,7 @@
       "bunx remove*": "ask",
       "bunx uninstall*": "ask",
       "command -v*": "allow",
-      "pm2*": "allow",
+      "pm2 *": "allow",
       "printenv*": "allow",
       "printf*": "allow",
       "pwd": "allow",
