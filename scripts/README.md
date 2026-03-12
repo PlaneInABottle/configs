@@ -13,7 +13,6 @@ templates/subagents/
 │   ├── reviewer.md
 │   ├── implementer.md
 │   ├── coordinator.md
-│   ├── prompt-creator.md
 │   └── METADATA.json       # Agent metadata (descriptions, examples)
 └── headers/                # Tool-specific headers
     ├── copilot.template    # Copilot header format
@@ -64,7 +63,7 @@ Generates subagent files from master templates + headers.
 ```
 
 **Options:**
-- `--agent=NAME` - Agent to update (planner|reviewer|implementer|coordinator|prompt-creator|all)
+- `--agent=NAME` - Agent to update (planner|reviewer|implementer|coordinator|all)
 - `--system=NAME` - System to update (copilot|opencode|claude|all) [default: all]
 - `--dry-run` - Preview changes without modifying files
 - `--force` - Overwrite without confirmation
@@ -279,7 +278,7 @@ Custom sections per role ensure maximum clarity and usability.
 
 ✅ **Multi-System Support:**
 - **Copilot**: planner, reviewer, implementer
-- **Opencode**: planner, reviewer, implementer, coordinator, prompt-creator
+- **Opencode**: planner, reviewer, implementer, coordinator
 - **Claude**: planner, reviewer, implementer
 
 ## Current Status
