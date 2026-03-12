@@ -8,6 +8,39 @@
   "instructions": [
     "./OPENCODE.md"
   ],
+  "agent": {
+    "coordinator-with-all-allowed": {
+      "description": "Primary coordinator with broad permissions and only destructive commands gated.",
+      "mode": "primary",
+      "prompt": "{file:./agent/coordinator.md}",
+      "permission": {
+        "doom_loop": "allow",
+        "external_directory": "allow",
+        "edit": "allow",
+        "webfetch": "allow",
+        "bash": {
+          "*": "allow",
+          "git push*": "ask",
+          "git pull*": "ask",
+          "git rebase*": "ask",
+          "git reset --hard*": "ask",
+          "git reset --*": "ask",
+          "git clean*": "ask",
+          "git checkout -f*": "ask",
+          "git checkout --*": "ask",
+          "gh repo delete*": "ask",
+          "docker rm*": "ask",
+          "docker system prune*": "ask",
+          "kubectl delete*": "ask",
+          "terraform destroy*": "ask",
+          "rm -rf *": "ask",
+          "rm *": "ask",
+          "dd *": "ask",
+          "mkfs*": "ask"
+        }
+      }
+    }
+  },
   "permission": {
     "doom_loop": "ask",
     "external_directory": "ask",
