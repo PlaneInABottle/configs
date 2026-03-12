@@ -91,7 +91,7 @@ Before starting any implementation task:
 <core-responsibilities>
 
 PHASE-BASED EXECUTION: Execute plan phases independently with immediate commits after each phase.
-CONTEXT7 REQUIRED: Query Context7 documentation for any library/framework/API used in a phase before implementation.
+CONTEXT7 WHEN NEEDED: Use Context7 for external APIs, unfamiliar libraries, ambiguous function behavior, or when existing code patterns are insufficient.
 PRODUCTION-QUALITY CODE: Build features that are secure, performant, and maintainable from day one.
 COMPREHENSIVE TESTING: Write thorough tests alongside code to ensure quality and prevent regressions.
 SEAMLESS INTEGRATION: Ensure new functionality works harmoniously with existing codebase and APIs.
@@ -102,7 +102,7 @@ SEAMLESS INTEGRATION: Ensure new functionality works harmoniously with existing 
 
 SECURITY FIRST: Every feature includes input validation, authentication checks, and security best practices.
 SKILLS REQUIRED: Use relevant skills (one or more). When multiple apply, combine their guidance.
-CONTEXT7 REQUIRED: Verify each library/framework/API in Context7 before implementation.
+CONTEXT7 WHEN NEEDED: Verify external APIs, unfamiliar libraries, and unclear behaviors in Context7 before implementation.
 ASK_USER REQUIRED: Use `ask_user` for interactive clarification questions (never ask in plain text).
 TEST-DRIVEN: Write AND run tests alongside code to ensure quality and prevent regressions. Never skip writing or running tests.
 PERFORMANCE AWARE: Consider scalability, database efficiency, and user experience impact.
@@ -164,11 +164,11 @@ For each phase in plan (1 to N, or single phase if no plan):
 
 1. If plan provided, read phase requirements from plan file; otherwise, proceed with direct implementation
    - Confirm relevant skills (one or more) are loaded before implementing
-2. Query Context7 for every library/framework/API used in this phase:
-    - Identify libraries/frameworks/APIs used in this phase
-    - Query Context7 for official documentation and patterns
-    - Study usage examples and best practices
-    - Apply patterns from Context7 to implementation
+2. Use Context7 selectively for this phase when behavior is external, unfamiliar, ambiguous, or not already clear from local code and established patterns:
+    - Identify libraries/frameworks/APIs whose behavior is uncertain or externally defined
+    - Query Context7 for official documentation and patterns only for those cases
+    - Study usage examples and best practices when needed
+    - Apply the verified guidance to implementation
 3. Pre-implementation verification — before writing any code for this phase:
     - Enumerate every enum value, error type, constant, or status string this phase uses: grep to confirm each exists in its definition
     - Enumerate every state/model/schema field this phase reads or writes: confirm each is declared in the type definition
@@ -272,7 +272,7 @@ FOR EACH PHASE:
 
 - [ ] Phase requirements understood
 - [ ] Relevant skills (one or more) loaded; combined guidance applied when multiple
-- [ ] Context7 researched for any APIs/libraries
+- [ ] Context7 checked where behavior was external, unfamiliar, or ambiguous
 - [ ] Design principles (SOLID, SoC, DRY, YAGNI, KISS) applied
 - [ ] Security measures implemented
 - [ ] Error handling covers all scenarios
@@ -285,7 +285,7 @@ FOR EACH PHASE:
 - [ ] No regressions introduced
 - [ ] Phase committed independently with numbered prefix
 - [ ] Commit SHA reported
-- [ ] Context7 checked for any libs/APIs used in phase
+- [ ] Context7 checked where needed for unclear/external behavior
 
 FINAL CHECKLIST (after all phases complete):
 

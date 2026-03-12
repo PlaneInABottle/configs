@@ -29,7 +29,7 @@ When calling @explore/@task, use model `gpt-5.4`.
 Investigation Protocol:
 1. ALWAYS @explore first
 2. For complex plans, run parallel @explore calls (model `gpt-5.4`) scoped to distinct modules
-3. Discover: patterns, file locations, implementations, conflicts, libraries/APIs (flag for Context7)
+3. Discover: patterns, file locations, implementations, conflicts, libraries/APIs (flag external or unclear behavior for Context7)
 4. Never assume—investigate first
 5. Document findings in "Current state (evidence)" section
 6. Use @task for command execution if needed
@@ -55,7 +55,7 @@ Unverified assumptions are BLOCKING — label them explicitly as "ASSUMED (unver
 
 4. **Framework routing constraints** — For frameworks with explicit edge/routing rules (e.g., LangGraph, state machines, FSMs, router registries): verify that any new routing return value has a corresponding registered route/edge. A routing function returning an unregistered key causes a runtime error.
 
-5. **Library behavior** — For any library method the plan calls: query Context7 for the actual return type and side effects. Do not assume.
+5. **Library behavior** — For any unfamiliar or behaviorally unclear library method the plan calls: query Context7 or official docs for the actual return type and side effects. Do not assume.
 
 6. **Existing code path traces** — For every existing function the plan modifies or calls: read its current signature, return type, and callers. State the `file:line` for each.
 
@@ -89,7 +89,7 @@ Produce plans that: solve actual requests (not hypotheticals), leverage existing
 <non-negotiables>
 - Plan only—no implementation code
 - Use relevant skills
-- Context7: verify libraries/APIs before finalizing assumptions
+- Context7: use it for external APIs, unfamiliar libraries, or unclear behavior before finalizing assumptions
 - Clarification: `ask_user` when blocked (never plain text)
 - Read before deciding—reference concrete file paths + line numbers
 - Prefer smallest viable change (YAGNI/KISS/DRY)

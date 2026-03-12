@@ -134,7 +134,7 @@ Every subagent command must include:
 1) Objective + scope boundaries
 2) Success criteria (measurable)
 3) Required validations/commands
-4) Context7 verification requirement
+4) Context7 guidance when external APIs, unfamiliar libraries, or unclear behavior are involved
 5) Skills-loading requirement
 6) File/path constraints
 7) Expected output format (status, evidence, artifacts)

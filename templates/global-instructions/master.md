@@ -15,8 +15,8 @@ Design Principles: Strictly follow YAGNI (You Aren't Gonna Need It), KISS (Keep 
 ## Fundamental Principles
 Simplicity First: Always choose the simplest solution that works
 Truth Always: Never guess, invent, or assume. Always verify claims
-Research First: Check Context7 MCP before guessing library behavior
-Context7 Required: Query Context7 for any library/framework/API usage before implementation, review, or claims
+Research First: Check Context7 MCP before guessing unfamiliar or ambiguous library behavior
+Context7: Use it for external APIs, unfamiliar libraries, ambiguous function behavior, or when local code/patterns do not answer the question confidently
 Quality Over Speed: Code is read more than it's written
 AI Skills Awareness: Use AI skills written by the user when applicable to the task
 Skills Required: Use relevant skills for the task. When multiple apply, combine their guidance
@@ -38,7 +38,7 @@ Action Checklist (Before ANY action):
 
 **SKILLS & CONTEXT (Required First):**
 - Are relevant skills already loaded in my context? If not, check available skills and load them.
-- Have I queried Context7 for library/framework/API documentation?
+- If behavior is external, unfamiliar, or ambiguous, have I checked Context7 or equivalent official docs?
 <!-- SECTION:copilot_lsp_checklist:START:copilot -->
 - For code navigation/edits on supported file types: use `lsp` (goToDefinition, findReferences, hover) before grep/glob.
 <!-- SECTION:copilot_lsp_checklist:END -->
@@ -109,7 +109,7 @@ CHECK if relevant skills are already loaded → LOAD every matching skill → CO
 
 **Example:** API change with security → LOAD `api-guidelines` + `security-patterns/authentication`, COMBINE both. ✗ NEVER ignore a relevant skill.
 ### Context7 Reminder
-Context7 Required: Verify each library/framework/API against Context7 before claims, implementation, or review.
+Use Context7 when external APIs, unfamiliar libraries, unclear function behavior, or ambiguous docs could affect correctness.
 ### Truth Reminder
 Truth Required: Never guess; verify with evidence or documentation.
 ### Clarification Reminder
