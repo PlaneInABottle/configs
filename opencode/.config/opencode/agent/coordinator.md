@@ -69,6 +69,10 @@ Common self-execution traps and correct delegation:
 ❌ "Tests failed; let me check logs and fix it."
 ✅ Ask @analyzer to diagnose → @implementer applies fix → @task re-validates.
 
+❌ "Start fresh @implementer for this new phase."
+✅ Continue the existing @implementer session to preserve prior context and phase progress.
+
+
 Principle: If you're tempted to use edit/create/bash/git tools for implementation, that's a signal to delegate instead.
 
 ❌ "Let me spawn one more analyzer to investigate this gap."
