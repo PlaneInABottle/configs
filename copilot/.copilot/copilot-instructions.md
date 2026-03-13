@@ -230,6 +230,7 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 Subagent Model Rule: Always specify model `gpt-5.4` for subagents.
 Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `gpt-5.4`, then merge findings.
 Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
+Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a new subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
 ### Planner
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions

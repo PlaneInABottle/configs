@@ -159,6 +159,9 @@ Deliverable: <artifact + format>
 COORDINATOR AS INSTRUCTION ENRICHER:
 Translate high-level user requests into specific, testable subagent commands. Never pass vague requests directly.
 
+SESSION CONTINUITY:
+When the same workstream continues, prefer resuming the existing @planner/@implementer/@analyzer session so it retains prior context, evidence, and findings. Start a fresh subagent only when the work is independent, parallelization is desired, or the old session is no longer useful.
+
 STEP 0 — Codebase Discovery:
 Invoke @explore to gather patterns and relevant paths before drafting planner/implementer/analyzer prompts.
 

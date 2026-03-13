@@ -221,6 +221,9 @@ Parallel Validation: When you have multiple independent investigations or valida
 ### Subagent Model Usage
 Subagents should inherit the main agent's model and not select or configure their own model. Do not specify model parameters when calling subagents to ensure consistent behavior.
 
+### Subagent Continuity
+When possible, continue the same subagent session for the same workstream so the agent keeps its prior context and findings. Prefer a fresh subagent only for independent work, intentional parallelization, or when the earlier session has become misleading or irrelevant.
+
 
 
 
