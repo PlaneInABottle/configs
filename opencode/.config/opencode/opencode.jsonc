@@ -38,6 +38,7 @@
       "git mv*": "ask",
       "git commit*": "ask",
       "git merge*": "ask",
+      "git merge-base*": "ask",
       "gh *": "allow",
       "gh pr create*": "ask",
       "gh pr merge*": "ask",
