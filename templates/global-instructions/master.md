@@ -54,7 +54,7 @@ Action Checklist (Before ANY action):
 **SUB-AGENT COMMANDS:**
 - Subagent command check: Explicitly command subagents to check and load relevant skills and use Context7.
 - Subagent model check: Use `gpt-5.4` for subagents.
-- Parallel review check: For code/commit reviews, spawn parallel @analyzer calls (gpt-5.4) and merge findings.
+- Parallel review check: For code/commit reviews, use parallel @analyzer calls (gpt-5.4) only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
 <!-- SECTION:copilot_subagent_commands:END -->
 
 Anti-Patterns to Avoid:
@@ -235,7 +235,7 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 
 <!-- SECTION:copilot_subagent_rules:START:copilot -->
 Subagent Model Rule: Always specify model `gpt-5.4` for subagents.
-Parallel Review Rule: For code/commit reviews, spawn parallel @analyzer calls using `gpt-5.4`, then merge findings.
+Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with `gpt-5.4` only when the review can be split across independent components within the same declared blast radius; this is not a default repo-wide sweep mechanism. Merge findings afterward.
 Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a new subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
 <!-- SECTION:copilot_subagent_rules:END -->
@@ -249,14 +249,14 @@ Output: Detailed implementation plan with phases
 
 Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.4`) (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
-Purpose: Security, performance, architecture audit
-When to use: Security-critical code, between phases, pre-deployment
+Purpose: Blocking review of the requested change plus a bounded adjacent bug sweep inside the affected blast radius
+When to use: Security-critical code, between phases, pre-deployment, focused code/commit validation
 Input: Code to review, context on changes
 Output: Issues, recommendations, approval status
 
 **Required First:** Check available skills and load all relevant skills before proceeding.
 
-Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel @explore calls (model `gpt-5.4`) (split by module/concern), then aggregate findings before writing the review.
+Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (model `gpt-5.4`) (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
 Purpose: Build specific phases according to plan using best practices from official documentation
 When to use: Phased implementation with clear requirements
@@ -284,9 +284,9 @@ When possible, continue the same subagent session for the same workstream so the
 <!-- SECTION:subagent_model_copilot:START:copilot -->
 ### Subagent Model Usage
 When calling subagents (@planner, @implementer, @analyzer, @explore, @task), always specify model `gpt-5.4`.
-For code/commit reviews, run parallel @analyzer calls with `gpt-5.4` and merge results.
+For code/commit reviews, use parallel @analyzer calls with `gpt-5.4` only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
 
-Parallel Subagent Calls: Spawn multiple parallel subagents of the SAME type for independent tracks, then merge results. @explore: split by module/pattern · @analyzer: split by component/focus-area · @implementer: ONLY if strictly independent modules · @task: for independent validations (lint + tests + typecheck).
+Parallel Subagent Calls: Spawn multiple parallel subagents of the SAME type for independent tracks, then merge results. @explore: split by module/pattern · @analyzer: split only by independent component/focus-area within the same declared blast radius · @implementer: ONLY if strictly independent modules · @task: for independent validations (lint + tests + typecheck).
 
 Terminology: When the user mentions "gpa", it means "general purpose agent".
 <!-- SECTION:subagent_model_copilot:END -->

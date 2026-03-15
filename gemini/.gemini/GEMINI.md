@@ -195,14 +195,14 @@ Output: Detailed implementation plan with phases
 
 Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel explore calls (model `gpt-5.4`) (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
-Purpose: Security, performance, architecture audit
-When to use: Security-critical code, between phases, pre-deployment
+Purpose: Blocking review of the requested change plus a bounded adjacent bug sweep inside the affected blast radius
+When to use: Security-critical code, between phases, pre-deployment, focused code/commit validation
 Input: Code to review, context on changes
 Output: Issues, recommendations, approval status
 
 **Required First:** Check available skills and load all relevant skills before proceeding.
 
-Parallel Context-Gathering: For reviews spanning multiple independent components, run parallel explore calls (model `gpt-5.4`) (split by module/concern), then aggregate findings before writing the review.
+Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel explore calls (model `gpt-5.4`) (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
 Purpose: Build specific phases according to plan using best practices from official documentation
 When to use: Phased implementation with clear requirements

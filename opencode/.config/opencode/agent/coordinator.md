@@ -309,8 +309,11 @@ Do not accept analyzer approval unless the review includes:
 - Evidence Reviewed
 - Coverage Verdict
 - Plan Adherence / Scope Drift
+- Exact changed path findings
+- Bounded adjacent sweep coverage/results limited to the declared blast radius
 
-If any of those sections are missing, incomplete, or show missing proof for required regression/negative/preservation coverage, treat the review as NEEDS_CHANGES or BLOCKED.
+If any of those sections are missing, incomplete, or show missing proof for required regression/negative/preservation/bounded-sweep coverage, treat the review as NEEDS_CHANGES or BLOCKED.
+If analyzer drifts into unrelated repo-wide auditing instead of the declared blast radius, reject the review and request a focused rerun.
 </review-acceptance-gate>
 
 </quality-framework>
