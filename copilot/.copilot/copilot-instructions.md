@@ -57,7 +57,7 @@ Action Checklist (Before ANY action):
 
 **SUB-AGENT COMMANDS:**
 - Subagent command check: Explicitly command subagents to check and load relevant skills and use Context7.
-- Subagent model check: Use `gpt-5.4` for subagents.
+- Subagent model check: Use `gpt-5.4` for subagents. Use `haiku 4.5` for @explore or @task agents.
 - Parallel review check: For code/commit reviews, use parallel @analyzer calls (gpt-5.4) only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
 
 Anti-Patterns to Avoid:
@@ -228,7 +228,7 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 ## Subagents
 
 
-Subagent Model Rule: Always specify model `gpt-5.4` for subagents.
+Subagent Model Rule: Specify model `gpt-5.4` for subagents. Use `haiku 4.5` for @explore or @task agents.
 Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with `gpt-5.4` only when the review can be split across independent components within the same declared blast radius; this is not a default repo-wide sweep mechanism. Merge findings afterward.
 Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a new subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
@@ -269,7 +269,7 @@ Parallel Validation: When you have multiple independent investigations or valida
 
 
 ### Subagent Model Usage
-When calling subagents (@planner, @implementer, @analyzer, @explore, @task), always specify model `gpt-5.4`.
+When calling subagents (@planner, @implementer, @analyzer, @explore, @task), use model `gpt-5.4` by default. For @explore or @task agents specifically, use model `haiku 4.5` instead.
 For code/commit reviews, use parallel @analyzer calls with `gpt-5.4` only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
 
 Parallel Subagent Calls: Spawn multiple parallel subagents of the SAME type for independent tracks, then merge results. @explore: split by module/pattern · @analyzer: split only by independent component/focus-area within the same declared blast radius · @implementer: ONLY if strictly independent modules · @task: for independent validations (lint + tests + typecheck).
