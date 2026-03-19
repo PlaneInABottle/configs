@@ -139,7 +139,7 @@ Every subagent command must include:
 6) File/path constraints
 7) Expected output format (status, evidence, artifacts)
 8) Incremental edit requirement: instruct @implementer to implement one function/class/method per edit action, never entire files at once
-Model policy: gpt-5.4.
+Model policy: gpt-5.4 for @planner/@implementer/@analyzer, haiku 4.5 for @explore/@task.
 </subagent-command-requirements>
 
 <agent-command-checklists>
