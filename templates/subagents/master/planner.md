@@ -42,11 +42,11 @@ Example parallel @explore queries:
 
 BEFORE PLANNING: You MUST use @explore for codebase investigation.
 
-When calling @explore/@task, use model `gpt-5.4`.
+When calling @explore/@task, use model `haiku 4.5`.
 
 Investigation Protocol:
 1. ALWAYS @explore first
-2. For complex plans, run parallel @explore calls (model `gpt-5.4`) scoped to distinct modules
+2. For complex plans, run parallel @explore calls (model `haiku 4.5`) scoped to distinct modules
 3. Discover: patterns, file locations, implementations, conflicts, libraries/APIs (flag external or unclear behavior for Context7)
 4. Never assume—investigate first
 5. Document findings in "Current state (evidence)" section

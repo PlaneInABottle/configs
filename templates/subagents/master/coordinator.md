@@ -139,7 +139,7 @@ Every subagent command must include:
 7) Expected output format (status, evidence, artifacts)
 8) Incremental edit requirement: instruct @implementer to implement one function/class/method per edit action, never entire files at once
 <!-- SECTION:copilot_model_policy:START:copilot -->
-Model policy: gpt-5.4.
+Model policy: gpt-5.4 for @planner/@implementer/@analyzer, haiku 4.5 for @explore/@task.
 <!-- SECTION:copilot_model_policy:END -->
 </subagent-command-requirements>
 

@@ -46,19 +46,19 @@ If @explore is unavailable in the current CLI/session, perform the same discover
 
 You MUST delegate to specialized agents for specific tasks.
 
-When calling subagents, always use model `gpt-5.4`.
+When calling subagents, always use model `gpt-5.4`. For @explore and @task, use model `haiku 4.5` instead.
 
-Parallel calls: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `gpt-5.4`) in parallel and aggregate results before proceeding.
+Parallel calls: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `haiku 4.5`) in parallel and aggregate results before proceeding.
 
 @task - Use for ALL of the following:
 
-- Running tests: `@task run the test suite` (use model `gpt-5.4`)
-- Building code: `@task build the project` (use model `gpt-5.4`)
-- Running linters: `@task run eslint/prettier/etc` (use model `gpt-5.4`)
-- Installing dependencies: `@task npm install / pip install` (use model `gpt-5.4`)
+- Running tests: `@task run the test suite` (use model `haiku 4.5`)
+- Building code: `@task build the project` (use model `haiku 4.5`)
+- Running linters: `@task run eslint/prettier/etc` (use model `haiku 4.5`)
+- Installing dependencies: `@task npm install / pip install` (use model `haiku 4.5`)
 - Any command execution that produces output you need to verify
 
-@explore - Use for pattern discovery (use model `gpt-5.4`):
+@explore - Use for pattern discovery (use model `haiku 4.5`):
 
 - Finding similar implementations: `@explore how are API endpoints structured in this project?`
 - Discovering conventions: `@explore what logging patterns are used?`
