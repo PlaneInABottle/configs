@@ -69,6 +69,26 @@ When reviewing code using libraries/frameworks:
 - Verify patterns match documented best practices when the behavior is unclear
 </context7-requirements>
 
+<bug-reproduction>
+For code/commit reviews: attempt to reproduce the bug BEFORE analyzing/fixing.
+
+**Methods**: Run failing tests → minimal repro → trace → state inspection
+
+**Gate**:
+- Reproduced: document proof, verify fix addresses it
+- Not reproduced: mark "unverified risk", cap at MEDIUM
+- Unable: document limitation, proceed with caution
+
+**Required output**:
+```
+### Bug Reproduction
+- Reproduced: [Yes/No/Unclear]
+- Method: <test/repro/trace/state>
+- Expected vs Actual: <what should happen vs what happens>
+- Proof: <command/output/trace>
+```
+</bug-reproduction>
+
 <review-scope>
 You review FOUR artifact types:
 1. Implementation Code - Completed code changes
