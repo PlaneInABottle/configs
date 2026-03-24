@@ -114,6 +114,20 @@
       "name": "coordinator",
       "opencode": {},
       "mode": "primary"
+    },
+    "prompt-generator": {
+      "description": "Prompt engineering specialist - generates comprehensive, autonomous prompts for the coordinator agent. Transforms user requirements into structured prompts with all context pre-loaded so the coordinator never asks questions.",
+      "examples": [
+        "  - \"Use when you need a comprehensive prompt for the coordinator agent\"",
+        "  - \"Use when you want the coordinator to execute without stopping or asking questions\"",
+        "  - \"Use for complex tasks that need structured phase breakdowns and agent loops\""
+      ],
+      "header_lines": {
+        "opencode": 4
+      },
+      "name": "prompt-generator",
+      "opencode": {},
+      "mode": "primary"
     }
   },
   "version": "1.0.0"

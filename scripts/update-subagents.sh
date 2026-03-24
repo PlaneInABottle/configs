@@ -30,7 +30,7 @@ usage() {
     echo "Updates subagent files from master templates."
     echo ""
     echo "Options:"
-    echo "  --agent=NAME          Update specific agent (planner|analyzer|implementer|coordinator|all)"
+    echo "  --agent=NAME          Update specific agent (planner|analyzer|implementer|coordinator|prompt-generator|all)"
     echo "  --system=NAME         Update specific system (copilot|opencode|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
     echo "  --help, -h            Show this help message"
@@ -392,11 +392,13 @@ if [[ -z "$AGENT" ]]; then
     usage
 fi
 
-if [[ "$AGENT" != "all" ]] && [[ "$AGENT" != "planner" ]] && \
-   [[ "$AGENT" != "analyzer" ]] && [[ "$AGENT" != "implementer" ]] && \
-   [[ "$AGENT" != "coordinator" ]]; then
-    echo "Error: Invalid agent name: $AGENT"
-    usage
+if [[ "$AGENT" != "all" ]]; then
+    valid_agents=$(python3 -c "import json; d=json.load(open('$METADATA_FILE')); print(' '.join(d['subagents'].keys()))")
+    if ! echo "$valid_agents" | tr ' ' '\n' | grep -qw "$AGENT"; then
+        echo "Error: Invalid agent name: $AGENT"
+        echo "Valid agents: $valid_agents"
+        usage
+    fi
 fi
 
 if [[ "$SYSTEM" != "all" ]] && [[ "$SYSTEM" != "copilot" ]] && \
