@@ -20,12 +20,43 @@ pip install -U crawl4ai
 crawl4ai-setup
 crawl4ai-doctor
 
-# Docker (recommended)
+# Or install with pipx for CLI usage
+pipx install crawl4ai
+
+# Docker service (optional)
 # Use specific version - 0.8.5 is stable
 docker pull unclecode/crawl4ai:0.8.5
 docker run -d -p 11235:11235 --name crawl4ai --shm-size=1g unclecode/crawl4ai:0.8.5
+```
 
 **Docker endpoints:** Dashboard `http://localhost:11235/dashboard` · Playground `http://localhost:11235/playground` · API `http://localhost:11235/crawl`
+
+### Default Choice
+
+Use the interface that matches the job:
+
+| Situation | Default |
+|-----------|---------|
+| Agent automation, custom scripts, extraction pipelines | **Python SDK** |
+| Quick ad-hoc scrape from terminal | **CLI** |
+| Shared service, remote access, dashboard, batch API | **Docker API** |
+
+**Recommended default:** prefer the **Python SDK** when you are building repeatable automation or agent workflows. It gives more control than the CLI and avoids the operational overhead of Docker.
+
+### Python Import Caveat
+
+If Crawl4AI was installed with `pipx`, plain `python3` usually will **not** import `crawl4ai`.
+
+```bash
+# CLI still works
+crwl https://example.com
+
+# But python3 may not see the package
+python3 -c "import crawl4ai"
+
+# Use the pipx interpreter instead
+~/.local/pipx/venvs/crawl4ai/bin/python your_script.py
+```
 
 ---
 
@@ -145,6 +176,8 @@ crwl https://www.reddit.com/r/politics/hot/ -o markdown -c "user_agent_mode=rand
 
 ## Python API
 
+**Use this as the default programmable interface.** It worked in session for both normal pages and protected Reddit URLs/search pages when using `user_agent_mode="random"`.
+
 ### Basic Usage
 
 ```python
@@ -174,6 +207,30 @@ run_cfg = CrawlerRunConfig(
 async with AsyncWebCrawler(config=config) as crawler:
     result = await crawler.arun(url="https://example.com", config=run_cfg)
 ```
+
+### Recommended Default Pattern
+
+```python
+import asyncio
+from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
+
+async def main():
+    browser = BrowserConfig(headless=True, user_agent_mode="random")
+    run_cfg = CrawlerRunConfig(wait_until="networkidle")
+
+    async with AsyncWebCrawler(config=browser) as crawler:
+        result = await crawler.arun(
+            url="https://www.reddit.com/search/?q=gold%20price%20drop&sort=relevance",
+            config=run_cfg,
+        )
+        print(result.success)
+        print(result.metadata.get("title"))
+        print(result.markdown[:1000])
+
+asyncio.run(main())
+```
+
+Use this pattern first, then add extraction, proxies, hooks, or deep crawling as needed.
 
 ### CrawlResult Properties
 
@@ -308,28 +365,32 @@ resp = requests.post("http://localhost:11235/crawl", json={
 results = resp.json()["results"]  # Array of crawl results
 ```
 
-## Docker vs CLI Comparison
+## CLI vs Python SDK vs Docker
 
-| Aspect | Docker | CLI |
-|--------|--------|-----|
-| **Speed** | Slower (HTTP overhead) | Faster (direct) |
-| **API access** | Yes (REST API) | No (command line) |
-| **Batch URLs** | Yes (JSON array) | No (sequential) |
-| **Web UI** | Dashboard + Playground | No |
-| **Deep crawl** | JSON config | `--deep-crawl bfs --max-pages N` |
-| **Setup** | Container running | `pip install` |
+| Aspect | CLI | Python SDK | Docker API |
+|--------|-----|------------|------------|
+| **Best for** | Quick terminal use | Programmable automation | Shared service/API |
+| **Speed** | Fastest for one-offs | Fast | Slightly slower (HTTP overhead) |
+| **Control** | Lowest | Highest | Medium |
+| **Batch URLs** | Limited | Full control in code | Yes (JSON array) |
+| **Web UI** | No | No | Dashboard + Playground |
+| **REST API** | No | No | Yes |
+| **Deep crawl** | Simple flags | Full strategy objects | Request payload |
+| **Anti-bot tuning** | Basic | Better | Better |
+| **Operational overhead** | Lowest | Low | Highest |
 
 ### When to Use Which
 
 | Use Case | Choose |
 |----------|--------|
-| Script/automation | CLI |
-| API for other services | Docker |
-| Quick one-off | CLI |
-| Production/monitoring | Docker |
-| Deep crawl multiple pages | CLI (`--deep-crawl`) |
-| Batch parallel crawl | Docker |
-| Web UI testing | Docker |
+| Quick one-off scrape | CLI |
+| Scripted automation | Python SDK |
+| Build custom extraction pipeline | Python SDK |
+| Repeatable agent workflow | Python SDK |
+| API for other services | Docker API |
+| Dashboard / playground / remote service | Docker API |
+| Batch parallel crawl from another app | Docker API |
+| Fast terminal debugging | CLI |
 
 ---
 
@@ -360,8 +421,10 @@ results = resp.json()["results"]  # Array of crawl results
 
 | Issue | Solution |
 |-------|----------|
+| `python3` cannot import `crawl4ai` | If installed via `pipx`, use `~/.local/pipx/venvs/crawl4ai/bin/python` or install into a project venv |
 | No output | Check browser accessibility, try `CacheMode.BYPASS` |
 | Anti-bot blocks (Reddit, etc.) | Use `user_agent_mode=random` (CLI: `-c "user_agent_mode=random"`, Docker: `"user_agent_mode": "random"`) |
+| Need a default interface | Use Python SDK for automation, CLI for quick manual runs, Docker API for service-style usage |
 | Reddit shows "Prove your human" | Add `user_agent_mode=random` - works reliably |
 | Slow performance | Use prefetch mode, enable caching |
 | JS not rendering | Increase timeout, check `wait_until` |
