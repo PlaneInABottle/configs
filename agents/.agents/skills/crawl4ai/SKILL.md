@@ -13,21 +13,29 @@ Crawl4AI is an open-source (Apache 2.0), LLM-friendly web crawler that transform
 
 ---
 
-## Installation
+## Verify Availability
+
+Assume Crawl4AI is already installed. Verify the interface you plan to use instead of repeating installation steps.
 
 ```bash
-pip install -U crawl4ai
-crawl4ai-setup
-crawl4ai-doctor
+# CLI present on PATH
+which crwl
 
-# Or install with pipx for CLI usage
-pipx install crawl4ai
+# CLI responds (there is no top-level --version flag)
+crwl crawl -h
 
-# Docker service (optional)
-# Use specific version - 0.8.5 is stable
-docker pull unclecode/crawl4ai:0.8.5
-docker run -d -p 11235:11235 --name crawl4ai --shm-size=1g unclecode/crawl4ai:0.8.5
+# Python package version when using the pipx interpreter
+~/.local/pipx/venvs/crawl4ai/bin/python - <<'PY'
+from importlib.metadata import version
+print(version('crawl4ai'))
+PY
+
+# Docker health and version
+curl http://localhost:11235/health
+docker ps --filter "name=crawl4ai" --format "{{.Image}} {{.Status}}"
 ```
+
+**Verified in session:** CLI at `/Users/Y_ALTAY1/.local/bin/crwl`, Python package `0.8.6` in the pipx interpreter, Docker health endpoint reporting version `0.8.5`.
 
 **Docker endpoints:** Dashboard `http://localhost:11235/dashboard` · Playground `http://localhost:11235/playground` · API `http://localhost:11235/crawl`
 
@@ -45,18 +53,20 @@ Use the interface that matches the job:
 
 ### Python Import Caveat
 
-If Crawl4AI was installed with `pipx`, plain `python3` usually will **not** import `crawl4ai`.
+If Crawl4AI was installed with `pipx`, plain `python3` usually will **not** import `crawl4ai` because `pipx` keeps the package in its own virtual environment.
 
 ```bash
 # CLI still works
 crwl https://example.com
 
-# But python3 may not see the package
+# But system python3 may not see the package
 python3 -c "import crawl4ai"
 
-# Use the pipx interpreter instead
+# Use the pipx interpreter for SDK scripts
 ~/.local/pipx/venvs/crawl4ai/bin/python your_script.py
 ```
+
+Use `python3` normally only when `crawl4ai` is installed in that exact Python environment. For this skill, prefer the pipx interpreter path when using the SDK.
 
 ---
 
@@ -195,17 +205,23 @@ asyncio.run(main())
 ### With Configuration
 
 ```python
+import asyncio
 from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
 
-config = BrowserConfig(headless=True, user_agent_mode="random")
-run_cfg = CrawlerRunConfig(
-    cache_mode=CacheMode.BYPASS,
-    wait_until="networkidle",
-    word_count_threshold=100
-)
+async def main():
+    browser = BrowserConfig(headless=True, user_agent_mode="random")
+    run_cfg = CrawlerRunConfig(
+        cache_mode=CacheMode.BYPASS,
+        wait_until="networkidle",
+        word_count_threshold=100,
+    )
 
-async with AsyncWebCrawler(config=config) as crawler:
-    result = await crawler.arun(url="https://example.com", config=run_cfg)
+    async with AsyncWebCrawler(config=browser) as crawler:
+        result = await crawler.arun(url="https://example.com", config=run_cfg)
+        print(result.success)
+        print(result.metadata.get("title"))
+
+asyncio.run(main())
 ```
 
 ### Recommended Default Pattern
@@ -231,6 +247,12 @@ asyncio.run(main())
 ```
 
 Use this pattern first, then add extraction, proxies, hooks, or deep crawling as needed.
+
+Run SDK scripts with the pipx interpreter when `python3` cannot import the package:
+
+```bash
+~/.local/pipx/venvs/crawl4ai/bin/python your_script.py
+```
 
 ### CrawlResult Properties
 
