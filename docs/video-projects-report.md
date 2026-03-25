@@ -193,6 +193,69 @@ For offline use:
 
 ---
 
+---
+
+## Existing Projects Research
+
+### MoneyPrinterTurbo
+
+A notable open-source project (52.8k stars) that implements the AI video generator concept:
+
+| Aspect | Details |
+|--------|---------|
+| **Language** | Python (97.8%) |
+| **Video editing** | MoviePy |
+| **Web UI** | Streamlit |
+| **API** | FastAPI |
+| **LLM Providers** | OpenAI, DeepSeek, Moonshot, Azure, Gemini, Qwen, Ollama, etc. |
+| **Stock assets** | Pexels API |
+| **TTS** | Azure TTS, Edge TTS |
+| **Subtitles** | Whisper, Edge TTS |
+
+**Workflow:**
+```
+Topic → LLM (generate script) → Pexels (fetch assets) → TTS (voiceover) → MoviePy (assemble) → Subtitle → Output
+```
+
+**Features:**
+- Web UI + API
+- Multiple video sizes (9:16竖屏, 16:9横屏)
+- Batch video generation
+- Subtitle customization (font, color, position, stroke)
+- Background music support
+- Chinese/English support
+
+### Similar Projects
+
+| Project | Stars | Key Features |
+|---------|-------|--------------|
+| **AI-Youtube-Shorts-Generator** | 2.2k | GPT-4, extracts interesting sections from existing videos |
+| **story-flicks** | 1.7k | AI story to video |
+| **ScriptedYTShortsAI** | 40 | GPT-4, ElevenLabs, Fal AI (image gen) |
+| **AI-Video-Production-Toolkit** | - | DALL-E 3, ElevenLabs, DeepSeek, synchronized captions |
+| **AI-Story-To-Movie** | - | Gemini, Imagen 3, Google Veo (video generation) |
+
+### Common Implementation Pattern
+
+```
+Topic → LLM (script/scene breakdown) → Assets (stock/AI) → TTS (voiceover) → MoviePy (assembly) → Subtitle → Music → Output
+```
+
+### Key Technologies Used
+
+| Component | Common Tools |
+|-----------|-------------|
+| Video processing | MoviePy, FFmpeg |
+| Script generation | OpenAI GPT, Gemini, DeepSeek |
+| Image generation | DALL-E, Flux, Stable Diffusion |
+| Stock assets | Pexels API, Pixabay API |
+| TTS | ElevenLabs, Azure TTS, Edge TTS |
+| STT/Subtitles | Whisper, WhisperX |
+| Web UI | Streamlit |
+| API | FastAPI |
+
+---
+
 ## Summary
 
 Both projects are theoretically feasible using existing tools and APIs:
@@ -201,5 +264,10 @@ Both projects are theoretically feasible using existing tools and APIs:
 - **Project 2** would help generate content from topics/scripts
 
 The core shared component would be FFmpeg for video processing. AI services would handle narration, asset fetching, and optional script generation.
+
+MoneyPrinterTurbo demonstrates a working implementation of Project 2 with:
+- Proven architecture (LLM → Assets → TTS → MoviePy → Output)
+- Multiple LLM provider support
+- Web UI + API interfaces
 
 Further exploration would be needed to determine specific implementation details, API choices, and feature priorities.
