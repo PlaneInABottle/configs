@@ -20,6 +20,7 @@ When verifying your implementations, **never** default to writing language-speci
 | **Data Generation** | **Env-Native Faker** | Use environment-native scripting (e.g., Python `faker`, Node `faker`) to generate deterministic JSON, test fixtures, or DB payloads. Data generation scripts MUST ONLY output standard formats (JSON/SQL/CSV) to stdout. They MUST NOT contain network requests, database connections, or test assertions. All outputs must be piped to the Universal Toolkit (e.g., `.hurl`, `psql`). |
 | **Dependencies** | **json-server / Prism** | Spin up instant fake APIs to mock 3rd party dependencies. Use environment variables to swap real URLs for local fakes. |
 | **Network / API** | **Network Boundaries** | Use `hurl` for REST/GraphQL, `grpcurl` for gRPC, and `wscat` for WebSockets. |
+| **External APIs** | **`api-discovery` skill** | Find and select reliable public APIs for your needs. Maps dev tasks to APIs (weather, geocoding, email validation, etc.). |
 | **Interface (Web/CLI)** | **`agent-browser`** | Use `agent-browser` as an Interactive REPL for Web UIs. For CLI apps, use standard Unix streams (`stdout/stderr`) or `expect` scripts. |
 | **Persistence / DB** | **Native Clients** | Bypass the app layer. Use native datastore clients (`psql`, `mongosh`, `sqlite3`, `redis-cli`) directly to assert state changes. If a native CLI client is unavailable, write a minimalist, single-file headless script to execute the query and print JSON to stdout. Do not write assertions inside this script; pipe the stdout to `jq` or `grep`. |
 | **Async / Events** | **`redis-cli` / `rpk`** | Inject messages directly into queues and verify worker side-effects. |
@@ -57,6 +58,7 @@ For exact implementation details, code snippets, and CLI commands for the toolki
 - [playbooks/universal-data-generation.md](playbooks/universal-data-generation.md) (Faker.js, Python Faker for test data)
 - [playbooks/mocking-dependencies.md](playbooks/mocking-dependencies.md) (JSON-Server, Prism, Wiremock)
 - [playbooks/media-file-handling.md](playbooks/media-file-handling.md) (Pexels, MinIO S3 mocking)
+- **`api-discovery` skill** - Find and select reliable public APIs for weather, geocoding, email validation, etc.
 
 ---
 
