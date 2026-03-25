@@ -6,7 +6,8 @@ description: Comprehensive guide for Crawl4AI - open-source LLM-friendly web cra
 # Crawl4AI - Open Source Web Crawler
 
 > **Full CLI docs:** [docs.crawl4ai.com/core/cli/](https://docs.crawl4ai.com/core/cli/)  
-> **Deep dive:** [Deep Crawling](references/deep-crawling.md) · [Extraction](references/extraction.md) · [Configuration](references/config.md)
+> **Ready-to-use scripts:** See [`scripts/`](scripts/) folder  
+> **Detailed SDK reference:** See [`references/`](references/) folder
 
 Crawl4AI is an open-source (Apache 2.0), LLM-friendly web crawler that transforms websites into clean Markdown or structured JSON. 62k+ GitHub stars.
 
@@ -25,6 +26,77 @@ docker pull unclecode/crawl4ai:0.8.5
 docker run -d -p 11235:11235 --name crawl4ai --shm-size=1g unclecode/crawl4ai:0.8.5
 
 **Docker endpoints:** Dashboard `http://localhost:11235/dashboard` · Playground `http://localhost:11235/playground` · API `http://localhost:11235/crawl`
+
+---
+
+## Ready-to-Use Scripts
+
+The [`scripts/`](scripts/) folder contains ready-to-use Python scripts:
+
+| Script | Usage |
+|--------|-------|
+| [`basic_crawler.py`](scripts/basic_crawler.py) | Simple markdown extraction |
+| [`batch_crawler.py`](scripts/batch_crawler.py) | Batch process multiple URLs |
+| [`extraction_pipeline.py`](scripts/extraction_pipeline.py) | Data extraction with auto-schema generation |
+
+```bash
+# Run scripts
+python scripts/basic_crawler.py https://example.com
+python scripts/batch_crawler.py urls.txt
+python scripts/extraction_pipeline.py --generate-schema https://shop.com "extract products"
+```
+
+---
+
+## Docker API Features
+
+The Docker API provides advanced capabilities beyond the CLI:
+
+| Feature | Description |
+|---------|-------------|
+| **Batch processing** | Crawl 100s of URLs in a single request |
+| **Async queue** | Submit job, get task ID, check results later |
+| **Dashboard UI** | Visual monitoring at http://localhost:11235 |
+| **Remote deployment** | Run on server, access via API |
+| **Priority queuing** | Set priority for important jobs first |
+| **Better scaling** | Multiple containers, load balancing |
+| **Centralized caching** | Shared cache across requests |
+
+### Docker API Endpoints
+
+```bash
+# Health check
+curl http://localhost:11235/health
+
+# Submit crawl job
+curl -X POST http://localhost:11235/crawl \
+  -H "Content-Type: application/json" \
+  -d '{"urls": ["https://example.com"], "priority": 10}'
+
+# Get task status (if async)
+curl http://localhost:11235/crawl/{task_id}
+
+# Batch crawl multiple URLs
+curl -X POST http://localhost:11235/crawl \
+  -H "Content-Type: application/json" \
+  -d '{
+    "urls": [
+      "https://altin.doviz.com/gram-altin",
+      "https://kur.doviz.com/serbest-piyasa/amerikan-dolari"
+    ]
+  }'
+```
+
+### When to Use Docker vs CLI
+
+| Use Case | Best Choice |
+|----------|-------------|
+| Quick one-off scrape | CLI (`crwl`) |
+| Production monitoring | Docker API |
+| Batch URLs (100s) | Docker API |
+| Local dev/testing | CLI |
+| Schedule recurring jobs | Docker API |
+| LLM extraction with schema | Docker API |
 
 ---
 
@@ -119,6 +191,8 @@ async with AsyncWebCrawler(config=config) as crawler:
 
 ## Deep Crawling
 
+For detailed deep crawling documentation, see [`references/deep-crawling.md`](references/deep-crawling.md).
+
 ### Strategies
 
 | Strategy | Description | Best For |
@@ -127,161 +201,31 @@ async with AsyncWebCrawler(config=config) as crawler:
 | `DFSDeepCrawlStrategy` | Depth-first (follows one path) | Documentation sites |
 | `BestFirstCrawlingStrategy` | Priority-based with scorers | Focused relevance |
 
-```python
-from crawl4ai import CrawlerRunConfig
-from crawl4ai.deep_crawling import BFSDeepCrawlStrategy, BestFirstCrawlingStrategy
-from crawl4ai.deep_crawling.scorers import KeywordRelevanceScorer
-
-# BFS - explore all pages level by level
-config = CrawlerRunConfig(
-    deep_crawl_strategy=BFSDeepCrawlStrategy(
-        max_depth=2,
-        include_external=False,
-        max_pages=50
-    )
-)
-
-# Best-first - prioritize relevant pages
-scorer = KeywordRelevanceScorer(keywords=["api", "docs"], weight=0.7)
-config = CrawlerRunConfig(
-    deep_crawl_strategy=BestFirstCrawlingStrategy(
-        max_depth=2,
-        url_scorer=scorer,
-        max_pages=25
-    ),
-    stream=True  # Process as discovered
-)
-```
-
-### Streaming Results
-
-```python
-config = CrawlerRunConfig(stream=True)
-async with AsyncWebCrawler() as crawler:
-    async for result in await crawler.arun(url, config=config):
-        process_result(result)  # Process each page as discovered
-```
-
-### Filtering
-
-```python
-from crawl4ai.deep_crawling.filters import FilterChain, URLPatternFilter, DomainFilter
-
-filter_chain = FilterChain([
-    URLPatternFilter(patterns=["*blog*", "*docs*"]),
-    DomainFilter(allowed_domains=["docs.example.com"])
-])
-
-config = CrawlerRunConfig(
-    deep_crawl_strategy=BFSDeepCrawlStrategy(
-        max_depth=2,
-        filter_chain=filter_chain
-    )
-)
-```
-
-### Crash Recovery
-
-```python
-# Save state
-async def save_state(state):
-    await redis.set("crawl_state", json.dumps(state))
-
-strategy = BFSDeepCrawlStrategy(
-    max_depth=3,
-    on_state_change=save_state
-)
-
-# Resume
-saved = json.loads(await redis.get("crawl_state"))
-strategy = BFSDeepCrawlStrategy(max_depth=3, resume_state=saved)
-```
-
-### Prefetch Mode (Fast URL Discovery)
-
-```python
-# Phase 1: Discover URLs (5-10x faster)
-prefetch_cfg = CrawlerRunConfig(prefetch=True)
-discovery = await crawler.arun(url, config=prefetch_cfg)
-urls = [link["href"] for link in discovery.links.get("internal", [])]
-
-# Phase 2: Full crawl selected URLs
-for url in urls:
-    result = await crawler.arun(url, config=full_config)
-```
+See [`references/deep-crawling.md`](references/deep-crawling.md) for streaming, filtering, crash recovery, and prefetch mode.
 
 ---
 
 ## Extraction Strategies
 
-### CSS-Based Extraction
+For detailed extraction docs, see [`references/extraction.md`](references/extraction.md).
+
+| Strategy | Use Case |
+|----------|----------|
+| **CSS-based** | Fast, no AI needed - define JSON schema |
+| **LLM-based** | Complex pages, AI extracts structured data |
 
 ```python
-from crawl4ai import JsonCssExtractionStrategy, CrawlerRunConfig
-
-schema = {
-    "name": "Products",
-    "baseSelector": ".product",
-    "fields": [
-        {"name": "title", "selector": "h3", "type": "text"},
-        {"name": "price", "selector": ".price", "type": "text"},
-        {"name": "image", "selector": "img", "type": "attribute", "attribute": "src"}
-    ]
-}
-
+# CSS extraction example
+schema = {"name": "Products", "baseSelector": ".product", 
+    "fields": [{"name": "title", "selector": "h3", "type": "text"}]}
 config = CrawlerRunConfig(extraction_strategy=JsonCssExtractionStrategy(schema))
-result = await crawler.arun(url, config=config)
-print(result.extracted_content)
-```
-
-### LLM-Based Extraction
-
-```python
-from crawl4ai import LLMExtractionStrategy, LLMConfig
-from pydantic import BaseModel
-
-class Product(BaseModel):
-    name: str
-    price: str
-    description: str
-
-config = CrawlerRunConfig(
-    extraction_strategy=LLMExtractionStrategy(
-        llm_config=LLMConfig(provider="openai/gpt-4o", api_key="key"),
-        schema=Product.schema(),
-        instruction="Extract product details"
-    )
-)
-```
-
-**Supported LLM providers:** `openai/gpt-4o`, `anthropic/claude-3-sonnet`, `ollama/llama2` (see LiteLLM for full list)
-
----
-
-## Content Filtering
-
-```python
-from crawl4ai.content_filter_strategy import BM25ContentFilter, PruningContentFilter
-from crawl4ai.markdown_generation_strategy import DefaultMarkdownGenerator
-
-# Fit markdown - removes noise
-result = await crawler.arun(url, config=CrawlerRunConfig(
-    markdown_generator=DefaultMarkdownGenerator(
-        options={"markdown": {"exclude_internal_links": True}}
-    )
-))
-
-# BM25 - algorithm-based relevance
-config = CrawlerRunConfig(
-    markdown_generator=DefaultMarkdownGenerator(
-        content_filter=BM25ContentFilter(user_query="search terms", bm25_threshold=1.0)
-    )
-)
 ```
 
 ---
 
 ## Advanced Features
+
+For complete advanced features (proxy, session, hooks, anti-bot), see [`references/config.md`](references/config.md).
 
 ### Proxy Configuration
 
