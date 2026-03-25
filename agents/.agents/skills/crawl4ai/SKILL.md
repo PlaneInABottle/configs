@@ -20,9 +20,9 @@ crawl4ai-setup
 crawl4ai-doctor
 
 # Docker (recommended)
-docker pull unclecode/crawl4ai:latest
-docker run -d -p 11235:11235 --name crawl4ai --shm-size=1g unclecode/crawl4ai:latest
-```
+# Use specific version - 0.8.5 is stable
+docker pull unclecode/crawl4ai:0.8.5
+docker run -d -p 11235:11235 --name crawl4ai --shm-size=1g unclecode/crawl4ai:0.8.5
 
 **Docker endpoints:** Dashboard `http://localhost:11235/dashboard` · Playground `http://localhost:11235/playground` · API `http://localhost:11235/crawl`
 
@@ -61,6 +61,12 @@ crwl https://example.com -B browser.yml -C crawler.yml
 
 # Browser parameters inline
 crwl https://example.com -b "headless=true,timeout=30000"
+
+# Crawler parameters (user-agent, etc.)
+crwl https://example.com -c "user_agent_mode=random"
+
+# Anti-bot bypass for protected sites (Reddit, etc.)
+crwl https://www.reddit.com/r/politics/hot/ -o markdown -c "user_agent_mode=random"
 ```
 
 ---
@@ -336,16 +342,50 @@ config = CrawlerRunConfig(
 ```python
 import requests
 
-# Submit job
+# Single URL crawl
 resp = requests.post("http://localhost:11235/crawl", json={
     "urls": ["https://example.com"],
     "priority": 10
 })
-task_id = resp.json().get("task_id")
+result = resp.json()
 
-# Get results
-result = requests.get(f"http://localhost:11235/crawl/{task_id}")
+# Batch multiple URLs (recommended for parallel crawling)
+resp = requests.post("http://localhost:11235/crawl", json={
+    "urls": [
+        "https://www.reddit.com/r/politics/hot/",
+        "https://www.reddit.com/r/politics/new/",
+        "https://www.reddit.com/r/politics/top/?t=week"
+    ],
+    "options": {
+        "output_format": "markdown",
+        "user_agent_mode": "random"
+    }
+})
+results = resp.json()["results"]  # Array of crawl results
 ```
+
+## Docker vs CLI Comparison
+
+| Aspect | Docker | CLI |
+|--------|--------|-----|
+| **Speed** | Slower (HTTP overhead) | Faster (direct) |
+| **API access** | Yes (REST API) | No (command line) |
+| **Batch URLs** | Yes (JSON array) | No (sequential) |
+| **Web UI** | Dashboard + Playground | No |
+| **Deep crawl** | JSON config | `--deep-crawl bfs --max-pages N` |
+| **Setup** | Container running | `pip install` |
+
+### When to Use Which
+
+| Use Case | Choose |
+|----------|--------|
+| Script/automation | CLI |
+| API for other services | Docker |
+| Quick one-off | CLI |
+| Production/monitoring | Docker |
+| Deep crawl multiple pages | CLI (`--deep-crawl`) |
+| Batch parallel crawl | Docker |
+| Web UI testing | Docker |
 
 ---
 
@@ -377,6 +417,7 @@ result = requests.get(f"http://localhost:11235/crawl/{task_id}")
 | Issue | Solution |
 |-------|----------|
 | No output | Check browser accessibility, try `CacheMode.BYPASS` |
-| Anti-bot blocks | Add proxies, use random user-agent |
+| Anti-bot blocks (Reddit, etc.) | Use `user_agent_mode=random` (CLI: `-c "user_agent_mode=random"`, Docker: `"user_agent_mode": "random"`) |
+| Reddit shows "Prove your human" | Add `user_agent_mode=random` - works reliably |
 | Slow performance | Use prefetch mode, enable caching |
 | JS not rendering | Increase timeout, check `wait_until` |
