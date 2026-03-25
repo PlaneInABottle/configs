@@ -34,18 +34,33 @@ docker run -d -p 11235:11235 --name crawl4ai --shm-size=1g unclecode/crawl4ai:la
 # Basic crawl
 crwl https://example.com
 
-# Output formats: all, json, markdown, markdown-fit
+# Output formats: all, json, markdown, md-fit (markdown-fit)
 crwl https://example.com -o json
 crwl https://example.com -o markdown-fit
+
+# Output to file
+crwl https://example.com -o json -O output.json
+
+# Bypass cache (force fresh crawl)
+crwl https://example.com -bc
 
 # Deep crawl: bfs, dfs, best-first
 crwl https://docs.site.com --deep-crawl bfs --max-pages 10
 
-# LLM Q&A
+# LLM Q&A - ask questions about page content
 crwl https://example.com -q "What is the main topic?"
+
+# LLM extraction - extract structured data with AI
+crwl https://example.com -j "extract all prices and dates"
+
+# JSON schema extraction - extract with CSS selectors
+crwl https://example.com -s schema.json -o json
 
 # With config files
 crwl https://example.com -B browser.yml -C crawler.yml
+
+# Browser parameters inline
+crwl https://example.com -b "headless=true,timeout=30000"
 ```
 
 ---
