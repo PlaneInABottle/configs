@@ -100,6 +100,38 @@ agent-browser snapshot -i
 - Use `--headed` for more realistic browser signature
 - Some sites require additional measures beyond agent-browser
 
+### 2.1 Handling Blocked Sites (Advanced Protection)
+
+Some sites like **Reuters** use enterprise-grade bot protection (DataDome, Cloudflare Enterprise, PerimeterX) that blocks even headed browsers. If you encounter a blank page or CAPTCHA:
+
+1. **Try `--headed` mode first** - may bypass basic detection:
+   ```bash
+   agent-browser --headed open https://www.reuters.com/
+   ```
+
+2. **Add stealth arguments** - reduces automation fingerprints:
+   ```bash
+   agent-browser --headed --args "--disable-blink-features=AutomationControlled" open <url>
+   ```
+
+3. **Close existing sessions first** - stale sessions may be flagged:
+   ```bash
+   agent-browser close
+   agent-browser --headed open <url>
+   ```
+
+4. **Wait for page load** - some sites render after initial load:
+   ```bash
+   agent-browser wait --load networkidle
+   agent-browser snapshot -i
+   ```
+
+5. **If blocked by DataDome/advanced CAPTCHA** (shows geo.captcha-delivery.com):
+   - Cannot be solved programmatically - requires human interaction or specialized services
+   - Use RSS feeds (e.g., Reuters Agency RSS: https://www.reutersagency.com/tools/rss/)
+   - Use official APIs if available
+   - Consider scraping services (ScrapingBee, Bright Data, ScraperAPI)
+
 ### 3. Paywalls
 - Cannot bypass subscription/paywalled content
 - Some sites offer RSS feeds or API access as alternatives
