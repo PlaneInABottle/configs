@@ -153,6 +153,7 @@ EVALEOF
 | Ref invalidation and documented scoped snapshots | [references/snapshot-refs.md](references/snapshot-refs.md) |
 | Headed debugging, recording, traces | [references/video-recording.md](references/video-recording.md) and [references/session-management.md](references/session-management.md) |
 | Proxy usage and TLS/proxy troubleshooting | [references/proxy-support.md](references/proxy-support.md) |
+| Web scraping and data extraction | [references/scraping.md](references/scraping.md) |
 
 ## Templates and Starter Scripts
 
@@ -161,6 +162,7 @@ EVALEOF
 | [templates/form-automation.sh](templates/form-automation.sh) | Guided form filling workflow |
 | [templates/authenticated-session.sh](templates/authenticated-session.sh) | Discovery-first auth scaffold; customize refs, then save and reuse state |
 | [templates/capture-workflow.sh](templates/capture-workflow.sh) | Capture text and screenshots |
+| [templates/scraping-workflow.sh](templates/scraping-workflow.sh) | Basic web scraping workflow for data extraction |
 
 ```bash
 ./templates/form-automation.sh https://example.com/form
