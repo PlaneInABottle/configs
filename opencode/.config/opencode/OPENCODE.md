@@ -24,6 +24,7 @@ AI Skills Awareness: Use AI skills written by the user when applicable to the ta
 Skills Required: Use relevant skills for the task. When multiple apply, combine their guidance
 Clarify Interactively: Use `question` for clarification questions when blocked or ambiguous (never ask in plain text)
 Subagent Continuity: Prefer continuing an existing subagent session for the same workstream to preserve context. Only start a fresh subagent when work is independent, prior context is stale, or parallelization is intentionally needed.
+Python: When running Python scripts via bash, always use `python3` instead of `python`
 
 ## Environment Variables
 
