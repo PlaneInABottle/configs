@@ -58,6 +58,7 @@ Anti-Patterns to Avoid:
 - Large Batch Edit: Writing entire files or multiple functions/classes in a single edit action; always implement one function/method/class at a time
 - Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory. When commanding subagents, DO NOT instruct them to `cd` or change their `cwd`—they automatically inherit the correct working directory.
 - Analysis Paralysis: Avoid open-ended explorer/analyzer loops before implementing. When additional subagent calls stop producing materially new information, move forward with implementation using the evidence you already have.
+- Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
