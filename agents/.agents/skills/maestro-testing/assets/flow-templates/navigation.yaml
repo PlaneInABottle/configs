@@ -1,0 +1,29 @@
+appId: com.example.myapp
+tags:
+  - navigation
+  - smoke
+---
+- launchApp
+- assertVisible: "Home"
+
+# Navigate through tabs
+- tapOn: "Search"
+- assertVisible: "Search Results"
+- takeScreenshot: "search-tab"
+
+- tapOn: "Profile"
+- assertVisible: "My Profile"
+- takeScreenshot: "profile-tab"
+
+- tapOn: "Settings"
+- assertVisible: "Settings"
+- takeScreenshot: "settings-screen"
+
+# Navigate back using system back or UI
+- tapOn: "Back"
+- assertVisible: "My Profile"
+
+# Return to home
+- tapOn: "Home"
+- assertVisible: "Home"
+- takeScreenshot: "navigation-complete"

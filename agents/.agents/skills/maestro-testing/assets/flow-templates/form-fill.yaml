@@ -1,0 +1,46 @@
+appId: com.example.myapp
+tags:
+  - forms
+---
+- launchApp
+- tapOn: "Sign Up"
+
+# Personal info
+- tapOn:
+    id: "first_name"
+- inputText: "Jane"
+- tapOn:
+    id: "last_name"
+- inputText: "Doe"
+- tapOn:
+    id: "email"
+- inputText: "jane@example.com"
+- tapOn:
+    id: "phone"
+- inputText: "+15551234567"
+- hideKeyboard
+
+# Scroll to additional fields
+- swipe:
+    direction: UP
+
+# Password fields
+- tapOn:
+    id: "password"
+- inputText: "SecureP@ss123"
+- tapOn:
+    id: "confirm_password"
+- inputText: "SecureP@ss123"
+- hideKeyboard
+
+# Accept terms checkbox
+- tapOn:
+    id: "terms_checkbox"
+
+# Submit
+- tapOn: "Create Account"
+- waitForAnimationToEnd
+
+# Verify success
+- assertVisible: "Welcome, Jane"
+- takeScreenshot: "form-submitted"

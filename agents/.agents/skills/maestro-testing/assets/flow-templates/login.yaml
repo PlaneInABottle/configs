@@ -1,0 +1,21 @@
+appId: com.example.myapp
+tags:
+  - auth
+  - smoke
+env:
+  EMAIL: ${TEST_EMAIL}
+  PASSWORD: ${TEST_PASSWORD}
+---
+- launchApp
+- assertVisible: "Welcome"
+- tapOn:
+    id: "email_input"
+- inputText: ${EMAIL}
+- tapOn:
+    id: "password_input"
+- inputText: ${PASSWORD}
+- tapOn:
+    id: "login_button"
+- waitForAnimationToEnd
+- assertVisible: "Dashboard"
+- takeScreenshot: "login-success"
