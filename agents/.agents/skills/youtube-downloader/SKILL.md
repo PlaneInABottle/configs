@@ -1,6 +1,6 @@
 ---
 name: youtube-downloader
-description: "Download a YouTube video or extract audio to mp3 using locally installed yt-dlp and ffmpeg (ffprobe optional for inspection). Use for format inspection, video download, or audio extraction from a single YouTube URL."
+description: "Download YouTube videos or extract audio to mp3 using locally installed yt-dlp and ffmpeg (ffprobe optional for inspection). Use when needing to download a video offline, extract audio track, inspect available formats/quality, or convert YouTube content to audio-only. Supports format inspection, best quality selection, audio extraction, and custom output templates."
 ---
 
 # YouTube Downloader

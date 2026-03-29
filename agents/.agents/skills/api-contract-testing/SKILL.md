@@ -1,6 +1,6 @@
 ---
 name: api-contract-testing
-description: "Validate REST API contracts using OpenAPI specs, test request/response schemas, and verify API behavior. Use when testing APIs, validating OpenAPI/JSON Schema, testing negative cases, or verifying API contracts."
+description: "Validate REST API contracts using OpenAPI specs (OpenAPI 3.0/3.1), test request/response schemas with JSON Schema validation, and verify API behavior. Use when testing REST APIs, validating OpenAPI/JSON Schema, verifying HTTP status codes, testing negative cases (400, 401, 404, 500), or checking API contracts against the spec."
 ---
 
 # API Contract Testing

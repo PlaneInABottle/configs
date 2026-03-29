@@ -1,6 +1,6 @@
 ---
 name: crawl4ai
-description: Comprehensive guide for Crawl4AI - open-source LLM-friendly web crawler and scraper. Covers CLI commands, Python API, Docker, deep crawling, extraction, content filtering, and advanced features.
+description: "Comprehensive guide for Crawl4AI - open-source LLM-friendly web crawler and scraper with 62k+ GitHub stars. Covers CLI commands (crwl), Python API, Docker API, deep crawling strategies (BFS, DFS, best-first), content extraction (CSS selectors, LLM-based extraction), markdown/json output, anti-bot bypass, and advanced features for RAG pipelines, data extraction, and batch URL processing."
 ---
 
 # Crawl4AI - Open Source Web Crawler

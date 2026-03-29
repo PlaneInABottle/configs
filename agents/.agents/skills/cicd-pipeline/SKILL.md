@@ -1,6 +1,6 @@
 ---
 name: cicd-pipeline
-description: "Create, configure, and debug CI/CD pipelines for GitHub Actions and GitLab CI. Use when setting up automated builds, tests, deployments, or fixing pipeline issues."
+description: "Create, configure, and debug CI/CD pipelines for GitHub Actions and GitLab CI. Use when setting up automated builds, tests, deployments, continuous integration, continuous deployment, or fixing broken pipelines, failed deployments, or workflow errors."
 ---
 
 # CI/CD Pipeline
