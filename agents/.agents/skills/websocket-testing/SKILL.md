@@ -17,13 +17,6 @@ wscat -c wss://api.example.com/ws
 websocat wss://api.example.com/ws
 ```
 
-## When to Use This Skill
-
-- **Real-time APIs**: Testing WebSocket endpoints
-- **Bidirectional Communication**: Message sending/receiving
-- **Connection Lifecycle**: Connect, disconnect, reconnect
-- **Message Protocols**: JSON, text, binary messages
-
 ## Tools
 
 | Tool | Purpose |
@@ -205,8 +198,3 @@ asyncio.run(test_subscribe())
 
 - [websockets Python library](https://websockets.readthedocs.io/)
 - [WebSocket Protocol](https://www.rfc-editor.org/rfc/rfc6455)
-
-## See Also
-
-- [async-worker-testing](./async-worker-testing) - Background job testing
-- [agent-browser](./agent-browser) - Browser WebSocket testing

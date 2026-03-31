@@ -17,13 +17,6 @@ hurl --variable "base_url=https://api.example.com" --test test-api.hurl
 npx @redocly/openapi-cli lint openapi.yaml
 ```
 
-## When to Use This Skill
-
-- **API Contract Validation**: Verify API matches OpenAPI spec
-- **Schema Testing**: Test request/response body shapes
-- **Negative Testing**: Test invalid inputs and error responses
-- **Integration Testing**: End-to-end API workflows
-
 ## Tools
 
 | Tool | Purpose |
@@ -160,8 +153,3 @@ EOF
 - [Hurl Documentation](https://hurl.dev/)
 - [OpenAPI Specification](https://spec.openapis.org/)
 - [JSON Schema](https://json-schema.org/)
-
-## See Also
-
-- [ai-native-workflow](./ai-native-workflow) - General API testing guidance
-- [native-datastore-verifier](./native-datastore-verifier) - Database verification

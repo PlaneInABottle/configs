@@ -9,29 +9,6 @@ Create and manage CI/CD pipelines using GitHub Actions and GitLab CI.
 
 ## Quick Start
 
-```bash
-# Create GitHub Actions workflow
-mkdir -p .github/workflows
-cat > .github/workflows/ci.yml <<'EOF'
-name: CI
-on: [push, pull_request]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm test
-EOF
-```
-
-## When to Use This Skill
-
-- **Creating CI pipelines**: Automated testing on push/PR
-- **Creating CD pipelines**: Automated deployments
-- **Debugging failures**: Fix broken pipeline runs
-- **Adding workflows**: New automation for builds, tests, deploys
-
 ## GitHub Actions
 
 ### Basic CI Workflow
@@ -271,8 +248,3 @@ deploy:
 
 - [GitHub Actions Docs](https://docs.github.com/en/actions)
 - [GitLab CI Docs](https://docs.gitlab.com/ee/ci/)
-
-## See Also
-
-- [ai-native-workflow](./ai-native-workflow) - Testing in CI/CD
-- [pm2-runtime-operator](./pm2-runtime-operator) - Process deployment

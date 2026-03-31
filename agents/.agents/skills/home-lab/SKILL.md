@@ -5,17 +5,6 @@ description: "Transform old devices (phones, tablets, computers) into self-hoste
 
 # Home Lab Skill
 
-## When to Use This Skill
-
-Use this skill when:
-- User wants to repurpose old Android phones/tablets as home servers
-- User wants to set up a home lab with multiple devices
-- User wants to set up a home lab with Docker containers
-- User asks about self-hosted alternatives to cloud services
-- User needs guidance on hardware for home lab
-- User wants to run services like media server, photo backup, ad blocker, etc.
-- User wants to understand how different hardware devices work together
-
 ---
 
 ## Device Preparation

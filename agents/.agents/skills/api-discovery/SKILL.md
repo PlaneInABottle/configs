@@ -7,14 +7,6 @@ description: "Discover and select high-quality public APIs for development needs
 
 Find and select the best public API for your development needs. This skill maps common development tasks to reliable, well-documented public APIs.
 
-## When to Use This Skill
-
-Load this skill when you need to:
-- Find an API for a specific functionality (weather, maps, email, etc.)
-- Discover free public APIs for a project
-- Get quick reference to API endpoints, auth, and limits
-- Validate if an API is suitable for AI agent integration
-
 ## Category Quick Reference
 
 | Development Need | Recommended APIs |
