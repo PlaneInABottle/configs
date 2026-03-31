@@ -1,6 +1,9 @@
-# Home Lab Skill
+---
+name: home-lab
+description: "Transform old devices (phones, tablets, computers) into self-hosted servers running useful Docker services. Use when: repurposing old Android phones/tablets as home servers, setting up a home lab with multiple devices, setting up a home lab with Docker containers, asking about self-hosted alternatives to cloud services, guidance on hardware for home lab, running services like media server, photo backup, ad blocker, or understanding how different hardware devices work together."
+---
 
-Transform old devices (phones, tablets, computers) into self-hosted servers running useful Docker services.
+# Home Lab Skill
 
 ## When to Use This Skill
 
