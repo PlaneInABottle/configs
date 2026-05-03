@@ -8,6 +8,7 @@
   "instructions": [
     "./OPENCODE.md"
   ],
+  "snapshot": false,
   "permission": {
     "doom_loop": "ask",
     "external_directory": "ask",
