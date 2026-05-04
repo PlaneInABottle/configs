@@ -11,7 +11,16 @@
   "snapshot": false,
   "permission": {
     "doom_loop": "ask",
-    "external_directory": "ask",
+    "external_directory": {
+      "*": "ask",
+      "/tmp*": "allow",
+      "~/Documents/configs/*": "allow",
+      "/Users/Y_ALTAY1/Downloads/*": "allow",
+      "/Users/Y_ALTAY1/.pm2/logs/*": "allow",
+      "/Users/Y_ALTAY1/.agents/*": "allow",
+      "/Users/Y_ALTAY1/.config": "allow",
+      "~/configs/*": "allow",
+    },
     "bash": {
       "*": "ask",
       "agent-browser*": "allow",
@@ -211,14 +220,14 @@
       ],
       "enabled": true,
       "environment": {
-        "SIM_API_BASE_URL": "{env:SIM_API_BASE_URL_REMOTE}",
-        "SIM_API_KEY": "{env:SIM_API_KEY_REMOTE}"
+        "SIM_API_BASE_URL": "{env:SIM_API_BASE_URL_LOCAL}",
+        "SIM_API_KEY": "{env:SIM_API_KEY_LOCAL}"
       }
     },
     "livekit-docs-mcp": {
       "type": "remote",
       "url": "https://docs.livekit.io/mcp",
       "enabled": true
-    }
+    },
   }
 }
