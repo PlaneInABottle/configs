@@ -83,105 +83,36 @@ For exact implementation details, code snippets, and CLI commands for the toolki
 
 ## PM2 Process Management
 
-PM2 is the **recommended process manager** for running application servers. It provides log rotation, auto-restart on crash, named processes for easy targeting, and real-time log streaming.
+PM2 is the **recommended process manager** for running application servers. 
 
-**Prerequisite:** PM2 must be installed globally: `npm install -g pm2`
+**Prerequisite:** `npm install -g pm2`
 
-### Commands
-
+**Essential commands:**
 ```bash
-# Start app server (Node.js)
-pm2 start npm --name "project-name" -- run dev
-
-# Start Python app
-pm2 start main.py --interpreter python3 --name "python-api"
-
-# Start with arguments
-pm2 start "uvicorn main:app --host 0.0.0.0 --port 8000" --name "fastapi"
-
-# View real-time logs
-pm2 logs project-name
-
-# View last 50 lines (no streaming)
-pm2 logs project-name --lines 50 --nostream
-
-# View all processes
-pm2 list
-
-# Stop
-pm2 stop project-name
-
-# Restart after code changes
-pm2 restart project-name
-
-# Delete completely
-pm2 delete project-name
-
-# Stop all
-pm2 delete all
-
-# Install log rotation (run once)
-pm2 install pm2-logrotate
-
-# Configure rotation
-pm2 set pm2-logrotate:max_size 10M
-pm2 set pm2-logrotate:retain 7
-pm2 set pm2-logrotate:compress true
+pm2 start npm --name "project" -- run dev    # Start
+pm2 logs project-name                          # View logs
+pm2 restart project-name                       # Restart after changes
+pm2 delete all                                 # Cleanup
+pm2 install pm2-logrotate                      # Log rotation (one-time)
 ```
 
-### Multi-Language Support
-
-PM2 auto-detects interpreter by file extension:
-| Extension | Interpreter |
-|-----------|-------------|
-| `.py` | Python |
-| `.rb` | Ruby |
-| `.sh` | Bash |
-| `.js` | Node |
-
-### Hybrid Pattern with Docker
-
-Use PM2 for app servers, Docker for databases:
-
-```bash
-# Start database (Docker)
-docker compose up -d db
-
-# Start app server (PM2)
-pm2 start npm --name "myapp" -- run dev
-
-# Verify both running
-pm2 list && docker compose ps
-```
+For detailed PM2 operations, load the `pm2-runtime-operator` skill.
 
 ---
 
 ## Interactive UI Verification (`agent-browser`)
 
-Instead of writing rigid test scripts, act as a real user. Use `agent-browser` for fast feedback during active implementation.
-
-For browser-specific semantics such as `--session` vs `--session-name`, saved state handling, headed/manual debugging, and advanced command patterns, load the dedicated `agent-browser` skill and follow its reference files instead of re-deriving behavior from memory.
+Use `agent-browser` for fast UI feedback during implementation.
 
 ```bash
-# Start application dev server with PM2
 pm2 start npm --name "myapp" -- run dev
-
-# Wait for server to be ready (health check)
-curl --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf http://localhost:3000/health
-
-# Verify rendering and state
 agent-browser open http://localhost:3000/login
 agent-browser snapshot -i
-
-# Interact
 agent-browser fill @e1 "$TEST_USER"
 agent-browser click @e2
-agent-browser wait --url "**/dashboard"
-
-# Re-snapshot because DOM changed!
-agent-browser snapshot -i
-agent-browser screenshot
 ```
+
+For browser-specific semantics, load the `agent-browser` skill.
 
 ---
 
