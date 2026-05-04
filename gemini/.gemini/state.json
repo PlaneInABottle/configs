@@ -1,4 +1,7 @@
 {
   "defaultBannerShownCount": 5,
-  "tipsShown": 10
+  "tipsShown": 10,
+  "startupWarningCounts": {
+    "home-directory": 1
+  }
 }

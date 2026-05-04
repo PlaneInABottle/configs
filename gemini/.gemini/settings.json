@@ -59,5 +59,8 @@
   },
   "billing": {
     "overageStrategy": "ask"
+  },
+  "model": {
+    "name": "gemini-3-flash-preview"
   }
 }
