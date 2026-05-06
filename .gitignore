@@ -72,6 +72,16 @@ codex/.codex/log/
 codex/.codex/sessions/
 codex/.codex/version.json
 codex/.codex/skills/
+codex/.codex/cache/
+codex/.codex/tmp/
+codex/.codex/shell_snapshots/
+codex/.codex/memories/
+codex/.codex/installation_id
+codex/.codex/.personality_migration
+codex/.codex/models_cache.json
+codex/.codex/*.sqlite
+codex/.codex/*.sqlite-shm
+codex/.codex/*.sqlite-wal
 
 # Copilot CLI - Exclude runtime state and logs
 copilot/.copilot/session-store.db
