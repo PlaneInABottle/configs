@@ -71,10 +71,14 @@
     "http://localhost:3001",
     "http://localhost:3100",
     "https://help.twilio.com",
-    "https://http//127.0.0.1:8000$path"
+    "https://http//127.0.0.1:8000$path",
+    "http://localhost:8081",
+    "http://127.0.0.1:8081",
+    "http://127.0.0.1:8011",
+    "http://127.0.0.1:8001"
   ],
   "disabledSkills": [],
-  "showReasoning": false,
+  "showReasoning": true,
   "experimental": true,
   "streamerMode": false,
   "skillDirectories": [
@@ -109,5 +113,30 @@
   },
   "alt_screen": false,
   "firstLaunchAt": "2026-03-11T00:00:00.000Z",
-  "effortLevel": "high"
+  "effortLevel": "high",
+  "loggedInUsers": [
+    {
+      "host": "https://github.com",
+      "login": "Y-ALTAY1_logitech"
+    },
+    {
+      "host": "https://github.com",
+      "login": "PlaneInABottle"
+    }
+  ],
+  "trustedFolders": [
+    "/Users/Y_ALTAY1/Documents/configs",
+    "/Users/Y_ALTAY1/Documents/logitech-sngr-rezai-email",
+    "/Users/Y_ALTAY1/Documents/simWoot/chatwoot",
+    "/Users/Y_ALTAY1/Documents/simWoot/sim",
+    "/Users/Y_ALTAY1/Documents/logitech-sngr-rezai-email-new",
+    "/Users/Y_ALTAY1/Documents/voiceWith",
+    "/Users/Y_ALTAY1/Documents/videoCreation",
+    "/Users/Y_ALTAY1"
+  ],
+  "lastLoggedInUser": {
+    "host": "https://github.com",
+    "login": "Y-ALTAY1_logitech"
+  },
+  "colorMode": "colorblind"
 }
