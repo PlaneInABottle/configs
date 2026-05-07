@@ -23,6 +23,9 @@ trust_level = "trusted"
 [projects."/home/mirza/Documents/Projects/zumrudu-anka"]
 trust_level = "trusted"
 
+[projects."/Users/Y_ALTAY1/Documents/simWoot/chatwoot"]
+trust_level = "trusted"
+
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
@@ -37,4 +40,4 @@ enabled=false
 network_access = true
 
 [tui.model_availability_nux]
-"gpt-5.5" = 1
+"gpt-5.5" = 3
