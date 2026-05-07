@@ -133,6 +133,7 @@ Ask about LIMITS and RULES (AI suggests based on security/UX best practices):
 - "Are there validation rules for label names? (length, characters, uniqueness?)"
 - "Who can use this feature? (any logged-in user, admins only, specific roles?)"
 - "Is there a limit on number of labels in the system? Per user?"
+- "Is backward compatibility required? (can we break existing API/data format, or must we support old format?)"
 
 Example:
 ```
@@ -143,6 +144,16 @@ options:
   - label: "Unique per user", description: "Same name can't exist twice for same user. Needs DB constraint."
   - label: "Admin approval", description: "New labels need admin approval. Requires workflow + notification system."
   - label: "No strict validation", description: "Just check not empty. Quick but may lead to inconsistent data."
+```
+
+Example for backward compatibility:
+```
+header: "Backward compatibility"
+question: "Can this feature break existing functionality?"
+options:
+  - label: "Breaking changes allowed (Recommended for new features)", description: "Can modify APIs, data formats, or UI. Faster development, no legacy support needed."
+  - label: "Maintain backward compatibility", description: "Must support existing API contracts, data formats, or user workflows. Needs versioning or migration strategy."
+  - label: "Deprecate then remove", description: "Mark old behavior as deprecated first, remove in future release. Balance progress with stability."
 ```
 </validation-and-constraints>
 
