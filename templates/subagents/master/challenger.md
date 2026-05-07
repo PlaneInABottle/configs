@@ -164,7 +164,35 @@ options:
   - label: "Form field", description: "Part of larger form, saves with form submission. Standard HTML form pattern."
   - label: "Page load + manual save", description: "Loads on page open, user modifies and clicks Save. Good for settings pages."
 ```
-</integration-and-triggers>
+
+<documentation-and-testing>
+Ask about DOCUMENTATION and SPECIAL TESTING needs:
+- "Does this feature need documentation? (README, inline docs, API docs, user guide?)"
+- "If we create an e2e test or special workflow, should we also create a skill to reproduce it?"
+- "What testing approach is needed? (unit, integration, e2e, or all?)"
+- "Is this a reusable pattern that others will need to reproduce? (skill creation?)"
+
+Example:
+```
+header: "Documentation"
+question: "Does this feature need documentation or a skill for reproducibility?"
+options:
+  - label: "Implementation only (Recommended for simple features)", description: "Just implement the feature. Your codebase has similar simple features without extra docs."
+  - label: "Add README/API docs", description: "Document how to use this feature. Good for APIs or complex UI components."
+  - label: "Create skill if e2e test exists", description: "If we produce an e2e test or special workflow, auto-create a skill so others can reproduce it."
+  - label: "Full docs + skill", description: "Comprehensive documentation + skill creation for complex, reusable patterns."
+```
+
+Example follow-up for skill creation:
+```
+header: "Skill details"
+question: "If we create a skill, what should it capture?"
+options:
+  - label: "E2E test workflow", description: "Capture the e2e test steps as a reusable skill for future regressions."
+  - label: "Complete feature pattern", description: "Document the entire implementation pattern (setup, usage, testing) as a skill."
+  - label: "Not sure yet", description: "Decide after implementation based on complexity."
+```
+</documentation-and-testing>
 
 </question-categories>
 
