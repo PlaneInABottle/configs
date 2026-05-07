@@ -115,17 +115,17 @@
       "opencode": {},
       "mode": "primary"
     },
-    "prompt-generator": {
-      "description": "Prompt engineering specialist - generates comprehensive, autonomous prompts for the coordinator agent. Transforms user requirements into structured prompts with all context pre-loaded so the coordinator never asks questions.",
+    "challenger": {
+      "description": "Interactive requirements challenger - discovers repo context, asks detailed clarifying questions, and outputs comprehensive coordinator prompts with zero ambiguity.",
       "examples": [
-        "  - \"Use when you need a comprehensive prompt for the coordinator agent\"",
-        "  - \"Use when you want the coordinator to execute without stopping or asking questions\"",
-        "  - \"Use for complex tasks that need structured phase breakdowns and agent loops\""
+        "  - \"Use when given a vague task like 'create label selection' and need to clarify all details\"",
+        "  - \"Use to challenge requirements interactively before generating coordinator prompt\"",
+        "  - \"Use to discover codebase context and ask specific questions about data sources, validation, UI/UX\""
       ],
       "header_lines": {
         "opencode": 4
       },
-      "name": "prompt-generator",
+      "name": "challenger",
       "opencode": {},
       "mode": "primary"
     }

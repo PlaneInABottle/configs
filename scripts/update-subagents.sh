@@ -30,7 +30,7 @@ usage() {
     echo "Updates subagent files from master templates."
     echo ""
     echo "Options:"
-    echo "  --agent=NAME          Update specific agent (planner|analyzer|implementer|coordinator|prompt-generator|all)"
+    echo "  --agent=NAME          Update specific agent (planner|analyzer|implementer|coordinator|challenger|all)"
     echo "  --system=NAME         Update specific system (copilot|opencode|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
     echo "  --help, -h            Show this help message"
