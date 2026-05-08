@@ -9,7 +9,7 @@
       "description": "Opencode primary system instructions (no header required)",
       "text_replacements": {
         "ask_user": "question",
-        " (model `gpt-5.4`)": ""
+        " (model `gpt-5.5`)": ""
       }
     },
     "copilot": {

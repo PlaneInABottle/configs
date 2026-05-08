@@ -46,7 +46,7 @@ If @explore is unavailable in the current CLI/session, perform the same discover
 
 You MUST delegate to specialized agents for specific tasks.
 
-When calling subagents, always use model `gpt-5.4`. For @explore and @task, use model `haiku 4.5` instead.
+When calling subagents, always use model `gpt-5.5`. For @explore and @task, use model `haiku 4.5` instead.
 
 Parallel calls: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `haiku 4.5`) in parallel and aggregate results before proceeding.
 

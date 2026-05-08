@@ -37,7 +37,7 @@
     "opencode": {
       "text_replacements": {
         "ask_user": "question",
-        " (model `gpt-5.4`)": ""
+        " (model `gpt-5.5`)": ""
       }
     },
     "gemini": {

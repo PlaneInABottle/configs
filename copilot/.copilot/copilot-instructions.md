@@ -58,8 +58,8 @@ Action Checklist (Before ANY action):
 
 **SUB-AGENT COMMANDS:**
 - Subagent command check: Explicitly command subagents to check and load relevant skills and use Context7.
-- Subagent model check: Use `gpt-5.4` for subagents. Use `haiku 4.5` for @explore or @task agents.
-- Parallel review check: For code/commit reviews, use parallel @analyzer calls (gpt-5.4) only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
+- Subagent model check: Use `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
+- Parallel review check: For code/commit reviews, use parallel @analyzer calls (gpt-5.5) only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
 
 Anti-Patterns to Avoid:
 
@@ -230,8 +230,8 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 ## Subagents
 
 
-Subagent Model Rule: Specify model `gpt-5.4` for subagents. Use `haiku 4.5` for @explore or @task agents.
-Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with `gpt-5.4` only when the review can be split across independent components within the same declared blast radius; this is not a default repo-wide sweep mechanism. Merge findings afterward.
+Subagent Model Rule: Specify model `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
+Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with `gpt-5.5` only when the review can be split across independent components within the same declared blast radius; this is not a default repo-wide sweep mechanism. Merge findings afterward.
 Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a new subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
 ### Planner
@@ -242,7 +242,7 @@ Output: Detailed implementation plan with phases
 
 **Required First:** Check available skills and load all relevant skills before proceeding.
 
-Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.4`) (each scoped to a distinct module/concern), then aggregate findings before planning.
+Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.5`) (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
 Purpose: Blocking review of the requested change plus a bounded adjacent bug sweep inside the affected blast radius
 When to use: Security-critical code, between phases, pre-deployment, focused code/commit validation
@@ -251,7 +251,7 @@ Output: Issues, recommendations, approval status
 
 **Required First:** Check available skills and load all relevant skills before proceeding.
 
-Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (model `gpt-5.4`) (split by module/concern), then aggregate findings before writing the review.
+Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (model `gpt-5.5`) (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
 Purpose: Build specific phases according to plan using best practices from official documentation
 When to use: Phased implementation with clear requirements
@@ -267,12 +267,12 @@ Critical Requirements:
 - Implementation Alignment: Implement according to learned patterns and official documentation
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
-Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.4`) in parallel and aggregate results before proceeding.
+Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.5`) in parallel and aggregate results before proceeding.
 
 
 ### Subagent Model Usage
-When calling subagents (@planner, @implementer, @analyzer, @explore, @task), use model `gpt-5.4` by default. For @explore or @task agents specifically, use model `haiku 4.5` instead.
-For code/commit reviews, use parallel @analyzer calls with `gpt-5.4` only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
+When calling subagents (@planner, @implementer, @analyzer, @explore, @task), use model `gpt-5.5` by default. For @explore or @task agents specifically, use model `haiku 4.5` instead.
+For code/commit reviews, use parallel @analyzer calls with `gpt-5.5` only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
 
 Parallel Subagent Calls: Spawn multiple parallel subagents of the SAME type for independent tracks, then merge results. @explore: split by module/pattern · @analyzer: split only by independent component/focus-area within the same declared blast radius · @implementer: ONLY if strictly independent modules · @task: for independent validations (lint + tests + typecheck).
 
