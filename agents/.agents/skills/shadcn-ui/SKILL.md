@@ -47,9 +47,11 @@ npx shadcn@latest init
 npx shadcn@latest add button input form card dialog select
 
 # Existing app
-npm install tailwindcss-animate class-variance-authority clsx tailwind-merge lucide-react
+npm install tw-animate-css class-variance-authority clsx tailwind-merge lucide-react
 npx shadcn@latest init
 ```
+
+> **Using Tailwind v4?** The line above now uses `tw-animate-css` which works with v3 and v4. For the full Tailwind v4 setup (including `@theme inline` pattern and Vite plugin), load the [`tailwind-v4-shadcn`](../tailwind-v4-shadcn/SKILL.md) skill.
 
 ## Reference Map
 
@@ -67,11 +69,6 @@ Read supporting files based on task scope:
   - Multi-namespace installs, monorepo workflows, CLI flags, and troubleshooting.
 - **Registry configuration**: [`references/REGISTRY_SETUP.md`](references/REGISTRY_SETUP.md)
   - Registry schemas, custom styles, plugin config, and secure registry auth setup.
-- **Supplemental references already in this skill**:
-  - [`references/reference.md`](references/reference.md)
-  - [`references/ui-reference.md`](references/ui-reference.md)
-  - [`references/chart.md`](references/chart.md)
-  - [`references/learn.md`](references/learn.md)
 
 ## Common Patterns (Fast Paths)
 
