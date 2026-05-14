@@ -20,18 +20,23 @@ Maestro is a mobile E2E testing framework that uses declarative YAML flow files 
 
 ```bash
 # 1. Install Maestro CLI
-curl -Ls "https://get.maestro.mobile" | bash
+curl -fsSL "https://get.maestro.mobile.dev" | bash
+# Note: URL is .mobile.dev NOT .mobile
 
-# 2. Write a flow (save as login.yaml)
+# 2. Verify
+export PATH="$HOME/.maestro/bin:$PATH"
+maestro --version
+
+# 3. Write a flow (save as login.yaml)
 # appId: com.example.myapp
 # ---
 # - launchApp
 # - assertVisible: "Welcome"
 
-# 3. Run on a booted simulator or emulator
+# 4. Run on a booted simulator or emulator
 maestro test login.yaml
 
-# 4. Run on a specific device
+# 5. Run on a specific device
 maestro test --device <UDID> login.yaml
 ```
 
@@ -69,6 +74,116 @@ Every flow is a YAML file. The first section (before `---`) sets metadata; the r
 | `back` | Navigate back (Android only; use `swipe` direction or `tapOn` back button on iOS) | `- back` |
 | `assertTrue` | Assert JS expression is truthy | `- assertTrue: ${output.count > 0}` |
 | `travel` | Simulate GPS coordinates | `- travel: { latitude: 37.77, longitude: -122.42 }` |
+
+## ⚠️ Expo Dev Client Bootstrap (Critical)
+
+React Native / Expo dev builds show overlay screens before the app renders. Every flow with `launchApp` must handle this 3-step dismiss sequence:
+
+```yaml
+# Step 1: Tap Metro URL on "DEVELOPMENT SERVERS" screen
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://localhost:8081"
+      - waitForAnimationToEnd
+
+# Step 2: Dismiss Expo "Continue" informational overlay
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+      - waitForAnimationToEnd
+
+# Step 3: Dismiss React Native dev menu (if still showing)
+- runFlow:
+    when:
+      visible: "Reload"
+    commands:
+      - tapOn: "Reload"  # NOT "Go home" — that exits the app
+      - waitForAnimationToEnd
+```
+
+**Why all 3?** The dev server screen (Step 1) connects to Metro. After JS loads, Expo shows an overlay describing the dev menu (Step 2, "Continue" button). Underneath it, the RN dev menu may be visible (Step 3) — tap "Reload" to dismiss it and show the app.
+
+If you don't handle these, the app appears stuck on a blank/overlay screen. After running these 3 steps, the app should show its actual content.
+
+**Wait for the JS bundle to fully render** after Metro connects — the bundle can take 10+ seconds to load. Use `extendedWaitUntil`:
+
+```yaml
+- extendedWaitUntil:
+    visible: "Some text unique to your app's first screen"
+    timeout: 30000
+```
+
+### Ready-to-use bootstrap flow
+
+See `assets/flow-templates/expo-bootstrap.yaml` for a complete self-contained flow you can reuse across all flows. Reference it with:
+
+```yaml
+appId: com.yourapp
+onFlowStart:
+  - runFlow: .maestro/shared/expo-bootstrap.yaml
+```
+
+## 🔴 Known Gotchas
+
+### 1. Turkish characters cause infinite hang ⏳
+
+Maestro's `assertVisible`, `tapOn`, and `extendedWaitUntil` **hang indefinitely** (not fail, hang) when the search string contains these Turkish characters:
+- `ş` `Ş` — ❌ hangs
+- `ı` `İ` — ❌ hangs
+- `ü` `Ü` — ❌ hangs  
+- `ğ` `Ğ` — ❌ hangs
+- `ç` `Ç` — ❌ hangs
+
+Characters that DO work: `ö` `Ö` ✅, regular ASCII ✅
+
+**Fix:** Match English/ASCII substrings only:
+```yaml
+# ❌ HANGS:
+- assertVisible: "Hoş Geldiniz"
+- tapOn: "Kullanıcı"
+
+# ✅ WORKS (ASCII only):
+- assertVisible: "Ozet"               # only if that's the actual text
+- assertVisible: "Toplam Antrenman"   # no Turkish special chars
+- tapOn: "Add routine"                # English accessibility label
+```
+
+### 2. Tab bar navigation with `tabBarShowLabel: false`
+
+When React Navigation has `tabBarShowLabel: false`, tab labels rendered by custom `TabBarIcon` components exist in the view hierarchy but Maestro may not find them via text match.
+
+**Fix:** Use the iOS accessibility label format for tabs:
+```yaml
+# Tab labels are: "Home, tab, 1 of 3", "Workout, tab, 2 of 3", "Profile, tab, 3 of 3"
+- tapOn: "Home, tab, 1 of 3"
+- tapOn: "Workout, tab, 2 of 3"
+- tapOn: "Profile, tab, 3 of 3"
+```
+
+Use `maestro hierarchy` to discover the actual accessibility labels on screen.
+
+### 3. iOS accessibility label concatenation
+
+iOS XCTest concatenates child text nodes into the parent's `accessibilityText`, separated by commas:
+```
+"✨, Yeni Rutin"    (parent Pressable, two Text children)
+```
+
+So `assertVisible: "Yeni Rutin"` may fail. Either match the full string or use a unique part that isn't split by commas.
+
+### 4. Debug with `maestro hierarchy`
+
+When Maestro can't find an element, dump the full UI tree to see actual labels:
+
+```bash
+maestro hierarchy | grep -o '"accessibilityText" : "[^"]*"' | grep -v '""'
+```
+
+This is essential for debugging — especially with Turkish characters, custom components, and platform-specific formatting.
 
 ## Flow Structure
 
@@ -195,7 +310,7 @@ jobs:
         with:
           xcode-version: latest-stable
       - name: Install Maestro
-        run: curl -Ls "https://get.maestro.mobile" | bash
+        run: curl -fsSL "https://get.maestro.mobile.dev" | bash
       - name: Boot Simulator
         run: |
           UDID=$(xcrun simctl list devices available | grep "iPhone 15" | head -1 | grep -oE '[0-9A-F-]{36}')
@@ -218,7 +333,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Install Maestro
-        run: curl -Ls "https://get.maestro.mobile" | bash
+        run: curl -fsSL "https://get.maestro.mobile.dev" | bash
       - name: Run Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -239,6 +354,11 @@ jobs:
 - **Ignoring optional flag**: Use `optional: true` for dismissable modals, rate prompts, permission dialogs.
 - **No screenshots**: Add `takeScreenshot` at key points for CI debugging when tests fail.
 - **Platform assumptions**: Use platform-specific subflows when iOS and Android differ.
+- **Skipping dev overlay dismissals**: Always handle "DEVELOPMENT SERVERS" → "Continue" → "Reload" in that order.
+- **Tapping "Go home" in RN dev menu**: This exits the app to the iOS home screen. Always tap "Reload" instead.
+- **Using Turkish characters in selectors**: Characters ş, ı, ü, ğ, ç hang Maestro indefinitely. Use ASCII-only substrings.
+- **Using text labels for tab bars when `tabBarShowLabel: false`**: Use iOS accessibility labels like "Workout, tab, 2 of 3" instead.
+- **Forgetting to dump hierarchy**: When assertions fail, always run `maestro hierarchy` first to see the actual accessibility labels.
 
 ## References
 

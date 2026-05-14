@@ -1,0 +1,51 @@
+# flow: Expo Dev Client Bootstrap
+# intent:
+#   Launch the app with a clean state, wait for animations,
+#   then dismiss ALL Expo/RN dev overlays in the correct order:
+#   1. DEVELOPMENT SERVERS screen → tap Metro URL
+#   2. Expo informational overlay → tap "Continue"
+#   3. React Native dev menu → tap "Reload" (NOT "Go home")
+#
+# After this flow, the app will be showing its actual UI.
+# Use as `onFlowStart` in every maestro flow:
+#
+# appId: ${MAESTRO_APP_ID}
+# onFlowStart:
+#   - runFlow: ../shared/expo-bootstrap.yaml
+# ---
+appId: ${MAESTRO_APP_ID}
+---
+# Launch with clean state
+- launchApp:
+    clearState: true
+    clearKeychain: true
+    stopApp: true
+- waitForAnimationToEnd
+
+# Step 1: Dev server screen
+- runFlow:
+    when:
+      visible: "DEVELOPMENT SERVERS"
+    commands:
+      - tapOn: "http://localhost:8081"
+      - waitForAnimationToEnd
+
+# Step 2: Expo "Continue" overlay
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+      - waitForAnimationToEnd
+
+# Step 3: RN dev menu — tap Reload, NOT "Go home"
+- runFlow:
+    when:
+      visible: "Reload"
+    commands:
+      - tapOn: "Reload"
+      - waitForAnimationToEnd
+
+# Settle animations
+- waitForAnimationToEnd
+- waitForAnimationToEnd
