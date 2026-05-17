@@ -184,3 +184,88 @@ fetch('https://api.example.com/protected', {
   headers: { Authorization: `Bearer ${token}` },
 });
 ```
+
+## GoTrue Admin API (Service Role)
+
+All Admin API calls require the **service_role key** (never expose on the client).
+Use server-side only (Edge Function, backend server, or `supabase-admin` client).
+
+```typescript
+// Create admin client (server-only)
+import { createClient } from '@supabase/supabase-js'
+const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+  auth: { autoRefreshToken: false, persistSession: false },
+})
+```
+
+### Create User
+
+```typescript
+const { data, error } = await supabaseAdmin.auth.admin.createUser({
+  email: 'newuser@example.com',
+  password: 'secureP@ss123',
+  email_confirm: true,            // skip confirmation email
+  user_metadata: { full_name: 'Jane Doe' },
+  app_metadata: { role: 'premium' },
+})
+```
+
+### List Users
+
+```typescript
+// Paginated list
+const { data, error } = await supabaseAdmin.auth.admin.listUsers({
+  page: 1,
+  perPage: 50,
+})
+
+// Filter client-side after fetch (SDK does not expose server-side filter)
+const { data: { users } } = await supabaseAdmin.auth.admin.listUsers()
+const filtered = users.filter(u => u.email === 'jane@example.com')
+```
+
+### Get / Update / Delete User
+
+```typescript
+// Get user by ID
+const { data } = await supabaseAdmin.auth.admin.getUserById(userId)
+
+// Update user
+const { data } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+  email: 'newemail@example.com',
+  user_metadata: { full_name: 'Jane Smith' },
+  app_metadata: { role: 'admin' },
+})
+
+// Delete user
+await supabaseAdmin.auth.admin.deleteUser(userId)
+```
+
+### Generate Link (magic link, invite, password reset)
+
+```typescript
+// Magic link
+const { data } = await supabaseAdmin.auth.admin.generateLink({
+  type: 'magiclink',
+  email: 'user@example.com',
+})
+
+// Invite
+const { data } = await supabaseAdmin.auth.admin.generateLink({
+  type: 'invite',
+  email: 'user@example.com',
+})
+
+// Password reset
+const { data } = await supabaseAdmin.auth.admin.generateLink({
+  type: 'recovery',
+  email: 'user@example.com',
+})
+```
+
+### Impersonation (Generate User Access Token)
+
+```typescript
+const { data } = await supabaseAdmin.auth.admin.createUserAccessToken(userId)
+// data.token — use as a Bearer token to act as this user
+```
