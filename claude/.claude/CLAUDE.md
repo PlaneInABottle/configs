@@ -60,6 +60,8 @@ Anti-Patterns to Avoid:
 - Analysis Paralysis: Avoid open-ended explorer/analyzer loops before implementing. When additional subagent calls stop producing materially new information, move forward with implementation using the evidence you already have.
 - Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
 
+
+
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
 
@@ -70,6 +72,8 @@ Anti-Patterns to Avoid:
 3. **Load relevant skills:** Check if already loaded; if not, use `skill` tool. Load ALL matching skills and combine guidance.
 
 4. **Priority order:** Project skills → Local code/patterns → Context7 docs (when needed) → General knowledge
+
+5. **Read skill references:** If a loaded skill references external files, playbooks, or guides that are relevant to your task, read them for complete context.
 
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
 
@@ -195,7 +199,7 @@ Output: Detailed implementation plan with phases
 
 **Required First:** Check available skills and load all relevant skills before proceeding.
 
-Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.4`) (each scoped to a distinct module/concern), then aggregate findings before planning.
+Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.5`) (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
 Purpose: Blocking review of the requested change plus a bounded adjacent bug sweep inside the affected blast radius
 When to use: Security-critical code, between phases, pre-deployment, focused code/commit validation
@@ -204,7 +208,7 @@ Output: Issues, recommendations, approval status
 
 **Required First:** Check available skills and load all relevant skills before proceeding.
 
-Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (model `gpt-5.4`) (split by module/concern), then aggregate findings before writing the review.
+Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (model `gpt-5.5`) (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
 Purpose: Build specific phases according to plan using best practices from official documentation
 When to use: Phased implementation with clear requirements
@@ -220,7 +224,7 @@ Critical Requirements:
 - Implementation Alignment: Implement according to learned patterns and official documentation
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
-Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.4`) in parallel and aggregate results before proceeding.
+Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.5`) in parallel and aggregate results before proceeding.
 ### Subagent Model Usage
 Subagents should inherit the main agent's model and not select or configure their own model. Do not specify model parameters when calling subagents to ensure consistent behavior.
 

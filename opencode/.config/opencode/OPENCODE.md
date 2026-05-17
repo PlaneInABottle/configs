@@ -60,6 +60,13 @@ Anti-Patterns to Avoid:
 - Analysis Paralysis: Avoid open-ended explorer/analyzer loops before implementing. When additional subagent calls stop producing materially new information, move forward with implementation using the evidence you already have.
 - Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
 
+**COMMAND EXECUTION:**
+- Delegate any command execution that could produce significant output to @general instead of running it directly
+  - Example: `@general run npm test`, `@general `pip install -r requirements.txt``, `@general check if docker is running`, `@general lint the codebase`
+- @general uses a lighter model — command output stays in its context, not yours, saving tokens
+- @general should summarize/filter results before returning, so your context stays lean
+- If @general reports failures, investigate the output and retry with a more specific command, or escalate to implementer
+
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
 
@@ -70,6 +77,8 @@ Anti-Patterns to Avoid:
 3. **Load relevant skills:** Check if already loaded; if not, use `skill` tool. Load ALL matching skills and combine guidance.
 
 4. **Priority order:** Project skills → Local code/patterns → Context7 docs (when needed) → General knowledge
+
+5. **Read skill references:** If a loaded skill references external files, playbooks, or guides that are relevant to your task, read them for complete context.
 
 **Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
 

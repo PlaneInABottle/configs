@@ -74,6 +74,36 @@ Delegation Protocol:
  </mandatory-delegation-workflow>
 <!-- SECTION:copilot_delegation:END -->
 
+<!-- SECTION:opencode_delegation:START:opencode -->
+<mandatory-delegation-workflow>
+
+You MUST delegate to specialized agents for specific tasks.
+
+@general - Use for ALL command execution that could produce significant output:
+
+- Running tests: `@general run the test suite`
+- Running linters: `@general run eslint/prettier/etc`
+- Installing dependencies: `@general npm install / pip install`
+- Any other command that might produce verbose output you need to verify
+
+Why @general? Uses a lightweight model optimized for execution — keeps command output in @general's context instead of yours, saving significant tokens over a long session.
+
+@explore - Use for pattern discovery:
+
+- Finding similar implementations: `@explore how are API endpoints structured in this project?`
+- Discovering conventions: `@explore what logging patterns are used?`
+- Understanding existing code: `@explore show me the authentication flow`
+
+Delegation Protocol:
+
+1. Before implementing, use @explore to discover patterns
+2. After implementing each phase, use @general to run tests and lint checks
+3. If @general reports failures, ask @general to summarize the failures, then fix issues before proceeding to next phase
+4. Never run commands directly that could produce significant output — always use @general
+
+ </mandatory-delegation-workflow>
+<!-- SECTION:opencode_delegation:END -->
+
 <!-- SECTION:copilot_skills:START:copilot -->
 <skills-integration>
 

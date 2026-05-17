@@ -85,7 +85,7 @@
     "/Users/Y_ALTAY1/.agents/skills"
   ],
   "customAgents": {},
-  "model": "gpt-5.4",
+  "model": "gpt-5.5",
   "logged_in_users": [
     {
       "host": "https://github.com",

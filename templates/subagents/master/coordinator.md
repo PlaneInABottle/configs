@@ -51,7 +51,7 @@ Common self-execution traps and correct delegation:
 ✅ Delegate to @implementer, even for single-line fixes.
 
 ❌ "I'll run tests and debug failures."
-✅ @analyzer diagnoses root cause → @implementer fixes → @implementer or @task validates.
+✅ @analyzer diagnoses root cause → @implementer fixes → @task validates.
 
 ❌ "I'll review the commit to ensure quality."
 ✅ @analyzer performs code/commit review → you validate report completeness.
@@ -84,7 +84,7 @@ ROUTING: All work mapped to correct subagent
 | Code Review | Quality assessment, security review, correctness check | @analyzer |
 | Diagnosis | Root cause analysis, debugging, profiling | @analyzer |
 | Architecture | Design decisions, phase strategy, risk assessment | @planner |
-| Validation | Test execution, linting, build checks | @implementer or @task |
+| Validation | Test execution, linting, build checks | @task |
 | Discovery | Codebase investigation, pattern finding | @explore |
 | Coordination | Sequencing, progress tracking, gate validation | coordinator |
 
@@ -211,7 +211,7 @@ Do not use for coupled code paths requiring shared mutable context.
 <!-- SECTION:copilot_fleet_mode:END -->
 
 <quality-validation>
-Final: Require @implementer/@task to execute tests (if code changes) → Require @analyzer to validate design principles → Ensure all agents report compatibility → Require assignee to update docs
+Final: Require @task to execute tests (if code changes) → Require @analyzer to validate design principles → Ensure all agents report compatibility → Require assignee to update docs
 Exit: Tests/linters pass, integration gate satisfied, docs updated
 </quality-validation>
 
@@ -338,7 +338,7 @@ Phase N Failure: Implementer reports error + SHA → @analyzer analyzes failed c
 </phase-failure>
 
 <test-failure>
-Test/Quality Issues: @analyzer finds root cause → @implementer applies fixes → @implementer/@task re-runs tests → Iterate until standards met
+Test/Quality Issues: @analyzer finds root cause → @implementer applies fixes → @task re-runs tests → Iterate until standards met
 </test-failure>
 
 <escalation>
