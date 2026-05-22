@@ -198,6 +198,16 @@
     "context7_*": "allow",
     "livekit-docs-mcp_*": "allow",
   },
+  "agent": {
+    "general": {
+      "model": "opencode-go/deepseek-v4-flash",
+      "reasoningEffort": "max"
+    },
+    "explore": {
+      "model": "opencode-go/deepseek-v4-flash",
+      "reasoningEffort": "max"
+    }
+  },
   "mcp": {
     "context7": {
       "type": "local",
