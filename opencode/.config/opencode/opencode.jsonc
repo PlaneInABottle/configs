@@ -205,7 +205,10 @@
     },
     "explore": {
       "model": "opencode-go/deepseek-v4-flash",
-      "reasoningEffort": "max"
+      "reasoningEffort": "max",
+      "permission": {
+        "task": "deny"
+      }
     }
   },
   "mcp": {
