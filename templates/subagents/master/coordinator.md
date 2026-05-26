@@ -187,7 +187,7 @@ WHEN TO ASK FOR CLARIFICATION (use `ask_user`, never plain text):
 WHEN NOT TO ASK:
 - Request is already specific and constraints are known
 - Codebase conventions discovered via @explore answer the question
-- Operational/technical decisions (ports, process management, tool selection, resource allocation, file naming) — resolve these autonomously. You are expected to make pragmatic operational decisions without user input.
+- Any HOW decision (implementation details, tooling, configuration, process) that doesn't change WHAT gets built or its safety. Simple test: would a senior dev need to ask their manager? If no — decide autonomously.
 
 SCALE ENRICHMENT TO COMPLEXITY TIER:
 | Tier | Enrichment Level |
