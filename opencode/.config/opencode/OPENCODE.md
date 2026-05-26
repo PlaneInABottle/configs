@@ -22,7 +22,8 @@ Context7: Use it for external APIs, unfamiliar libraries, ambiguous function beh
 Quality Over Speed: Code is read more than it's written
 AI Skills Awareness: Use AI skills written by the user when applicable to the task
 Skills Required: Use relevant skills for the task. When multiple apply, combine their guidance
-Clarify Interactively: Use `question` for clarification questions when blocked or ambiguous (never ask in plain text)
+Clarify Interactively: Use `question` for clarification questions when blocked or ambiguous (never ask in plain text). Only ask when the decision materially affects requirements, scope, approach, or safety — never for operational hurdles.
+Operational Autonomy: You are expected to make pragmatic technical decisions autonomously. Port conflicts, process management, tool choices, file naming, resource allocation — these are YOUR decisions. Do NOT ask the user. Decide, act, and keep the mission moving. Only escalate when the decision materially affects requirements, scope, or safety.
 Subagent Continuity: Prefer continuing an existing subagent session for the same workstream to preserve context. Only start a fresh subagent when work is independent, prior context is stale, or parallelization is intentionally needed.
 Python: When running Python scripts via bash, always use `python3` instead of `python`
 
