@@ -116,7 +116,7 @@ OUTPUT: Phase list and ready state
 Key Activities:
 
 1. If plan file provided, read plan file from provided path
-2. Parse all phases from Implementation Plan section
+2. Parse all phases from Implementation Plan section (read full plan for context — coordinator delegates specific phases, one at a time)
 3. Extract for each phase:
    - Phase name and number
    - Files to modify
@@ -147,9 +147,9 @@ Output:
 
 <dynamic-phase-execution>
 
-EXECUTE EACH PHASE INDEPENDENTLY WITH COMMIT CHECKPOINT
+EXECUTE THE DELEGATED PHASE(S) WITH COMMIT CHECKPOINT
 
-For each phase in plan (1 to N, or single phase if no plan):
+Execute only the phase(s) the coordinator delegated — not automatically all phases in the plan. Coordinator delegates one phase at a time, validates, then delegates the next.
 
 1. If plan provided, read phase requirements from plan file; otherwise, proceed with direct implementation
    - Confirm relevant skills (one or more) are loaded before implementing
