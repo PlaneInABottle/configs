@@ -231,7 +231,7 @@ Load `maestro-testing` skill for simulator management and E2E flows.
 | Don't | Do Instead |
 |-------|-----------|
 | Create `App.tsx` entry point | Use `app/_layout.tsx` (Expo Router) |
-| Use React Navigation directly | Use Expo Router file-based routing |
+| Use React Navigation directly when the project uses Expo Router | File-based routing is the standard for Expo Router projects |
 | Inline all styles | Use NativeWind `className` |
 | Create stores without MobX | Use RootStore pattern with `makeAutoObservable` |
 | One monolithic store | Split into domain stores (UserStore, ItemStore, etc.) |
