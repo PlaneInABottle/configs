@@ -76,6 +76,8 @@ Anti-Patterns to Avoid:
 - @general uses a lighter model — command output stays in its context, not yours, saving tokens
 - @general should summarize/filter results before returning, so your context stays lean
 - If @general reports failures, investigate the output and retry with a more specific command, or escalate to implementer
+- @general is for small, definite tasks only. Never give @general multi-phase workflows, complex
+  decision-making, or open-ended tasks. For those, delegate to @implementer.
 <!-- SECTION:opencode_command_execution:END -->
 
 ## Skills-First Workflow
