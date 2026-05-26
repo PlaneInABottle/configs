@@ -61,7 +61,9 @@ You MUST delegate to specialized agents for specific tasks.
 - Installing dependencies: `@general npm install / pip install`
 - Any other command that might produce verbose output you need to verify
 
-Why @general? Uses a lightweight model optimized for execution — keeps command output in @general's context instead of yours, saving significant tokens over a long session.
+Why @general? Uses a lightweight model optimized for execution — keeps command output in @general's context instead of yours, saving significant tokens over a long session. @general is cheap to run, so use it extensively for small, definite tasks without worrying about cost.
+
+Keep @general tasks small and well-scoped (1-3 definite steps). @general is NOT for complex multi-phase work — that's your job as implementer.
 
 @explore - Use for pattern discovery:
 
