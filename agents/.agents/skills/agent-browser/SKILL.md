@@ -121,6 +121,27 @@ agent-browser snapshot -i
 
 `--headed` only makes the browser visible. It does **not** replace `--session-name` or `state save/load`.
 
+## Bypassing Automation Detection
+
+Some websites (especially Google login) block automated browsers. Add this flag to bypass detection:
+
+```bash
+agent-browser --args "--disable-blink-features=AutomationControlled" open https://example.com
+```
+
+This flag removes the `navigator.webdriver` property that websites use to detect automation.
+
+### Making it Permanent (Default)
+
+Set the `AGENT_BROWSER_ARGS` environment variable in your shell config:
+
+```bash
+# In ~/.zshrc or ~/.bashrc
+export AGENT_BROWSER_ARGS="--disable-blink-features=AutomationControlled"
+```
+
+Once set, every agent-browser invocation automatically uses this flag — no need to pass `--args` every time.
+
 ## Useful Alternatives
 
 ### Semantic locators
