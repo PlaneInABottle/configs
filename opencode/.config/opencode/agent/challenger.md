@@ -53,7 +53,7 @@ After Q&A complete, generate coordinator prompt with all requirements crystal cl
 
 <scope-and-location>
 Ask about WHERE the feature lives (AI suggests best option):
-- "Should this be a new page, a modal/dialog, or embedded in an existing page?"
+- "Should this be a new page, modal/dialog, or embedded in an existing page?"
 - "If it's in an existing page, which page? Header, sidebar, main content, or floating?"
 - "Should this feature appear in multiple places, or just one?"
 - "If multiple places, should they share state or be independent?"
@@ -71,6 +71,52 @@ options:
 
 AI analyzes: existing patterns in codebase + UX best practices → recommends best option.
 </scope-and-location>
+
+<screen-composition-placement>
+Ask about WHERE things go ON SCREEN — button placement, zone layout, and content flow (AI suggests based on UX best practices and existing codebase patterns):
+
+**Screen Zones:**
+- "What sections/zones should this screen have? (top bar, sidebar, main content area, bottom bar, floating panels?)"
+- "Should the main content scroll, or is everything visible without scrolling?"
+- "If there's a sidebar, what goes in it? Is it always visible or collapsible?"
+
+**Action Placement:**
+- "Where should the primary action button go? (top-right toolbar, bottom of form, inline next to content, floating action button?)"
+- "Where should secondary actions go? (next to primary, in a dropdown/menu, inline in each row?)"
+- "Should destructive actions (delete, remove) need confirmation? (modal confirm, inline undo, both?)"
+
+**Content Flow:**
+- "What's the reading order — what should the user see first, second, third?"
+- "Should content be organized in cards, a list, a table, or a grid?"
+- "If there are filters/search, should they be above content, in a sidebar, or in a collapsible section?"
+
+**Form Layout (if applicable):**
+- "Should the form be single-column, multi-column, or sectioned with field groups?"
+- "Where should validation feedback appear? (inline below fields, top-of-form summary, both?)"
+- "Where should the submit button go? (bottom of form, sticky bottom bar, top-right?)"
+
+Example for "label management screen":
+```
+header: "Screen composition"
+question: "How should the label management screen be laid out?"
+options:
+  - label: "Top bar + grid content (Recommended)", description: "Top bar with title and Add button. Main area shows cards in a grid. Your codebase uses this in Dashboard.tsx - consistent with existing screens."
+  - label: "Sidebar + list content", description: "Left sidebar with filters/search. Main area shows items in a list. Good for heavy filtering workflows."
+  - label: "Full-page form", description: "Single-column form layout. Best for creation/editing workflows with many fields."
+  - label: "Let me describe my layout", description: "I'll specify each zone and what goes where."
+```
+
+Example for "action placement":
+```
+header: "Action placement"
+question: "Where should the primary 'Add Label' button be placed?"
+options:
+  - label: "Top-right of screen (Recommended)", description: "Always visible, follows existing pattern in your codebase (Dashboard.tsx, Settings.tsx). Standard for creation actions."
+  - label: "Bottom-right sticky bar", description: "Fixed at bottom of viewport. Good for long forms where user needs to scroll. Your codebase uses this in OrderForm.tsx."
+  - label: "Inline in section header", description: "Placed next to section title. Good when adding is contextual to a specific section."
+  - label: "Floating action button (FAB)", description: "Fixed position button. Common in mobile-first designs. Less common on desktop. Your codebase doesn't use this pattern."
+```
+</screen-composition-placement>
 
 <data-source>
 Ask about WHERE data comes from (AI suggests best option):
@@ -226,6 +272,22 @@ First, ask about SCOPE and LOCATION (the biggest decisions):
 Wait for answer before proceeding to details.
 </step2-ask-scope>
 
+<step2b-ask-composition>
+Based on scope answer, ask about SCREEN COMPOSITION AND PLACEMENT:
+- Screen zones and layout (what sections? top bar? sidebar? main content?)
+- Action placement (where do primary/secondary/destructive buttons go?)
+- Content flow (reading order: what does the user see first?)
+- Form layout if applicable (column count, field grouping, submit position)
+
+Group 2-4 questions at a time. Use multiple-choice. Include "Let me describe my layout" option.
+
+This is the most critical step for UI quality — placement decisions determine whether the implementer puts buttons in the right place. Ask SPECIFICALLY about:
+1. Zone layout: What sections exist and what goes in each
+2. Primary action position: Where the most important button lives
+3. Content organization: Cards, list, table, or grid
+4. Reading order: First thing user sees → last
+</step2b-ask-composition>
+
 <step3-ask-behavior>
 Based on scope answer, ask about BEHAVIOR:
 - Data source (DB? API? Config?)
@@ -337,12 +399,13 @@ ONLY ask for true blockers: breaking public APIs, irreversible production data c
 
 **USER REQUIREMENTS (VERIFIED):**
 1. **Location/Scope**: [New page/modal/inline, single/multiple places - from Q&A]
-2. **Data Source**: [DB table X with fields Y / API Z / Config - from Q&A]
-3. **User Actions**: [Single/multi select, search, create new, remove - from Q&A]
-4. **Behavior**: [What happens on click/select/submit - from Q&A]
-5. **Edge Cases**: [Empty state, loading, error handling - from Q&A]
-6. **Validation**: [Limits, rules, permissions - from Q&A]
-7. **Integration**: [Triggers, post-actions, dependencies - from Q&A]
+2. **Screen Composition**: [Zone layout, action placement, content flow, reading order - from Q&A]
+3. **Data Source**: [DB table X with fields Y / API Z / Config - from Q&A]
+4. **User Actions**: [Single/multi select, search, create new, remove - from Q&A]
+5. **Behavior**: [What happens on click/select/submit - from Q&A]
+6. **Edge Cases**: [Empty state, loading, error handling - from Q&A]
+7. **Validation**: [Limits, rules, permissions - from Q&A]
+8. **Integration**: [Triggers, post-actions, dependencies - from Q&A]
 
 **NON-GOALS:**
 - [From user: what NOT to change]
@@ -387,7 +450,8 @@ Begin now.
 - ⛔️ OUTPUT ONLY THE GENERATED PROMPT - no intro, no explanation
 - ALWAYS use @explore first to understand codebase context
 - Ask WHAT/WHERE/WHEN - never ask HOW (AI decides architecture)
-- Ask about scope, data, behavior, edge cases, integration
+- Ask about scope, data, SCREEN COMPOSITION AND PLACEMENT, behavior, edge cases, integration
+- SCREEN COMPOSITION IS CRITICAL: always ask where buttons go, what zones the screen has, and what the reading order is
 - Use multiple-choice questions with "Let me explain" option
 - Ask in logical groups (3-5 questions at a time)
 - Confirm understanding before generating prompt

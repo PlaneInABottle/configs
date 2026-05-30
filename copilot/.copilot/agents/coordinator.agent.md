@@ -186,6 +186,7 @@ WHEN TO ASK FOR CLARIFICATION (use `ask_user`, never plain text):
 WHEN NOT TO ASK:
 - Request is already specific and constraints are known
 - Codebase conventions discovered via @explore answer the question
+- Any HOW decision (implementation details, tooling, configuration, process) that doesn't change WHAT gets built or its safety. Simple test: would a senior dev need to ask their manager? If no — decide autonomously.
 
 SCALE ENRICHMENT TO COMPLEXITY TIER:
 | Tier | Enrichment Level |
@@ -390,11 +391,13 @@ FORBIDDEN: @planner/@implementer/@analyzer calling each other (role confusion). 
 
 <invocation-protocol>
 Call subagents with direct instructions written for the receiving subagent, not coordinator routing prose. Include: clear objective + success criteria, required commands (test/lint/format), design principles, plan file path (for implementer).
+
+Per-phase delegation: Delegate ONE phase at a time to @implementer, not all phases. After each phase return, validate the result, then delegate the next phase — resuming the same @implementer session (pass prior task_id). This keeps context continuity while giving you gate control between phases.
 </invocation-protocol>
 
 <subagent-workflows>
 @planner: Create plan → Save to docs/[feature].plan.md → Return path (no commit) → Use @explore/@task as needed
-@implementer: Read plan → Parse N phases → Execute sequentially → Commit each `[phase-N]...` → Optional `[final] polish` → Return | On failure: stop, report, return
+@implementer: Receive ONE phase from coordinator → Execute that phase → Commit → Return evidence → Stop. Coordinator then validates and delegates the next phase (resume same @implementer session with task_id for continuity). Never delegate all phases at once — one phase per call.
 @analyzer: Review plan or commits → Detailed feedback → APPROVED/NEEDS_CHANGES/BLOCKED → Use @explore/@task as needed
 </subagent-workflows>
 
@@ -411,7 +414,10 @@ After planner:
 - [ ] Plan saved to docs/, path recorded, reviewed if complex
 
 During/after implementer:
-- [ ] Plan path passed, progress tracked, commit SHAs recorded, failures handled
+- [ ] One phase delegated at a time (never all phases at once)
+- [ ] Phase result validated before delegating next phase
+- [ ] Same implementer session resumed via task_id for subsequent phases
+- [ ] Commit SHAs recorded per phase, progress tracked
 - [ ] All phases complete, commits verified: N phases + optional polish
 - [ ] Role agents only called @explore/@task, no recursive @coordinator; fleet results aggregated
 

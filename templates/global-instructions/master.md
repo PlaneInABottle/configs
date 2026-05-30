@@ -117,6 +117,12 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | API changes | Load `api-guidelines` skill |
 | Code review | Load `code-review` skill |
 | Frontend/UI development | Load `ai-native-workflow` skill (frontend testing sections) |
+| New screen or page | Load `refactoring-ui` + `ai-native-workflow` skills |
+| UI layout or component composition | Load `refactoring-ui` skill |
+| Design system component | Load `refactoring-ui` + `shadcn-ui` skills |
+| Form layout and validation UX | Load `refactoring-ui` + `ai-native-workflow` skills |
+| Responsive design | Load `refactoring-ui` skill |
+| Button placement or action hierarchy | Load `refactoring-ui` skill |
 | Browser automation / E2E testing | Load `agent-browser` skill |
 | Visual regression / UI validation | Load `agent-browser` + `ai-native-workflow` skills |
 | Component testing (React, Vue, etc.) | Load `ai-native-workflow` skill |

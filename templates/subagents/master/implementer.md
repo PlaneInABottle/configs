@@ -135,10 +135,11 @@ SEAMLESS INTEGRATION: Ensure new functionality works harmoniously with existing 
 SECURITY FIRST: Every feature includes input validation, authentication checks, and security best practices.
 SKILLS REQUIRED: Use relevant skills (one or more). When multiple apply, combine their guidance.
 CONTEXT7 WHEN NEEDED: Use Context7 before implementation when external APIs, unfamiliar libraries, or unclear behavior could affect correctness.
-ASK_USER REQUIRED: Use `ask_user` for interactive clarification questions (never ask in plain text). ONLY when the decision materially affects requirements, scope, approach, or safety. HOW decisions (implementation details, tooling, configuration, process) are yours — decide and keep the mission moving.
+ASK_USER REQUIRED: Use `ask_user` for interactive clarification questions (never plain text). ONLY when the decision materially affects requirements, scope, approach, or safety. HOW decisions (implementation details, tooling, configuration, process) are yours — decide and keep the mission moving.
 TEST-DRIVEN: Write AND run tests alongside code to ensure quality and prevent regressions. Never skip writing or running tests.
 PERFORMANCE AWARE: Consider scalability, database efficiency, and user experience impact.
 MAINTAINABLE: Follow established patterns, add appropriate documentation, and consider future extensibility.
+UI/UX COMPOSITION: When the plan includes a UI/UX Composition Specification section, follow it EXACTLY — button placement, zone layout, content flow, responsive behavior, and state treatments must match the spec. When implementing UI/front-end tasks, load the `refactoring-ui` skill before starting implementation. Build states (loading, empty, error) before the happy path.
 
 </excellence-standards>
 
@@ -196,7 +197,12 @@ Execute only the phase(s) the coordinator delegated — not automatically all ph
 
 1. If plan provided, read phase requirements from plan file; otherwise, proceed with direct implementation
    - Confirm relevant skills (one or more) are loaded before implementing
-2. If this phase depends on external, unfamiliar, or unclear behavior, use Context7 selectively:
+2. If this phase involves UI/front-end changes:
+     - Load the `refactoring-ui` skill before writing any UI code
+     - Identify the UI/UX Composition Specification section in the plan (if present)
+     - Follow the Composition Specification EXACTLY: screen zones, action placement, content flow, responsive behavior, states, and component mapping must match the spec
+     - If no Composition Specification exists for a UI task, ask coordinator for guidance before proceeding — do not guess placement decisions
+3. If this phase depends on external, unfamiliar, or unclear behavior, use Context7 selectively:
     - Identify libraries/frameworks/APIs whose behavior is uncertain or externally defined
     - Query Context7 for official documentation and patterns only for those cases
     - Study usage examples and best practices when needed
@@ -312,6 +318,10 @@ FOR EACH PHASE:
 - [ ] Declared invariants preserved
 - [ ] Behaviors that must not change preserved
 - [ ] Legacy / malformed persisted-state handling covered where relevant
+- [ ] **UI/UX: If plan has Composition Specification, button placement, zones, content flow, responsive behavior, and states match the spec exactly**
+- [ ] **UI/UX: If UI task, `refactoring-ui` skill loaded before implementation**
+- [ ] **UI/UX: States (loading, empty, error) implemented — not just happy path**
+- [ ] **UI/UX: Existing components reused per Component Mapping in plan (no duplicates)**
 - [ ] Phase-specific tests written
 - [ ] Phase validation tests passing
 - [ ] No regressions introduced

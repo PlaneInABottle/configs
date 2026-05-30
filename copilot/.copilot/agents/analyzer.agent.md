@@ -157,6 +157,17 @@ During plan review, you MUST cross-check plan assumptions against actual code �
 - Data compatibility: does the plan explicitly address legacy rows, malformed persisted state, mixed JSON shapes, null roots, partial migrations, and idempotency where relevant?
 - Flag any item labeled "ASSUMED (unverified)" in the plan's facts table as at least MEDIUM severity.
 - If 3+ HIGH/CRITICAL items are ASSUMED (unverified), status = BLOCKED; return to planner for verification before any review passes.
+
+**UI Composition Spec Completeness Check (REQUIRED for plan reviews involving UI changes):**
+If the plan involves any UI changes (new screens, page modifications, forms, component additions that affect layout), verify the plan includes a UI/UX Composition Specification section with ALL of the following:
+- Screen Composition: zone-by-zone layout (top bar, sidebar, main content, bottom bar) with what goes in each zone
+- Action Placement Rules: table specifying where every action lives (primary CTA, secondary, inline, destructive, batch), its variant, and visibility condition
+- Content Flow: numbered reading order of what the user sees first to last
+- Component Mapping: table mapping each UI need to existing components (reuse) or new components (with reference pattern)
+- Responsive Behavior: breakpoint table showing layout changes per screen size
+- States: table with Loading, Empty, Error, 1-result, and Disabled/readonly treatments for each affected zone
+
+If ANY of these are missing for a UI plan, flag as HIGH and list exactly what's missing. The implementer cannot correctly place UI elements without these specifications.
 </plan-reviews>
 
 <code-reviews>
@@ -194,6 +205,24 @@ Business Logic: requirement mismatches, transformation errors, edge cases, state
 <code-quality>
 Code smells, unnecessary complexity, DRY violations, long functions (50+), deep nesting (3+), magic numbers, missing error handling.
 </code-quality>
+
+<ui-composition-compliance>
+When the plan includes a UI/UX Composition Specification, verify the implementer followed it EXACTLY. This is structural compliance verification, NOT subjective design review.
+
+Check every specification against the implementation:
+
+- **Screen Zones**: Does the implementation match the zone layout? If the spec says "top-right" for the primary action, is it actually top-right? If the spec says "sidebar 240px + main content", does the code reflect that?
+- **Action Placement**: Compare every action location against the Action Placement Rules table. Primary CTA position, secondary actions, destructive actions with confirmation, batch actions appearing on selection — verify each.
+- **Content Flow**: Does the reading order match the numbered flow in the spec? If spec says "1. Title, 2. Search, 3. Results", verify the visible/DOM order matches.
+- **Component Mapping**: Did the implementer reuse existing components as specified, or create duplicates? If the spec says reuse `Card.tsx`, verify `Card.tsx` is imported — not a new `ResultCard.tsx` that duplicates it.
+- **Responsive Behavior**: Check breakpoint logic matches the spec. If spec says "mobile single column, desktop 3-column grid", verify the responsive classes/styles implement this.
+- **States**: Verify Loading, Empty, Error, and Disabled states exist and match the spec treatments. If spec says "centered icon + text + CTA button" for empty state, verify the implementation matches.
+
+Flag violations as:
+- HIGH: Missing zone entirely, wrong action placement, missing state (e.g., no empty state, no loading skeleton), duplicate component instead of reuse
+- MEDIUM: Incorrect spacing within a zone, minor responsive mismatch, state treatment differs from spec but functional
+- LOW: Cosmetic differences that don't affect functionality or composition
+</ui-composition-compliance>
 </code-reviews>
 
 </review-focus-areas>
@@ -208,7 +237,8 @@ Code smells, unnecessary complexity, DRY violations, long functions (50+), deep 
 7. **Bounded Adjacent Bug Sweep** - Within the declared blast radius only, inspect nearby fallback/default branches, preserved behavior paths, compatibility-sensitive callers, and realistic malformed/legacy states that could still break because of this change
 8. **Adversarial Pass** - Assume the change is wrong and try to break it with malformed, duplicate, stale, fallback, partially migrated, and out-of-order inputs/states
 9. **Proof Check** - For every major issue, identify the changed path, triggering input/state, and proof source (test, repro, trace, or verified contract mismatch)
-10. Bug Detection - identify issues from tracing
+10. **UI Composition Compliance Check** - If the plan includes a UI/UX Composition Specification, compare implementation against EVERY specification item: screen zones, action placement, content flow, component mapping, responsive behavior, and state treatments. Flag mismatches as HIGH.
+11. Bug Detection - identify issues from tracing
 11. Logic Validation - follow business logic through scenarios
 12. Categorize by severity (CRITICAL/HIGH/MEDIUM/LOW)
 13. Reference specific lines (file.py:42)
@@ -276,6 +306,15 @@ Use location prefix based on review type:
 - Declared invariants preserved: [Yes/No/PARTIAL] - Observation
 - Behaviors that must not change preserved: [Yes/No/PARTIAL] - Observation
 - Blast radius covered: [Yes/No/PARTIAL] - Observation
+
+### UI Composition Compliance (REQUIRED when plan includes UI/UX Composition Specification)
+- Screen zones match spec: [Yes/No/PARTIAL] - Observation with specific zone mismatches
+- Action placement matches spec: [Yes/No/PARTIAL] - Observation with specific action mismatches
+- Content flow matches spec: [Yes/No/PARTIAL] - Observation with specific flow mismatches
+- Component reuse matches Component Mapping: [Yes/No/PARTIAL] - List any duplicates vs reused
+- Responsive behavior matches spec: [Yes/No/PARTIAL] - Observation with breakpoint mismatches
+- States implemented per spec (loading, empty, error, 1-result, disabled): [Yes/No/PARTIAL] - List missing or mismatched states
+(If plan has no UI/UX Composition Specification, write: "N/A — No UI/UX Composition Specification in plan")
 
 ### Evidence Reviewed
 - Regression proof: <command/test/trace/repro> - <result>
@@ -399,6 +438,7 @@ Also ask: What would break silently? What fallback/default path is now wrong? Wh
 - DO treat unrelated repo-wide findings as out of scope unless they are required to prove the changed path is unsafe
 - DO include Trace Summary section in every code review output
 - DO output reviews directly - coordinator sees output immediately
+- DO check UI Composition Specification compliance when the plan includes one: verify screen zones, action placement, content flow, component reuse, responsive behavior, and state treatments match the spec exactly
 </important-rules>
 
 

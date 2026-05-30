@@ -95,6 +95,7 @@ Produce plans that: solve actual requests (not hypotheticals), leverage existing
 - Prefer smallest viable change (YAGNI/KISS/DRY)
 - Separate facts (observed) from assumptions
 - Use commit-level granularity for medium/complex changes (>3 phases, >5 commits, >2 days)
+- **UI/UX Composition**: For any task involving UI changes (new screens, page modifications, forms, component additions that affect layout), include a UI/UX Composition Specification section with screen zones, action placement, content flow, responsive behavior, states, and component mapping
 </non-negotiables>
 
 <design-principles>
@@ -139,9 +140,10 @@ Apply these patterns to ensure maintainability and testability:
 1. **Understand**: Restate goals, constraints, non-goals; load relevant skills
 2. **Analyze**: Identify modules/files; confirm evidence from @explore
 3. **Propose**: Primary approach + why simplest; 1-2 alternatives if meaningful
-4. **Phase**: Smallest atomic units, independently committable
-5. **Validate**: Design principles + risks + testing approach + rollout/rollback
-6. **Handoff**: Complete context for autonomous execution
+4. **UI/UX Composition** (REQUIRED for any task involving UI changes): Specify screen zones, action placement, content flow, responsive behavior, states, and component mapping. This section answers every "where does X go?" question so the implementer never guesses button placement, layout, or composition decisions. Skip only for pure backend/config changes with no UI impact.
+5. **Phase**: Smallest atomic units, independently committable
+6. **Validate**: Design principles + risks + testing approach + rollout/rollback
+7. **Handoff**: Complete context for autonomous execution
 </planning-workflow>
 
 <phase-granularity>
@@ -234,6 +236,84 @@ Use this structure for medium/complex plans (trim sections that don't apply):
 ## Allowed Scope / Forbidden Scope
 - Allowed: `<expected files/modules/behaviors allowed to change>`
 - Forbidden: `<behaviors/files/interfaces that must not change in this plan>`
+
+## UI/UX Composition Specification
+REQUIRED for any task involving UI changes (new screens, page modifications, forms, dashboards, component additions that affect layout). Skip only for pure backend/config/API changes with zero UI impact.
+
+### Screen Composition
+Describe the screen zone-by-zone — where every element lives. This is the single source of truth for placement decisions.
+
+```
+#### [Zone: Top Bar / Header] (sticky/non-sticky)
+├── Left: [e.g., ← Back arrow | Screen title "Labels"]
+├── Center: [e.g., nothing, or search]
+└── Right: [e.g., ＋ Add Label button (primary, size: sm)]
+
+#### [Zone: Sidebar] (always/conditionally visible, width: Npx)
+├── [e.g., Filter list, collapsible sections]
+└── [e.g., Navigation items]
+
+#### [Zone: Main Content] (scrollable)
+├── Section: [e.g., Filter bar — sticky below top bar]
+│   ├── [e.g., Search input (full width, debounce 300ms)]
+│   └── [e.g., Filter chips (horizontal scroll on mobile)]
+├── Section: [e.g., Results grid]
+│   ├── Desktop: [e.g., 3-column grid, gap-4]
+│   ├── Tablet: [e.g., 2-column grid]
+│   └── Mobile: [e.g., single column stack]
+└── [e.g., Cards/items — describe each row/card layout]
+
+#### [Zone: Bottom Bar] (if sticky)
+└── [e.g., Submit button (primary, full width on mobile)]
+```
+
+### Action Placement Rules
+Specify where every action lives. The implementer must follow these exactly.
+
+| Action | Position | Variant | Visibility Condition |
+|--------|----------|---------|----------------------|
+| Primary CTA (e.g., Save/Create) | [e.g., top-right of screen, always visible] | primary/heavy | [e.g., always, or when form is valid] |
+| Secondary (e.g., Cancel) | [e.g., left of primary button] | secondary/ghost | [e.g., always] |
+| Inline actions (e.g., Edit/Delete per row) | [e.g., bottom-right of each card] | ghost | [e.g., visible on hover] |
+| Destructive (e.g., Delete) | [e.g., inline, ghost variant + confirmation modal] | destructive ghost | [e.g., always, or admin only] |
+| Batch actions (e.g., Delete selected) | [e.g., appear in top bar when items selected] | primary | [e.g., only when ≥1 item selected] |
+
+### Content Flow (Reading Order)
+What does the user see, in order? Number each element.
+
+1. [e.g., Page title + Add button]
+2. [e.g., Search/filter bar]
+3. [e.g., Results grid/list]
+4. [e.g., Empty state replaces #3 when no results]
+5. [e.g., Error banner appears at top of #3 on fetch failure]
+
+### Component Mapping
+Map each UI need to either an existing component (reuse) or a new component (with reference pattern).
+
+| Need | Reuse Existing | New Component | Reference Pattern |
+|-----|---------------|---------------|-------------------|
+| [e.g., Card layout] | `components/Card.tsx` | — | — |
+| [e.g., Filter bar] | — | `FilterBar.tsx` | `components/SearchInput.tsx` pattern |
+| [e.g., Empty state] | `components/EmptyState.tsx` | — | — |
+| [e.g., Confirm modal] | `components/ConfirmDialog.tsx` | — | — |
+
+### Responsive Behavior
+
+| Breakpoint | Layout Change |
+|------------|--------------|
+| Mobile (<768px) | [e.g., Single column, sidebar hidden, cards stacked, search full width] |
+| Tablet (768–1024px) | [e.g., 2-column grid, sidebar as overlay] |
+| Desktop (>1024px) | [e.g., Sidebar 240px + 3-column grid, search inline] |
+
+### States
+
+| State | Affected Zone | Treatment |
+|-------|--------------|-----------|
+| Loading | [e.g., Main Content] | [e.g., Show 3 skeleton cards matching card dimensions, search disabled] |
+| Empty | [e.g., Main Content] | [e.g., Centered: icon + "No labels yet" text + "Add your first label" CTA button] |
+| Error | [e.g., Top of Main Content] | [e.g., AlertBanner with retry button, dismisses on successful refetch] |
+| 1 result | [e.g., Main Content] | [e.g., Same grid layout, single card — no layout shift] |
+| Disabled/readonly | [e.g., Action buttons] | [e.g., opacity-50, pointer-events-none, tooltip explains why] |
 
 ## Invariants
 | Invariant | Why it matters | How to verify |
@@ -334,6 +414,7 @@ Plans are evaluated on these dimensions (used by @analyzer):
 | Failure Signals | Plan states what evidence would show the approach is wrong or incomplete |
 | Data Compatibility | Legacy/malformed persisted state handling explicitly covered where relevant |
 | Review Gates | Table with Gate/Phase/Focus Area for @analyzer validation points |
+| UI Composition | For UI tasks: screen zones, action placement, content flow, responsive behavior, states, component mapping all specified |
 | Output | Plan saved to `docs/[feature-name].plan.md` |
 
 **Quick validation:** Does each phase answer: "What files? What changes? How to verify? Who proves it? What must not break? What would show this plan is wrong?"
