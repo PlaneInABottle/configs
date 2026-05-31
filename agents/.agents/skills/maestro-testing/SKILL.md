@@ -1,13 +1,18 @@
 ---
 name: maestro-testing
-description: "Run end-to-end mobile tests with Maestro framework. Use when: writing mobile E2E test flows, testing React Native apps on simulators/emulators, capturing screenshots for verification, managing Xcode simulators or Android emulators, running automated mobile tests, or setting up mobile CI testing. Triggers on 'test mobile app', 'e2e test', 'maestro flow', 'run simulator test', 'screenshot test', or any mobile testing task."
+description: "Mobile E2E testing and live device control with Maestro MCP. Use when: implementing mobile features, debugging React Native apps, verifying UI on simulators/emulators, writing E2E test flows, running automated tests, or any mobile UI task."
 ---
 
 # Maestro Testing
 
 ## Overview
 
-Maestro is a mobile E2E testing framework that uses declarative YAML flow files to automate iOS and Android apps. It requires no SDK integration — just install the CLI and point it at your app. Works with iOS (Xcode simulators) and Android (emulators).
+Maestro is a mobile E2E testing framework — two ways to use it:
+
+1. **Maestro MCP** — live device control (like a browser for mobile). Use this during feature implementation and debugging to verify UI directly.
+2. **YAML flows** — repeatable test scripts. Write these only *after* a feature is validated via MCP, for CI and regression runs.
+
+**Rule: MCP during implementation → YAML flows after validation.** Don't waste time scripting flows for features still in flux.
 
 **Composes with:**
 | Skill | Relationship |
@@ -16,9 +21,7 @@ Maestro is a mobile E2E testing framework that uses declarative YAML flow files 
 | ai-native-workflow | Verification patterns — Maestro provides screenshot evidence |
 | agent-browser | Complementary — agent-browser handles web, Maestro handles mobile |
 
-## 🔥 Maestro MCP (Live Device Control)
-
-**Use MCP tools directly** while implementing features, debugging, or verifying UI — no YAML scripts needed.
+## Maestro MCP (Live Device Control)
 
 ```bash
 maestro mcp  # Starts the MCP server
@@ -37,22 +40,6 @@ maestro mcp  # Starts the MCP server
 | `run_flow` | Execute inline YAML directly |
 | `scroll` | Scroll in direction |
 | `back` | Navigate back |
-
-### Workflow: Interactive First, Scripts After
-
-```
-FEATURE IMPLEMENTATION / DEBUGGING        PERSISTENT TESTING
-─────────────────────────────────────     ───────────────────
-MCP tools (direct control)                YAML scripts (repeatable)
-tap_on, input_text, inspect, screenshot   maestro test login.yaml
-  ↓                                       
-Validate feature works live               
-  ↓                                       
-ONLY THEN write YAML flows                 
-for CI / regression / repeat runs         
-```
-
-During implementation and debugging, **use MCP tools interactively** to validate the feature on a live device. Once validated, write YAML flows for CI and repeatable runs. This avoids wasting time scripting flows for features that may still change.
 
 ## Quick Start
 
