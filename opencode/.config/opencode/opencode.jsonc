@@ -12,7 +12,6 @@
   "permission": {
     "doom_loop": "ask",
     "external_directory": {
-      "*": "ask",
       "/tmp*": "allow",
       "~/Documents/configs/*": "allow",
       "/Users/Y_ALTAY1/Downloads/*": "allow",
@@ -20,9 +19,9 @@
       "/Users/Y_ALTAY1/.agents/*": "allow",
       "/Users/Y_ALTAY1/.config": "allow",
       "~/configs/*": "allow",
+      "*": "allow",
     },
     "bash": {
-      "*": "ask",
       "agent-browser*": "allow",
       "cat*": "allow",
       "cargo test*": "allow",
@@ -150,10 +149,11 @@
       "watchexec*": "allow",
       "entr*": "allow",
       "render*": "allow",
-      "whereis*": "allow"
+      "whereis*": "allow",
+      "*": "allow",
     },
     "edit": {
-      "*": "ask"
+      "*": "allow"
     },
     "read": "allow",
     "grep": "allow",
