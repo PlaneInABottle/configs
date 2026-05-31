@@ -62,14 +62,12 @@ Anti-Patterns to Avoid:
 - Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
 
 **COMMAND EXECUTION:**
-- Delegate any command execution that could produce significant output to @general instead of running it directly
-  - Example: `@general run npm test`, `@general `pip install -r requirements.txt``, `@general check if docker is running`, `@general lint the codebase`
-- @general uses a lighter model — command output stays in its context, not yours, saving tokens
-- @general should summarize/filter results before returning, so your context stays lean
-- If @general reports failures, investigate the output and retry with a more specific command, or escalate to implementer
-- @general is cheap and fast — use it freely for small, definite tasks without worrying about cost.
-  Never give @general multi-phase workflows, complex decision-making, or open-ended tasks.
-  For those, delegate to @implementer.
+- Delegate small, definite command-heavy chores to @general instead of doing them in the main session
+- Typical chores: running tests, linting the codebase, installing dependencies, and summarizing verbose command output
+- Keep @general tasks narrow (1-3 clear steps)
+- Ask @general to summarize/filter verbose command output before returning so your context stays lean
+- If @general reports failures, investigate the output and retry with a more specific command, or escalate to @implementer
+- Do not use @general for multi-phase implementation, architecture, or open-ended debugging. For those, keep orchestration in the main session and use @implementer or other specialized agents.
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
@@ -203,6 +201,8 @@ If you encounter `EADDRINUSE` (port in use):
 
 
 ## Subagents
+
+
 
 
 

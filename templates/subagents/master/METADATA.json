@@ -34,6 +34,33 @@
   },
   "description": "Master templates for subagent content with configuration",
   "systems": {
+    "codex": {
+      "text_replacements": {
+        "Use `ask_user` for clarification": "Ask the user directly in the conversation for clarification",
+        "Use `ask_user` for interactive clarification questions": "Ask the user directly in the conversation for clarification",
+        "use `ask_user`, never plain text": "ask the user directly in the conversation",
+        "`ask_user` when blocked": "ask the user directly in the conversation when blocked",
+        "`ask_user`": "ask the user directly in the conversation",
+        "@explore": "the built-in explorer agent",
+        "@general": "the built-in worker agent",
+        "@task": "the built-in worker agent",
+        "@planner": "the `planner` custom agent",
+        "@implementer": "the `implementer` custom agent",
+        "@analyzer": "the `analyzer` custom agent",
+        "ALWAYS the built-in explorer agent first": "ALWAYS use the built-in `explorer` agent first",
+        "run multiple parallel the built-in explorer agent calls": "run multiple parallel `explorer` agent threads",
+        "run parallel the built-in explorer agent calls": "run parallel `explorer` agent threads",
+        "issue multiple the built-in explorer agent calls": "issue multiple parallel `explorer` agent threads",
+        "the built-in explorer agent calls": "`explorer` agent threads",
+        "Use the built-in explorer agent for": "Use the built-in `explorer` agent for",
+        "use the built-in explorer agent to": "use the built-in `explorer` agent to",
+        "Use the built-in worker agent to": "Use the built-in `worker` agent to",
+        "use the built-in worker agent to": "use the built-in `worker` agent to",
+        "the built-in worker agent should": "the built-in `worker` agent should",
+        " (model `gpt-5.5`)": "",
+        " (model `haiku 4.5`)": ""
+      }
+    },
     "opencode": {
       "text_replacements": {
         "ask_user": "question",
@@ -64,6 +91,7 @@
       ],
       "header_lines": {
         "copilot": 4,
+        "codex": 6,
         "opencode": 45,
         "claude": 24
       },
@@ -79,6 +107,7 @@
       ],
       "header_lines": {
         "copilot": 4,
+        "codex": 6,
         "opencode": 25,
         "claude": 22
       },
@@ -95,6 +124,7 @@
       ],
       "header_lines": {
         "copilot": 5,
+        "codex": 6,
         "opencode": 45,
         "claude": 22
       },

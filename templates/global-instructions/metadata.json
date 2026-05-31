@@ -3,6 +3,25 @@
   "created": "2025-12-18T23:00:00Z",
   "version": "1.2.0",
   "systems": {
+    "codex": {
+      "requires_header": false,
+      "target_file": "codex/.codex/AGENTS.md",
+      "description": "Codex CLI global instructions (no header required)",
+      "text_replacements": {
+        "Use `ask_user` for clarification questions when blocked or ambiguous (never ask in plain text).": "Ask the user directly in the conversation for clarification questions when blocked or ambiguous.",
+        "Use `ask_user` for interactive clarification questions (never ask in plain text).": "Ask the user directly in the conversation for clarification when required.",
+        "ask_user: Use for interactive clarification questions; never ask in plain text.": "User clarification: Ask directly in the conversation when clarification is required.",
+        "After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user via `ask_user` if they want a reusable skill created for this workflow.": "After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user in the conversation if they want a reusable skill created for this workflow.",
+        "1. Use `ask_user` to clarify ambiguity": "1. Ask the user directly in the conversation to clarify ambiguity",
+        "@planner": "the `planner` custom agent",
+        "@implementer": "the `implementer` custom agent",
+        "@analyzer": "the `analyzer` custom agent",
+        "@explore": "the built-in `explorer` agent",
+        "@task": "the built-in `worker` agent",
+        "@general": "the built-in `worker` agent",
+        " (model `gpt-5.5`)": ""
+      }
+    },
     "opencode": {
       "requires_header": false,
       "target_file": "opencode/.config/opencode/OPENCODE.md",

@@ -361,7 +361,7 @@ For Plan Reviews, replace Design Principles Assessment with:
 
 <output-rules>
 FORBIDDEN: Narrative prose, bullet symbols other than -, numbered sections, alternative formats, executing commands/edits.
-The coordinator reads your output and takes immediate action.
+The parent session reads your output and takes immediate action.
 </output-rules>
 
 </output-format>
@@ -439,7 +439,7 @@ Also ask: What would break silently? What fallback/default path is now wrong? Wh
 - DO keep adjacent bug sweeps bounded to the affected blast radius only
 - DO treat unrelated repo-wide findings as out of scope unless they are required to prove the changed path is unsafe
 - DO include Trace Summary section in every code review output
-- DO output reviews directly - coordinator sees output immediately
+- DO output reviews directly - the parent session sees output immediately
 - DO check UI Composition Specification compliance when the plan includes one: verify screen zones, action placement, content flow, component reuse, responsive behavior, and state treatments match the spec exactly
 </important-rules>
 

@@ -40,7 +40,7 @@ Skip for: single-file edits, simple questions, quick fixes, or clearly-scoped 1-
 Action Checklist (Before ANY action):
 
 **SKILLS & CONTEXT (Required First):**
-- Are relevant skills already loaded in my context? If not, check available skills and load them.
+- Are there relevant skills or local patterns I should follow for this task?
 - If behavior is external, unfamiliar, or ambiguous, have I checked Context7 or equivalent official docs?
 <!-- SECTION:copilot_lsp_checklist:START:copilot -->
 - For code navigation/edits on supported file types: use `lsp` (goToDefinition, findReferences, hover) before grep/glob.
@@ -70,36 +70,34 @@ Anti-Patterns to Avoid:
 - Analysis Paralysis: Avoid open-ended explorer/analyzer loops before implementing. When additional subagent calls stop producing materially new information, move forward with implementation using the evidence you already have.
 - Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
 
-<!-- SECTION:opencode_command_execution:START:opencode -->
+<!-- SECTION:shared_command_execution:START:opencode,codex -->
 **COMMAND EXECUTION:**
-- Delegate any command execution that could produce significant output to @general instead of running it directly
-  - Example: `@general run npm test`, `@general `pip install -r requirements.txt``, `@general check if docker is running`, `@general lint the codebase`
-- @general uses a lighter model — command output stays in its context, not yours, saving tokens
-- @general should summarize/filter results before returning, so your context stays lean
-- If @general reports failures, investigate the output and retry with a more specific command, or escalate to implementer
-- @general is cheap and fast — use it freely for small, definite tasks without worrying about cost.
-  Never give @general multi-phase workflows, complex decision-making, or open-ended tasks.
-  For those, delegate to @implementer.
-<!-- SECTION:opencode_command_execution:END -->
+- Delegate small, definite command-heavy chores to @general instead of doing them in the main session
+- Typical chores: running tests, linting the codebase, installing dependencies, and summarizing verbose command output
+- Keep @general tasks narrow (1-3 clear steps)
+- Ask @general to summarize/filter verbose command output before returning so your context stays lean
+- If @general reports failures, investigate the output and retry with a more specific command, or escalate to @implementer
+- Do not use @general for multi-phase implementation, architecture, or open-ended debugging. For those, keep orchestration in the main session and use @implementer or other specialized agents.
+<!-- SECTION:shared_command_execution:END -->
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
 
-1. **Check available skills:** Review and match skill descriptions to your task requirements.
+1. **Identify relevant skills:** Use skill guidance when it clearly applies to the task.
 
-2. **Decision tree:** Code patterns / workflows / tooling-integration → Load matching skill(s). No match → Proceed without skill.
+2. **Default behavior:** Prefer existing local patterns first; use relevant skills when they add clear guidance.
 
-3. **Load relevant skills:** Check if already loaded; if not, use `skill` tool. Load ALL matching skills and combine guidance.
+3. **Combine guidance:** When multiple relevant skills apply, combine their guidance.
 
 4. **Priority order:** Project skills → Local code/patterns → Context7 docs (when needed) → General knowledge
 
 5. **Read skill references:** If a loaded skill references external files, playbooks, or guides that are relevant to your task, read them for complete context.
 
-**Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
+**Operational Gate:** If a skill clearly applies to the task, follow its guidance.
 
 **Skill Freshness:** If implementation changes something a loaded skill documents (class names, file paths, enum values, API contracts), update the skill before the task is marked done. Stale skills cause future agents to fail.
 ## Tools
-Skills: Project-specific patterns and workflows. Check available skills FIRST. Load with `skill` tool.
+Skills: Project-specific patterns and workflows. Use relevant skill guidance when it applies.
 Context7 MCP: Tool for researching external APIs and unfamiliar or ambiguous library behavior when local code/patterns are not enough.
 <!-- SECTION:copilot_lsp_tools:START:copilot -->
 LSP tools: Use `lsp` for code intelligence on `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.lua`, `.sh`, `.bash`, `.zsh` files. Prefer over grep/glob for symbol navigation. Operations: `goToDefinition`, `findReferences`, `hover` (type info), `documentSymbol` (file outline), `rename` (safe cross-file rename), `incomingCalls`/`outgoingCalls` (call graph).
@@ -129,7 +127,7 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | New project setup / workflow design | Load `ai-native-workflow` skill |
 | Multiple concerns | Load ALL matching skills, combine guidance |
 
-CHECK if relevant skills are already loaded → LOAD every matching skill → COMBINE guidance → FOLLOW skill instructions over general knowledge.
+USE relevant skill guidance when it applies → COMBINE multiple skills when needed → FOLLOW skill instructions over general knowledge.
 
 **Example:** API change with security → LOAD `api-guidelines` + `security-patterns/authentication`, COMBINE both. ✗ NEVER ignore a relevant skill.
 ### Context7 Reminder
@@ -255,6 +253,10 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 
 ## Subagents
 
+<!-- SECTION:codex_subagent_note:START:codex -->
+Codex custom agents are defined as standalone TOML files under `~/.codex/agents/` or project `.codex/agents/`. The root Codex session should orchestrate custom agents directly for complex work. Use built-in `explorer` for read-heavy discovery and built-in `worker` for small execution-focused chores such as tests, lint, installs, and summarizing verbose command output. Prefer parallel agent threads when useful; Codex does not use a separate background-agent mode for this workflow.
+<!-- SECTION:codex_subagent_note:END -->
+
 
 <!-- SECTION:copilot_subagent_rules:START:copilot -->
 Subagent Model Rule: Specify model `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
@@ -268,7 +270,7 @@ When to use: Complex features, major refactors, architecture decisions
 Input: Feature requirements, constraints, current architecture
 Output: Detailed implementation plan with phases
 
-**Required First:** Check available skills and load all relevant skills before proceeding.
+**Required First:** Use relevant skills when they apply.
 
 Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.5`) (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
@@ -277,7 +279,7 @@ When to use: Security-critical code, between phases, pre-deployment, focused cod
 Input: Code to review, context on changes
 Output: Issues, recommendations, approval status
 
-**Required First:** Check available skills and load all relevant skills before proceeding.
+**Required First:** Use relevant skills when they apply.
 
 Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (model `gpt-5.5`) (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
@@ -286,7 +288,7 @@ When to use: Phased implementation with clear requirements
 Input: Phase description, requirements, constraints
 Output: Working implementation, tested, ready for next phase
 
-**Required First:** Check available skills and load all relevant skills before proceeding.
+**Required First:** Use relevant skills when they apply.
 
 Critical Requirements:
 

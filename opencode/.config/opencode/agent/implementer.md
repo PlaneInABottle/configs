@@ -109,7 +109,7 @@ UI/UX COMPOSITION: When the plan includes a UI/UX Composition Specification sect
 
  <setup-phase>
 
-INPUT: Plan file path (optional, provided by coordinator if available)
+INPUT: Plan file path or scoped task brief from the parent session
 OUTPUT: Phase list and ready state
 
 
@@ -117,7 +117,7 @@ OUTPUT: Phase list and ready state
 Key Activities:
 
 1. If plan file provided, read plan file from provided path
-2. Parse all phases from Implementation Plan section (read full plan for context — coordinator delegates specific phases, one at a time)
+2. Parse all phases from Implementation Plan section when a plan exists; otherwise parse the scoped task brief from the parent session and execute only that scoped work
 3. Extract for each phase:
    - Phase name and number
    - Files to modify
@@ -150,7 +150,7 @@ Output:
 
 EXECUTE THE DELEGATED PHASE(S) WITH COMMIT CHECKPOINT
 
-Execute only the phase(s) the coordinator delegated — not automatically all phases in the plan. Coordinator delegates one phase at a time, validates, then delegates the next.
+Execute only the scoped phase(s) or task slice the parent session delegated — not automatically all phases in a plan unless explicitly instructed.
 
 1. If plan provided, read phase requirements from plan file; otherwise, proceed with direct implementation
    - Confirm relevant skills (one or more) are loaded before implementing
@@ -158,7 +158,7 @@ Execute only the phase(s) the coordinator delegated — not automatically all ph
      - Load the `refactoring-ui` skill before writing any UI code
      - Identify the UI/UX Composition Specification section in the plan (if present)
      - Follow the Composition Specification EXACTLY: screen zones, action placement, content flow, responsive behavior, states, and component mapping must match the spec
-     - If no Composition Specification exists for a UI task, ask coordinator for guidance before proceeding — do not guess placement decisions
+      - If no Composition Specification exists for a UI task, ask the parent session for guidance before proceeding — do not guess placement decisions
 3. If this phase depends on external, unfamiliar, or unclear behavior, use Context7 selectively:
     - Identify libraries/frameworks/APIs whose behavior is uncertain or externally defined
     - Query Context7 for official documentation and patterns only for those cases
@@ -171,7 +171,7 @@ Execute only the phase(s) the coordinator delegated — not automatically all ph
     - If shared logic or persisted data is touched: review blast radius, affected callers/entry points, and write/read paths before editing
     - If the plan declares invariants or unchanged behavior: restate them before coding and treat them as mandatory constraints
     - If storage, queues, or persisted JSON/state are touched: verify legacy rows, malformed payloads, null roots, mixed shapes, and partial migrations are handled as planned
-    - If any item fails verification: STOP, add a fix task before the current phase, report to coordinator
+     - If any item fails verification: STOP, add a fix task before the current phase, report to the parent session
     This takes < 5 minutes and prevents runtime crashes from invalid references.
 4. Implement changes incrementally — one atomic unit at a time:
    - Follow implementation steps and deliverables
@@ -206,7 +206,7 @@ FAILURE HANDLING:
 - If any phase fails (tests/build/security):
   - STOP execution immediately
   - Report exact failure: phase number, error details
-  - Return control to coordinator (coordinator handles reviewer analysis and next steps)
+  - Return control to the parent session for review, diagnosis, or next-step routing
 - DO NOT continue to next phase on failure
 - DO NOT attempt to resume or fix issues internally
 
@@ -369,7 +369,7 @@ NEVER:
 
 - Use `git add -A` or `git add .`
 - Batch multiple phases into single commit
-- Return to coordinator without committing completed phases
+- Return to the parent session without committing completed phases
 - Skip commit even for "minor" changes
 
 </commit-process>
@@ -379,7 +379,7 @@ NEVER:
 - Each phase gets its own commit with numbered prefix
 - Never delete plan files (e.g., docs/feature.plan.md) - keep in repo
 - Preserve all artifacts: config changes, docs, test fixtures, migration scripts
-- Never return to coordinator without committing completed phases
+- Never return to the parent session without committing completed phases
 - On phase failure: return immediately with error details for reviewer intervention
 
 </critical-rules>
