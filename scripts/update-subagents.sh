@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Update Subagent Files from Master Templates
-# Generates copilot and opencode subagent files from master templates + headers
+# Generates system-specific subagent files from master templates
 
 set -eo pipefail
 
@@ -31,7 +31,7 @@ usage() {
     echo ""
     echo "Options:"
     echo "  --agent=NAME          Update specific agent (planner|analyzer|implementer|coordinator|challenger|all)"
-    echo "  --system=NAME         Update specific system (copilot|opencode|all) [default: all]"
+    echo "  --system=NAME         Update specific system (copilot|codex|claude|opencode|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
     echo "  --help, -h            Show this help message"
     echo ""
@@ -248,6 +248,15 @@ EOF
         return 0
     fi
 
+    if [[ "$system" == "codex" ]]; then
+        cat <<EOF
+name = "${name}"
+description = "${description}"
+developer_instructions = """
+EOF
+        return 0
+    fi
+
     # opencode - no permissions for any agent (use global config.json instead)
     local examples="$(get_metadata_lines subagents "$agent" examples)"
 
@@ -288,6 +297,8 @@ update_agent() {
     local output_file=""
     if [[ "$system" == "copilot" ]]; then
         output_file="$CONFIG_DIR/copilot/.copilot/agents/${agent}.agent.md"
+    elif [[ "$system" == "codex" ]]; then
+        output_file="$CONFIG_DIR/codex/.codex/agents/${agent}.toml"
     elif [[ "$system" == "claude" ]]; then
         output_file="$CONFIG_DIR/claude/.claude/agents/${agent}.md"
     else
@@ -300,6 +311,8 @@ update_agent() {
         print_dry_run "Would update: $output_file"
         return 0
     fi
+
+    mkdir -p "$(dirname "$output_file")"
     
     # Generate header
     local header
@@ -308,8 +321,14 @@ update_agent() {
     # Combine header + content, process includes, then filter sections
     {
         echo "$header"
-        echo ""
+        if [[ "$system" != "codex" ]]; then
+            echo ""
+        fi
         cat "$master_file"
+        if [[ "$system" == "codex" ]]; then
+            echo
+            echo '"""'
+        fi
     } | process_includes | filter_sections_for_system "$system" > "$output_file"
     
     local line_count
@@ -328,7 +347,7 @@ main() {
     # Determine which systems to update
     local systems_to_update=()
     if [[ "$SYSTEM" == "all" ]]; then
-        systems_to_update=(copilot opencode)
+        systems_to_update=(copilot codex claude opencode)
     else
         systems_to_update=("$SYSTEM")
     fi
@@ -402,6 +421,7 @@ if [[ "$AGENT" != "all" ]]; then
 fi
 
 if [[ "$SYSTEM" != "all" ]] && [[ "$SYSTEM" != "copilot" ]] && \
+   [[ "$SYSTEM" != "codex" ]] && [[ "$SYSTEM" != "claude" ]] && \
    [[ "$SYSTEM" != "opencode" ]]; then
     echo "Error: Invalid system name: $SYSTEM"
     usage

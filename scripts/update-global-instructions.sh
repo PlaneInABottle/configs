@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Update Global Instructions from Master Template
 # Generates system-specific instruction files from master template + headers
+# Supports optional per-system template overrides at templates/global-instructions/<system>.md
 
 set -eo pipefail
 
@@ -30,7 +31,7 @@ usage() {
     echo "Updates global instruction files from master template."
     echo ""
     echo "Options:"
-    echo "  --system=NAME         Update specific system (copilot|opencode|claude|gemini|all) [default: all]"
+    echo "  --system=NAME         Update specific system (copilot|codex|opencode|claude|gemini|all) [default: all]"
     echo "  --dry-run             Show what would be updated without making changes"
     echo "  --help, -h            Show this help message"
     echo ""
@@ -159,6 +160,12 @@ update_system() {
     local requires_header=$(get_metadata_value "$system" "requires_header")
     local target_file="$CONFIG_DIR/$(get_metadata_value "$system" "target_file")"
     local header_file="$HEADERS_DIR/${system}.header"
+    local template_file="$MASTER_FILE"
+    local system_template_file="$TEMPLATE_DIR/${system}.md"
+
+    if [[ -f "$system_template_file" ]]; then
+        template_file="$system_template_file"
+    fi
 
     print_step "Updating ${system} global instructions..."
 
@@ -180,14 +187,14 @@ update_system() {
             echo ""
             echo "<!-- sync-test: generated via templates/global-instructions/master.md + scripts/update-global-instructions.sh -->"
             echo ""
-            filter_sections_for_system "$system" "$MASTER_FILE"
+            filter_sections_for_system "$system" "$template_file"
         } > "$target_file"
     else
         # For systems that don't require headers (opencode)
         {
             echo "<!-- sync-test: generated via templates/global-instructions/master.md + scripts/update-global-instructions.sh -->"
             echo ""
-            filter_sections_for_system "$system" "$MASTER_FILE"
+            filter_sections_for_system "$system" "$template_file"
         } > "$target_file"
     fi
 
@@ -206,7 +213,7 @@ main() {
     # Determine which systems to update
     local systems_to_update=()
     if [[ "$SYSTEM" == "all" ]]; then
-        systems_to_update=(copilot opencode claude gemini)
+        systems_to_update=(copilot codex opencode claude gemini)
     else
         systems_to_update=("$SYSTEM")
     fi
@@ -252,7 +259,7 @@ done
 
 # Validate arguments
 if [[ "$SYSTEM" != "all" ]] && [[ "$SYSTEM" != "copilot" ]] && \
-   [[ "$SYSTEM" != "opencode" ]] && [[ "$SYSTEM" != "claude" ]] && \
+   [[ "$SYSTEM" != "codex" ]] && [[ "$SYSTEM" != "opencode" ]] && [[ "$SYSTEM" != "claude" ]] && \
    [[ "$SYSTEM" != "gemini" ]]; then
     echo "Error: Invalid system name: $SYSTEM"
     usage

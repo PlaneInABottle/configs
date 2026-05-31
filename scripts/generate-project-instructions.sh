@@ -106,7 +106,7 @@ usage() {
     echo "  • .claude/CLAUDE.md       - Claude Code (project-specific)"
     echo "  • .gemini/GEMINI.md       - Gemini Code (project-specific)"
     echo "  • .qwen/QWEN.md           - Qwen Code (project-specific)"
-    echo "  • AGENTS.md               - GitHub Copilot + OpenCode (project-specific)"
+    echo "  • AGENTS.md               - Codex + GitHub Copilot + OpenCode (project-specific)"
     echo ""
     echo "Examples:"
     echo "  $0 ~/projects/my-new-project"
@@ -371,7 +371,7 @@ create_agent_files() {
         fi
     fi
     
-    # Create AGENTS.md (project-specific for Copilot + OpenCode)
+    # Create AGENTS.md (project-specific for Codex + Copilot + OpenCode)
     if [[ "$ONLY_FILES" == "all" || "$ONLY_FILES" == "agents" ]]; then
         should_create_file=false
         if [[ -f "$TARGET_DIR/AGENTS.md" ]]; then
@@ -401,7 +401,7 @@ show_summary() {
     echo "  • .claude/CLAUDE.md       - Claude Code (project-specific)"
     echo "  • .gemini/GEMINI.md       - Gemini Code (project-specific)"
     echo "  • .qwen/QWEN.md           - Qwen Code (project-specific)"
-    echo "  • AGENTS.md               - GitHub Copilot + OpenCode (project-specific)"
+    echo "  • AGENTS.md               - Codex + GitHub Copilot + OpenCode (project-specific)"
     echo ""
     echo -e "${YELLOW}Next steps:${NC}"
     echo "  1. Review and customize files for your specific project needs"

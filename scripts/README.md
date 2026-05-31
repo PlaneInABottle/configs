@@ -1,6 +1,6 @@
 # Subagent Management Scripts
 
-Automated system for managing subagent instruction files across Copilot, Opencode, and Claude systems.
+Automated system for managing subagent instruction files across Copilot, Codex, Opencode, and Claude systems.
 
 ## Overview
 
@@ -10,9 +10,10 @@ This system uses **master templates** as single source of truth and generates to
 templates/subagents/
 ├── master/                 # Single source of truth
 │   ├── planner.md
-│   ├── reviewer.md
+│   ├── analyzer.md
 │   ├── implementer.md
 │   ├── coordinator.md
+│   ├── challenger.md
 │   └── METADATA.json       # Agent metadata (descriptions, examples)
 └── headers/                # Tool-specific headers
     ├── copilot.template    # Copilot header format
@@ -49,10 +50,11 @@ Generates subagent files from master templates + headers.
 **Usage:**
 ```bash
 # Update specific agent for all systems
-./scripts/update-subagents.sh --agent=debugger
+./scripts/update-subagents.sh --agent=analyzer
 
 # Update all agents for specific system
 ./scripts/update-subagents.sh --agent=all --system=copilot
+./scripts/update-subagents.sh --agent=all --system=codex
 ./scripts/update-subagents.sh --agent=all --system=claude
 
 # Dry run to preview changes
@@ -63,8 +65,8 @@ Generates subagent files from master templates + headers.
 ```
 
 **Options:**
-- `--agent=NAME` - Agent to update (planner|reviewer|implementer|coordinator|all)
-- `--system=NAME` - System to update (copilot|opencode|claude|all) [default: all]
+- `--agent=NAME` - Agent to update (planner|analyzer|implementer|coordinator|challenger|all)
+- `--system=NAME` - System to update (copilot|codex|opencode|claude|all) [default: all]
 - `--dry-run` - Preview changes without modifying files
 - `--force` - Overwrite without confirmation
 
@@ -107,7 +109,7 @@ Validates that copilot and opencode files have identical content.
 
 1. **Edit master template:**
    ```bash
-   # Edit the master template (e.g., planner, implementer, reviewer, coordinator)
+   # Edit the master template (e.g., planner, analyzer, implementer)
    vim templates/subagents/master/implementer.md
    ```
 
@@ -157,6 +159,18 @@ description: "..."
 
 <content from master template>
 ```
+
+### Codex Format
+
+```toml
+name = "planner"
+description = "Software architect that creates detailed implementation plans without writing code..."
+developer_instructions = """
+<content from master template>
+"""
+```
+
+Codex custom agents are generated as standalone TOML files under `codex/.codex/agents/`. Codex auto-discovers these files from `~/.codex/agents/` because `~/.codex` is symlinked to this repo's `codex/.codex` on this machine.
 
 ### Opencode Format
 
@@ -250,9 +264,9 @@ Different tools have different requirements. Headers remain tool-specific.
 Each subagent serves a different purpose:
 - **Planner**: Comprehensive planning with SOLID principles
 - **Implementer**: Technology-specific implementation guides
-- **Reviewer**: Security and quality focus areas
+- **Analyzer**: Security and quality focus areas
 - **Coordinator**: Multi-phase orchestration (Opencode only)
-- **Prompt-Creator**: Prompt engineering specialist (Opencode only)
+- **Challenger**: Requirements challenger (Opencode only)
 
 Custom sections per role ensure maximum clarity and usability.
 
@@ -277,9 +291,10 @@ Custom sections per role ensure maximum clarity and usability.
 - `validate-subagents.sh` detects content start dynamically (after the last `---` and following blank lines), so it does **not** rely on hardcoded header lengths.
 
 ✅ **Multi-System Support:**
-- **Copilot**: planner, reviewer, implementer
-- **Opencode**: planner, reviewer, implementer, coordinator
-- **Claude**: planner, reviewer, implementer
+- **Copilot**: planner, analyzer, implementer, coordinator
+- **Codex**: planner, analyzer, implementer
+- **Opencode**: planner, analyzer, implementer, coordinator, challenger
+- **Claude**: planner, analyzer, implementer
 
 ## Current Status
 
@@ -299,7 +314,7 @@ Custom sections per role ensure maximum clarity and usability.
 - `validate-subagents.sh` detects content start dynamically (after the last `---` and following blank lines), so it does **not** rely on hardcoded header lengths.
 
 🔧 **TODO (Optional Enhancements):**
-- Add per-subagent overrides for opencode tools/permissions (e.g. reviewer stricter than implementer)
+- Add per-subagent overrides for opencode tools/permissions (e.g. analyzer stricter than implementer)
 - Add a small test suite for the scripts
 - CI/CD integration (optional)
 
@@ -340,9 +355,8 @@ Always validate before committing:
 Expected output when synced:
 ```
 ✓ planner content identical (1405 lines)
-✓ reviewer content identical (448 lines)
+✓ analyzer content identical (448 lines)
 ✓ implementer content identical (1602 lines)
-✓ coordinator content identical (328 lines)
 
 ✓ All subagents are in sync!
 ```

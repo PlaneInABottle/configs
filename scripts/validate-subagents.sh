@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Validate Subagent Files Against Master Templates
-# Checks that copilot and opencode files have identical content (excluding headers)
-# and that generated files don't contain raw SECTION/INCLUDE markers
+# Checks that generated subagent files don't contain raw SECTION/INCLUDE markers
 
 set -eo pipefail
 
@@ -118,6 +117,8 @@ validate_agent() {
         local file=""
         if [[ "$system" == "copilot" ]]; then
             file="$CONFIG_DIR/copilot/.copilot/agents/${agent}.agent.md"
+        elif [[ "$system" == "codex" ]]; then
+            file="$CONFIG_DIR/codex/.codex/agents/${agent}.toml"
         elif [[ "$system" == "claude" ]]; then
             file="$CONFIG_DIR/claude/.claude/agents/${agent}.md"
         else
