@@ -1,2 +1,4 @@
 prefix_rule(pattern=["uv", "run", "pytest"], decision="allow")
 prefix_rule(pattern=["rbenv", "exec", "bundle", "exec", "rspec"], decision="allow")
+prefix_rule(pattern=["maestro"], decision="allow")
+prefix_rule(pattern=["pm2", "list"], decision="allow")

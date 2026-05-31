@@ -27,6 +27,9 @@ trust_level = "trusted"
 [projects."/Users/Y_ALTAY1/Documents/simWoot/chatwoot"]
 trust_level = "trusted"
 
+[projects."/Users/Y_ALTAY1/Documents/mobile/new-diving-app"]
+trust_level = "trusted"
+
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
@@ -37,6 +40,10 @@ args = ["-y", "@supabase/mcp-server-supabase@latest", "--project-ref=kxtmkvxkbmt
 env = { SUPABASE_ACCESS_TOKEN = "" } 
 startup_timeout_ms = 20_000 
 enabled=false
+
+[mcp_servers.maestro]
+command = "maestro"
+args = ["mcp"]
 
 network_access = true
 
