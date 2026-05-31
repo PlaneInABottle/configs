@@ -198,6 +198,8 @@ If you encounter `EADDRINUSE` (port in use):
 
 
 
+
+
 ### Planner
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions
