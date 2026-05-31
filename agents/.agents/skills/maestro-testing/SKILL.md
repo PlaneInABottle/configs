@@ -16,6 +16,44 @@ Maestro is a mobile E2E testing framework that uses declarative YAML flow files 
 | ai-native-workflow | Verification patterns — Maestro provides screenshot evidence |
 | agent-browser | Complementary — agent-browser handles web, Maestro handles mobile |
 
+## 🔥 Maestro MCP (Live Device Control)
+
+**Use MCP tools directly** while implementing features, debugging, or verifying UI — no YAML scripts needed.
+
+```bash
+maestro mcp  # Starts the MCP server
+```
+
+### Available MCP Tools
+
+| Tool | What it does |
+|------|--------------|
+| `list_devices` | List available simulators/emulators |
+| `launch_app` | Launch an app by bundle ID |
+| `inspect_view_hierarchy` | Dump current screen's UI tree as CSV |
+| `tap_on` | Tap element by text, ID, or regex |
+| `input_text` | Type into focused field |
+| `take_screenshot` | Capture screen |
+| `run_flow` | Execute inline YAML directly |
+| `scroll` | Scroll in direction |
+| `back` | Navigate back |
+
+### Workflow: Interactive First, Scripts After
+
+```
+FEATURE IMPLEMENTATION / DEBUGGING        PERSISTENT TESTING
+─────────────────────────────────────     ───────────────────
+MCP tools (direct control)                YAML scripts (repeatable)
+tap_on, input_text, inspect, screenshot   maestro test login.yaml
+  ↓                                       
+Validate feature works live               
+  ↓                                       
+ONLY THEN write YAML flows                 
+for CI / regression / repeat runs         
+```
+
+During implementation and debugging, **use MCP tools interactively** to validate the feature on a live device. Once validated, write YAML flows for CI and repeatable runs. This avoids wasting time scripting flows for features that may still change.
+
 ## Quick Start
 
 ```bash

@@ -139,6 +139,7 @@
       "gitk*": "allow",
       "tig*": "allow",
       "kill*": "allow",
+      "maestro*": "allow",
       "npx*": "allow",
       "npx remove*": "ask",
       "npx uninstall*": "ask",
@@ -247,5 +248,14 @@
       "url": "https://docs.livekit.io/mcp",
       "enabled": true
     },
+    "maestro": {
+      "type": "local",
+      "command": [
+        "maestro",
+        "mcp"
+      ],
+      "enabled": true,
+      "environment": {}
+    }
   }
 }

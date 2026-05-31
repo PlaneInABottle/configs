@@ -1,6 +1,6 @@
 ---
 name: ai-native-workflow
-description: Comprehensive guide for AI-managed development workflows and language-agnostic system operations. MANDATORY for any feature implementation, API creation, UI development, debugging, or testing. Defines the universal toolchain (Hurl, Faker, Docker, agent-browser) used to execute and verify code without relying on language-specific frameworks like pytest or Jest.
+description: Comprehensive guide for AI-managed development workflows and language-agnostic system operations. MANDATORY for any feature implementation, API creation, UI development, debugging, or testing. Defines the universal toolchain (Hurl, Faker, Docker, agent-browser, Maestro) used to execute and verify code without relying on language-specific frameworks like pytest or Jest.
 license: MIT
 ---
 
@@ -22,6 +22,7 @@ When verifying your implementations, **never** default to writing language-speci
 | **Network / API** | **Network Boundaries** | Use `hurl` for REST/GraphQL, `grpcurl` for gRPC, and `wscat` for WebSockets. |
 | **External APIs** | **`api-discovery` skill** | Find and select reliable public APIs for your needs. Maps dev tasks to APIs (weather, geocoding, email validation, etc.). |
 | **Interface (Web/CLI)** | **`agent-browser`** | Use `agent-browser` as an Interactive REPL for Web UIs. For CLI apps, use standard Unix streams (`stdout/stderr`) or `expect` scripts. |
+| **Interface (Mobile)** | **`maestro mcp`** | Use `maestro mcp` to directly control iOS/Android simulators — tap, input text, inspect hierarchy, screenshot. For the full skill, load `maestro-testing`. |
 | **Persistence / DB** | **Native Clients** | Bypass the app layer. Use native datastore clients (`psql`, `mongosh`, `sqlite3`, `redis-cli`) directly to assert state changes. If a native CLI client is unavailable, write a minimalist, single-file headless script to execute the query and print JSON to stdout. Do not write assertions inside this script; pipe the stdout to `jq` or `grep`. |
 | **Async / Events** | **`redis-cli` / `rpk`** | Inject messages directly into queues and verify worker side-effects. |
 | **Media / Files** | **`pexels-media` skill** | Download real, valid binary fixtures for upload testing. Never pass corrupted mock bytes. |
@@ -39,6 +40,7 @@ Before following a playbook, verify the required CLI tools are installed and on 
 ```bash
 command -v hurl >/dev/null || echo "Install hurl before running API or GraphQL playbooks"
 command -v agent-browser >/dev/null || echo "Install agent-browser before running UI playbooks"
+command -v maestro >/dev/null || echo "Install maestro before running mobile playbooks"
 command -v docker >/dev/null || echo "Install Docker before running infrastructure flows"
 ```
 
@@ -71,7 +73,7 @@ For exact implementation details, code snippets, and CLI commands for the toolki
 3. **Phase 3: Implementation & Verification**
    Build the feature and immediately verify it using the **Universal Toolkit Playbooks** linked above.
 4. **Phase 4: Programmatic Operations**
-   Ensure you can manage the application programmatically without a human (e.g., manipulating UI state using `agent-browser`).
+   Ensure you can manage the application programmatically without a human (e.g., manipulating UI state using `agent-browser` for web, `maestro mcp` for mobile).
 5. **Phase 5: Continuous Iteration & Debugging**
    Run existing unit tests after every code change. Tests are your guardrails. **NEVER write, modify, or append to language-specific integration tests under ANY circumstances. Use pytest/cargo test/Jest ONLY for pure logic unit testing.** (Note: Do not use Jest/pytest to test functions that import web frameworks like Express/FastAPI, ORMs, or rely on I/O. If testing a function requires mocking external modules, database connections, or HTTP clients, it is an integration boundary. Do NOT write a unit test for it; test it end-to-end via `.hurl` or native clients). You MUST use the Universal Toolkit (`.hurl`, `agent-browser`, `psql`) for all new test assertions. During UI changes, run `agent-browser snapshot -i` and screenshot to track visual regressions. Re-snapshot after every navigation. You MUST read the output of `agent-browser snapshot -i` before interacting with ANY UI element; NEVER blindly guess element IDs. Always wait for async data fetching or specific state changes (using `agent-browser wait`) before re-snapshotting. Do not snapshot immediately after a click if a loading state or async mutation is expected.
 6. **Phase 6: Teardown**
@@ -100,7 +102,9 @@ For detailed PM2 operations, load the `pm2-runtime-operator` skill.
 
 ---
 
-## Interactive UI Verification (`agent-browser`)
+## Interactive UI Verification
+
+### Web (`agent-browser`)
 
 Use `agent-browser` for fast UI feedback during implementation.
 
@@ -113,6 +117,22 @@ agent-browser click @e2
 ```
 
 For browser-specific semantics, load the `agent-browser` skill.
+
+### Mobile (`maestro mcp`)
+
+Use Maestro MCP for direct device control during mobile feature implementation and debugging.
+
+```bash
+# Available as MCP tools — no CLI commands needed when configured
+# list_devices  → find available simulator
+# launch_app    → start your app
+# inspect_view_hierarchy → see what's on screen
+# tap_on        → tap elements
+# input_text    → type into fields
+# take_screenshot → capture screen
+```
+
+**During implementation/debugging, use MCP tools interactively on a live device.** Write YAML flows only after the feature is validated, for CI and repeatable regression runs. Load `maestro-testing` skill for full YAML syntax and flow authoring.
 
 ---
 
@@ -127,7 +147,8 @@ For browser-specific semantics, load the `agent-browser` skill.
 
 | Anti-Pattern | Do Instead |
 |---|---|
-| Writing `pytest`/`Jest` for integration tests | Use `.hurl` for APIs, `psql` for DB, `agent-browser` for UI. Keep the SUT language-agnostic. |
+| Writing `pytest`/`Jest` for integration tests | Use `.hurl` for APIs, `psql` for DB, `agent-browser` for web UI, `maestro mcp` for mobile UI. Keep the SUT language-agnostic. |
+| Writing Maestro YAML flows before validating a feature | Use `maestro mcp` tools interactively during implementation. Write YAML flows only after the feature works on a live device. |
 | Stale browser refs | Always run `agent-browser snapshot -i` after a click/navigation. Refs invalidate on DOM mutation. |
 | Over-engineering Docker | Start with just App + DB. Add Redis/Mailpit only when a specific feature requires it. |
 | Creating monolithic skills | Adhere to "One skill per concern". |
