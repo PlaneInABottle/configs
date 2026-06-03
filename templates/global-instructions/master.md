@@ -84,8 +84,8 @@ Anti-Patterns to Avoid:
 **COMMAND EXECUTION:**
 - Codex keeps orchestration in the main session, but should proactively delegate when the task is clearly a better fit for a built-in agent.
 - Use the built-in `explorer` agent whenever the work is primarily repo discovery: searching for files, tracing call sites, mapping architecture, or answering "where does this live?" questions.
-- Use the built-in `worker` agent whenever the work is primarily bounded execution: long or verbose test runs, lint/typecheck/install commands, log summarization, and other command-heavy chores where you mainly need the result back.
-- Keep only tiny one-shot commands in the main session when delegation would add more overhead than value.
+- Strongly favor the built-in `worker` agent for chore commands because it is fast and cheap: test runs, lint/typecheck/install commands, verification steps, log summarization, and other bounded command-heavy work where you mainly need the result back.
+- Keep only tiny one-shot commands in the main session when delegation would add more overhead than value; otherwise prefer `worker` for execution chores.
 - For batch/parallel work that benefits from real concurrency, use `spawn_agents_on_csv` (CSV fan-out) or run multiple `codex exec` calls in parallel from your shell, then aggregate the outputs yourself. Do not rely on inline subagent spawning for this — Codex's `spawn_agent` is explicit-trigger only.
 - Do not start long-lived processes from inside a session without PM2/Docker (see Running Applications below). Codex context can be compacted mid-run, which loses PIDs and causes zombie processes and port exhaustion.
 <!-- SECTION:codex_command_execution:END -->
@@ -94,7 +94,8 @@ Anti-Patterns to Avoid:
 ## Built-in Agents
 
 - Strongly prefer the built-in `explorer` agent for search, discovery, and codebase mapping tasks.
-- Strongly prefer the built-in `worker` agent for command execution, verification, and summarizing long output.
+- Strongly prefer the built-in `worker` agent for command execution, tests, verification, and summarizing long output.
+- Treat `worker` as the default helper for cheap, bounded execution chores.
 - In this repo, the supported Codex delegation set is `explorer` and `worker`.
 - Keep coding, editing, and final synthesis in the main Codex session unless delegation is clearly faster.
 <!-- SECTION:codex_builtin_agents:END -->

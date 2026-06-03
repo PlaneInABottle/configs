@@ -1,5 +1,7 @@
 {
-  "defaultBannerShownCount": 5,
+  "defaultBannerShownCount": {
+    "0bb64b0e8440afc305a336bede152f9389ede841378cda7df768c6b35b16ce11": 1
+  },
   "tipsShown": 10,
   "startupWarningCounts": {
     "home-directory": 1

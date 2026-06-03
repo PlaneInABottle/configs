@@ -41,6 +41,9 @@
       "warningAcknowledged": true,
       "enabled": true,
       "maxAge": "30d"
+    },
+    "plan": {
+      "enabled": true
     }
   },
   "output": {
@@ -53,7 +56,6 @@
   },
   "experimental": {
     "useModelRouter": true,
-    "plan": true,
     "enableAgents": true,
     "modelSteering": false
   },
@@ -62,5 +64,8 @@
   },
   "model": {
     "name": "gemini-3-flash-preview"
+  },
+  "agents": {
+    "overrides": {}
   }
 }
