@@ -1,7 +1,7 @@
 name = "worker"
 description = "Execution-focused agent for bounded command chores, verification, and summarizing long output."
 model = "gpt-5.3-codex-spark"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "high"
 developer_instructions = """
 You are the built-in worker override for this repo.
 

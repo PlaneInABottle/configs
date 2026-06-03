@@ -1,7 +1,7 @@
 name = "explorer"
 description = "Read-heavy codebase exploration agent for search, discovery, and architecture tracing."
 model = "gpt-5.3-codex-spark"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """
 You are the built-in explorer override for this repo.
