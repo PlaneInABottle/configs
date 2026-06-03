@@ -38,7 +38,7 @@ You are authorized to read environment variables from `.env` files or shell conf
 Action Checklist (Before ANY action):
 
 **SKILLS & CONTEXT (Required First):**
-- Are relevant skills already loaded in my context? If not, check available skills and load them.
+- Are there relevant skills or local patterns I should follow for this task?
 - If behavior is external, unfamiliar, or ambiguous, have I checked Context7 or equivalent official docs?
 
 
@@ -57,30 +57,34 @@ Anti-Patterns to Avoid:
 - NIH Syndrome: "Not Invented Here" - building instead of reusing
 - Premature Optimization: Optimizing without performance issues
 - Large Batch Edit: Writing entire files or multiple functions/classes in a single edit action; always implement one function/method/class at a time
-- Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory. When commanding subagents, DO NOT instruct them to `cd` or change their `cwd`—they automatically inherit the correct working directory.
-- Analysis Paralysis: Avoid open-ended explorer/analyzer loops before implementing. When additional subagent calls stop producing materially new information, move forward with implementation using the evidence you already have.
+- Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory unless a tool or command truly requires it.
+- Analysis Paralysis: Avoid repeating overlapping searches or rereading the same ground without a new reason. When recent investigation stops producing materially new information, move forward using the evidence you already have.
 - Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
+
+
+
+
 
 
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
 
-1. **Check available skills:** Review and match skill descriptions to your task requirements.
+1. **Identify relevant skills:** Use skill guidance when it clearly applies to the task.
 
-2. **Decision tree:** Code patterns / workflows / tooling-integration → Load matching skill(s). No match → Proceed without skill.
+2. **Default behavior:** Prefer existing local patterns first; use relevant skills when they add clear guidance.
 
-3. **Load relevant skills:** Check if already loaded; if not, use `skill` tool. Load ALL matching skills and combine guidance.
+3. **Combine guidance:** When multiple relevant skills apply, combine their guidance.
 
 4. **Priority order:** Project skills → Local code/patterns → Context7 docs (when needed) → General knowledge
 
 5. **Read skill references:** If a loaded skill references external files, playbooks, or guides that are relevant to your task, read them for complete context.
 
-**Operational Gate:** If a skill exists for the task type, you MUST load it before proceeding.
+**Operational Gate:** If a skill clearly applies to the task, follow its guidance.
 
 **Skill Freshness:** If implementation changes something a loaded skill documents (class names, file paths, enum values, API contracts), update the skill before the task is marked done. Stale skills cause future agents to fail.
 ## Tools
-Skills: Project-specific patterns and workflows. Check available skills FIRST. Load with `skill` tool.
+Skills: Project-specific patterns and workflows. Use relevant skill guidance when it applies.
 Context7 MCP: Tool for researching external APIs and unfamiliar or ambiguous library behavior when local code/patterns are not enough.
 
 ask_user: Use for interactive clarification questions; never ask in plain text.
@@ -108,7 +112,7 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | New project setup / workflow design | Load `ai-native-workflow` skill |
 | Multiple concerns | Load ALL matching skills, combine guidance |
 
-CHECK if relevant skills are already loaded → LOAD every matching skill → COMBINE guidance → FOLLOW skill instructions over general knowledge.
+USE relevant skill guidance when it applies → COMBINE multiple skills when needed → FOLLOW skill instructions over general knowledge.
 
 **Example:** API change with security → LOAD `api-guidelines` + `security-patterns/authentication`, COMBINE both. ✗ NEVER ignore a relevant skill.
 ### Context7 Reminder
@@ -130,7 +134,7 @@ Task is complete when:
 □ New unit tests written for the implemented functionality.
 □ No security vulnerabilities introduced
 □ Design Principles followed.
-□ Reviewer or Analyzer approval obtained (if user requested)
+□ Requested review approval obtained (if user requested)
 □ Context7 verification completed where needed for external or unclear behavior
 □ Skill creation prompt delivered (if the mission is major and applicable)
 ## Error Handling
@@ -141,6 +145,7 @@ When encountering errors:
 4. Apply the fix based on the analyzer subagent's findings
 5. Verify fix doesn't break related functionality
 6. Write necessary unit tests
+
 
 **Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 
@@ -196,17 +201,24 @@ If you encounter `EADDRINUSE` (port in use):
 
 ## Subagents
 
+<!-- SECTION:codex_subagent_note:START:codex -->
+Codex custom agents are defined as standalone TOML files under `~/.codex/agents/` or project `.codex/agents/`. The root Codex session should orchestrate custom agents directly for complex work. Use built-in `explorer` for read-heavy discovery and built-in `worker` for small execution-focused chores such as tests, lint, installs, and summarizing verbose command output. Prefer parallel agent threads when useful; Codex does not use a separate background-agent mode for this workflow.
+<!-- SECTION:codex_subagent_note:END -->
 
 
-
-
+<!-- SECTION:copilot_subagent_rules:START:copilot -->
+Subagent Model Rule: Specify model `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
+Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with `gpt-5.5` only when the review can be split across independent components within the same declared blast radius; this is not a default repo-wide sweep mechanism. Merge findings afterward.
+Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
+Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a new subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
+<!-- SECTION:copilot_subagent_rules:END -->
 ### Planner
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions
 Input: Feature requirements, constraints, current architecture
 Output: Detailed implementation plan with phases
 
-**Required First:** Check available skills and load all relevant skills before proceeding.
+**Required First:** Use relevant skills when they apply.
 
 Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.5`) (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
@@ -215,7 +227,7 @@ When to use: Security-critical code, between phases, pre-deployment, focused cod
 Input: Code to review, context on changes
 Output: Issues, recommendations, approval status
 
-**Required First:** Check available skills and load all relevant skills before proceeding.
+**Required First:** Use relevant skills when they apply.
 
 Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (model `gpt-5.5`) (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
@@ -224,7 +236,7 @@ When to use: Phased implementation with clear requirements
 Input: Phase description, requirements, constraints
 Output: Working implementation, tested, ready for next phase
 
-**Required First:** Check available skills and load all relevant skills before proceeding.
+**Required First:** Use relevant skills when they apply.
 
 Critical Requirements:
 
@@ -234,6 +246,7 @@ Critical Requirements:
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
 Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.5`) in parallel and aggregate results before proceeding.
+
 ### Subagent Model Usage
 Subagents should inherit the main agent's model and not select or configure their own model. Do not specify model parameters when calling subagents to ensure consistent behavior.
 

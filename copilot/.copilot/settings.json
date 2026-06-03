@@ -78,65 +78,15 @@
     "http://127.0.0.1:8001"
   ],
   "disabledSkills": [],
-  "showReasoning": true,
+  "showReasoning": false,
   "experimental": true,
   "streamerMode": false,
   "skillDirectories": [
     "/Users/Y_ALTAY1/.agents/skills"
   ],
   "customAgents": {},
-  "model": "gpt-5.5",
-  "logged_in_users": [
-    {
-      "host": "https://github.com",
-      "login": "Y-ALTAY1_logitech"
-    },
-    {
-      "host": "https://github.com",
-      "login": "PlaneInABottle"
-    }
-  ],
-  "trusted_folders": [
-    "/Users/Y_ALTAY1/Documents/configs",
-    "/Users/Y_ALTAY1/Documents/logitech-sngr-rezai-email",
-    "/Users/Y_ALTAY1/Documents/simWoot/chatwoot",
-    "/Users/Y_ALTAY1/Documents/simWoot/sim",
-    "/Users/Y_ALTAY1/Documents/logitech-sngr-rezai-email-new",
-    "/Users/Y_ALTAY1/Documents/voiceWith",
-    "/Users/Y_ALTAY1/Documents/videoCreation",
-    "/Users/Y_ALTAY1"
-  ],
+  "model": "claude-opus-4.8",
   "on_air_mode": false,
-  "last_logged_in_user": {
-    "host": "https://github.com",
-    "login": "Y-ALTAY1_logitech"
-  },
   "alt_screen": false,
-  "firstLaunchAt": "2026-03-11T00:00:00.000Z",
-  "effortLevel": "high",
-  "loggedInUsers": [
-    {
-      "host": "https://github.com",
-      "login": "Y-ALTAY1_logitech"
-    },
-    {
-      "host": "https://github.com",
-      "login": "PlaneInABottle"
-    }
-  ],
-  "trustedFolders": [
-    "/Users/Y_ALTAY1/Documents/configs",
-    "/Users/Y_ALTAY1/Documents/logitech-sngr-rezai-email",
-    "/Users/Y_ALTAY1/Documents/simWoot/chatwoot",
-    "/Users/Y_ALTAY1/Documents/simWoot/sim",
-    "/Users/Y_ALTAY1/Documents/logitech-sngr-rezai-email-new",
-    "/Users/Y_ALTAY1/Documents/voiceWith",
-    "/Users/Y_ALTAY1/Documents/videoCreation",
-    "/Users/Y_ALTAY1"
-  ],
-  "lastLoggedInUser": {
-    "host": "https://github.com",
-    "login": "Y-ALTAY1_logitech"
-  },
   "colorMode": "colorblind"
 }

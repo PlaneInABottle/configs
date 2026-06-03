@@ -40,9 +40,21 @@ args = ["mcp"]
 
 network_access = true
 
+[mcp_servers.maestro.tools.list_devices]
+approval_mode = "approve"
+
+[mcp_servers.maestro.tools.inspect_screen]
+approval_mode = "approve"
+
+[mcp_servers.maestro.tools.run]
+approval_mode = "approve"
+
+[mcp_servers.maestro.tools.take_screenshot]
+approval_mode = "approve"
+
 [agents]
 max_threads = 6
-max_depth = 3
+max_depth = 1
 
 [tui]
 status_line = ["model-with-reasoning", "current-dir", "project-name", "git-branch", "context-used", "five-hour-limit", "weekly-limit"]

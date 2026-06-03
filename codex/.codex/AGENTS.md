@@ -57,17 +57,26 @@ Anti-Patterns to Avoid:
 - NIH Syndrome: "Not Invented Here" - building instead of reusing
 - Premature Optimization: Optimizing without performance issues
 - Large Batch Edit: Writing entire files or multiple functions/classes in a single edit action; always implement one function/method/class at a time
-- Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory. When commanding subagents, DO NOT instruct them to `cd` or change their `cwd`—they automatically inherit the correct working directory.
-- Analysis Paralysis: Avoid open-ended explorer/analyzer loops before implementing. When additional subagent calls stop producing materially new information, move forward with implementation using the evidence you already have.
+- Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory unless a tool or command truly requires it.
+- Analysis Paralysis: Avoid repeating overlapping searches or rereading the same ground without a new reason. When recent investigation stops producing materially new information, move forward using the evidence you already have.
 - Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
 
+
+
 **COMMAND EXECUTION:**
-- Delegate small, definite command-heavy chores to the built-in `worker` agent instead of doing them in the main session
-- Typical chores: running tests, linting the codebase, installing dependencies, and summarizing verbose command output
-- Keep the built-in `worker` agent tasks narrow (1-3 clear steps)
-- Ask the built-in `worker` agent to summarize/filter verbose command output before returning so your context stays lean
-- If the built-in `worker` agent reports failures, investigate the output and retry with a more specific command, or escalate to the `implementer` custom agent
-- Do not use the built-in `worker` agent for multi-phase implementation, architecture, or open-ended debugging. For those, keep orchestration in the main session and use the `implementer` custom agent or other specialized agents.
+- Codex keeps orchestration in the main session, but should proactively delegate when the task is clearly a better fit for a built-in agent.
+- Use the built-in `explorer` agent whenever the work is primarily repo discovery: searching for files, tracing call sites, mapping architecture, or answering "where does this live?" questions.
+- Use the built-in `worker` agent whenever the work is primarily bounded execution: long or verbose test runs, lint/typecheck/install commands, log summarization, and other command-heavy chores where you mainly need the result back.
+- Keep only tiny one-shot commands in the main session when delegation would add more overhead than value.
+- For batch/parallel work that benefits from real concurrency, use `spawn_agents_on_csv` (CSV fan-out) or run multiple `codex exec` calls in parallel from your shell, then aggregate the outputs yourself. Do not rely on inline subagent spawning for this — Codex's `spawn_agent` is explicit-trigger only.
+- Do not start long-lived processes from inside a session without PM2/Docker (see Running Applications below). Codex context can be compacted mid-run, which loses PIDs and causes zombie processes and port exhaustion.
+
+## Built-in Agents
+
+- Strongly prefer the built-in `explorer` agent for search, discovery, and codebase mapping tasks.
+- Strongly prefer the built-in `worker` agent for command execution, verification, and summarizing long output.
+- In this repo, the supported Codex delegation set is `explorer` and `worker`.
+- Keep coding, editing, and final synthesis in the main Codex session unless delegation is clearly faster.
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
@@ -136,17 +145,17 @@ Task is complete when:
 □ New unit tests written for the implemented functionality.
 □ No security vulnerabilities introduced
 □ Design Principles followed.
-□ Reviewer or Analyzer approval obtained (if user requested)
+□ Requested review approval obtained (if user requested)
 □ Context7 verification completed where needed for external or unclear behavior
 □ Skill creation prompt delivered (if the mission is major and applicable)
 ## Error Handling
 When encountering errors:
+
 1. Capture full error message and stack trace
 2. Identify error type and location
-3. Use the analyzer subagent for root cause analysis and fix recommendations
-4. Apply the fix based on the analyzer subagent's findings
-5. Verify fix doesn't break related functionality
-6. Write necessary unit tests
+3. Diagnose root cause yourself using error message, stack trace, and local context. Use `Context7` for unfamiliar library errors.
+4. Apply the fix and verify it doesn't break related functionality
+5. Write necessary unit tests
 
 **Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 
@@ -200,51 +209,10 @@ If you encounter `EADDRINUSE` (port in use):
 
 
 
-## Subagents
-
-Codex custom agents are defined as standalone TOML files under `~/.codex/agents/` or project `.codex/agents/`. The root Codex session should orchestrate custom agents directly for complex work. Use built-in `explorer` for read-heavy discovery and built-in `worker` for small execution-focused chores such as tests, lint, installs, and summarizing verbose command output. Prefer parallel agent threads when useful; Codex does not use a separate background-agent mode for this workflow.
 
 
 
-### Planner
-Purpose: Architecture design and detailed planning
-When to use: Complex features, major refactors, architecture decisions
-Input: Feature requirements, constraints, current architecture
-Output: Detailed implementation plan with phases
 
-**Required First:** Use relevant skills when they apply.
-
-Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel the built-in `explorer` agent calls (each scoped to a distinct module/concern), then aggregate findings before planning.
-### Analyzer
-Purpose: Blocking review of the requested change plus a bounded adjacent bug sweep inside the affected blast radius
-When to use: Security-critical code, between phases, pre-deployment, focused code/commit validation
-Input: Code to review, context on changes
-Output: Issues, recommendations, approval status
-
-**Required First:** Use relevant skills when they apply.
-
-Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel the built-in `explorer` agent calls (split by module/concern), then aggregate findings before writing the review.
-### Implementer
-Purpose: Build specific phases according to plan using best practices from official documentation
-When to use: Phased implementation with clear requirements
-Input: Phase description, requirements, constraints
-Output: Working implementation, tested, ready for next phase
-
-**Required First:** Use relevant skills when they apply.
-
-Critical Requirements:
-
-- Context7 When Needed: Check Context7 MCP when implementation depends on external APIs, unfamiliar libraries, or ambiguous behavior not resolved by local code/patterns. **Failure Consequence:** Incorrect API usage and rework.
-- Pattern Learning: Study official patterns and best practices from Context7 documentation when needed for correctness
-- Implementation Alignment: Implement according to learned patterns and official documentation
-- Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
-
-Parallel Validation: When you have multiple independent investigations or validations, issue multiple the built-in `explorer` agent calls in parallel and aggregate results before proceeding.
-### Subagent Model Usage
-Subagents should inherit the main agent's model and not select or configure their own model. Do not specify model parameters when calling subagents to ensure consistent behavior.
-
-### Subagent Continuity
-When possible, continue the same subagent session for the same workstream so the agent keeps its prior context and findings. Prefer a fresh subagent only for independent work, intentional parallelization, or when the earlier session has become misleading or irrelevant.
 
 
 

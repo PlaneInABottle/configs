@@ -91,7 +91,6 @@
       ],
       "header_lines": {
         "copilot": 4,
-        "codex": 6,
         "opencode": 45,
         "claude": 24
       },
@@ -107,7 +106,6 @@
       ],
       "header_lines": {
         "copilot": 4,
-        "codex": 6,
         "opencode": 25,
         "claude": 22
       },
@@ -124,7 +122,6 @@
       ],
       "header_lines": {
         "copilot": 5,
-        "codex": 6,
         "opencode": 45,
         "claude": 22
       },

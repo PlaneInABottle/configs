@@ -66,11 +66,11 @@ Anti-Patterns to Avoid:
 - NIH Syndrome: "Not Invented Here" - building instead of reusing
 - Premature Optimization: Optimizing without performance issues
 - Large Batch Edit: Writing entire files or multiple functions/classes in a single edit action; always implement one function/method/class at a time
-- Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory. When commanding subagents, DO NOT instruct them to `cd` or change their `cwd`—they automatically inherit the correct working directory.
-- Analysis Paralysis: Avoid open-ended explorer/analyzer loops before implementing. When additional subagent calls stop producing materially new information, move forward with implementation using the evidence you already have.
+- Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory unless a tool or command truly requires it.
+- Analysis Paralysis: Avoid repeating overlapping searches or rereading the same ground without a new reason. When recent investigation stops producing materially new information, move forward using the evidence you already have.
 - Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
 
-<!-- SECTION:shared_command_execution:START:opencode,codex -->
+<!-- SECTION:shared_command_execution:START:opencode -->
 **COMMAND EXECUTION:**
 - Delegate small, definite command-heavy chores to @general instead of doing them in the main session
 - Typical chores: running tests, linting the codebase, installing dependencies, and summarizing verbose command output
@@ -79,6 +79,25 @@ Anti-Patterns to Avoid:
 - If @general reports failures, investigate the output and retry with a more specific command, or escalate to @implementer
 - Do not use @general for multi-phase implementation, architecture, or open-ended debugging. For those, keep orchestration in the main session and use @implementer or other specialized agents.
 <!-- SECTION:shared_command_execution:END -->
+
+<!-- SECTION:codex_command_execution:START:codex -->
+**COMMAND EXECUTION:**
+- Codex keeps orchestration in the main session, but should proactively delegate when the task is clearly a better fit for a built-in agent.
+- Use the built-in `explorer` agent whenever the work is primarily repo discovery: searching for files, tracing call sites, mapping architecture, or answering "where does this live?" questions.
+- Use the built-in `worker` agent whenever the work is primarily bounded execution: long or verbose test runs, lint/typecheck/install commands, log summarization, and other command-heavy chores where you mainly need the result back.
+- Keep only tiny one-shot commands in the main session when delegation would add more overhead than value.
+- For batch/parallel work that benefits from real concurrency, use `spawn_agents_on_csv` (CSV fan-out) or run multiple `codex exec` calls in parallel from your shell, then aggregate the outputs yourself. Do not rely on inline subagent spawning for this — Codex's `spawn_agent` is explicit-trigger only.
+- Do not start long-lived processes from inside a session without PM2/Docker (see Running Applications below). Codex context can be compacted mid-run, which loses PIDs and causes zombie processes and port exhaustion.
+<!-- SECTION:codex_command_execution:END -->
+
+<!-- SECTION:codex_builtin_agents:START:codex -->
+## Built-in Agents
+
+- Strongly prefer the built-in `explorer` agent for search, discovery, and codebase mapping tasks.
+- Strongly prefer the built-in `worker` agent for command execution, verification, and summarizing long output.
+- In this repo, the supported Codex delegation set is `explorer` and `worker`.
+- Keep coding, editing, and final synthesis in the main Codex session unless delegation is clearly faster.
+<!-- SECTION:codex_builtin_agents:END -->
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
@@ -152,17 +171,26 @@ Task is complete when:
 □ New unit tests written for the implemented functionality.
 □ No security vulnerabilities introduced
 □ Design Principles followed.
-□ Reviewer or Analyzer approval obtained (if user requested)
+□ Requested review approval obtained (if user requested)
 □ Context7 verification completed where needed for external or unclear behavior
 □ Skill creation prompt delivered (if the mission is major and applicable)
 ## Error Handling
 When encountering errors:
+<!-- SECTION:shared_error_handling_subagent_mentions:START:!codex -->
 1. Capture full error message and stack trace
 2. Identify error type and location
 3. Use the analyzer subagent for root cause analysis and fix recommendations
 4. Apply the fix based on the analyzer subagent's findings
 5. Verify fix doesn't break related functionality
 6. Write necessary unit tests
+<!-- SECTION:shared_error_handling_subagent_mentions:END -->
+<!-- SECTION:codex_error_handling_override:START:codex -->
+1. Capture full error message and stack trace
+2. Identify error type and location
+3. Diagnose root cause yourself using error message, stack trace, and local context. Use `Context7` for unfamiliar library errors.
+4. Apply the fix and verify it doesn't break related functionality
+5. Write necessary unit tests
+<!-- SECTION:codex_error_handling_override:END -->
 
 **Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 <!-- SECTION:copilot_direct_communication:START:copilot -->
@@ -251,6 +279,7 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 | Interactive tool | `bash(..., mode="async")` |
 <!-- SECTION:background_agents:END -->
 
+<!-- SECTION:subagents_section:START:!codex -->
 ## Subagents
 
 <!-- SECTION:codex_subagent_note:START:codex -->
@@ -264,6 +293,8 @@ Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with
 Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a new subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
 <!-- SECTION:copilot_subagent_rules:END -->
+<!-- SECTION:subagents_section:END -->
+<!-- SECTION:subagent_role_descriptions:START:!codex -->
 ### Planner
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions
@@ -298,7 +329,9 @@ Critical Requirements:
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
 Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.5`) in parallel and aggregate results before proceeding.
-<!-- SECTION:subagent_model_default:START:!copilot -->
+<!-- SECTION:subagent_role_descriptions:END -->
+
+<!-- SECTION:subagent_model_default:START:!copilot,!codex -->
 ### Subagent Model Usage
 Subagents should inherit the main agent's model and not select or configure their own model. Do not specify model parameters when calling subagents to ensure consistent behavior.
 
