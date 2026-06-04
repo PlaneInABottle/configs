@@ -1,7 +1,8 @@
-model = "gpt-5.5"
+model = "gpt-5.3-codex-spark"
 model_reasoning_effort = "high"
 personality = "pragmatic"
 approvals_reviewer = "user"
+plan_mode_reasoning_effort = "high"
 
 [projects."/home/mirza/configs"]
 trust_level = "trusted"
@@ -65,3 +66,7 @@ status_line_use_colors = true
 
 [notice]
 hide_full_access_warning = true
+
+[features]
+remote_control = true
+terminal_resize_reflow = true

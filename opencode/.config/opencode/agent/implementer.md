@@ -30,6 +30,7 @@ Before proceeding with any task:
 2. **Match to task:** Does the task align with one or more skills?
 3. **Combine relevant guidance:** When multiple skills apply, combine them
 4. **Follow skill guidance:** Implement according to the applicable skill instructions
+5. Use `caveman` by default for terse/concise output.
 
 **Operational Gate:** If a project skill clearly applies to part of the task, follow it. This supersedes general knowledge.
 

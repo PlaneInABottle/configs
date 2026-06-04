@@ -57,6 +57,8 @@ Action Checklist (Before ANY action):
 - Subagent command check: Explicitly command subagents to check and load relevant skills and use Context7.
 - Subagent model check: Use `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
 - Parallel review check: For code/commit reviews, use parallel @analyzer calls (gpt-5.5) only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
+
+Caveman-mode is the default for concise/token-efficient output; include `caveman` skill in the required skills list for the task.
 <!-- SECTION:copilot_subagent_commands:END -->
 
 Anti-Patterns to Avoid:
@@ -138,6 +140,7 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | New screen or page | Load `refactoring-ui` + `ai-native-workflow` skills |
 | UI layout or component composition | Load `refactoring-ui` skill |
 | Design system component | Load `refactoring-ui` + `shadcn-ui` skills |
+| Default concise/token-efficient output | Load `caveman` skill |
 | Form layout and validation UX | Load `refactoring-ui` + `ai-native-workflow` skills |
 | Responsive design | Load `refactoring-ui` skill |
 | Button placement or action hierarchy | Load `refactoring-ui` skill |

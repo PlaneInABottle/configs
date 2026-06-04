@@ -24,6 +24,7 @@ Before proceeding with any task:
 2. **Match to task:** Does the task align with one or more skills?
 3. **Combine relevant guidance:** When multiple skills apply, combine them
 4. **Follow skill guidance:** Implement according to the applicable skill instructions
+5. Use `caveman` by default for terse/concise output.
 
 **Operational Gate:** If a project skill clearly applies to part of the task, follow it. This supersedes general knowledge.
 
@@ -73,6 +74,7 @@ Before starting any implementation task:
 3. Skills contain repository-specific patterns and implementation approaches
 4. Use skills extensively when implementing - they provide proven approaches for the codebase
 5. Use `ask_user` for clarification questions when blocked or ambiguous (never plain text)
+6. Apply `caveman` style by default for concise output.
 
 </skills-integration>
 
