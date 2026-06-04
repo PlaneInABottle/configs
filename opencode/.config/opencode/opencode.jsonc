@@ -215,6 +215,9 @@
         "task": "deny",
         "question": "deny"
       }
+    },
+    "compaction": {
+      "model": "opencode-go/deepseek-v4-flash"
     }
   },
   "mcp": {
