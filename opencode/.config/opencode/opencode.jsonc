@@ -169,33 +169,6 @@
     "webfetch": "allow",
     "websearch": "allow",
     "question": "allow",
-    "sim-mcp_*": "allow",
-    "sim-mcp_cancel_execution": "ask",
-    "sim-mcp_create_workflow": "ask",
-    "sim-mcp_delete_workflow": "ask",
-    "sim-mcp_deploy_workflow": "ask",
-    "sim-mcp_activate_deployment_version": "ask",
-    "sim-mcp_revert_workflow_to_deployment_version": "ask",
-    "sim-mcp_undeploy_workflow": "ask",
-    "sim-mcp_add_blocks": "ask",
-    "sim-mcp_add_variable": "ask",
-    "sim-mcp_create_skill": "ask",
-    "sim-mcp_run_workflow_until_block": "ask",
-    "sim-mcp_run_from_block": "ask",
-    "sim-mcp_run_block": "ask",
-    "sim-mcp_remove_blocks": "ask",
-    "sim-mcp_remove_edge": "ask",
-    "sim-mcp_remove_variable": "ask",
-    "sim-mcp_delete_skill": "ask",
-    "sim-mcp_replace_workflow_state": "ask",
-    "sim-mcp_update_block_name": "ask",
-    "sim-mcp_toggle_block_enabled": "ask",
-    "sim-mcp_update_block_parent": "ask",
-    "sim-mcp_update_subblock": "ask",
-    "sim-mcp_update_subflow": "ask",
-    "sim-mcp_update_skill": "ask",
-    "sim-mcp_execute_workflow": "ask",
-    "sim-mcp_upsert_custom_tools": "ask",
     "context7_*": "allow",
     "livekit-docs-mcp_*": "allow",
   },
@@ -232,19 +205,6 @@
       ],
       "enabled": true,
       "environment": {}
-    },
-    "sim-mcp": {
-      "type": "local",
-      "command": [
-        "node",
-        "{env:SIM_MCP_LOCATION}",
-        "--server"
-      ],
-      "enabled": true,
-      "environment": {
-        "SIM_API_BASE_URL": "{env:SIM_API_BASE_URL_LOCAL}",
-        "SIM_API_KEY": "{env:SIM_API_KEY_LOCAL}"
-      }
     },
     "livekit-docs-mcp": {
       "type": "remote",
