@@ -54,6 +54,27 @@ Model Rationale:
 Coordinator is an orchestration agent with general reasoning. Specialized subagents (@implementer, @analyzer, @planner). Therefore, default action for any complex work is delegation, not self-execution.
 </coordinator-constraints>
 
+<phase-dispatch-protocol>
+CRITICAL: Implementer receives work ONE PHASE AT A TIME — never the full plan at once.
+
+Round-trip workflow:
+1. Coordinator sends Phase N to @implementer (scope, files, validations, commit format)
+2. @implementer executes Phase N, commits, returns evidence + SHA
+3. Coordinator validates result (tests pass, commit exists, scope correct)
+4. Coordinator sends Phase N+1 to @implementer (resume same session via task_id)
+5. Repeat until all phases complete
+6. After all phases done, Coordinator sends @analyzer for final review
+
+WHY: Implementer models may have limited context. One phase per call keeps scope small,
+errors isolated, and gate control with coordinator.
+
+NEVER:
+- Send all phases to @implementer in one call
+- Let @implementer self-dispatch subsequent phases
+- Skip validation between phases
+- Start a fresh @implementer session when the existing one has context (resume via task_id)
+</phase-dispatch-protocol>
+
 <coordinator-anti-patterns>
 Common self-execution traps and correct delegation:
 
@@ -212,9 +233,16 @@ DELEGATION EXAMPLES (copy and adapt):
 </subagent-instruction-protocol>
 
 <orchestration-execution>
-Execution Loop (per phase): Call agent with requirements → Monitor/handle errors → Validate against criteria → Proceed or handle failure → Update progress
+Execution Loop (round-trip per phase):
 
-Entry: Phase plan and success criteria available → Exit: Success criteria met, validations pass
+1. Dispatch: Send Phase N to @implementer (scope, files, validations, commit format)
+2. Receive: @implementer returns commit SHA + files changed + test results
+3. Validate: Check commit exists, scope matches, tests pass
+4. Gate: If phase fails → diagnose (via @analyzer if needed) → fix → re-validate
+5. Advance: Send Phase N+1 to @implementer (resume same session via task_id)
+6. After all phases: Send @analyzer for final review
+
+Entry: Phase plan and success criteria available → Exit: All phases committed, tests pass, final review approved
 </orchestration-execution>
 
 <fleet-mode-coordination>
@@ -224,7 +252,7 @@ Do not use for coupled code paths requiring shared mutable context.
 </fleet-mode-coordination>
 
 <quality-validation>
-Final: Require @task to execute tests (if code changes) → Require @analyzer to validate design principles → Ensure all agents report compatibility → Require assignee to update docs
+Final: After all phases complete, require @task to execute full integration test suite → Require @analyzer to validate design principles → Ensure all agents report compatibility → Require assignee to update docs
 Exit: Tests/linters pass, integration gate satisfied, docs updated
 </quality-validation>
 
@@ -259,11 +287,11 @@ If ANY item is NO: return to @planner or @analyzer before proceeding.
 
 | Pattern | Workflow |
 |---------|----------|
-| Feature (Standard/Complex) | @planner (save to docs/) → @implementer (N phases, N commits) → @analyzer |
-| Feature (Major) | @planner → @analyzer (plan review) → @implementer (N phases) → @analyzer |
-| Code Refactoring | @planner → @implementer (N phases) → @analyzer |
+| Feature (Standard/Complex) | @planner (save to docs/) → coordinator dispatches phases 1..N one-by-one to @implementer → @analyzer |
+| Feature (Major) | @planner → @analyzer (plan review) → coordinator dispatches phases 1..N one-by-one to @implementer → @analyzer |
+| Code Refactoring | @planner → coordinator dispatches phases 1..N one-by-one to @implementer → @analyzer |
 | Bug Fix (Simple, ≤3 files) | @analyzer (diagnose) → @implementer (fix, commit) → @analyzer (validate) |
-| Bug Fix (Complex) | @analyzer (diagnose) → @planner (strategy) → @implementer (N phases, N commits) → @analyzer |
+| Bug Fix (Complex) | @analyzer (diagnose) → @planner (strategy) → coordinator dispatches phases 1..N one-by-one to @implementer → @analyzer |
 | Feasibility Assessment | @analyzer (assess) → @planner (design, estimate) → Report (no impl without approval) |
 | Simple Task | @implementer (execute, commit) |
 | Code Review | @analyzer (review files/commits) |
@@ -316,7 +344,7 @@ SKIP for: <5 phases, simple bug fixes (≤3 files), docs updates, minor config c
 
 <review-strategy>
 All-Commit Review (default):
-1. Implementer completes all N phases, N commits
+1. After coordinator has dispatched all N phases one-by-one to @implementer (with validation between each)
 2. Run parallel reviewers
 3. Merge reviews, resolve conflicts
 4. APPROVED → complete | NEEDS_CHANGES → implementer fixes all
@@ -400,7 +428,14 @@ FORBIDDEN: @planner/@implementer/@analyzer calling each other (role confusion). 
 <invocation-protocol>
 Call subagents with direct instructions written for the receiving subagent, not coordinator routing prose. Include: clear objective + success criteria, required commands (test/lint/format), design principles, plan file path (for implementer).
 
-Per-phase delegation: Delegate ONE phase at a time to @implementer, not all phases. After each phase return, validate the result, then delegate the next phase — resuming the same @implementer session (pass prior task_id). This keeps context continuity while giving you gate control between phases.
+PER-PHASE ROUND-TRIP (see also <phase-dispatch-protocol>):
+- Send @implementer ONE phase only: phase name, files to touch, validations to run, commit format
+- Wait for @implementer to return (commit SHA + evidence)
+- Validate the result yourself (check commit, check scope)
+- Only then send the NEXT phase to @implementer (resume same session via task_id)
+- After ALL phases complete, send @analyzer for final review
+
+NEVER send multiple phases in a single @implementer call.
 </invocation-protocol>
 
 <subagent-workflows>

@@ -120,6 +120,18 @@ Each phase must be:
 - Provides value even if later phases delayed
 - For complex phases, break tasks to function/class level: e.g., Task 1.1: implement `calculate_total()`, Task 1.2: implement `validate_input()`
 
+SMALL PHASES RULE: Coordinator dispatches phases to implementer ONE AT A TIME.
+Implementer models may have limited context — each phase must be self-contained enough
+to be understood and executed in a single invocation without seeing other phases.
+
+Guidelines for sizing phases:
+- Each phase should be completable in one focused session (one logical change)
+- If a phase touches >3 files, split it into sub-phases
+- If a phase has >5 tasks, split it into sub-phases
+- Prefer more small phases over fewer large phases (e.g., 6 phases of 2 files > 3 phases of 4 files)
+- Each phase should have a clear, descriptive name that says exactly what it does
+- Phases can reference earlier phases by commit, but should not require reading ahead
+
 Anti-patterns: "Setup infrastructure", "Update everything related to X", "Preparation work"
 Good: "Add user model with basic fields", "Update auth endpoint for email validation"
 </phase-granularity>

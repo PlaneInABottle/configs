@@ -107,27 +107,29 @@ User clarification: Ask directly in the conversation when clarification is requi
 
 | Task Type | Action |
 |-----------|--------|
-| Debug failing tests | Load `testing-strategies` skill |
-| Add authentication | Load `security-patterns/authentication` skill |
-| API changes | Load `api-guidelines` skill |
-| Code review | Load `code-review` skill |
+| Debug failing tests | Load `ai-native-workflow` skill (testing sections) |
+| API changes / contract testing | Load `api-contract-testing` skill |
+| API discovery for development | Load `api-discovery` skill |
+| Code review / code quality | Use the `analyzer` subagent |
 | Frontend/UI development | Load `ai-native-workflow` skill (frontend testing sections) |
 | New screen or page | Load `refactoring-ui` + `ai-native-workflow` skills |
 | UI layout or component composition | Load `refactoring-ui` skill |
-| Design system component | Load `refactoring-ui` + `shadcn-ui` skills |
+| Design system component | Load `refactoring-ui` skill |
 | Default concise/token-efficient output | Load `caveman` skill |
 | Form layout and validation UX | Load `refactoring-ui` + `ai-native-workflow` skills |
 | Responsive design | Load `refactoring-ui` skill |
 | Button placement or action hierarchy | Load `refactoring-ui` skill |
 | Browser automation / E2E testing | Load `agent-browser` skill |
 | Visual regression / UI validation | Load `agent-browser` + `ai-native-workflow` skills |
+| Async worker / queue testing | Load `async-worker-testing` skill |
+| WebSocket / real-time testing | Load `websocket-testing` skill |
 | Component testing (React, Vue, etc.) | Load `ai-native-workflow` skill |
 | New project setup / workflow design | Load `ai-native-workflow` skill |
 | Multiple concerns | Load ALL matching skills, combine guidance |
 
 USE relevant skill guidance when it applies → COMBINE multiple skills when needed → FOLLOW skill instructions over general knowledge.
 
-**Example:** API change with security → LOAD `api-guidelines` + `security-patterns/authentication`, COMBINE both. ✗ NEVER ignore a relevant skill.
+**Example:** API change with real-time testing → LOAD `api-contract-testing` + `websocket-testing`, COMBINE both. ✗ NEVER ignore a relevant skill.
 ### Context7 Reminder
 Use Context7 when external APIs, unfamiliar libraries, unclear function behavior, or ambiguous docs could affect correctness.
 ### Truth Reminder
