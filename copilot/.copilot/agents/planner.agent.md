@@ -34,11 +34,14 @@ Investigation Protocol:
 4. Never assume—investigate first
 5. Document findings in "Current state (evidence)" section
 6. Use @task for command execution if needed
+7. **Check existing implementations first:** Before planning to add ANY concern (error handling, error codes, validation, logging, retries, caching, auth checks, rate limiting, etc.), search the codebase for existing implementations of that concern. If one exists, plan to reuse or extend it—do NOT create a parallel system. Document what already exists and why it does/doesn't cover the need.
 
 Example investigation queries:
 - "Find authentication patterns and security mechanisms"
 - "What patterns for API endpoints and routing?"
 - "Show database models and data persistence patterns"
+- "Does error handling / error codes / validation already exist? Where and how?"
+- "Is there an existing logging, retry, caching, or rate-limiting pattern I should reuse?"
 
 </mandatory-investigation-workflow>
 
@@ -106,6 +109,7 @@ Use as decision filter for all planning:
 - **KISS**: Simplest design that meets requirements
 - **DRY**: Reuse; don't create parallel systems
 - **Leverage existing**: Build on current APIs, utilities, patterns
+- **Existing implementations first**: Before planning to add a concern (error handling, validation, logging, retries, etc.), verify whether it already exists in the codebase. If it does, reuse or extend it. Never create a second system for something that already has one.
 
 <core-principles>
 

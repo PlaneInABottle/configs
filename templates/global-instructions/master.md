@@ -48,6 +48,7 @@ Action Checklist (Before ANY action):
 
 **VALIDATION:**
 - Can existing code/tools solve this?
+- Does this concern (error handling, validation, logging, retries, caching, etc.) already exist in the codebase? If yes, reuse or extend it—do NOT create a parallel system.
 - Is this truly necessary?
 - Am I overengineering?
 - Have I verified this claim with evidence?
