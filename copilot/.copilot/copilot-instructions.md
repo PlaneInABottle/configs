@@ -82,6 +82,8 @@ Anti-Patterns to Avoid:
 
 
 
+
+
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
 
@@ -129,6 +131,8 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | Component testing (React, Vue, etc.) | Load `ai-native-workflow` skill |
 | New project setup / workflow design | Load `ai-native-workflow` skill |
 | Multiple concerns | Load ALL matching skills, combine guidance |
+
+
 
 USE relevant skill guidance when it applies → COMBINE multiple skills when needed → FOLLOW skill instructions over general knowledge.
 
@@ -251,10 +255,6 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 
 ## Subagents
 
-<!-- SECTION:codex_subagent_note:START:codex -->
-Codex custom agents are defined as standalone TOML files under `~/.codex/agents/` or project `.codex/agents/`. The root Codex session should orchestrate custom agents directly for complex work. Use built-in `explorer` for read-heavy discovery and built-in `worker` for small execution-focused chores such as tests, lint, installs, and summarizing verbose command output. Prefer parallel agent threads when useful; Codex does not use a separate background-agent mode for this workflow.
-<!-- SECTION:codex_subagent_note:END -->
-
 
 <!-- SECTION:copilot_subagent_rules:START:copilot -->
 Subagent Model Rule: Specify model `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
@@ -262,6 +262,9 @@ Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with
 Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a new subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
 <!-- SECTION:copilot_subagent_rules:END -->
+
+
+
 ### Planner
 Purpose: Architecture design and detailed planning
 When to use: Complex features, major refactors, architecture decisions

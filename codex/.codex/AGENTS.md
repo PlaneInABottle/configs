@@ -74,11 +74,88 @@ Anti-Patterns to Avoid:
 
 ## Built-in Agents
 
-- Strongly prefer the built-in `explorer` agent for search, discovery, and codebase mapping tasks.
-- Strongly prefer the built-in `worker` agent for command execution, tests, verification, and summarizing long output.
-- Treat `worker` as the default helper for cheap, bounded execution chores.
-- In this repo, the supported Codex delegation set is `explorer` and `worker`.
-- Keep coding, editing, and final synthesis in the main Codex session unless delegation is clearly faster.
+- **`explorer`** — Read-only codebase discovery. Use for search, architecture tracing, pattern finding.
+- **`worker`** — Command execution. Use for tests, lint, build, install, summarizing long output.
+- **`implementer`** — Code writing. Use for multi-file implementation work (see Delegation section below).
+- Treat `worker` as the default helper for cheap execution chores.
+- Treat `implementer` as the default for any non-trivial code writing (multiple files, multiple functions).
+- Keep orchestration, planning, analysis, and review in the main session.
+
+## Delegating to Implementer
+
+When a task involves writing or modifying code across multiple files or functions, delegate to the `implementer` custom agent phase by phase.
+
+**When to delegate:**
+- New features with 2+ files
+- Bug fixes touching multiple code paths
+- Refactoring across files
+- Any implementation that would benefit from isolated context
+
+**When NOT to delegate:**
+- Single-line or single-function edits — do it directly
+- Config changes, README updates, trivial fixes
+- Planning, analysis, or review — that's your job as the main session
+
+**How to delegate — give detailed phase instructions:**
+
+Each delegation must include:
+1. **Phase scope**: exactly which files to create/modify
+2. **What to do**: function names, signatures, logic description, where things go
+3. **Acceptance criteria**: what "done" looks like
+4. **Invariants**: what must not change
+5. **Existing patterns to follow**: reference file:line of similar code
+6. **Test requirements**: what tests to write
+
+Example delegation:
+```
+Phase 2: Add user authentication endpoint
+
+Files to modify:
+- src/routes/auth.ts (create new)
+- src/middleware/auth.ts (create new)
+- src/app.ts (add route registration at line 45)
+
+What to do:
+1. In src/routes/auth.ts: Create POST /auth/login handler
+   - Accept { email, password } body
+   - Validate with existing validateInput() from src/utils/validation.ts:23
+   - Call existing UserService.authenticate() from src/services/user.ts:67
+   - Return { token, user } on success, 401 on failure
+   - Use existing error handling pattern from src/routes/users.ts:15-30
+
+2. In src/middleware/auth.ts: Create authMiddleware
+   - Verify JWT from Authorization header
+   - Use existing verifyToken() from src/utils/jwt.ts:12
+   - Attach user to req.context
+
+3. In src/app.ts: Register routes at line 45
+   - app.use('/auth', authRouter)
+
+Acceptance criteria:
+- POST /auth/login with valid credentials returns 200 + token
+- POST /auth/login with invalid credentials returns 401
+- Protected routes return 401 without valid token
+
+Invariants:
+- Existing user routes must continue working unchanged
+- Error response shape must match existing { error: string, code: string }
+
+Tests to write:
+- Unit tests for auth middleware (valid token, expired token, missing header)
+- Integration tests for login endpoint (success, invalid password, missing fields)
+
+Follow existing patterns from: src/routes/users.ts, src/middleware/
+```
+
+**After implementer returns:**
+- Review the commit SHA and files changed
+- Verify test results
+- If failed, diagnose and re-delegate with corrections
+- If passed, delegate the next phase
+
+**Worker usage:**
+- Main session: use `worker` for all command execution (tests, lint, build) to save context
+- Implementer can run commands directly since it uses the same model — no token savings from delegating to worker within implementer
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
@@ -104,6 +181,8 @@ User clarification: Ask directly in the conversation when clarification is requi
 ## Skills Mastery
 **Skills Loading is MANDATORY.** Skills contain proven patterns, workflows, and integrations specific to this project.
 
+
+
 **Task-to-Skill Matching:**
 
 | Task Type | Action |
@@ -111,7 +190,8 @@ User clarification: Ask directly in the conversation when clarification is requi
 | Debug failing tests | Load `ai-native-workflow` skill (testing sections) |
 | API changes / contract testing | Load `api-contract-testing` skill |
 | API discovery for development | Load `api-discovery` skill |
-| Code review / code quality | Use the `analyzer` subagent |
+| Code review / code quality | Review directly in main session |
+| New feature / multi-file change | Delegate to `implementer` phase by phase |
 | Frontend/UI development | Load `ai-native-workflow` skill (frontend testing sections) |
 | New screen or page | Load `refactoring-ui` + `ai-native-workflow` skills |
 | UI layout or component composition | Load `refactoring-ui` skill |
@@ -214,6 +294,9 @@ If you encounter `EADDRINUSE` (port in use):
 
 
 
+
+
+Codex custom agents are defined as standalone TOML files under `~/.codex/agents/` or project `.codex/agents/`. The root Codex session orchestrates custom agents directly. Use built-in `explorer` for read-heavy discovery, built-in `worker` for small execution-focused chores, and `implementer` for multi-file code writing. Implementer receives detailed phase instructions and executes one phase at a time. Prefer parallel agent threads when useful; Codex does not use a separate background-agent mode for this workflow.
 
 
 

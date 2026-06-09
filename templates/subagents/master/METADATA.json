@@ -92,7 +92,8 @@
       "header_lines": {
         "copilot": 4,
         "opencode": 45,
-        "claude": 24
+        "claude": 24,
+        "codex": 5
       },
       "name": "implementer",
       "opencode": {}
