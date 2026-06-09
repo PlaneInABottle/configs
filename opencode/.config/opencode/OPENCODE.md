@@ -63,12 +63,23 @@ Anti-Patterns to Avoid:
 - Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
 
 **COMMAND EXECUTION:**
-- Delegate small, definite command-heavy chores to @general instead of doing them in the main session
-- Typical chores: running tests, linting the codebase, installing dependencies, and summarizing verbose command output
+- **Delegate all command execution to @general** — never run commands directly that produce significant output (tests, lint, build, install). This keeps your context lean.
+- Typical chores: running tests, linting, installing dependencies, building, summarizing verbose output
 - Keep @general tasks narrow (1-3 clear steps)
-- Ask @general to summarize/filter verbose command output before returning so your context stays lean
-- If @general reports failures, investigate the output and retry with a more specific command, or escalate to @implementer
-- Do not use @general for multi-phase implementation, architecture, or open-ended debugging. For those, keep orchestration in the main session and use @implementer or other specialized agents.
+
+Good prompts:
+- `@general run the test suite and summarize failures if any`
+- `@general run eslint on src/ and report issues`
+- `@general install lodash and verify it's in package.json`
+- `@general run python3 -m pytest tests/ -x and summarize the output`
+
+Bad prompts (too broad / wrong agent):
+- ❌ `@general implement the auth module` → use @implementer
+- ❌ `@general investigate why tests are failing` → use @analyzer for diagnosis
+- ❌ `@general refactor the database layer` → use @implementer
+
+If @general reports failures, investigate the output and retry with a more specific command, or escalate to @implementer.
+Do not use @general for multi-phase implementation, architecture, diagnosis, or open-ended debugging.
 
 
 

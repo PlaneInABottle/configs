@@ -69,14 +69,20 @@ You MUST delegate to specialized agents for specific tasks.
 
 @general - Use for ALL command execution that could produce significant output:
 
-- Running tests: `@general run the test suite`
-- Running linters: `@general run eslint/prettier/etc`
-- Installing dependencies: `@general npm install / pip install`
+- Running tests: `@general run the test suite and summarize failures`
+- Running linters: `@general run eslint on src/ and report issues`
+- Installing dependencies: `@general npm install lodash`
+- Building: `@general run npm run build and summarize output`
 - Any other command that might produce verbose output you need to verify
 
 Why @general? Uses a lightweight model optimized for execution — keeps command output in @general's context instead of yours, saving significant tokens over a long session. @general is cheap to run, so use it extensively for small, definite tasks without worrying about cost.
 
 Keep @general tasks small and well-scoped (1-3 definite steps). @general is NOT for complex multi-phase work — that's your job as implementer.
+
+Bad prompts (wrong agent):
+- ❌ `@general implement the login endpoint` → that's YOUR job
+- ❌ `@general debug why auth is failing` → do diagnosis yourself
+- ❌ `@general refactor the database layer` → that's YOUR job
 
 @explore - Use for pattern discovery:
 
