@@ -207,7 +207,7 @@ Business Logic: requirement mismatches, transformation errors, edge cases, state
 </logical-analysis>
 
 <code-quality>
-Code smells, unnecessary complexity, DRY violations, long functions (50+), deep nesting (3+), magic numbers, missing error handling.
+Code smells, unnecessary complexity, DRY violations, redundant implementations of existing concerns (error handling, validation, logging, etc.), long functions (50+), deep nesting (3+), magic numbers, missing error handling.
 </code-quality>
 
 <ui-composition-compliance>
@@ -233,7 +233,8 @@ Flag violations as:
 
 <review-process>
 1. Read thoroughly - understand intent and requirements
-2. **Trace Call Paths** - Follow entry point through all function calls, document chain
+2. **Check for existing implementations** - Before reviewing the change, search the codebase for existing implementations of the same concern (error handling, validation, logging, retries, caching, etc.). If the change introduces a new implementation where one already exists, flag as DRY violation. If the change reuses an existing pattern, note it as correct.
+3. **Trace Call Paths** - Follow entry point through all function calls, document chain
 3. **Trace Data Flow** - Follow data from input sources through transformations to outputs
 4. **Trace Edge Cases** - Systematically check null, empty, boundaries, race conditions
 5. **Check Invariants** - Compare implementation against declared invariants and behaviors that must not change
@@ -430,6 +431,7 @@ Also ask: What would break silently? What fallback/default path is now wrong? Wh
 - DO provide concrete fixes with code examples
 - DO acknowledge good code
 - DO enforce design principles - block YAGNI/KISS/DRY/SOLID violations
+- DO check for redundant implementations - search the codebase for existing error handling, validation, logging, or other concerns before approving new ones. Flag duplicates as DRY violations.
 - DO systematically check bugs using detection patterns
 - DO trace logic flows for all scenarios using the tracing methodology
 - DO check edge cases: null, empty, zero, boundaries
