@@ -38,8 +38,6 @@ Python: When running Python scripts via bash, always use `python3` instead of `p
 
 You are authorized to read environment variables from `.env` files or shell configuration (e.g., `~/.zshrc`, `~/.bashrc`). Do not worry about exposing or reading secrets/API keys from these files - the user has explicitly allowed it. Proceed with implementation without needing to mask or hide these values.
 
-
-
 **TODO REQUIREMENT:** For complex tasks (multi-step, multiple files, or unclear scope), create a todo checklist using `update_todo` tool. Break down the task into clear, trackable items. Update as you work.
 
 Skip for: single-file edits, simple questions, quick fixes, or clearly-scoped 1-step tasks.
@@ -75,14 +73,6 @@ Anti-Patterns to Avoid:
 - Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory unless a tool or command truly requires it.
 - Analysis Paralysis: Avoid repeating overlapping searches or rereading the same ground without a new reason. When recent investigation stops producing materially new information, move forward using the evidence you already have.
 - Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
-
-
-
-
-
-
-
-
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
@@ -132,8 +122,6 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | New project setup / workflow design | Load `ai-native-workflow` skill |
 | Multiple concerns | Load ALL matching skills, combine guidance |
 
-
-
 USE relevant skill guidance when it applies → COMBINE multiple skills when needed → FOLLOW skill instructions over general knowledge.
 
 **Example:** API change with real-time testing → LOAD `api-contract-testing` + `websocket-testing`, COMBINE both. ✗ NEVER ignore a relevant skill.
@@ -168,7 +156,6 @@ When encountering errors:
 4. Apply the fix based on the analyzer subagent's findings
 5. Verify fix doesn't break related functionality
 6. Write necessary unit tests
-
 
 **Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 ## CRITICAL: Direct Communication Only - No Shell Wrappers
@@ -233,7 +220,6 @@ If you encounter `EADDRINUSE` (port in use):
 - First line: Brief summary (under 50 chars)
 - Body: Explain motivation and approach, not just diff details
 
-
 ## Background Agents & Fleet Mode
 
 **Terminology:** When user says "subagents", they mean sync mode (`@planner`, `@implementer`, `@analyzer` or `task(mode="sync")`). When user says "background agents", they mean async/non-blocking mode (`task(mode="background")`).
@@ -255,13 +241,10 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 
 ## Subagents
 
-
 Subagent Model Rule: Specify model `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
 Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with `gpt-5.5` only when the review can be split across independent components within the same declared blast radius; this is not a default repo-wide sweep mechanism. Merge findings afterward.
 Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a fresh subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
-
-
 
 ### Planner
 Purpose: Architecture design and detailed planning
@@ -297,8 +280,6 @@ Critical Requirements:
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
 Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.5`) in parallel and aggregate results before proceeding.
-
-
 
 ### Subagent Model Usage
 When calling subagents (@planner, @implementer, @analyzer, @explore, @task), use model `gpt-5.5` by default. For @explore or @task agents specifically, use model `haiku 4.5` instead.
