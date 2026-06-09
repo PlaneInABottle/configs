@@ -1,5 +1,5 @@
 model = "gpt-5.3-codex-spark"
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 personality = "pragmatic"
 approvals_reviewer = "user"
 plan_mode_reasoning_effort = "high"
@@ -35,6 +35,9 @@ trust_level = "trusted"
 command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
 
+[mcp_servers.livekit-docs-mcp]
+url = "https://docs.livekit.io/mcp"
+
 [mcp_servers.maestro]
 command = "maestro"
 args = ["mcp"]
@@ -60,12 +63,14 @@ max_depth = 1
 [tui]
 status_line = ["model-with-reasoning", "current-dir", "project-name", "git-branch", "context-used", "five-hour-limit", "weekly-limit"]
 status_line_use_colors = true
+pet = "seedy"
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 
 [notice]
 hide_full_access_warning = true
+hide_rate_limit_model_nudge = true
 
 [features]
 remote_control = true
