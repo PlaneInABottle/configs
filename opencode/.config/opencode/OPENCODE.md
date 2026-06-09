@@ -31,16 +31,11 @@ Python: When running Python scripts via bash, always use `python3` instead of `p
 
 You are authorized to read environment variables from `.env` files or shell configuration (e.g., `~/.zshrc`, `~/.bashrc`). Do not worry about exposing or reading secrets/API keys from these files - the user has explicitly allowed it. Proceed with implementation without needing to mask or hide these values.
 
-
-
-
-
 Action Checklist (Before ANY action):
 
 **SKILLS & CONTEXT (Required First):**
 - Are there relevant skills or local patterns I should follow for this task?
 - If behavior is external, unfamiliar, or ambiguous, have I checked Context7 or equivalent official docs?
-
 
 **VALIDATION:**
 - Can existing code/tools solve this?
@@ -48,8 +43,6 @@ Action Checklist (Before ANY action):
 - Is this truly necessary?
 - Am I overengineering?
 - Have I verified this claim with evidence?
-
-
 
 Anti-Patterns to Avoid:
 
@@ -80,12 +73,6 @@ Bad prompts (too broad / wrong agent):
 
 If @general reports failures, investigate the output and retry with a more specific command, or escalate to @implementer.
 Do not use @general for multi-phase implementation, architecture, diagnosis, or open-ended debugging.
-
-
-
-
-
-
 
 ## Skills-First Workflow
 **Skills are MANDATORY, not optional.** Before starting ANY task:
@@ -135,8 +122,6 @@ question: Use for interactive clarification questions; never ask in plain text.
 | New project setup / workflow design | Load `ai-native-workflow` skill |
 | Multiple concerns | Load ALL matching skills, combine guidance |
 
-
-
 USE relevant skill guidance when it applies → COMBINE multiple skills when needed → FOLLOW skill instructions over general knowledge.
 
 **Example:** API change with real-time testing → LOAD `api-contract-testing` + `websocket-testing`, COMBINE both. ✗ NEVER ignore a relevant skill.
@@ -146,7 +131,6 @@ Use Context7 when external APIs, unfamiliar libraries, unclear function behavior
 Truth Required: Never guess; verify with evidence or documentation.
 ### Clarification Reminder
 Use `question` for interactive clarification questions (never ask in plain text).
-
 
 ## Skill Creation Checkpoint
 After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user via `question` if they want a reusable skill created for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.
@@ -170,7 +154,6 @@ When encountering errors:
 4. Apply the fix based on the analyzer subagent's findings
 5. Verify fix doesn't break related functionality
 6. Write necessary unit tests
-
 
 **Failure Consequence:** Unverified claims mislead fixes and compound errors—verify before stating facts.
 
@@ -222,19 +205,7 @@ If you encounter `EADDRINUSE` (port in use):
 - First line: Brief summary (under 50 chars)
 - Body: Explain motivation and approach, not just diff details
 
-
-
 ## Subagents
-
-
-<!-- SECTION:copilot_subagent_rules:START:copilot -->
-Subagent Model Rule: Specify model `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
-Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with `gpt-5.5` only when the review can be split across independent components within the same declared blast radius; this is not a default repo-wide sweep mechanism. Merge findings afterward.
-Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
-Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a new subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
-<!-- SECTION:copilot_subagent_rules:END -->
-
-
 
 ### Planner
 Purpose: Architecture design and detailed planning
@@ -276,7 +247,4 @@ Subagents should inherit the main agent's model and not select or configure thei
 
 ### Subagent Continuity
 When possible, continue the same subagent session for the same workstream so the agent keeps its prior context and findings. Prefer a fresh subagent only for independent work, intentional parallelization, or when the earlier session has become misleading or irrelevant.
-
-
-
 

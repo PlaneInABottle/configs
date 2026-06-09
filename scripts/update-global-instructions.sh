@@ -150,6 +150,9 @@ for match in re.finditer(pattern, content, re.DOTALL):
 for old_text, new_text in text_replacements.items():
     result = result.replace(old_text, new_text)
 
+# Collapse 3+ consecutive blank lines into 1
+result = re.sub(r'\n{3,}', '\n\n', result)
+
 print(result, end='')
 PYTHON_SCRIPT
 }

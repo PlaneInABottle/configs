@@ -31,16 +31,11 @@ Python: When running Python scripts via bash, always use `python3` instead of `p
 
 You are authorized to read environment variables from `.env` files or shell configuration (e.g., `~/.zshrc`, `~/.bashrc`). Do not worry about exposing or reading secrets/API keys from these files - the user has explicitly allowed it. Proceed with implementation without needing to mask or hide these values.
 
-
-
-
-
 Action Checklist (Before ANY action):
 
 **SKILLS & CONTEXT (Required First):**
 - Are there relevant skills or local patterns I should follow for this task?
 - If behavior is external, unfamiliar, or ambiguous, have I checked Context7 or equivalent official docs?
-
 
 **VALIDATION:**
 - Can existing code/tools solve this?
@@ -48,8 +43,6 @@ Action Checklist (Before ANY action):
 - Is this truly necessary?
 - Am I overengineering?
 - Have I verified this claim with evidence?
-
-
 
 Anti-Patterns to Avoid:
 
@@ -61,8 +54,6 @@ Anti-Patterns to Avoid:
 - Unnecessary Directory Changes: DO NOT use `cd` in bash commands if the current working directory is already the target directory unless a tool or command truly requires it.
 - Analysis Paralysis: Avoid repeating overlapping searches or rereading the same ground without a new reason. When recent investigation stops producing materially new information, move forward using the evidence you already have.
 - Shell `eval`: Avoid when possible—use direct commands, `rbenv exec`, `nvm exec`, or PATH export instead. Security risk (injection).
-
-
 
 **COMMAND EXECUTION:**
 - Codex keeps orchestration in the main session, but should proactively delegate when the task is clearly a better fit for a built-in agent.
@@ -181,8 +172,6 @@ User clarification: Ask directly in the conversation when clarification is requi
 ## Skills Mastery
 **Skills Loading is MANDATORY.** Skills contain proven patterns, workflows, and integrations specific to this project.
 
-
-
 **Task-to-Skill Matching:**
 
 | Task Type | Action |
@@ -217,7 +206,6 @@ Use Context7 when external APIs, unfamiliar libraries, unclear function behavior
 Truth Required: Never guess; verify with evidence or documentation.
 ### Clarification Reminder
 Ask the user directly in the conversation for clarification when required.
-
 
 ## Skill Creation Checkpoint
 After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user in the conversation if they want a reusable skill created for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.
@@ -292,16 +280,5 @@ If you encounter `EADDRINUSE` (port in use):
 - First line: Brief summary (under 50 chars)
 - Body: Explain motivation and approach, not just diff details
 
-
-
-
-
 Codex custom agents are defined as standalone TOML files under `~/.codex/agents/` or project `.codex/agents/`. The root Codex session orchestrates custom agents directly. Use built-in `explorer` for read-heavy discovery, built-in `worker` for small execution-focused chores, and `implementer` for multi-file code writing. Implementer receives detailed phase instructions and executes one phase at a time. Prefer parallel agent threads when useful; Codex does not use a separate background-agent mode for this workflow.
-
-
-
-
-
-
-
 

@@ -47,20 +47,12 @@ Before proceeding with any task:
 
 Before implementing, use @explore to discover existing patterns, relevant files, integration points, and local conventions.
 
-
-
 - Check similar implementations before writing code.
 - For multiple independent investigations, run parallel @explore calls and aggregate findings before editing.
 - Treat @explore as read-only context gathering.
 - If discovered patterns answer the question, follow them instead of inventing a new structure.
 
 </discovery-workflow>
-
-
-
-
-
-
 
 <core-responsibilities>
 
@@ -91,8 +83,6 @@ UI/UX COMPOSITION: When the plan includes a UI/UX Composition Specification sect
 
 INPUT: Plan file path or scoped task brief from the parent session
 OUTPUT: Phase list and ready state
-
-
 
 Key Activities:
 

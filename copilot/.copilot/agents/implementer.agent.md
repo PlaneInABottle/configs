@@ -42,8 +42,6 @@ Before proceeding with any task:
 
 ---
 
-
-
 <mandatory-delegation-workflow>
 
 You MUST delegate to specialized agents for specific tasks.
@@ -74,8 +72,6 @@ Delegation Protocol:
 4. Never run commands directly when @task can handle them
 
  </mandatory-delegation-workflow>
-
-
 
 <skills-integration>
 

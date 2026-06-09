@@ -61,8 +61,6 @@ If @explore is unavailable in the current CLI/session, perform the same discover
 
 </discovery-workflow>
 
-
-
 <mandatory-delegation-workflow>
 
 You MUST delegate to specialized agents for specific tasks.
@@ -99,8 +97,6 @@ Delegation Protocol:
 
  </mandatory-delegation-workflow>
 
-
-
 <core-responsibilities>
 
 PHASE-BASED EXECUTION: Execute plan phases independently with immediate commits after each phase.
@@ -130,8 +126,6 @@ UI/UX COMPOSITION: When the plan includes a UI/UX Composition Specification sect
 
 INPUT: Plan file path or scoped task brief from the parent session
 OUTPUT: Phase list and ready state
-
-
 
 Key Activities:
 

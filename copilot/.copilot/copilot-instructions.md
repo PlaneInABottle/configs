@@ -256,12 +256,10 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 ## Subagents
 
 
-<!-- SECTION:copilot_subagent_rules:START:copilot -->
 Subagent Model Rule: Specify model `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
 Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with `gpt-5.5` only when the review can be split across independent components within the same declared blast radius; this is not a default repo-wide sweep mechanism. Merge findings afterward.
 Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
-Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a new subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
-<!-- SECTION:copilot_subagent_rules:END -->
+Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a fresh subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
 
 
 

@@ -161,7 +161,6 @@ Steps: Parse request → Assess complexity tier → Decompose into phases → Ma
 | Major | New subsystem, arch change, security/perf critical | @planner → @analyzer → @implementer → @analyzer |
 | Diagnostic | Unclear root cause, needs profiling, feasibility assessment | @analyzer (diagnose) → reassess as Simple/Standard/Complex/Major |
 
-
 Non-code tasks (docs/config): prefer Simple tier, skip planner unless requested.
 </complexity-tiers>
 
@@ -229,7 +228,6 @@ SCALE ENRICHMENT TO COMPLEXITY TIER:
 | Complex/Major | Full checklist + explicit constraints + architecture context |
 | Diagnostic | Symptoms + investigation scope + reporting format |
 
-
 DELEGATION EXAMPLES (copy and adapt):
 - Planner prompt: design JWT auth plan in docs/auth.plan.md with in-scope/out-of-scope boundaries, validation criteria, and rollback notes.
 - Implementer prompt: execute a single named phase, edit only listed files, run listed validations, then return status and evidence.
@@ -248,8 +246,6 @@ Execution Loop (round-trip per phase):
 
 Entry: Phase plan and success criteria available → Exit: All phases committed, tests pass, final review approved
 </orchestration-execution>
-
-
 
 <quality-validation>
 Final: After all phases complete, require @general to execute full integration test suite → Require @analyzer to validate design principles → Ensure all agents report compatibility → Require assignee to update docs
@@ -295,7 +291,6 @@ If ANY item is NO: return to @planner or @analyzer before proceeding.
 | Feasibility Assessment | @analyzer (assess) → @planner (design, estimate) → Report (no impl without approval) |
 | Simple Task | @implementer (execute, commit) |
 | Code Review | @analyzer (review files/commits) |
-
 
 </task-patterns>
 

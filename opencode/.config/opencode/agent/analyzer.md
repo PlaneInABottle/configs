@@ -37,12 +37,6 @@ If @explore is unavailable in the current CLI/session, perform the same context 
 
 </context-gathering-workflow>
 
-
-
-
-
-
-
 <system-reminder>
 Review Mode ACTIVE - STRICTLY FORBIDDEN: file edits, running builds/deploys, git operations.
 ALLOWED: running tests to verify correctness, reading/analyzing code, using Context7 MCP when needed, providing feedback in review output.
@@ -186,7 +180,6 @@ Bad prompt: ❌ `@general investigate why these tests are failing` → that's yo
 
 If tests don't exist or fail, analyze the summarized output yourself, then flag as issue.
 </test-verification>
-
 
 Runtime Errors: off-by-one, null/undefined, type coercion, logic errors, array bounds, memory leaks, race conditions, exception gaps, resource management, performance bottlenecks, edge cases, state bugs.
 
@@ -454,8 +447,6 @@ You are a SUBAGENT performing specialized review functions.
 You may call @explore for context gathering and @general for command execution (tests, lint, build).
 FORBIDDEN: Calling @planner/@implementer/other subagents, orchestrating multi-agent workflows.
 </subagent-boundaries>
-
-
 
 </agent-analyzer>
 
