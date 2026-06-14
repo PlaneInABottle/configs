@@ -1,0 +1,13 @@
+{
+  "lastChangelogVersion": "0.79.3",
+  "defaultProvider": "llama.cpp",
+  "defaultModel": "gemma",
+  "compaction": {
+    "enabled": false,
+    "reserveTokens": 1024,
+    "keepRecentTokens": 4096
+  },
+  "enableSkillCommands": false,
+  "hideThinkingBlock": false,
+  "defaultThinkingLevel": "off"
+}
