@@ -1,8 +1,11 @@
-model = "gpt-5.3-codex-spark"
-model_reasoning_effort = "xhigh"
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
 personality = "pragmatic"
 approvals_reviewer = "user"
 plan_mode_reasoning_effort = "high"
+
+notify = ["/Users/Y_ALTAY1/Documents/configs/codex/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+service_tier = "default"
 
 [projects."/home/mirza/configs"]
 trust_level = "trusted"
@@ -33,15 +36,14 @@ trust_level = "trusted"
 
 [mcp_servers.context7]
 command = "npx"
-args = ["-y", "@upstash/context7-mcp"]
+args = [ "-y", "@upstash/context7-mcp" ]
 
 [mcp_servers.livekit-docs-mcp]
 url = "https://docs.livekit.io/mcp"
 
 [mcp_servers.maestro]
 command = "maestro"
-args = ["mcp"]
-
+args = [ "mcp" ]
 network_access = true
 
 [mcp_servers.maestro.tools.list_devices]
@@ -61,7 +63,7 @@ max_threads = 6
 max_depth = 1
 
 [tui]
-status_line = ["model-with-reasoning", "current-dir", "project-name", "git-branch", "context-used", "five-hour-limit", "weekly-limit"]
+status_line = [ "model-with-reasoning", "current-dir", "project-name", "git-branch", "context-used", "five-hour-limit", "weekly-limit" ]
 status_line_use_colors = true
 pet = "seedy"
 
@@ -73,5 +75,28 @@ hide_full_access_warning = true
 hide_rate_limit_model_nudge = true
 
 [features]
-remote_control = true
 terminal_resize_reflow = true
+
+[marketplaces.openai-bundled]
+last_updated = "2026-06-12T05:46:21Z"
+source_type = "local"
+source = "/Users/Y_ALTAY1/Documents/configs/codex/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-06-12T05:47:16Z"
+source_type = "local"
+source = "/Users/Y_ALTAY1/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[desktop]
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = false
+keepRemoteControlAwakeWhilePluggedIn = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
