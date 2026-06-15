@@ -54,6 +54,16 @@ opencode/node_modules/
 opencode/.config/opencode/node_modules/
 opencode/.config/opencode/opencode-notifier-state.json
 
+# Pi Coding Agent - Exclude credentials, sessions, and installed packages
+pi/.pi/agent/auth.json
+pi/.pi/agent/sessions/
+pi/.pi/agent/skills/
+pi/.pi/agent/packages/
+pi/.pi/agent/logs/
+pi/.pi/agent/cache/
+pi/.pi/agent/tmp/
+pi/.pi/agent/*.log
+
 # Qwen CLI - Exclude runtime files and sensitive configuration
 qwen/.qwen/installation_id
 qwen/.qwen/oauth_creds.json
@@ -82,6 +92,14 @@ codex/.codex/models_cache.json
 codex/.codex/*.sqlite
 codex/.codex/*.sqlite-shm
 codex/.codex/*.sqlite-wal
+codex/.codex/.codex-global-state.json*
+codex/.codex/.tmp/
+codex/.codex/computer-use/
+codex/.codex/plugins/
+codex/.codex/process_manager/
+codex/.codex/session_index.jsonl
+codex/.codex/sqlite/
+codex/.codex/vendor_imports/
 
 # Copilot CLI - Exclude runtime state and logs
 copilot/.copilot/session-store.db
