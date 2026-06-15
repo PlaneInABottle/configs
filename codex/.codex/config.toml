@@ -34,6 +34,9 @@ trust_level = "trusted"
 [projects."/Users/Y_ALTAY1/Documents/mobile/new-diving-app"]
 trust_level = "trusted"
 
+[projects."/Users/Y_ALTAY1/Documents/ankiDecks"]
+trust_level = "trusted"
+
 [mcp_servers.context7]
 command = "npx"
 args = [ "-y", "@upstash/context7-mcp" ]
