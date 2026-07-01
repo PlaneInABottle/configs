@@ -43,9 +43,11 @@ __pycache__/
 .DS_Store
 .credentials.json
 .update.lock
+youtube-downloads/
 
 # Environment variables
 .env
+.secrets/
 .serena/
 
 # OpenCode - Exclude local environment and runtime files

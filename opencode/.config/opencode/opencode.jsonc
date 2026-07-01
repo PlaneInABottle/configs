@@ -174,19 +174,16 @@
   },
   "agent": {
     "coordinator": {
-      "model": "opencode-go/mimo-v2.5-pro",
-      "reasoningEffort": "high"
+      "model": "opencode-go/minimax-m3"
     },
     "analyzer": {
-      "model": "opencode-go/mimo-v2.5-pro",
-      "reasoningEffort": "high"
+      "model": "opencode-go/minimax-m3"
     },
     "planner": {
       "model": "opencode-go/qwen3.7-plus"
     },
     "implementer": {
-      "model": "opencode-go/mimo-v2.5-pro",
-      "reasoningEffort": "high"
+      "model": "opencode-go/minimax-m3"
     },
     "general": {
       "model": "opencode-go/deepseek-v4-flash",
