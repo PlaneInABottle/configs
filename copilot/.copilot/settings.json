@@ -1,7 +1,7 @@
 {
   "renderMarkdown": true,
   "screenReader": false,
-  "theme": "auto",
+  "theme": "colorblind",
   "allowedUrls": [
     "https://github.com",
     "http://localhost:3000",
@@ -78,14 +78,12 @@
     "http://127.0.0.1:8001"
   ],
   "disabledSkills": [],
-  "showReasoning": false,
   "experimental": true,
   "streamerMode": false,
   "skillDirectories": [
     "/Users/Y_ALTAY1/.agents/skills"
   ],
   "customAgents": {},
-  "model": "gemini-3.5-flash",
   "on_air_mode": false,
   "alt_screen": false,
   "colorMode": "colorblind",
