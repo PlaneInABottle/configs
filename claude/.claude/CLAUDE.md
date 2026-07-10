@@ -91,7 +91,6 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | New screen or page | Load `refactoring-ui` + `ai-native-workflow` skills |
 | UI layout or component composition | Load `refactoring-ui` skill |
 | Design system component | Load `refactoring-ui` skill |
-| Default concise/token-efficient output | Load `caveman` skill |
 | Form layout and validation UX | Load `refactoring-ui` + `ai-native-workflow` skills |
 | Responsive design | Load `refactoring-ui` skill |
 | Button placement or action hierarchy | Load `refactoring-ui` skill |
@@ -196,7 +195,7 @@ Output: Detailed implementation plan with phases
 
 **Required First:** Use relevant skills when they apply.
 
-Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.5`) (each scoped to a distinct module/concern), then aggregate findings before planning.
+Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
 Purpose: Blocking review of the requested change plus a bounded adjacent bug sweep inside the affected blast radius
 When to use: Security-critical code, between phases, pre-deployment, focused code/commit validation
@@ -205,7 +204,7 @@ Output: Issues, recommendations, approval status
 
 **Required First:** Use relevant skills when they apply.
 
-Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (model `gpt-5.5`) (split by module/concern), then aggregate findings before writing the review.
+Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
 Purpose: Build specific phases according to plan using best practices from official documentation
 When to use: Phased implementation with clear requirements
@@ -221,7 +220,7 @@ Critical Requirements:
 - Implementation Alignment: Implement according to learned patterns and official documentation
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
-Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.5`) in parallel and aggregate results before proceeding.
+Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls in parallel and aggregate results before proceeding.
 
 ### Subagent Model Usage
 Subagents should inherit the main agent's model and not select or configure their own model. Do not specify model parameters when calling subagents to ensure consistent behavior.

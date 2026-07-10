@@ -56,10 +56,9 @@ Action Checklist (Before ANY action):
 <!-- SECTION:copilot_subagent_commands:START:copilot -->
 **SUB-AGENT COMMANDS:**
 - Subagent command check: Explicitly command subagents to check and load relevant skills and use Context7.
-- Subagent model check: Use `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
-- Parallel review check: For code/commit reviews, use parallel @analyzer calls (gpt-5.5) only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
+- Subagent model check: Use `gpt-5.6-terra` for subagents. Use `gpt-5.6-luna` for @explore or @task agents.
+- Parallel review check: For code/commit reviews, use parallel @analyzer calls (gpt-5.6-terra) only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
 
-Caveman-mode is the default for concise/token-efficient output; include `caveman` skill in the required skills list for the task.
 <!-- SECTION:copilot_subagent_commands:END -->
 
 Anti-Patterns to Avoid:
@@ -232,7 +231,6 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | New screen or page | Load `refactoring-ui` + `ai-native-workflow` skills |
 | UI layout or component composition | Load `refactoring-ui` skill |
 | Design system component | Load `refactoring-ui` skill |
-| Default concise/token-efficient output | Load `caveman` skill |
 | Form layout and validation UX | Load `refactoring-ui` + `ai-native-workflow` skills |
 | Responsive design | Load `refactoring-ui` skill |
 | Button placement or action hierarchy | Load `refactoring-ui` skill |
@@ -259,7 +257,6 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | New screen or page | Load `refactoring-ui` + `ai-native-workflow` skills |
 | UI layout or component composition | Load `refactoring-ui` skill |
 | Design system component | Load `refactoring-ui` skill |
-| Default concise/token-efficient output | Load `caveman` skill |
 | Form layout and validation UX | Load `refactoring-ui` + `ai-native-workflow` skills |
 | Responsive design | Load `refactoring-ui` skill |
 | Button placement or action hierarchy | Load `refactoring-ui` skill |
@@ -411,13 +408,15 @@ Use SQL for structured task management: `INSERT INTO todos (id, title, status)`.
 <!-- SECTION:subagents_section:END -->
 
 <!-- SECTION:copilot_subagent_rules:START:copilot -->
-Subagent Model Rule: Specify model `gpt-5.5` for subagents. Use `haiku 4.5` for @explore or @task agents.
-Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with `gpt-5.5` only when the review can be split across independent components within the same declared blast radius; this is not a default repo-wide sweep mechanism. Merge findings afterward.
+Subagent Model Rule: Specify model `gpt-5.6-terra` for subagents. Use `gpt-5.6-luna` for @explore or @task agents.
+Parallel Review Rule: For code/commit reviews, use parallel @analyzer calls with `gpt-5.6-terra` only when the review can be split across independent components within the same declared blast radius; this is not a default repo-wide sweep mechanism. Merge findings afterward.
 Subagent Command Rule: Every subagent prompt must explicitly command use of relevant skills and mention Context7 only when external APIs, unfamiliar libraries, or unclear behavior make it necessary. DO NOT command subagents to use `cd` or change `cwd` (they inherit the correct working directory). Subagents MUST clean up their own background processes (e.g., test servers) before returning to prevent zombie processes.
 Subagent Continuity Rule: When continuing the same workstream and the existing subagent session already has relevant context, resume that same subagent instead of starting a fresh one. Start a fresh subagent only when the work is independent, the prior session is no longer useful, or parallelization is intentionally needed.
 <!-- SECTION:copilot_subagent_rules:END -->
 
 <!-- SECTION:codex_subagent_note:START:codex -->
+## Subagents
+
 Codex custom agents are defined as standalone TOML files under `~/.codex/agents/` or project `.codex/agents/`. The root Codex session orchestrates custom agents directly. Use built-in `explorer` for read-heavy discovery, built-in `worker` for small execution-focused chores, and `implementer` for multi-file code writing. Implementer receives detailed phase instructions and executes one phase at a time. Prefer parallel agent threads when useful; Codex does not use a separate background-agent mode for this workflow.
 <!-- SECTION:codex_subagent_note:END -->
 
@@ -430,7 +429,7 @@ Output: Detailed implementation plan with phases
 
 **Required First:** Use relevant skills when they apply.
 
-Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.5`) (each scoped to a distinct module/concern), then aggregate findings before planning.
+Parallel Investigation: For complex plans spanning multiple independent areas, run multiple parallel @explore calls (model `gpt-5.6-terra`) (each scoped to a distinct module/concern), then aggregate findings before planning.
 ### Analyzer
 Purpose: Blocking review of the requested change plus a bounded adjacent bug sweep inside the affected blast radius
 When to use: Security-critical code, between phases, pre-deployment, focused code/commit validation
@@ -439,7 +438,7 @@ Output: Issues, recommendations, approval status
 
 **Required First:** Use relevant skills when they apply.
 
-Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (model `gpt-5.5`) (split by module/concern), then aggregate findings before writing the review.
+Parallel Context-Gathering: For reviews spanning multiple independent components within the same declared blast radius, run parallel @explore calls (model `gpt-5.6-terra`) (split by module/concern), then aggregate findings before writing the review.
 ### Implementer
 Purpose: Build specific phases according to plan using best practices from official documentation
 When to use: Phased implementation with clear requirements
@@ -455,7 +454,7 @@ Critical Requirements:
 - Implementation Alignment: Implement according to learned patterns and official documentation
 - Process Cleanup: Subagents MUST NOT leave orphaned background processes. Use Docker or cleanly kill processes before returning.
 
-Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.5`) in parallel and aggregate results before proceeding.
+Parallel Validation: When you have multiple independent investigations or validations, issue multiple @explore calls (model `gpt-5.6-terra`) in parallel and aggregate results before proceeding.
 <!-- SECTION:subagent_role_descriptions:END -->
 
 <!-- SECTION:subagent_model_default:START:!copilot,!codex -->
@@ -468,8 +467,8 @@ When possible, continue the same subagent session for the same workstream so the
 
 <!-- SECTION:subagent_model_copilot:START:copilot -->
 ### Subagent Model Usage
-When calling subagents (@planner, @implementer, @analyzer, @explore, @task), use model `gpt-5.5` by default. For @explore or @task agents specifically, use model `haiku 4.5` instead.
-For code/commit reviews, use parallel @analyzer calls with `gpt-5.5` only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
+When calling subagents (@planner, @implementer, @analyzer, @explore, @task), use model `gpt-5.6-terra` by default. For @explore or @task agents specifically, use model `gpt-5.6-luna` instead.
+For code/commit reviews, use parallel @analyzer calls with `gpt-5.6-terra` only when the review can be split across independent components within the same declared blast radius; this is optional and not a default repo-wide sweep.
 
 Parallel Subagent Calls: Spawn multiple parallel subagents of the SAME type for independent tracks, then merge results. @explore: split by module/pattern · @analyzer: split only by independent component/focus-area within the same declared blast radius · @implementer: ONLY if strictly independent modules · @task: for independent validations (lint + tests + typecheck).
 

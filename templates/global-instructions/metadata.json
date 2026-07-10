@@ -19,7 +19,7 @@
         "@explore": "the built-in `explorer` agent",
         "@task": "the built-in `worker` agent",
         "@general": "the built-in `worker` agent",
-        " (model `gpt-5.5`)": ""
+        " (model `gpt-5.6-terra`)": ""
       }
     },
     "opencode": {
@@ -28,7 +28,7 @@
       "description": "Opencode primary system instructions (no header required)",
       "text_replacements": {
         "ask_user": "question",
-        " (model `gpt-5.5`)": ""
+        " (model `gpt-5.6-terra`)": ""
       }
     },
     "copilot": {
@@ -40,7 +40,10 @@
     "claude": {
       "requires_header": false,
       "target_file": "claude/.claude/CLAUDE.md",
-      "description": "Claude desktop app instructions (no header required)"
+      "description": "Claude desktop app instructions (no header required)",
+      "text_replacements": {
+        " (model `gpt-5.6-terra`)": ""
+      }
     },
     "gemini": {
       "requires_header": false,
@@ -51,7 +54,8 @@
         "@planner": "planner",
         "@implementer": "implementer",
         "@explore": "explore",
-        "@task": "task"
+        "@task": "task",
+        " (model `gpt-5.6-terra`)": ""
       },
       "notes": "Gemini uses plain agent names without @ prefix. Text replacements handle this automatically."
     }

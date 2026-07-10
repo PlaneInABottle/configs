@@ -102,6 +102,11 @@ codex/.codex/process_manager/
 codex/.codex/session_index.jsonl
 codex/.codex/sqlite/
 codex/.codex/vendor_imports/
+codex/.codex/mcp-oauth-locks/
+codex/.codex/transcription-history.jsonl
+codex/.codex/app-server-control/
+codex/.codex/rules/
+codex/.codex/pets/
 
 # Copilot CLI - Exclude runtime state and logs
 copilot/.copilot/session-store.db

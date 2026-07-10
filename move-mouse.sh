@@ -107,7 +107,18 @@ while true {
         point = loc
     }
 
-    CGWarpMouseCursorPosition(point)
+    // Post a real mouse-moved event so the HID idle timer resets.
+    // CGWarpMouseCursorPosition only teleports the pointer and does NOT
+    // generate an input event, so apps like Microsoft Teams still mark
+    // you as Away. Requires Input Monitoring permission for the terminal.
+    if let event = CGEvent(
+        mouseEventSource: nil,
+        mouseType: .mouseMoved,
+        mouseCursorPosition: point,
+        mouseButton: .left
+    ) {
+        event.post(tap: .cghidEventTap)
+    }
     theta += speed
     usleep(useconds_t(intervalUs))
 }

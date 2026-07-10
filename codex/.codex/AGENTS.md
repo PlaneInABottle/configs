@@ -185,7 +185,6 @@ User clarification: Ask directly in the conversation when clarification is requi
 | New screen or page | Load `refactoring-ui` + `ai-native-workflow` skills |
 | UI layout or component composition | Load `refactoring-ui` skill |
 | Design system component | Load `refactoring-ui` skill |
-| Default concise/token-efficient output | Load `caveman` skill |
 | Form layout and validation UX | Load `refactoring-ui` + `ai-native-workflow` skills |
 | Responsive design | Load `refactoring-ui` skill |
 | Button placement or action hierarchy | Load `refactoring-ui` skill |
@@ -279,6 +278,8 @@ If you encounter `EADDRINUSE` (port in use):
 **Commit Message Format:**
 - First line: Brief summary (under 50 chars)
 - Body: Explain motivation and approach, not just diff details
+
+## Subagents
 
 Codex custom agents are defined as standalone TOML files under `~/.codex/agents/` or project `.codex/agents/`. The root Codex session orchestrates custom agents directly. Use built-in `explorer` for read-heavy discovery, built-in `worker` for small execution-focused chores, and `implementer` for multi-file code writing. Implementer receives detailed phase instructions and executes one phase at a time. Prefer parallel agent threads when useful; Codex does not use a separate background-agent mode for this workflow.
 

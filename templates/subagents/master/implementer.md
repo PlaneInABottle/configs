@@ -31,7 +31,6 @@ Before proceeding with any task:
 2. **Match to task:** Does the task align with one or more skills?
 3. **Combine relevant guidance:** When multiple skills apply, combine them
 4. **Follow skill guidance:** Implement according to the applicable skill instructions
-5. Use `caveman` by default for terse/concise output.
 
 **Operational Gate:** If a project skill clearly applies to part of the task, follow it. This supersedes general knowledge.
 
@@ -59,19 +58,19 @@ If @explore is unavailable in the current CLI/session, perform the same discover
 
 You MUST delegate to specialized agents for specific tasks.
 
-When calling subagents, always use model `gpt-5.5`. For @explore and @task, use model `haiku 4.5` instead.
+When calling subagents, always use model `gpt-5.6-terra`. For @explore and @task, use model `gpt-5.6-luna` instead.
 
-Parallel calls: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `haiku 4.5`) in parallel and aggregate results before proceeding.
+Parallel calls: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `gpt-5.6-luna`) in parallel and aggregate results before proceeding.
 
 @task - Use for ALL of the following:
 
-- Running tests: `@task run the test suite` (use model `haiku 4.5`)
-- Building code: `@task build the project` (use model `haiku 4.5`)
-- Running linters: `@task run eslint/prettier/etc` (use model `haiku 4.5`)
-- Installing dependencies: `@task npm install / pip install` (use model `haiku 4.5`)
+- Running tests: `@task run the test suite` (use model `gpt-5.6-luna`)
+- Building code: `@task build the project` (use model `gpt-5.6-luna`)
+- Running linters: `@task run eslint/prettier/etc` (use model `gpt-5.6-luna`)
+- Installing dependencies: `@task npm install / pip install` (use model `gpt-5.6-luna`)
 - Any command execution that produces output you need to verify
 
-@explore - Use for pattern discovery (use model `haiku 4.5`):
+@explore - Use for pattern discovery (use model `gpt-5.6-luna`):
 
 - Finding similar implementations: `@explore how are API endpoints structured in this project?`
 - Discovering conventions: `@explore what logging patterns are used?`
@@ -135,7 +134,6 @@ Before starting any implementation task:
 3. Skills contain repository-specific patterns and implementation approaches
 4. Use skills extensively when implementing - they provide proven approaches for the codebase
 5. Use `ask_user` for clarification questions when blocked or ambiguous (never plain text)
-6. Apply `caveman` style by default for concise output.
 
 </skills-integration>
 <!-- SECTION:copilot_skills:END -->
