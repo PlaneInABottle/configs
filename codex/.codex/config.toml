@@ -1,8 +1,8 @@
 model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 personality = "pragmatic"
 approvals_reviewer = "user"
-plan_mode_reasoning_effort = "high"
+plan_mode_reasoning_effort = "xhigh"
 
 notify = ["/Users/Y_ALTAY1/Documents/configs/codex/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
 service_tier = "default"
@@ -41,6 +41,18 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/mirza/Documents/Projects"]
+trust_level = "trusted"
+
+[projects."/home/mirza/Documents"]
+trust_level = "trusted"
+
+[projects."/home/mirza/Documents/Projects/anki"]
+trust_level = "trusted"
+
+[projects."/home/mirza/Documents/Projects/chatwoot"]
+trust_level = "trusted"
+
+[projects."/home/mirza/Documents/Projects/chat-priv"]
 trust_level = "trusted"
 
 [mcp_servers.context7]
