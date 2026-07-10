@@ -60,32 +60,33 @@ Anti-Patterns to Avoid:
 - Use the built-in `explorer` agent whenever the work is primarily repo discovery: searching for files, tracing call sites, mapping architecture, or answering "where does this live?" questions.
 - Strongly favor the built-in `worker` agent for chore commands because it is fast and cheap: test runs, lint/typecheck/install commands, verification steps, log summarization, and other bounded command-heavy work where you mainly need the result back.
 - Keep only tiny one-shot commands in the main session when delegation would add more overhead than value; otherwise prefer `worker` for execution chores.
-- For batch/parallel work that benefits from real concurrency, use `spawn_agents_on_csv` (CSV fan-out) or run multiple `codex exec` calls in parallel from your shell, then aggregate the outputs yourself. Do not rely on inline subagent spawning for this — Codex's `spawn_agent` is explicit-trigger only.
+- For batch/parallel work that benefits from real concurrency, use `spawn_agents_on_csv` (CSV fan-out) or run multiple `codex exec` calls in parallel from your shell, then aggregate the outputs yourself. Do not rely on inline subagent spawning for this — Codex's `spawn_agent` is explicit-trigger only. **Avoid parallel agent threads unless explicitly requested by the user — they multiply token consumption.**
 - Do not start long-lived processes from inside a session without PM2/Docker (see Running Applications below). Codex context can be compacted mid-run, which loses PIDs and causes zombie processes and port exhaustion.
 
 ## Built-in Agents
 
-- **`explorer`** — Read-only codebase discovery. Use for search, architecture tracing, pattern finding.
-- **`worker`** — Command execution. Use for tests, lint, build, install, summarizing long output.
-- **`implementer`** — Code writing. Use for multi-file implementation work (see Delegation section below).
+- **`explorer`** — Read-only codebase discovery. Use freely for search, architecture tracing, pattern finding.
+- **`worker`** — Command execution. Use freely for tests, lint, build, install, summarizing long output.
+- **`implementer`** — Code writing. Use ONLY for large multi-file implementations (3+ files or complex multi-function changes). Do NOT use for single-file edits, small features, or routine code changes — do those directly in the main session.
 - Treat `worker` as the default helper for cheap execution chores.
-- Treat `implementer` as the default for any non-trivial code writing (multiple files, multiple functions).
 - Keep orchestration, planning, analysis, and review in the main session.
 
 ## Delegating to Implementer
 
-When a task involves writing or modifying code across multiple files or functions, delegate to the `implementer` custom agent phase by phase.
+`implementer` is expensive (inherits the main model + full phase context). Use it sparingly — only when the implementation is large enough that isolated context is clearly justified.
 
-**When to delegate:**
-- New features with 2+ files
-- Bug fixes touching multiple code paths
-- Refactoring across files
-- Any implementation that would benefit from isolated context
+**When to delegate (rare):**
+- New features spanning 3+ files
+- Bug fixes touching multiple code paths across files
+- Large refactors across files
+- Implementation that would overflow the main session context
 
-**When NOT to delegate:**
-- Single-line or single-function edits — do it directly
+**When NOT to delegate (default):**
+- Single-file or 2-file edits — do it directly
+- Single-function changes — do it directly
 - Config changes, README updates, trivial fixes
 - Planning, analysis, or review — that's your job as the main session
+- When in doubt, do it directly — saving context isn't worth the token cost of a full implementer round-trip
 
 **How to delegate — give detailed phase instructions:**
 
@@ -281,5 +282,5 @@ If you encounter `EADDRINUSE` (port in use):
 
 ## Subagents
 
-Codex custom agents are defined as standalone TOML files under `~/.codex/agents/` or project `.codex/agents/`. The root Codex session orchestrates custom agents directly. Use built-in `explorer` for read-heavy discovery, built-in `worker` for small execution-focused chores, and `implementer` for multi-file code writing. Implementer receives detailed phase instructions and executes one phase at a time. Prefer parallel agent threads when useful; Codex does not use a separate background-agent mode for this workflow.
+Codex custom agents are defined as standalone TOML files under `~/.codex/agents/` or project `.codex/agents/`. The root Codex session orchestrates custom agents directly. Use built-in `explorer` freely for read-heavy discovery, built-in `worker` freely for small execution-focused chores, and `implementer` sparingly only for large multi-file code writing (see Delegation section above). Avoid parallel agent threads unless explicitly requested by the user — they multiply token consumption.
 
