@@ -87,5 +87,6 @@
   "on_air_mode": false,
   "alt_screen": false,
   "colorMode": "colorblind",
-  "effortLevel": "high"
+  "effortLevel": "high",
+  "model": "gpt-5.6-sol"
 }
