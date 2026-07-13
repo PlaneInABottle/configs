@@ -80,7 +80,7 @@ Delegation Protocol:
 
 1. Before implementing, use @explore to discover patterns
 2. After implementing each phase, use @task to run tests/build/lint
-3. If @task reports failures, fix issues before proceeding to next phase
+3. If @task reports failures caused by your current phase, fix them and rerun validation before returning
 4. Never run commands directly when @task can handle them
 
  </mandatory-delegation-workflow>
@@ -118,7 +118,7 @@ Delegation Protocol:
 
 1. Before implementing, use @explore to discover patterns
 2. After implementing each phase, use @general to run tests and lint checks
-3. If @general reports failures, ask @general to summarize the failures, then fix issues before proceeding to next phase
+3. If @general reports failures caused by your current phase, fix them and rerun validation before returning
 4. Never run commands directly that could produce significant output — always use @general
 
  </mandatory-delegation-workflow>
@@ -268,12 +268,12 @@ Execute only the scoped phase(s) or task slice the parent session delegated — 
 
 FAILURE HANDLING:
 
-- If any phase fails (tests/build/security):
-  - STOP execution immediately
-  - Report exact failure: phase number, error details
+- If validation fails because of your current phase, diagnose and fix it, then rerun the failed checks. Limit correction loops to two focused attempts.
+- If the failure predates your phase, is outside your scope, or persists after two focused attempts:
+  - STOP execution
+  - Report exact failure, attempts made, and remaining evidence
   - Return control to the parent session for review, diagnosis, or next-step routing
 - DO NOT continue to next phase on failure
-- DO NOT attempt to resume or fix issues internally
 
 </dynamic-phase-execution>
 
@@ -293,8 +293,8 @@ Activities:
 
 If changes were made and the user requested a commit:
 
-- Message format: `[final] polish: <description of cleanup>`
-- Example: `[final] polish: update integration docs and cleanup imports`
+- Use the repository's existing commit style or conventional `chore: <description>` format
+- Example: `chore: update integration docs and clean up imports`
 
 </final-polish-phase>
 

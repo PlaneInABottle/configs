@@ -55,6 +55,7 @@ Action Checklist (Before ANY action):
 <!-- SECTION:copilot_subagent_commands:START:copilot -->
 **SUB-AGENT COMMANDS:**
 - Every agent may use @explore for read-only discovery and @task for bounded command execution. Do not specify model IDs when spawning them; let Copilot apply its configured/default subagent models.
+- Cheap helpers may gather evidence or run commands only. The parent agent must perform reasoning, diagnosis, planning, review, recommendations, and final-response authorship itself unless @coordinator delegates that work to an authorized heavy role agent.
 - Only @coordinator may invoke @planner, @analyzer, or @implementer.
 
 <!-- SECTION:copilot_subagent_commands:END -->
@@ -73,6 +74,7 @@ Anti-Patterns to Avoid:
 <!-- SECTION:shared_command_execution:START:opencode -->
 **COMMAND EXECUTION:**
 - Every agent may delegate bounded command execution to @general and read-only discovery to @explore.
+- Cheap helpers may gather evidence or run commands only. The parent agent must perform reasoning, diagnosis, planning, review, recommendations, and final-response authorship itself unless @coordinator delegates that work to an authorized heavy role agent.
 - Typical chores: running tests, linting, installing dependencies, building, summarizing verbose output
 - Keep @general tasks narrow (1-3 clear steps)
 
@@ -93,7 +95,7 @@ Do not use @general for multi-phase implementation, architecture, diagnosis, or 
 <!-- SECTION:codex_command_execution:START:codex -->
 **COMMAND EXECUTION:**
 - Every agent may use the built-in `explorer` for read-only discovery and `worker` for bounded command execution.
-- Keep helper tasks narrow. Do not use cheap helpers for planning, diagnosis, review, implementation, or multi-phase work.
+- Keep helper tasks narrow. Cheap helpers may gather evidence or run commands only; the parent session retains reasoning, diagnosis, planning, review, recommendations, implementation, and final-response authorship.
 - Codex has no coordinator or enabled heavy role agents. Perform planning, analysis, review, and implementation directly in the current session.
 - Do not start long-lived processes from inside a session without PM2/Docker (see Running Applications below). Codex context can be compacted mid-run, which loses PIDs and causes zombie processes and port exhaustion.
 <!-- SECTION:codex_command_execution:END -->
@@ -186,16 +188,6 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 USE relevant skill guidance when it applies → COMBINE multiple skills when needed → FOLLOW skill instructions over general knowledge.
 
 **Example:** API change with real-time testing → LOAD `api-contract-testing` + `websocket-testing`, COMBINE both. ✗ NEVER ignore a relevant skill.
-### Context7 Reminder
-Use Context7 when external APIs, unfamiliar libraries, unclear function behavior, or ambiguous docs could affect correctness.
-### Truth Reminder
-Truth Required: Never guess; verify with evidence or documentation.
-### Clarification Reminder
-Use `ask_user` for interactive clarification questions (never ask in plain text).
-<!-- SECTION:copilot_direct_communication_reminder:START:copilot -->
-### Direct Communication Reminder
-Never use shell commands (cat, echo, heredocs) to display explanations. Write directly in markdown. Use bash only for actual file operations and system commands.
-<!-- SECTION:copilot_direct_communication_reminder:END -->
 
 ## Skill Creation Checkpoint
 After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user via `ask_user` if they want a reusable skill created for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.

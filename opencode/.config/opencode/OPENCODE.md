@@ -56,6 +56,7 @@ Anti-Patterns to Avoid:
 
 **COMMAND EXECUTION:**
 - Every agent may delegate bounded command execution to @general and read-only discovery to @explore.
+- Cheap helpers may gather evidence or run commands only. The parent agent must perform reasoning, diagnosis, planning, review, recommendations, and final-response authorship itself unless @coordinator delegates that work to an authorized heavy role agent.
 - Typical chores: running tests, linting, installing dependencies, building, summarizing verbose output
 - Keep @general tasks narrow (1-3 clear steps)
 
@@ -122,12 +123,6 @@ question: Use for interactive clarification questions; never ask in plain text.
 USE relevant skill guidance when it applies → COMBINE multiple skills when needed → FOLLOW skill instructions over general knowledge.
 
 **Example:** API change with real-time testing → LOAD `api-contract-testing` + `websocket-testing`, COMBINE both. ✗ NEVER ignore a relevant skill.
-### Context7 Reminder
-Use Context7 when external APIs, unfamiliar libraries, unclear function behavior, or ambiguous docs could affect correctness.
-### Truth Reminder
-Truth Required: Never guess; verify with evidence or documentation.
-### Clarification Reminder
-Use `question` for interactive clarification questions (never ask in plain text).
 
 ## Skill Creation Checkpoint
 After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user via `question` if they want a reusable skill created for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.

@@ -57,6 +57,7 @@ Action Checklist (Before ANY action):
 
 **SUB-AGENT COMMANDS:**
 - Every agent may use @explore for read-only discovery and @task for bounded command execution. Do not specify model IDs when spawning them; let Copilot apply its configured/default subagent models.
+- Cheap helpers may gather evidence or run commands only. The parent agent must perform reasoning, diagnosis, planning, review, recommendations, and final-response authorship itself unless @coordinator delegates that work to an authorized heavy role agent.
 - Only @coordinator may invoke @planner, @analyzer, or @implementer.
 
 Anti-Patterns to Avoid:
@@ -120,14 +121,6 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 USE relevant skill guidance when it applies → COMBINE multiple skills when needed → FOLLOW skill instructions over general knowledge.
 
 **Example:** API change with real-time testing → LOAD `api-contract-testing` + `websocket-testing`, COMBINE both. ✗ NEVER ignore a relevant skill.
-### Context7 Reminder
-Use Context7 when external APIs, unfamiliar libraries, unclear function behavior, or ambiguous docs could affect correctness.
-### Truth Reminder
-Truth Required: Never guess; verify with evidence or documentation.
-### Clarification Reminder
-Use `ask_user` for interactive clarification questions (never ask in plain text).
-### Direct Communication Reminder
-Never use shell commands (cat, echo, heredocs) to display explanations. Write directly in markdown. Use bash only for actual file operations and system commands.
 
 ## Skill Creation Checkpoint
 After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user via `ask_user` if they want a reusable skill created for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.

@@ -1,75 +1,13 @@
 {
   "created": "2025-12-16T10:33:00Z",
-  "defaults": {
-    "opencode": {
-      "permission_lines": [
-        "  webfetch: allow",
-        "  bash:",
-        "    \"git diff\": allow",
-        "    \"git log*\": allow",
-        "    \"git status\": allow",
-        "    \"git show*\": allow",
-        "    \"pytest*\": allow",
-        "    \"npm test*\": allow",
-        "    \"uv run*\": allow",
-        "    \"head*\": allow",
-        "    \"tail*\": allow",
-        "    \"cat*\": allow",
-        "    \"ls*\": allow",
-        "    \"tree*\": allow",
-        "    \"find*\": allow",
-        "    \"grep*\": allow",
-        "    \"echo*\": allow",
-        "    \"wc*\": allow",
-        "    \"pwd\": allow",
-        "    \"sed*\": deny",
-        "    \"awk*\": deny",
-        "    \"*\": ask",
-        "  edit: ask"
-      ]
-    },
-    "claude": {
-      "tools": "Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, NotebookEdit, WebFetch, TodoWrite, WebSearch, BashOutput, KillBash, mcp__Context7__resolve-library-id, mcp__Context7__get-library-docs, ListMcpResourcesTool, ReadMcpResourceTool"
-    }
-  },
   "description": "Master templates for subagent content with configuration",
   "systems": {
-    "codex": {
-      "text_replacements": {
-        "Use `ask_user` for clarification": "Ask the user directly in the conversation for clarification",
-        "Use `ask_user` for interactive clarification questions": "Ask the user directly in the conversation for clarification",
-        "use `ask_user`, never plain text": "ask the user directly in the conversation",
-        "`ask_user` when blocked": "ask the user directly in the conversation when blocked",
-        "`ask_user`": "ask the user directly in the conversation",
-        "@explore": "the built-in explorer agent",
-        "@general": "the built-in worker agent",
-        "@task": "the built-in worker agent",
-        "ALWAYS the built-in explorer agent first": "ALWAYS use the built-in `explorer` agent first",
-        "run multiple parallel the built-in explorer agent calls": "run multiple parallel `explorer` agent threads",
-        "run parallel the built-in explorer agent calls": "run parallel `explorer` agent threads",
-        "issue multiple the built-in explorer agent calls": "issue multiple parallel `explorer` agent threads",
-        "the built-in explorer agent calls": "`explorer` agent threads",
-        "Use the built-in explorer agent for": "Use the built-in `explorer` agent for",
-        "use the built-in explorer agent to": "use the built-in `explorer` agent to",
-        "Use the built-in worker agent to": "Use the built-in `worker` agent to",
-        "use the built-in worker agent to": "use the built-in `worker` agent to",
-        "the built-in worker agent should": "the built-in `worker` agent should"
-      }
-    },
     "opencode": {
       "text_replacements": {
         "ask_user": "question",
         "@task": "@general"
-      }
-    },
-    "gemini": {
-      "text_replacements": {
-        "@analyzer": "analyzer",
-        "@planner": "planner",
-        "@implementer": "implementer",
-        "@explore": "explore",
-        "@task": "task"
-      }
+      },
+      "forbidden_tokens": ["ask_user", "@task"]
     }
   },
   "subagents": {
@@ -83,11 +21,7 @@
         "  - \"Use for code refactoring and quality optimization\"",
         "  - \"Use for performance improvements and technical debt reduction\""
       ],
-      "header_lines": {
-        "copilot": 4,
-        "opencode": 45,
-        "claude": 24
-      },
+      "enabled_systems": ["copilot", "opencode", "claude"],
       "name": "implementer",
       "opencode": {}
     },
@@ -98,11 +32,7 @@
         "  - \"Use for large refactoring projects needing systematic planning\"",
         "  - \"Use for security-critical changes requiring careful risk assessment\""
       ],
-      "header_lines": {
-        "copilot": 4,
-        "opencode": 25,
-        "claude": 22
-      },
+      "enabled_systems": ["copilot", "opencode", "claude"],
       "name": "planner",
       "opencode": {}
     },
@@ -114,11 +44,7 @@
         "  - \"Use for code quality assessment before merging\"",
         "  - \"Use for architectural validation of implementation plans\""
       ],
-      "header_lines": {
-        "copilot": 5,
-        "opencode": 45,
-        "claude": 22
-      },
+      "enabled_systems": ["copilot", "opencode", "claude"],
       "name": "analyzer",
       "opencode": {}
     },
@@ -129,10 +55,7 @@
         "  - \"Use for codebase cleanup and refactoring projects with quality assurance\"",
         "  - \"Use for feature implementation with comprehensive testing and review\""
       ],
-      "header_lines": {
-        "copilot": 4,
-        "opencode": 47
-      },
+      "enabled_systems": ["copilot", "opencode"],
       "name": "coordinator",
       "opencode": {},
       "mode": "primary"
@@ -144,9 +67,7 @@
         "  - \"Use to challenge requirements interactively before generating coordinator prompt\"",
         "  - \"Use to discover codebase context and ask specific questions about data sources, validation, UI/UX\""
       ],
-      "header_lines": {
-        "opencode": 4
-      },
+      "enabled_systems": ["opencode"],
       "name": "challenger",
       "opencode": {},
       "mode": "primary"

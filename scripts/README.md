@@ -1,407 +1,108 @@
-# Subagent Management Scripts
+# Prompt Generation Scripts
 
-Automated system for managing subagent instruction files across Copilot, Codex, Opencode, and Claude systems.
+The prompt system has two sources of truth:
 
-## Overview
+- `templates/global-instructions/master.md` for CLI-wide instructions
+- `templates/subagents/master/*.md` for role-agent instructions
 
-This system uses **master templates** as single source of truth and generates tool-specific files by combining master content with appropriate headers.
+Generated files must not be edited manually. Update the templates and regenerate.
 
-```
-templates/subagents/
-├── master/                 # Single source of truth
-│   ├── planner.md
-│   ├── analyzer.md
-│   ├── implementer.md
-│   ├── coordinator.md
-│   ├── challenger.md
-│   └── METADATA.json       # Agent metadata (descriptions, examples)
-└── headers/                # Tool-specific headers
-    ├── copilot.template    # Copilot header format
-    ├── opencode.template   # Opencode header format (YAML)
-    └── claude.template     # Claude header format
-```
+## Architecture
 
-## Scripts
+`scripts/render_prompts.py` is the shared template renderer. It provides:
 
-### 1. `extract-to-master.sh`
+- Recursive `<!-- INCLUDE:path -->` expansion for role-agent templates
+- Nested `<!-- SECTION:id:START:systems -->` filtering
+- Per-system text replacements
+- Forbidden-token checks to catch platform syntax leakage
 
-Extracts content from existing subagent files into master templates.
+`scripts/generate_prompts.py` adds platform-specific headers, locks concurrent runs, writes outputs atomically, and reconciles the expected output inventory. These shell wrappers preserve the established commands:
 
-**Usage:**
-```bash
-./scripts/extract-to-master.sh
-```
+- `scripts/update-global-instructions.sh`
+- `scripts/update-subagents.sh`
 
-**What it does:**
-- Reads copilot and opencode subagent files
-- Extracts content (excluding headers)
-- Saves to `templates/subagents/master/{agent}.md`
-- Creates header templates
-- Generates METADATA.json with descriptions and examples
+`scripts/validate_prompts.py`, exposed through `scripts/validate-prompts.sh`, runs unit tests and checks every generated global and role-agent file byte-for-byte against its source template. It also rejects orphaned or disabled role-agent outputs.
 
-**When to use:**
-- Initial setup (already done)
-- After manual edits to subagent files that should become the new master
-
-### 2. `update-subagents.sh`
-
-Generates subagent files from master templates + headers.
-
-**Usage:**
-```bash
-# Update specific agent for all systems
-./scripts/update-subagents.sh --agent=analyzer
-
-# Update all agents for specific system
-./scripts/update-subagents.sh --agent=all --system=copilot
-./scripts/update-subagents.sh --agent=all --system=codex
-./scripts/update-subagents.sh --agent=all --system=claude
-
-# Dry run to preview changes
-./scripts/update-subagents.sh --agent=all --dry-run
-
-# Force overwrite without prompts
-./scripts/update-subagents.sh --agent=all --force
-```
-
-**Options:**
-- `--agent=NAME` - Agent to update (planner|analyzer|implementer|coordinator|challenger|all)
-- `--system=NAME` - System to update (copilot|codex|opencode|claude|all) [default: all]
-- `--dry-run` - Preview changes without modifying files
-- `--force` - Overwrite without confirmation
-
-**What it does:**
-- Reads master template content
-- Reads metadata (description, examples)
-- Generates appropriate header for target system
-- Combines header + content
-- Writes to target location
-
-**When to use:**
-- After editing master templates
-- To regenerate all files from master
-- To ensure synchronization
-
-### 3. `validate-subagents.sh`
-
-Validates that copilot and opencode files have identical content.
-
-**Usage:**
-```bash
-./scripts/validate-subagents.sh
-```
-
-**What it does:**
-- Compares content of copilot vs opencode files (excluding headers)
-- Reports which agents are in sync
-- Exit code 0 if all synced, 1 if any differ
-
-**When to use:**
-- Before committing changes
-- To verify synchronization
-- In CI/CD pipeline (future)
-
-## Workflow
-
-### Making Changes to Subagents
-
-**Recommended workflow:**
-
-1. **Edit master template:**
-   ```bash
-   # Edit the master template (e.g., planner, analyzer, implementer)
-   vim templates/subagents/master/implementer.md
-   ```
-
-2. **Update all files:**
-   ```bash
-   # Dry run first to preview
-   ./scripts/update-subagents.sh --agent=implementer --dry-run
-
-   # Apply changes
-   ./scripts/update-subagents.sh --agent=implementer --force
-   ```
-
-3. **Validate:**
-   ```bash
-   ./scripts/validate-subagents.sh
-   ```
-
-4. **Commit:**
-   ```bash
-   git add templates copilot opencode
-   git commit -m "[subagents] Update implementer: <description>"
-   ```
-
-### Bulk Updates
+## Global Instructions
 
 ```bash
-# Update all subagents
-./scripts/update-subagents.sh --agent=all --force
+# Regenerate every CLI
+./scripts/update-global-instructions.sh
 
-# Validate everything
-./scripts/validate-subagents.sh
+# Regenerate one CLI
+./scripts/update-global-instructions.sh --system=opencode
 
-# Commit if all good
-git add templates copilot opencode
-git commit -m "[subagents] Bulk update: <description>"
+# Preview target paths without writing
+./scripts/update-global-instructions.sh --dry-run
+
+# Fail if generated files are stale
+./scripts/update-global-instructions.sh --check
 ```
 
-## File Structure
+System metadata and output paths live in `templates/global-instructions/metadata.json`.
 
-### Copilot Format
+## Role Agents
+
+```bash
+# Regenerate every enabled role agent
+./scripts/update-subagents.sh
+
+# Regenerate one role or one CLI
+./scripts/update-subagents.sh --agent=implementer
+./scripts/update-subagents.sh --system=copilot
+
+# Preview target paths without writing
+./scripts/update-subagents.sh --dry-run
+
+# Fail on stale, missing, or unexpected managed outputs
+./scripts/update-subagents.sh --check
+```
+
+Agent metadata lives in `templates/subagents/master/METADATA.json`. Each agent declares `enabled_systems`; numeric header-length metadata is not used.
+
+Current role-agent matrix:
+
+| Agent | Copilot | Opencode | Claude |
+|---|---:|---:|---:|
+| planner | yes | yes | yes |
+| analyzer | yes | yes | yes |
+| implementer | yes | yes | yes |
+| coordinator | yes | yes | no |
+| challenger | no | yes | no |
+
+Codex has no generated heavy role agents. Its managed helper files are the built-in `explorer` and `worker` overrides under `codex/.codex/agents/`.
+
+## Sections
 
 ```markdown
----
-name: implementer
-description: "..."
----
+<!-- SECTION:example:START:copilot,opencode -->
+Visible only in Copilot and Opencode.
+<!-- SECTION:example:END -->
 
-<content from master template>
+<!-- SECTION:example_except_codex:START:!codex -->
+Visible everywhere except Codex.
+<!-- SECTION:example_except_codex:END -->
 ```
 
-### Codex Format
+Use unique section IDs. Nested sections are supported.
 
-Codex currently uses only its built-in `explorer` and `worker` helpers. No heavy role agents are generated because this configuration has no coordinator agent.
+## Includes
 
-### Opencode Format
-
-```yaml
----
-description: "..."
-mode: subagent
-examples:
-  - "..."
-  - "..."
-tools:
-  write: true
-  edit: true
-  bash: true
-  webfetch: true
-  read: true
-  grep: true
-  glob: true
-  list: true
-  patch: true
-  todowrite: true
-  todoread: true
-permission:
-  webfetch: allow
-  bash:
-    "git diff": allow
-    "git log*": allow
-    "git status": allow
-    "git show*": allow
-    "pytest*": allow
-    "npm test*": allow
-    "uv run*": allow
-    "head*": allow
-    "tail*": allow
-    "cat*": allow
-    "ls*": allow
-    "tree*": allow
-    "find*": allow
-    "grep*": allow
-    "echo*": allow
-    "wc*": allow
-    "pwd": allow
-    "sed*": deny
-    "awk*": deny
-    "*": ask
-  edit: ask
----
-
-<content from master template>
-```
-
-These Opencode `tools` / `permission` blocks are generated from `METADATA.json`.
-
-- Default (applies to all agents): `defaults.opencode.tools_lines` and `defaults.opencode.permission_lines`
-- Per-agent override (optional): `subagents.<agent>.opencode.tools_lines` and `subagents.<agent>.opencode.permission_lines` (falls back to defaults when empty)
-
-### Claude Format
+Role-agent templates may include shared fragments:
 
 ```markdown
----
-name: planner
-description: "Software architect that creates detailed implementation plans without writing code..."
-
-Examples:
-  - "Use for complex multi-step features requiring architectural design"
-  - "Use for large refactoring projects needing systematic planning"
-tools: Bash, Glob, Grep, LS, Read, Edit, MultiEdit, Write, NotebookEdit, WebFetch, TodoWrite, WebSearch, BashOutput, KillBash, mcp__Context7__resolve-library-id, mcp__Context7__get-library-docs, ListMcpResourcesTool, ReadMcpResourceTool
----
-
-<content from master template>
+<!-- INCLUDE:templates/shared/subagents/principles.md -->
 ```
 
-Claude header is generated from `METADATA.json`:
+Includes must stay inside the repository. Missing or recursive includes fail generation.
 
-- `name`: Agent name from `subagents.<agent>.name`
-- `description`: Agent description from `subagents.<agent>.description`
-- `Examples`: Example usage blocks from `subagents.<agent>.examples`
-- `tools`: Tools list from `defaults.claude.tools` (same for all agents)
-
-## Design Decisions
-
-### Why Different Headers?
-
-- **Copilot**: Minimal header (4 lines) - only needs name and description
-- **Opencode**: Extended YAML header (44-46 lines) - needs detailed tool permissions
-
-Different tools have different requirements. Headers remain tool-specific.
-
-### Why Different Section Structures?
-
-Each subagent serves a different purpose:
-- **Planner**: Comprehensive planning with SOLID principles
-- **Implementer**: Technology-specific implementation guides
-- **Analyzer**: Security and quality focus areas
-- **Coordinator**: Multi-phase orchestration (Opencode only)
-- **Challenger**: Requirements challenger (Opencode only)
-
-Custom sections per role ensure maximum clarity and usability.
-
-## Current Status
-
-✅ **Working:**
-- Extraction script (`extract-to-master.sh`)
-- Generation script (`update-subagents.sh`)
-- Validation script (`validate-subagents.sh`)
-- Master templates created
-- Header templates created
-- **Claude integration added**
-
-✅ **Implemented Configurability:**
-- Opencode header `tools:` and `permission:` blocks are configurable via `templates/subagents/master/METADATA.json`:
-  - `defaults.opencode.tools_lines`
-  - `defaults.opencode.permission_lines`
-- Claude header `tools:` is configurable via `templates/subagents/master/METADATA.json`:
-  - `defaults.claude.tools`
-
-✅ **Robust Validation:**
-- `validate-subagents.sh` detects content start dynamically (after the last `---` and following blank lines), so it does **not** rely on hardcoded header lengths.
-
-✅ **Multi-System Support:**
-- **Copilot**: planner, analyzer, implementer, coordinator
-- **Codex**: no generated heavy role agents; built-in explorer and worker only
-- **Opencode**: planner, analyzer, implementer, coordinator, challenger
-- **Claude**: planner, analyzer, implementer
-
-## Current Status
-
-✅ **Working:**
-- Extraction script (`extract-to-master.sh`)
-- Generation script (`update-subagents.sh`)
-- Validation script (`validate-subagents.sh`)
-- Master templates created
-- Header templates created
-
-✅ **Implemented Configurability:**
-- Opencode header `tools:` and `permission:` blocks are configurable via `templates/subagents/master/METADATA.json`:
-  - `defaults.opencode.tools_lines`
-  - `defaults.opencode.permission_lines`
-
-✅ **Robust Validation:**
-- `validate-subagents.sh` detects content start dynamically (after the last `---` and following blank lines), so it does **not** rely on hardcoded header lengths.
-
-🔧 **TODO (Optional Enhancements):**
-- Add per-subagent overrides for opencode tools/permissions (e.g. analyzer stricter than implementer)
-- Add a small test suite for the scripts
-- CI/CD integration (optional)
-
-## Maintenance
-
-### Adding a New Subagent
-
-1. Create master template: `templates/subagents/master/newagent.md`
-2. Add metadata to `METADATA.json`:
-   - `name`, `description`, `examples`
-   - `header_lines` for each system (copilot, opencode, claude) if applicable
-3. Update scripts to include new agent in arrays
-4. Run update script: `./scripts/update-subagents.sh --agent=newagent --force`
-5. Validate: `./scripts/validate-subagents.sh`
-
-### Updating Master Templates
-
-Master templates are plain markdown files. Edit them directly:
+## Validation Workflow
 
 ```bash
-vim templates/subagents/master/implementer.md
+./scripts/update-global-instructions.sh
+./scripts/update-subagents.sh
+./scripts/validate-prompts.sh
+git diff --check
 ```
 
-Then regenerate:
-
-```bash
-./scripts/update-subagents.sh --agent=implementer --force
-```
-
-### Verifying Sync
-
-Always validate before committing:
-
-```bash
-./scripts/validate-subagents.sh
-```
-
-Expected output when synced:
-```
-✓ planner content identical (1405 lines)
-✓ analyzer content identical (448 lines)
-✓ implementer content identical (1602 lines)
-
-✓ All subagents are in sync!
-```
-
-## Troubleshooting
-
-### Validation fails after update
-
-```bash
-# Check what actually differs
-diff <(tail -n +6 copilot/.copilot/agents/implementer.agent.md) \
-     <(tail -n +45 opencode/.config/opencode/agent/implementer.md)
-
-# Re-extract and update
-./scripts/extract-to-master.sh
-./scripts/update-subagents.sh --agent=implementer --force
-```
-
-### Manual edits were made to copilot/opencode files
-
-```bash
-# Extract current state to master
-./scripts/extract-to-master.sh
-
-# This uses opencode as source of truth
-# Review the extracted master templates
-vim templates/subagents/master/*.md
-
-# Regenerate to sync everything
-./scripts/update-subagents.sh --agent=all --force
-```
-
-### Header line counts are wrong
-
-They shouldn’t be anymore: `validate-subagents.sh` detects content start dynamically.
-
-If generation looks wrong, verify the header template and metadata instead:
-- `templates/subagents/headers/opencode.template`
-- `templates/subagents/master/METADATA.json` (`defaults.opencode.tools_lines`, `defaults.opencode.permission_lines`, and per-agent `examples`)
-
-## Future Enhancements
-
-- [ ] Git pre-commit hook for automatic validation
-- [ ] Automated tests for scripts
-- [ ] CI/CD integration
-- [ ] Version tracking in METADATA.json
-- [ ] Diff viewing before update
-- [ ] Interactive mode for update script
-- [ ] Backup/restore functionality
-- [ ] Change log generation
-
-## Related Documentation
-
-- [Subagent Management Scripts](../docs/subagent-update-script-analysis.md) - Full analysis and options
-- [Project Instructions Generator](./generate-project-instructions.sh) - Generates project-specific AI instruction files for Claude, Gemini, Qwen, and Copilot/OpenCode
-- [Global Instructions Template System](../templates/global-instructions/README.md) - Single source of truth for system instruction files across Copilot, Claude, OpenCode, and Gemini
+Before committing, inspect `git status` and stage only the intended templates, generated outputs, metadata, scripts, and documentation. Do not stage runtime configuration or unrelated working-tree changes.

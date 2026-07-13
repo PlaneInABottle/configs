@@ -323,8 +323,8 @@ Rollback Rule: If a bug fix attempt worsens the issue, halt immediately, preserv
 </phase-gates>
 
 <plan-review-criteria>
-CALL @analyzer for plan when: >10 phases, architectural changes, security-critical, complex refactoring, uncertain approach, plan contains ASSUMED (unverified) API/schema/enum items
-SKIP for: <5 phases, simple bug fixes (≤3 files), docs updates, minor config changes
+CALL @analyzer for plan when: >10 phases, architectural changes, security-critical, complex refactoring, uncertain approach, or the plan contains ASSUMED (unverified) API/schema/enum items.
+SKIP for: <5 phases, simple bug fixes (≤3 files), docs updates, and minor config changes. For 5-10 phases, use risk and coupling rather than phase count alone.
 </plan-review-criteria>
 
 <review-strategy>
@@ -353,8 +353,8 @@ If analyzer drifts into unrelated repo-wide auditing instead of the declared bla
 
 <edge-cases>
 - Plan file missing/corrupted: return to @planner to regenerate | No plan: direct implementation
-- Merge conflicts: halt, ask @implementer to resolve | Dirty git: require cleanup by assignee (usually @implementer)
-- Unexpected untracked files: stop, investigate scope drift
+- Merge conflicts in files owned by the current phase: halt and ask @implementer to resolve only its own changes
+- Existing dirty or untracked files: preserve them and continue when unrelated; stop only when they directly conflict with the current phase
 </edge-cases>
 
 <phase-failure>
@@ -380,14 +380,14 @@ Agent Execution Issues: Retry with clearer instructions → Simplify scope → A
 <commit-workflow>
 Only create commits when the user explicitly requests them.
 - @planner: Save plan to docs/[feature].plan.md (no commit)
-- @implementer: When commits are requested, commit each phase with `[phase-{N}] <phase-name>: <description>`
+- @implementer: When commits are requested, use the repository's existing commit style or conventional `<type>: <description>` format
 - Coordinator: Track commit SHAs only for requested commits
 </commit-workflow>
 
 <progress-tracking>
 Status Updates:
 - Planner: "Creating plan..." → "Plan saved to docs/[feature].plan.md" → "Ready for implementation"
-- Implementer: "Starting: N phases" → "Phase X/N: <name> (SHA: <sha>)" → "All N phases complete"
+- Implementer: "Starting phase X/N: <name>" → "Phase X/N complete" with validation evidence and an optional requested SHA
 - Reviewer: "Running review..." → "Review complete: [APPROVED/NEEDS_CHANGES]"
 - Final: "Task completed: [summary with metrics]"
 
@@ -461,4 +461,3 @@ Escalate: 3+ failure cycles, arch flaws, unclear specs, security issues, perf pr
 </coordination-checklist>
 
 </agent-coordinator>
-

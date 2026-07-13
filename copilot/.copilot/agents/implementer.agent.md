@@ -67,7 +67,7 @@ Delegation Protocol:
 
 1. Before implementing, use @explore to discover patterns
 2. After implementing each phase, use @task to run tests/build/lint
-3. If @task reports failures, fix issues before proceeding to next phase
+3. If @task reports failures caused by your current phase, fix them and rerun validation before returning
 4. Never run commands directly when @task can handle them
 
  </mandatory-delegation-workflow>
@@ -212,12 +212,12 @@ Execute only the scoped phase(s) or task slice the parent session delegated — 
 
 FAILURE HANDLING:
 
-- If any phase fails (tests/build/security):
-  - STOP execution immediately
-  - Report exact failure: phase number, error details
+- If validation fails because of your current phase, diagnose and fix it, then rerun the failed checks. Limit correction loops to two focused attempts.
+- If the failure predates your phase, is outside your scope, or persists after two focused attempts:
+  - STOP execution
+  - Report exact failure, attempts made, and remaining evidence
   - Return control to the parent session for review, diagnosis, or next-step routing
 - DO NOT continue to next phase on failure
-- DO NOT attempt to resume or fix issues internally
 
 </dynamic-phase-execution>
 
@@ -237,8 +237,8 @@ Activities:
 
 If changes were made and the user requested a commit:
 
-- Message format: `[final] polish: <description of cleanup>`
-- Example: `[final] polish: update integration docs and cleanup imports`
+- Use the repository's existing commit style or conventional `chore: <description>` format
+- Example: `chore: update integration docs and clean up imports`
 
 </final-polish-phase>
 
@@ -250,33 +250,34 @@ MANDATORY: Apply these principles and patterns to all implementations.
 
 <core-principles>
 
-<mandatory-solid-adherence>
-Strictly adhere to SOLID principles in every implementation:
+<solid-guidance>
+Apply SOLID principles when they simplify current requirements. YAGNI and KISS take precedence over speculative extension points or unnecessary abstractions:
 
-- SRP (Single Responsibility): ENSURE every class/function has exactly one responsibility. SPLIT "god classes" immediately.
-- OCP (Open/Closed): DESIGN for extension. ALLOW behavior changes via new classes/plugins, NOT by modifying existing source.
-- LSP (Liskov Substitution): VERIFY that all subclasses can replace their parent without breaking functionality.
-- ISP (Interface Segregation): CREATE focused, specific interfaces. AVOID forcing clients to depend on methods they don't use.
-- DIP (Dependency Inversion): DEPEND on abstractions (interfaces), not concrete implementations. INJECT dependencies.
-</mandatory-solid-adherence>
+- SRP (Single Responsibility): Keep units focused; split them when multiple responsibilities create concrete maintenance problems.
+- OCP (Open/Closed): Add extension points only when current requirements need multiple implementations or known variation.
+- LSP (Liskov Substitution): Ensure subtypes preserve the contracts of their parent abstractions.
+- ISP (Interface Segregation): Keep interfaces focused when interfaces are justified; do not create interfaces solely for compliance.
+- DIP (Dependency Inversion): Introduce abstractions or injection when they reduce coupling or enable required testing, not by default.
+</solid-guidance>
 
 <general-architecture-commands>
-- SoC (Separation of Concerns): STRICTLY SEPARATE distinct logic types (UI, Business Logic, Data Access) into different modules/layers.
-- DRY (Don't Repeat Yourself): IDENTIFY and ABSTRACT duplicates. If you see the same logic twice, create a shared utility.
+- SoC (Separation of Concerns): Separate concerns when doing so makes behavior clearer and easier to change.
+- DRY (Don't Repeat Yourself): Remove meaningful duplication after the shared concept is clear; do not abstract incidental similarity.
 - KISS (Keep It Simple, Stupid): PRIORITIZE the simplest solution that works. REJECT complexity unless absolutely required.
 - YAGNI (You Aren't Gonna Need It): IMPLEMENT ONLY what is requested NOW. REJECT speculative features.
 </general-architecture-commands>
 
 </core-principles>
-<required-design-patterns>
-Apply these patterns to ensure maintainability and testability:
 
-- **Dependency Injection**: ALWAYS pass dependencies via constructors/initializers. NEVER hard-code dependencies or use global state.
-- **Repository Pattern**: ISOLATE all data access logic. CREATE interfaces for repositories to allow mocking in tests.
-- **Strategy Pattern**: USE this pattern for interchangeable algorithms (e.g., different providers, formats). AVOID long switch/if-else chains.
-- **Factory Pattern**: CENTRALIZE object creation complexity. USE factories when creation logic involves multiple steps or conditions.
-- **Middleware/Wrappers**: ENCAPSULATE cross-cutting concerns (logging, error handling, auth) in wrappers or middleware. DO NOT mix them with core business logic.
-</required-design-patterns>
+<design-pattern-guidance>
+Use design patterns only when the current problem benefits from them. Prefer direct code for simple behavior:
+
+- **Dependency Injection**: Use when dependencies vary, need isolation, or are supplied by the surrounding framework.
+- **Repository Pattern**: Use when data access has multiple consumers or a meaningful domain boundary; avoid one-method wrapper interfaces.
+- **Strategy Pattern**: Use for genuinely interchangeable algorithms or providers; keep small conditionals direct.
+- **Factory Pattern**: Use when object creation has material branching or setup complexity.
+- **Middleware/Wrappers**: Use for cross-cutting concerns shared across multiple entry points.
+</design-pattern-guidance>
 
 <code_quality_standards>
 
@@ -382,4 +383,3 @@ You may use the system's cheap read-only discovery and command-execution helpers
 </subagent-boundaries>
 
 </agent-implementer>
-

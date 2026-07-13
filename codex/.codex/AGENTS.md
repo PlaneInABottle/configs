@@ -56,7 +56,7 @@ Anti-Patterns to Avoid:
 
 **COMMAND EXECUTION:**
 - Every agent may use the built-in `explorer` for read-only discovery and `worker` for bounded command execution.
-- Keep helper tasks narrow. Do not use cheap helpers for planning, diagnosis, review, implementation, or multi-phase work.
+- Keep helper tasks narrow. Cheap helpers may gather evidence or run commands only; the parent session retains reasoning, diagnosis, planning, review, recommendations, implementation, and final-response authorship.
 - Codex has no coordinator or enabled heavy role agents. Perform planning, analysis, review, and implementation directly in the current session.
 - Do not start long-lived processes from inside a session without PM2/Docker (see Running Applications below). Codex context can be compacted mid-run, which loses PIDs and causes zombie processes and port exhaustion.
 
@@ -117,12 +117,6 @@ User clarification: Ask directly in the conversation when clarification is requi
 USE relevant skill guidance when it applies → COMBINE multiple skills when needed → FOLLOW skill instructions over general knowledge.
 
 **Example:** API change with real-time testing → LOAD `api-contract-testing` + `websocket-testing`, COMBINE both. ✗ NEVER ignore a relevant skill.
-### Context7 Reminder
-Use Context7 when external APIs, unfamiliar libraries, unclear function behavior, or ambiguous docs could affect correctness.
-### Truth Reminder
-Truth Required: Never guess; verify with evidence or documentation.
-### Clarification Reminder
-Ask the user directly in the conversation for clarification when required.
 
 ## Skill Creation Checkpoint
 After completing a major mission (multi-step, repeatable, or cross-cutting work), ask the user in the conversation if they want a reusable skill created for this workflow. Only ask when a repeatable pattern or reusable workflow is clearly applicable.

@@ -16,7 +16,8 @@
         "@explore": "the built-in `explorer` agent",
         "@task": "the built-in `worker` agent",
         "@general": "the built-in `worker` agent"
-      }
+      },
+      "forbidden_tokens": ["ask_user", "@explore", "@task", "@general", "@planner", "@analyzer", "@implementer", "@coordinator"]
     },
     "opencode": {
       "requires_header": false,
@@ -24,13 +25,15 @@
       "description": "Opencode primary system instructions (no header required)",
       "text_replacements": {
         "ask_user": "question"
-      }
+      },
+      "forbidden_tokens": ["ask_user", "@task"]
     },
     "copilot": {
       "requires_header": true,
       "target_file": "copilot/.copilot/copilot-instructions.md",
       "description": "Copilot assistant instructions (requires YAML header)",
-      "parser_notes": "Content must not start with XML-style tags immediately after frontmatter. Add plain text/markdown first to avoid parser failure."
+      "parser_notes": "Content must not start with XML-style tags immediately after frontmatter. Add plain text/markdown first to avoid parser failure.",
+      "forbidden_tokens": ["@general"]
     },
     "claude": {
       "requires_header": false,
@@ -49,13 +52,6 @@
         "@task": "task"
       },
       "notes": "Gemini uses plain agent names without @ prefix. Text replacements handle this automatically."
-    }
-  },
-  "dynamic_sections": {
-    "coordination_mode": {
-      "enabled_for": ["copilot"],
-      "description": "Internal coordination guidance for systems without subagent capabilities",
-      "location": "After 'Graduated Escalation Model' section"
     }
   },
   "features": {

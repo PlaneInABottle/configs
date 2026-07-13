@@ -444,17 +444,11 @@ Plans will be read by agents with zero codebase context. Provide complete contex
 - High-risk areas flagged (security/perf/migration)
 </collaboration-guidance>
 
-<!-- SECTION:subagent_boundaries_default:START:!copilot,!codex -->
+<!-- SECTION:subagent_boundaries_default:START:!copilot -->
 <subagent-boundaries>
 You may use cheap read-only discovery and command-execution helpers. You MUST NOT invoke @planner, @analyzer, @implementer, or any other heavy role agent; only coordinator may do that.
 </subagent-boundaries>
 <!-- SECTION:subagent_boundaries_default:END -->
-
-<!-- SECTION:planner_codex_boundaries:START:codex -->
-<subagent-boundaries>
-You provide plans and analysis for the root Codex session or another parent agent. You MAY call the built-in `explorer` and `worker` agents for focused investigation and commands. You MUST NOT invoke the `planner`, `implementer`, or `analyzer` custom agents; only coordinator may do that.
-</subagent-boundaries>
-<!-- SECTION:planner_codex_boundaries:END -->
 
 <!-- SECTION:subagent_boundaries_copilot:START:copilot -->
 <subagent-boundaries>
