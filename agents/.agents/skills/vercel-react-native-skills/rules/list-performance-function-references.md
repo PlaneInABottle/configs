@@ -7,10 +7,10 @@ tags: lists, performance, flatlist, virtualization
 
 ## Optimize List Performance with Stable Object References
 
-Don't map or filter data before passing to virtualized lists. Virtualization
-relies on object reference stability to know what changed—new references cause
-full re-renders of all visible items. Attempt to prevent frequent renders at the
-list-parent level.
+Avoid recreating every item object in a frequently rendering list parent when
+profiling shows it defeats memoization or recycling. Mapping and filtering are
+otherwise normal operations; preserve stable data where it materially reduces
+rerenders.
 
 Where needed, use context selectors within list items.
 
@@ -94,7 +94,6 @@ function DomainSearch() {
       <SearchInput />
       <LegendList
         data={tlds}
-        // if you aren't using React Compiler, wrap renderItem with useCallback
         renderItem={({ item }) => <DomainItem tld={item} />}
       />
     </>

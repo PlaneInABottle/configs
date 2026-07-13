@@ -7,9 +7,9 @@ tags: navigation, react-navigation, expo-router, native-stack, tabs
 
 ## Use Native Navigators for Navigation
 
-Always use native navigators instead of JS-based ones. Native navigators use
-platform APIs (UINavigationController on iOS, Fragment on Android) for better
-performance and native behavior.
+Prefer native navigators when platform behavior and transition performance are
+important, while preserving the project's established navigator unless a
+measured problem or product requirement justifies migration.
 
 **For stacks:** Use `@react-navigation/native-stack` or expo-router's default
 stack (which uses native-stack). Avoid `@react-navigation/stack`.

@@ -1,21 +1,19 @@
 ---
 name: pexels-media
-description: "Source royalty-free images and videos from Pexels API for design work, UI placeholders, or content creation. Use when needing stock photos, downloading images for mockups, fetching videos for backgrounds, or getting curated/popular media. Supports search by query/color/orientation, curated photos, popular videos, collections, multiple resolutions (large, medium, small, HD, SD), and MANDATORY sidecar metadata files for attribution and licensing compliance."
+description: Source images and videos from the Pexels API for design work, placeholders, or content creation while recording source and attribution metadata. Use when searching or downloading Pexels media; verify current API limits and license terms before final use.
 ---
 
 # Pexels Media Sourcing
 
-Source high-quality, royalty-free images and videos from Pexels for design work, placeholders, or content creation.
+Source images and videos from Pexels for design work, placeholders, or content creation. Verify the current Pexels license for the intended use rather than relying on a cached legal summary.
 
 ## Prerequisites
 
 This skill requires the `PEXELS_API_KEY` environment variable to be set.
 
-**Machine-local note:** On this machine, `PEXELS_API_KEY` is loaded from `~/.zshrc`. If `echo $PEXELS_API_KEY` is empty, run `source ~/.zshrc` or open a new shell.
-
 ```bash
-# Check if API key is available
-echo $PEXELS_API_KEY
+# Check presence without printing the key
+test -n "${PEXELS_API_KEY:-}" || { printf '%s\n' "PEXELS_API_KEY is not set" >&2; exit 1; }
 ```
 
 If not set, obtain a free API key from [Pexels API](https://www.pexels.com/api/).
@@ -171,13 +169,12 @@ For a downloaded file `mountain-sunset.jpg`, create `mountain-sunset.jpg.meta.js
   "photographer_id": 67890,
   "avg_color": "#7E5835",
   "alt": "Brown mountain during sunset",
-  "license": "Pexels License - Free for personal and commercial use",
+  "license_url": "https://www.pexels.com/license/",
+  "license_checked_at": "<ISO-8601 verification time>",
   "attribution": "Photo by John Doe on Pexels",
   "attribution_html": "<a href=\"https://www.pexels.com/photo/12345/\">Photo</a> by <a href=\"https://www.pexels.com/@johndoe\">John Doe</a> on <a href=\"https://www.pexels.com\">Pexels</a>",
   "downloaded_at": "2025-12-02T14:30:00Z",
-  "api_response": {
-    // Full original API response for this photo
-  }
+  "api_response": {}
 }
 ```
 
@@ -216,12 +213,11 @@ For a downloaded file `mountain-sunset.jpg`, create `mountain-sunset.jpg.meta.js
       "nr": 0
     }
   ],
-  "license": "Pexels License - Free for personal and commercial use",
+  "license_url": "https://www.pexels.com/license/",
+  "license_checked_at": "<ISO-8601 verification time>",
   "attribution": "Video by John Doe on Pexels",
   "downloaded_at": "2025-12-02T14:30:00Z",
-  "api_response": {
-    // Full original API response for this video
-  }
+  "api_response": {}
 }
 ```
 
@@ -268,7 +264,8 @@ echo "$PHOTO_DATA" | jq '{
   photographer_id: .photographer_id,
   avg_color: .avg_color,
   alt: .alt,
-  license: "Pexels License - Free for personal and commercial use",
+  license_url: "https://www.pexels.com/license/",
+  license_checked_at: (now | todate),
   attribution: ("Photo by " + .photographer + " on Pexels"),
   downloaded_at: (now | todate),
   api_response: .
@@ -277,15 +274,14 @@ echo "$PHOTO_DATA" | jq '{
 
 ## Rate Limits
 
-- **Default:** 200 requests/hour, 20,000 requests/month
-- Check response headers for current limits:
+Verify current limits in official API documentation and inspect response headers:
   - `X-Ratelimit-Limit`
   - `X-Ratelimit-Remaining`
   - `X-Ratelimit-Reset`
 
 ## Attribution Best Practices
 
-While not legally required by the Pexels license, attribution is encouraged:
+Verify current attribution requirements in the Pexels license. Preserve attribution metadata even when a specific use does not require displaying it:
 
 - **Minimal:** "Photo by [Photographer] on Pexels"
 - **With link:** "Photo by [Photographer](photographer_url) on [Pexels](photo_url)"

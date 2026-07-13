@@ -19,11 +19,7 @@ description: "Transform old devices (phones, tablets, computers) into self-hoste
 
 ### Old Computers
 
-Recommended models:
-- **Dell OptiPlex** (Gen 6-9) - $100-200 on eBay
-- **HP EliteDesk** (Gen 6-8) - $100-150
-- **Mini PCs** (Intel NUC, Gigabyte Brix, Beelink) - $150-250
-- **Raspberry Pi 4/5** - Good starter option
+Common candidates include used business desktops, mini PCs, and supported single-board computers. Compare current local pricing, idle power, storage interfaces, replacement parts, and architecture compatibility before recommending hardware.
 
 ---
 
@@ -172,16 +168,10 @@ See [references/placement-guide.md](references/placement-guide.md) for tier-base
 ## Docker Installation
 
 ### On Ubuntu
-```bash
-curl -fsSL https://get.docker.com | sh
-sudo usermod -aG docker $USER
-# Log out and back in
-```
+Follow Docker's current official repository instructions for the installed Ubuntu release. Review installation commands before running them, then add the intended local user to the Docker group only after acknowledging that group membership grants root-equivalent host access.
 
 ### On Raspberry Pi
-```bash
-curl -fsSL https://get.docker.com | sh
-```
+Follow Docker's current official Raspberry Pi OS instructions and verify the device architecture and supported OS release. Do not pipe an unaudited remote installer directly into a privileged shell.
 
 ### On Termux (Android)
 ```bash
@@ -234,7 +224,7 @@ Forward ports on router to home server:
 2. Find "Port Forwarding" or "Virtual Server"
 3. Forward external port to internal IP:port
 
-**Warning:** Use strong passwords and consider VPN/Cloudflare Tunnel.
+**Warning:** Prefer a VPN or identity-aware tunnel. Do not expose dashboards, container managers, storage administration, or home-automation administration directly through router port forwarding. Require TLS, strong authentication, updates, and narrowly scoped firewall rules for any intentionally public service.
 
 ---
 
@@ -252,18 +242,11 @@ Read the following reference files based on what you need:
 
 ### For Phones/Tablets
 
-**USB Charger Hack:**
-- Cut USB cable, connect to phone's USB-C/Lightning pins
-- Phone stays on while charging
-- Use a smart plug to control power
-
-**Battery as UPS:**
-- Connect phone to power bank
-- When power cuts, battery keeps running
-
-**Always-On Charging:**
-- Lithium battery with charge controller
-- Set "Stay Awake While Charging" in developer options
+- Use the manufacturer's intact charger and cable. Never cut, splice, or connect power directly to USB or battery contacts.
+- Do not operate swollen, damaged, overheating, or unsupported lithium batteries unattended.
+- Prefer devices with supported charge-limit or battery-protection settings and place them on a nonflammable, ventilated surface.
+- A phone battery is not a managed UPS. For unattended service, prefer hardware designed for continuous power and graceful shutdown.
+- Use a commercially certified smart plug only when remote power cycling is safe for the device and filesystem.
 
 ### For Computers
 

@@ -1,5 +1,12 @@
 # Android App Links — Configuration Reference
 
+## Contents
+
+- [assetlinks.json](#assetlinksjson)
+- [Intent Filters](#intent-filters)
+- [Testing](#testing)
+- [Common Pitfalls](#common-pitfalls)
+
 ## assetlinks.json
 
 Host at `https://yourdomain.com/.well-known/assetlinks.json`. Must be served over HTTPS with `Content-Type: application/json`.

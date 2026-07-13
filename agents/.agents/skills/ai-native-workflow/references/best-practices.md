@@ -1,5 +1,12 @@
 # Best Practices & Anti-Patterns
 
+## Contents
+
+- [Core Principles](#core-principles)
+- [Universal Verification Patterns](#universal-verification-patterns)
+- [Headless Runtime Operations](#headless-runtime-operations)
+- [Anti-Patterns — Extended](#anti-patterns-extended)
+
 Extended guidance for AI-native development workflows. Use alongside the main [SKILL.md](../SKILL.md).
 
 ---
@@ -10,8 +17,8 @@ Extended guidance for AI-native development workflows. Use alongside the main [S
 
 AI agents move fast. Tests are the guardrails, but you must use the right tools:
 
-- **Unit logic tests after code changes.** Run the relevant language-specific suite (`pytest`, `Jest`, `cargo test`) after modifying pure functions or internal logic.
-- **NEVER write, modify, or append to language-specific integration tests under ANY circumstances.** Use the Universal Toolkit (`.hurl`, `psql`, `agent-browser`) to test APIs, DBs, and UIs.
+- **Repository-native tests after code changes.** Run and extend the affected framework suite for logic or integration behavior it already owns.
+- **Boundary checks when they add evidence.** Use Hurl, native clients, `agent-browser`, or Maestro for externally observable behavior that is awkward or incomplete in the existing suite.
 - **Fix broken tests immediately.** A failing test is a signal, not noise.
 - **Reference the Playbooks:** See `../playbooks/api-contract-testing.md` and `../playbooks/universal-data-generation.md` for proper testing patterns.
 

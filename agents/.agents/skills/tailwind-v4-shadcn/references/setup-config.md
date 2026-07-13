@@ -13,8 +13,9 @@
 pnpm add tailwindcss @tailwindcss/vite
 pnpm add -D @types/node tw-animate-css
 pnpm dlx shadcn@latest init
-rm tailwind.config.ts
 ```
+
+Keep an existing `tailwind.config.*` while it still provides plugins, presets, or theme settings. Use Tailwind's `@config` bridge during incremental migration and remove the file only after verifying it is unused.
 
 ## Minimal Required Files
 

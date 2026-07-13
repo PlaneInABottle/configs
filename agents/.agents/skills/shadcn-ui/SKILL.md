@@ -1,7 +1,6 @@
 ---
 name: shadcn-ui
 description: Provides complete shadcn/ui component library patterns including installation, configuration, and implementation of accessible React components. Use when setting up shadcn/ui, installing components, building forms with React Hook Form and Zod, customizing themes with Tailwind CSS, or implementing UI patterns like buttons, dialogs, dropdowns, tables, and complex form layouts.
-allowed-tools: Read, Write, Bash, Edit, Glob
 ---
 
 # shadcn/ui Component Patterns
@@ -10,21 +9,12 @@ allowed-tools: Read, Write, Bash, Edit, Glob
 
 Use this skill to implement production-ready shadcn/ui interfaces with strong accessibility, predictable theming, and reusable component patterns.
 
-## When to Use
-
-- Setting up a new project with shadcn/ui.
-- Installing or configuring individual components.
-- Building forms with React Hook Form and Zod validation.
-- Implementing accessible UI patterns (dialogs, selects, sheets, navigation).
-- Customizing themes with Tailwind and CSS variables.
-- Integrating shadcn/ui into Next.js App Router projects.
-
 ## Core Workflow
 
 1. Initialize shadcn/ui with `npx shadcn@latest init`.
 2. Install only required components with `npx shadcn@latest add <component>`.
 3. Import from `@/components/ui/*` and compose using Tailwind utility classes.
-4. Build forms with React Hook Form + Zod.
+4. Preserve the project's form and validation stack; use React Hook Form and Zod only when already selected or requested.
 5. Validate keyboard/focus behavior, labels, and ARIA semantics.
 6. Customize via your local component files and CSS variables (you own the code).
 

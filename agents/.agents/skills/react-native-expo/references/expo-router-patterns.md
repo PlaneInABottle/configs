@@ -1,5 +1,16 @@
 # Expo Router Patterns Reference
 
+## Contents
+
+- [File-Based Routing Table](#file-based-routing-table)
+- [Nested Layouts](#nested-layouts)
+- [Navigation API](#navigation-api)
+- [Route Groups](#route-groups)
+- [Deep Linking](#deep-linking)
+- [Modal Routes](#modal-routes)
+- [Auth Flow Pattern](#auth-flow-pattern)
+- [Tab Icons](#tab-icons)
+
 ## File-Based Routing Table
 
 | File | Route | Example |

@@ -12,7 +12,7 @@ Use this skill to inventory the active skills tree, surface deterministic struct
 ## Audit Workflow
 
 1. Inventory the target skills tree before proposing changes.
-2. Run `scripts/audit_skills.py` to catch deterministic structural issues first.
+2. Run `scripts/audit_skills.py` to catch deterministic structural issues first, including local links in every Markdown file.
 3. Read `references/audit-checklist.md` to inspect overlap, contradictions, progressive disclosure, split boundaries, and claim-validation steps.
 4. Verify important claims against shipped files, validator output, and reproducible local commands when feasible; mark them as verified, contradicted, or unverified.
 5. When session work confirms, contradicts, or narrows existing guidance, update the affected skill with the smallest evidence-backed change that makes the next run more accurate.
@@ -23,12 +23,13 @@ Use this skill to inventory the active skills tree, surface deterministic struct
 ## Load These Resources As Needed
 
 - Load [`references/audit-checklist.md`](references/audit-checklist.md) when you need the review rubric and split-vs-keep heuristics.
-- Load [`references/phase-3-audit-baseline.md`](references/phase-3-audit-baseline.md) when you need the retained Phase 3 audit-output/sign-off baseline for the active skills tree.
 - Load [`references/split-boundaries.md`](references/split-boundaries.md) when you need the repository rule for keeping `ai-native-workflow` unified as the runtime-verification umbrella while moving meta-skill governance into `skill-maintainer` and `skill-creator`.
 - Run `python3 scripts/audit_skills.py <skills-root>` for a deterministic inventory of missing `SKILL.md`, missing linked local references, validator failures, trigger-duplication headings, and size warnings.
+- Run `python3 scripts/add_reference_tocs.py <skills-root> --write` to add a generated H2 index to oversized Markdown references that do not already have one, then review the resulting links.
 
 ## Expected Audit Output
 
 - The script prints a summary with `Skills scanned`, `Errors`, and `Warnings`, followed by one `[PASS]` or `[FAIL]` block per immediate skill directory.
 - A repository-ready tree should finish with `Errors: 0`; warnings can still appear for oversized references that need progressive-disclosure cleanup.
 - An intentionally broken fixture should exit non-zero and show explicit lines such as `SKILL.md not found`, `missing linked local reference: ...`, or `body-level trigger duplication heading detected`.
+- Do not retain hard-coded skill counts or warning totals as permanent baselines; run the audit against the current tree whenever evidence is needed.

@@ -27,11 +27,10 @@ try:
 except ImportError:
     print(f"ℹ️  Crawl4AI {MIN_CRAWL4AI_VERSION}+ required")
 
-from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
+from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, LLMConfig
 from crawl4ai.extraction_strategy import (
     LLMExtractionStrategy,
     JsonCssExtractionStrategy,
-    CosineStrategy
 )
 
 # =============================================================================
@@ -49,7 +48,7 @@ async def generate_schema(url: str, instruction: str, output_file: str = "genera
 
     # Use LLM to analyze the page structure and generate schema
     extraction_strategy = LLMExtractionStrategy(
-        provider="openai/gpt-4o-mini",  # Can use any LLM provider
+        llm_config=LLMConfig(provider="openai/gpt-4o-mini"),
         instruction=f"""
         Analyze this webpage and generate a CSS/JSON extraction schema.
         Task: {instruction}
@@ -238,7 +237,7 @@ async def extract_with_llm(url: str, instruction: str):
     browser_config = BrowserConfig(headless=True)
 
     extraction_strategy = LLMExtractionStrategy(
-        provider="openai/gpt-4o-mini",  # Can change to ollama/llama3, anthropic/claude, etc.
+        llm_config=LLMConfig(provider="openai/gpt-4o-mini"),
         instruction=instruction,
         schema={
             "type": "object",

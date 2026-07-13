@@ -1,5 +1,11 @@
 # Mailpit flow checks
 
+## Contents
+
+- [Flow-specific checks](#flow-specific-checks)
+- [Body, links, and attachments](#body-links-and-attachments)
+- [Polling and failure handling](#polling-and-failure-handling)
+
 ## Flow-specific checks
 
 Prefer targeted queries over `latest` shortcuts when multiple emails may arrive close together.

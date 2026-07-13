@@ -1,5 +1,15 @@
 # Dark Mode Implementation
 
+## Contents
+
+- [Overview](#overview)
+- [ThemeProvider Component](#themeprovider-component)
+- [Theme Toggle Component](#theme-toggle-component)
+- [How It Works](#how-it-works)
+- [Common Issues](#common-issues)
+- [Testing Checklist](#testing-checklist)
+- [Official Documentation](#official-documentation)
+
 ## Overview
 
 Tailwind v4 + shadcn/ui dark mode requires:

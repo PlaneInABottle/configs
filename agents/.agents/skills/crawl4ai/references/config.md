@@ -1,5 +1,15 @@
 # Configuration Reference
 
+## Contents
+
+- [BrowserConfig](#browserconfig)
+- [CrawlerRunConfig](#crawlerrunconfig)
+- [Proxy Configuration](#proxy-configuration)
+- [Hooks](#hooks)
+- [Markdown Generation](#markdown-generation)
+- [Content Filters](#content-filters)
+- [Complete Example](#complete-example)
+
 Complete configuration options for Crawl4AI.
 
 ## BrowserConfig

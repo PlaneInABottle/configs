@@ -1,155 +1,48 @@
 ---
 name: api-contract-testing
-description: "Validate REST API contracts using OpenAPI specs (OpenAPI 3.0/3.1), test request/response schemas with JSON Schema validation, and verify API behavior. Use when testing REST APIs, validating OpenAPI/JSON Schema, verifying HTTP status codes, testing negative cases (400, 401, 404, 500), or checking API contracts against the spec."
+description: Validate REST API behavior against an OpenAPI 3.x contract. Use when linting or bundling a specification, checking implementation responses against documented schemas, testing negative cases and authentication, or detecting drift between an API and its OpenAPI document.
 ---
 
 # API Contract Testing
 
-Validate REST APIs against their contracts using OpenAPI specifications and JSON Schema validation.
+Separate specification validation from implementation conformance. A valid OpenAPI file does not prove the running API follows it, and a few hand-written field assertions do not validate the full response schema.
 
-## Quick Start
+## Workflow
 
-```bash
-# Test an endpoint against OpenAPI spec
-hurl --variable "base_url=https://api.example.com" --test test-api.hurl
+1. Locate the repository's OpenAPI document and existing contract-test tooling.
+2. Lint and bundle the specification with the project's configured validator. For new Redocly usage, prefer the current `@redocly/cli` package.
+3. Start the API through the repository's normal runtime.
+4. Run a contract-aware tool that sends requests and validates status, headers, and bodies against OpenAPI, or validate captured responses with schemas generated from the relevant operation.
+5. Add focused Hurl cases for workflows, auth, and negative behavior that the schema alone cannot express.
+6. Report operation IDs and exact schema mismatches.
 
-# Validate OpenAPI spec
-npx @redocly/openapi-cli lint openapi.yaml
-```
+## Hurl Example
 
-## Tools
-
-| Tool | Purpose |
-|------|---------|
-| Hurl | HTTP testing with assertion support |
-| openapi-cli | OpenAPI spec validation |
-| ajv | JSON Schema validation |
-
-## Core Workflow
-
-### 1. Validate OpenAPI Spec
-
-```bash
-# Lint OpenAPI spec
-npx @redocly/openapi-cli lint openapi.yaml
-
-# Bundle and validate
-npx @redocly/openapi-cli bundle openapi.yaml -o dist/openapi.json
-```
-
-### 2. Test with Hurl
-
-```bash
-# Basic GET test
-hurl --test --variable "base_url=https://api.example.com" <<'EOF'
+```hurl
 GET {{base_url}}/users/1
-[Asserts]
-status == 200
-json path "$.id" == 1
-json path "$.name" exists
-EOF
-```
-
-### 3. Schema Validation
-
-```bash
-# Test response matches schema
-hurl --test <<'EOF'
-GET https://api.example.com/users/1
-[Asserts]
-status == 200
-header "Content-Type" == "application/json"
-json path "$.id" is_integer
-json path "$.email" matches "^[a-z]+@[a-z]+\\.[a-z]+$"
-EOF
-```
-
-### 4. Negative Testing
-
-```bash
-# Test 404
-hurl --test <<'EOF'
-GET https://api.example.com/users/99999
-[Asserts]
-status == 404
-json path "$.error" exists
-EOF
-
-# Test 400 - validation error
-hurl --test <<'EOF'
-POST https://api.example.com/users
-{"email": "invalid"}
-[Asserts]
-status == 400
-json path "$.message" contains "email"
-EOF
-```
-
-## Advanced Patterns
-
-### Authentication Flow
-
-```bash
-# Login and use token
-hurl --test <<'EOF'
-POST https://api.example.com/auth/login
-{"email": "test@example.com", "password": "secret"}
-[Asserts]
-status == 200
-json path "$.token" exists
-[Captures]
-token: jsonpath "$.token"
-
-GET https://api.example.com/users
-[Headers]
-Authorization: "Bearer {{token}}"
-[Asserts]
-status == 200
-EOF
-```
-
-### API Versioning
-
-```bash
-hurl --test --variable "base_url=https://api.example.com/v2" <<'EOF'
-GET {{base_url}}/users
+HTTP 200
 [Asserts]
 header "Content-Type" contains "application/json"
-json path "$[0].id" exists
-EOF
+jsonpath "$.id" isInteger
+jsonpath "$.email" exists
 ```
 
-### Rate Limiting
+Hurl is useful for explicit behavioral assertions but is not, by itself, an OpenAPI conformance engine.
 
-```bash
-hurl --test <<'EOF'
-# Make 3 rapid requests
-GET https://api.example.com/users
-GET https://api.example.com/users
-GET https://api.example.com/users
-[Asserts]
-status >= 200
-status < 500
+## Required Cases
 
-# Should eventually get rate limited
-GET https://api.example.com/users
-[Asserts]
-status == 429
-EOF
-```
+- Documented success statuses and media types
+- Request validation failures
+- Authentication and authorization failures
+- Not-found behavior where documented
+- Nullable, optional, empty, and paginated responses
+- Undocumented statuses or fields when additional properties are forbidden
 
-## Testing Strategy
+Rate-limit tests must derive expectations from the API's configured policy and headers. Never assume a fixed request number must return `429`.
 
-| Test Type | What to Test |
-|-----------|--------------|
-| Happy Path | Valid inputs, expected responses |
-| Schema | Response shape matches spec |
-| Negative | Invalid inputs, error codes |
-| Edge Cases | Empty arrays, null values, limits |
-| Auth | Token expiration, invalid tokens |
+## Guardrails
 
-## References
-
-- [Hurl Documentation](https://hurl.dev/)
-- [OpenAPI Specification](https://spec.openapis.org/)
-- [JSON Schema](https://json-schema.org/)
+- Use disposable test identities and data.
+- Keep secrets in Hurl secret variables or the repository's secret mechanism.
+- Do not test destructive production endpoints.
+- Prefer the repository's existing contract tool over adding a parallel one.

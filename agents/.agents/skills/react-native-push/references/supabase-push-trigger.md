@@ -1,142 +1,48 @@
-# Supabase Push Trigger Reference
+# Supabase Push Delivery
 
-## Edge Function: Send Expo Push
+## Contents
 
-```ts
-// supabase/functions/send-push/index.ts
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+- [Boundary](#boundary)
+- [Token Table](#token-table)
+- [Edge Function](#edge-function)
+- [Tickets and Receipts](#tickets-and-receipts)
+- [Retries](#retries)
 
-const EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send";
+## Boundary
 
-Deno.serve(async (req) => {
-  const { record } = await req.json();
+Use a trusted Supabase Edge Function or worker to send notifications. Authenticate the caller or verify the database webhook signature, and keep the Supabase service-role key and optional Expo access token in function secrets.
 
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-  );
+## Token Table
 
-  const { data: tokens, error } = await supabase
-    .from("push_tokens").select("token, platform")
-    .eq("user_id", record.user_id);
+Store one row per installation with at least user ID, Expo push token, platform, enabled state, and timestamps. Enable RLS so users can manage only their own registrations; reserve bulk reads and cleanup for trusted server code.
 
-  if (error || !tokens?.length) return new Response("No tokens", { status: 200 });
+Use a uniqueness constraint on the token and update `last_seen_at` when the app confirms registration.
 
-  const messages = tokens.map((t) => ({
-    to: t.token, sound: "default",
-    title: record.title, body: record.body,
-    data: record.data ?? {},
-    badge: record.badge ?? undefined,
-    channelId: record.channel_id ?? undefined,
-  }));
+## Edge Function
 
-  // Send in batches of 100
-  for (let i = 0; i < messages.length; i += 100) {
-    const batch = messages.slice(i, i + 100);
-    const res = await fetch(EXPO_PUSH_URL, {
-      method: "POST",
-      headers: { 
-        Accept: "application/json", 
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Deno.env.get("EXPO_ACCESS_TOKEN")}`,
-      },
-      body: JSON.stringify(batch),
-    });
+1. Validate the incoming notification request and authorize its target user or audience.
+2. Select enabled tokens through a server-only client.
+3. Build payloads with validated data and current Expo limits.
+4. Send bounded batches to the Expo Push API.
+5. Persist successful ticket IDs with their token mapping.
+6. Return a correlation ID rather than logging token values.
 
-    if (!res.ok) { console.error("Expo API error:", res.status); continue; }
+If Expo push access-token security is enabled, send the token in the documented authorization header and keep it in Supabase secrets.
 
-    const { data: tickets } = await res.json();
-    for (let j = 0; j < tickets.length; j++) {
-      if (tickets[j].status === "error") {
-        const err = tickets[j].details?.error;
-        if (err === "DeviceNotRegistered" || err === "InvalidCredentials") {
-          await supabase.from("push_tokens").delete().eq("token", batch[j].to);
-        }
-      }
-    }
-  }
+## Tickets and Receipts
 
-  return new Response("OK", { status: 200 });
-});
-```
+Push tickets confirm that Expo accepted each message; they do not prove device delivery. Fetch receipts later using successful ticket IDs.
 
-> **Note:** Set `EXPO_ACCESS_TOKEN` as a Supabase secret: `supabase secrets set EXPO_ACCESS_TOKEN=<your-expo-token>`
+- Handle immediate malformed-message or credential errors from tickets.
+- Handle `DeviceNotRegistered` from the authoritative ticket or receipt and disable the mapped token.
+- Treat project-level credential errors as configuration failures, not reasons to delete every device token.
+- Retain enough ticket-to-token mapping to perform safe receipt cleanup.
 
-## Database Table: notifications
+## Retries
 
-```sql
-create table notifications (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references auth.users(id),
-  title text not null,
-  body text not null,
-  data jsonb default '{}',
-  badge int,
-  channel_id text,
-  created_at timestamptz default now()
-);
+- Retry only transient network errors, `429`, and documented server failures.
+- Use bounded exponential backoff with jitter and honor `Retry-After` when provided.
+- Do not retry malformed payloads, invalid credentials, or permanently unregistered devices.
+- Make sends idempotent with a notification or delivery ID so worker retries do not create uncontrolled duplicates.
 
-alter table notifications enable row level security;
-create policy "Users can read own notifications"
-  on notifications for select using (auth.uid() = user_id);
-```
-
-## Webhook: Trigger on INSERT
-
-**Dashboard:** Database → Webhooks → Create → Table: `notifications`, Event: `INSERT`, Function: `send-push`.
-
-**SQL (pg_net):**
-
-```sql
-create extension if not exists pg_net;
-
-create or replace function trigger_push_notification() returns trigger as $$
-begin
-  perform net.http_post(
-    url := current_setting('app.supabase_url') || '/functions/v1/send-push',
-    body := json_build_object('record', row_to_json(new))::text,
-    headers := '{"Content-Type":"application/json"}'::jsonb
-  );
-  return new;
-end;
-$$ language plpgsql;
-
-create trigger on_notification_insert
-  after insert on notifications
-  for each row execute function trigger_push_notification();
-```
-
-## Error Handling
-
-| Expo Error | Action |
-|-----------|--------|
-| `DeviceNotRegistered` | Delete token from `push_tokens` |
-| `InvalidCredentials` | Delete token, verify FCM/APNs keys |
-| `MessageTooBig` | Trim body (max ~4096 bytes) |
-| `MessageRateExceeded` | Exponential backoff, batch fewer |
-| `MismatchSenderId` | Token generated with wrong FCM project |
-
-**Retry (transient errors):**
-
-```ts
-async function sendWithRetry(messages: object[], retries = 3) {
-  for (let a = 0; a < retries; a++) {
-    try {
-      const res = await fetch(EXPO_PUSH_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(messages),
-      });
-      if (res.ok) return await res.json();
-      if (res.status === 429) { await new Promise(r => setTimeout(r, 1000 * 2 ** a)); continue; }
-      throw new Error(`Push failed: ${res.status}`);
-    } catch (e) { if (a === retries - 1) throw e; }
-  }
-}
-```
-
-## Deploy
-
-```bash
-supabase functions deploy send-push
-```
+Verify current batch sizes, receipt windows, and error names in Expo's official push-service documentation before implementation.

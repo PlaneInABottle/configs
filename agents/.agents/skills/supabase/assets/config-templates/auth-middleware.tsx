@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Session, User } from '@supabase/supabase-js';
+import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from './supabase-client';
 
 // ---------------------------------------------------------------------------
@@ -53,9 +53,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
+    let active = true;
+
     // Restore persisted session on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setState({ session, user: session?.user ?? null, loading: false });
+      if (active) {
+        setState({ session, user: session?.user ?? null, loading: false });
+      }
     });
 
     // Listen for auth events (sign in, sign out, token refresh)
@@ -66,12 +70,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => {
+      active = false;
       subscription.unsubscribe();
     };
   }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
     setState({ session: null, user: null, loading: false });
   };
 

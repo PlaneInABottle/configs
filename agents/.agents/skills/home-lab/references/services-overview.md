@@ -1,3 +1,8 @@
+
+## Contents
+
+- [Self-Hosted Services (Complete List)](#self-hosted-services-complete-list)
+
 ## Self-Hosted Services (Complete List)
 
 ### Media & Entertainment

@@ -1,5 +1,18 @@
 # Supabase Realtime Guide
 
+## Contents
+
+- [Channel Basics](#channel-basics)
+- [Broadcast](#broadcast)
+- [Presence](#presence)
+- [Private Channels](#private-channels)
+- [RLS Policies for Realtime](#rls-policies-for-realtime)
+- [Rooms / Users Schema](#rooms-users-schema)
+- [REST API Broadcast](#rest-api-broadcast)
+- [Broadcast Replay](#broadcast-replay)
+- [postgres_changes](#postgres_changes)
+- [References](#references)
+
 - [Channel Basics](#channel-basics)
 - [Broadcast](#broadcast)
 - [Presence](#presence)

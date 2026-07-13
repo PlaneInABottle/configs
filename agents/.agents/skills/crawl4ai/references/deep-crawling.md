@@ -1,5 +1,18 @@
 # Deep Crawling Reference
 
+## Contents
+
+- [Strategy Comparison](#strategy-comparison)
+- [BFSDeepCrawlStrategy](#bfsdeepcrawlstrategy)
+- [DFSDeepCrawlStrategy](#dfsdeepcrawlstrategy)
+- [BestFirstCrawlingStrategy (Recommended)](#bestfirstcrawlingstrategy-recommended)
+- [Filters](#filters)
+- [Scorers](#scorers)
+- [Streaming vs Non-Streaming](#streaming-vs-non-streaming)
+- [Crash Recovery](#crash-recovery)
+- [Cancellation](#cancellation)
+- [Prefetch Mode](#prefetch-mode)
+
 Complete guide to Crawl4AI's deep crawling capabilities.
 
 ## Strategy Comparison

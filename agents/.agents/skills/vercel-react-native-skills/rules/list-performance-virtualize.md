@@ -1,16 +1,15 @@
 ---
-title: Use a List Virtualizer for Any List
+title: Virtualize Long or Expensive Lists
 impact: HIGH
 impactDescription: reduced memory, faster mounts
 tags: lists, performance, virtualization, scrollview
 ---
 
-## Use a List Virtualizer for Any List
+## Virtualize Long or Expensive Lists
 
-Use a list virtualizer like LegendList or FlashList instead of ScrollView with
-mapped children—even for short lists. Virtualizers only render visible items,
-reducing memory usage and mount time. ScrollView renders all children upfront,
-which gets expensive quickly.
+Use a list virtualizer like FlatList, LegendList, or FlashList when item count,
+item cost, or profiling shows that rendering every child is expensive. A simple
+ScrollView can remain clearer for small, bounded content.
 
 **Incorrect (ScrollView renders all items at once):**
 
@@ -36,7 +35,6 @@ function Feed({ items }: { items: Item[] }) {
   return (
     <LegendList
       data={items}
-      // if you aren't using React Compiler, wrap these with useCallback
       renderItem={({ item }) => <ItemCard item={item} />}
       keyExtractor={(item) => item.id}
       estimatedItemSize={80}
@@ -55,7 +53,6 @@ function Feed({ items }: { items: Item[] }) {
   return (
     <FlashList
       data={items}
-      // if you aren't using React Compiler, wrap these with useCallback
       renderItem={({ item }) => <ItemCard item={item} />}
       keyExtractor={(item) => item.id}
     />
@@ -63,5 +60,5 @@ function Feed({ items }: { items: Item[] }) {
 }
 ```
 
-Benefits apply to any screen with scrollable content—profiles, settings, feeds,
-search results. Default to virtualization.
+Consider virtualization for long or expensive profiles, settings, feeds, and
+search results. Keep small bounded content simple.

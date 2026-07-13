@@ -1,5 +1,11 @@
 # shadcn/ui Learning Guide
 
+## Contents
+
+- [Learning Path](#learning-path)
+- [Practice Exercises](#practice-exercises)
+- [Resources](#resources)
+
 This guide helps you learn shadcn/ui from basics to advanced patterns.
 
 ## Learning Path

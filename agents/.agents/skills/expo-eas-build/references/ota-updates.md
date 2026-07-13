@@ -1,5 +1,14 @@
 # OTA Updates with expo-updates
 
+## Contents
+
+- [Installation](#installation)
+- [Publishing Updates](#publishing-updates)
+- [Runtime Version Strategy](#runtime-version-strategy)
+- [Checking for Updates](#checking-for-updates)
+- [Rollback Procedures](#rollback-procedures)
+- [Common Issues](#common-issues)
+
 ## Installation
 
 ```bash

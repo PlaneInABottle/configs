@@ -1,5 +1,14 @@
 # Extraction Strategies Reference
 
+## Contents
+
+- [CSS-Based Extraction (No LLM)](#css-based-extraction-no-llm)
+- [LLM-Based Extraction](#llm-based-extraction)
+- [Table Extraction](#table-extraction)
+- [Content Filtering with Extraction](#content-filtering-with-extraction)
+- [Extraction Parameters](#extraction-parameters)
+- [Best Practices](#best-practices)
+
 Crawl4AI provides multiple extraction strategies for getting structured data from web pages.
 
 ## CSS-Based Extraction (No LLM)

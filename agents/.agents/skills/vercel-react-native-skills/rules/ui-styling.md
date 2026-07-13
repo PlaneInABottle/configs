@@ -9,13 +9,13 @@ tags: styling, css, layout, shadows, gradients
 
 Follow these styling patterns for cleaner, more consistent React Native code.
 
-**Always use `borderCurve: 'continuous'` with `borderRadius`:**
+**Use `borderCurve: 'continuous'` when iOS-style continuous corners fit and the target versions support it:**
 
 ```tsx
-// Incorrect
+// Cross-platform default
 { borderRadius: 12 }
 
-// Correct – smoother iOS-style corners
+// Optional – smoother iOS-style corners
 { borderRadius: 12, borderCurve: 'continuous' }
 ```
 

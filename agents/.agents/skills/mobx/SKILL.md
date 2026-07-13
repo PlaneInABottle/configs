@@ -1,6 +1,6 @@
 ---
 name: mobx
-description: "Implement reactive state management with MobX. Use when: creating observable stores, defining actions and computed values, connecting stores to React components with observer, handling async state updates, designing store architecture (RootStore pattern), or debugging reactivity issues. Triggers on 'add mobx store', 'create observable', 'mobx observer', 'state management', 'store pattern', or any MobX-related task."
+description: Implement or debug MobX state management after MobX is selected or already present. Use for observable stores, actions, computed values, reactions, observer components, async MobX updates, and MobX-specific store architecture. Do not load for generic state-management selection unless MobX is a candidate under evaluation.
 ---
 
 # MobX
@@ -48,7 +48,7 @@ const Counter = observer(() => (
 
 ## Creating Stores
 
-Use class-based stores with `makeAutoObservable` — it auto-infers `observable` fields, `action` methods, and `computed` getters.
+Class-based stores with `makeAutoObservable` are a concise option when they match the existing codebase; `makeObservable`, factory stores, and explicit annotations remain valid.
 
 ```ts
 import { makeAutoObservable } from 'mobx'
@@ -73,11 +73,11 @@ class TodoStore {
 }
 ```
 
-**Rule:** Every method that mutates state must be an action. Every derived value should be a computed getter.
+When MobX strict actions are enabled, mutate observable state inside actions. Use computed getters for derived values that benefit from MobX tracking; keep trivial one-use derivations local when clearer.
 
 ## RootStore Pattern
 
-Use a singleton `RootStore` that owns all feature stores and passes itself for cross-store communication.
+Use a `RootStore` only when the application has multiple collaborating stores and already follows that pattern. Smaller applications can provide independent stores without a global singleton.
 
 ```ts
 class RootStore {
@@ -96,7 +96,7 @@ Expose via React context. See `references/store-patterns.md` for full RootStore 
 
 ## Async Actions
 
-Async updates **must** wrap mutations in `runInAction` — MobX cannot track async boundaries automatically.
+After an `await`, update observable state through `runInAction`, a declared action, or MobX `flow`, according to the project's conventions.
 
 ```ts
 import { runInAction } from 'mobx'

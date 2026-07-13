@@ -1,5 +1,13 @@
 # Store Patterns
 
+## Contents
+
+- [RootStore + React Context](#rootstore-react-context)
+- [Feature Store Pattern](#feature-store-pattern)
+- [Store-to-Store Communication](#store-to-store-communication)
+- [Async Store Pattern](#async-store-pattern)
+- [Form Store Pattern](#form-store-pattern)
+
 ## RootStore + React Context
 
 Singleton root store passed via React context. Every feature store receives the root for cross-store access.

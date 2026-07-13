@@ -1,5 +1,16 @@
 # Common Gotchas & Solutions
 
+## Contents
+
+- [Critical Failures (Will Break Your Build)](#critical-failures-will-break-your-build)
+- [Configuration Gotchas](#configuration-gotchas)
+- [Color System Gotchas](#color-system-gotchas)
+- [Component Gotchas](#component-gotchas)
+- [Installation Gotchas](#installation-gotchas)
+- [Testing Gotchas](#testing-gotchas)
+- [Quick Diagnosis](#quick-diagnosis)
+- [Prevention Checklist](#prevention-checklist)
+
 ## Critical Failures (Will Break Your Build)
 
 ### 1. `:root` Inside `@layer base`

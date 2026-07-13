@@ -1,10 +1,10 @@
 ---
 name: vercel-react-native-skills
 description:
-  React Native and Expo best practices for building performant mobile apps. Use
-  when building React Native components, optimizing list performance,
-  implementing animations, or working with native modules. Triggers on tasks
-  involving React Native, Expo, mobile performance, or native platform APIs.
+  Review and optimize React Native or Expo performance using focused rules for
+  lists, rendering, animation, navigation, images, and native integration. Use
+  for performance investigations or explicit best-practice reviews, not every
+  routine React Native edit.
 license: MIT
 metadata:
   author: vercel
@@ -16,17 +16,6 @@ metadata:
 Comprehensive best practices for React Native and Expo applications. Contains
 rules across multiple categories covering performance, animations, UI patterns,
 and platform-specific optimizations.
-
-## When to Apply
-
-Reference these guidelines when:
-
-- Building React Native or Expo apps
-- Optimizing list and scroll performance
-- Implementing animations with Reanimated
-- Working with images and media
-- Configuring native modules or fonts
-- Structuring monorepo projects with native dependencies
 
 ## Rule Categories by Priority
 
@@ -45,9 +34,9 @@ Reference these guidelines when:
 
 ### 1. List Performance (CRITICAL)
 
-- `list-performance-virtualize` - Use FlashList for large lists
-- `list-performance-item-memo` - Memoize list item components
-- `list-performance-callbacks` - Stabilize callback references
+- `list-performance-virtualize` - Consider virtualization for lists large enough to benefit
+- `list-performance-item-memo` - Memoize list items only when profiling or existing conventions justify it
+- `list-performance-callbacks` - Avoid per-item callback churn when it causes measured rerenders
 - `list-performance-inline-objects` - Avoid inline style objects
 - `list-performance-function-references` - Extract functions outside render
 - `list-performance-images` - Optimize images in lists
@@ -66,13 +55,13 @@ Reference these guidelines when:
 
 ### 4. UI Patterns (HIGH)
 
-- `ui-expo-image` - Use expo-image for all images
+- `ui-expo-image` - Consider expo-image when caching, placeholders, or list recycling matter
 - `ui-image-gallery` - Use Galeria for image lightboxes
 - `ui-pressable` - Use Pressable over TouchableOpacity
 - `ui-safe-area-scroll` - Handle safe areas in ScrollViews
 - `ui-scrollview-content-inset` - Use contentInset for headers
 - `ui-menus` - Use native context menus
-- `ui-native-modals` - Use native modals when possible
+- `ui-native-modals` - Prefer native modals when their interaction model fits
 - `ui-measure-views` - Use onLayout, not measure()
 - `ui-styling` - Use StyleSheet.create or Nativewind
 

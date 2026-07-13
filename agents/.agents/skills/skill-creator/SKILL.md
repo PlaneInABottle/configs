@@ -364,7 +364,7 @@ Write instructions for using the skill and its bundled resources.
 
 ### Step 5: Packaging a Skill
 
-Once development of the skill is complete, it must be packaged into a distributable .skill file that gets shared with the user. The packaging process first checks that the folder exists and contains `SKILL.md`, then runs `scripts/quick_validate.py` before writing the archive:
+Package a skill only when the user needs a distributable `.skill` archive. Repository-local skills need validation but do not require packaging after every edit. The packaging process checks that the folder contains `SKILL.md`, then runs `scripts/quick_validate.py` before writing the archive:
 
 ```bash
 scripts/package_skill.py <path/to/skill-folder>

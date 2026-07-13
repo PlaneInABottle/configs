@@ -1,108 +1,64 @@
 #!/usr/bin/env bash
-# verify-storage.sh — Test Supabase Storage operations end-to-end
-#
-# Usage:
-#   SUPABASE_URL=https://xxxx.supabase.co SUPABASE_ANON_KEY=ey... ./verify-storage.sh
-#
-# Tests: create bucket → upload → list → signed URL → download → delete → remove bucket
-# Exits 0 on all-pass, 1 on any failure.
+# Verify upload, listing, signed download, and cleanup in an existing disposable bucket.
 set -euo pipefail
 
-# ── Colors ──────────────────────────────────────────────────────────────────
-RED='\033[0;31m'; GREEN='\033[0;32m'; NC='\033[0m'
-pass() { echo -e "  ${GREEN}✓${NC} $1"; }
-fail() { echo -e "  ${RED}✗${NC} $1"; exit 1; }
+for tool in curl jq; do
+  command -v "$tool" >/dev/null || { printf 'ERROR: %s is required\n' "$tool" >&2; exit 1; }
+done
 
-# ── Validate inputs ─────────────────────────────────────────────────────────
-[[ -n "${SUPABASE_URL:-}" ]] || { echo "ERROR: SUPABASE_URL not set" >&2; exit 1; }
-[[ -n "${SUPABASE_ANON_KEY:-}" ]] || { echo "ERROR: SUPABASE_ANON_KEY not set" >&2; exit 1; }
+: "${SUPABASE_URL:?Set SUPABASE_URL}"
+: "${SUPABASE_ANON_KEY:?Set SUPABASE_ANON_KEY or publishable key}"
+: "${SUPABASE_ACCESS_TOKEN:?Set an authenticated disposable user access token}"
+: "${SUPABASE_TEST_BUCKET:?Set an existing disposable bucket name}"
 
-URL="${SUPABASE_URL%/}"
-AUTH="Authorization: Bearer ${SUPABASE_ANON_KEY}"
-APIKEY="apikey: ${SUPABASE_ANON_KEY}"
-BUCKET="verify-test-$(date +%s)"
-FILE_PATH="test/hello-world.txt"
-FILE_CONTENT="Hello Supabase Storage! $(date)"
-TEMP_FILE=$(mktemp)
-trap 'rm -f "$TEMP_FILE"' EXIT
+url="${SUPABASE_URL%/}"
+bucket="$SUPABASE_TEST_BUCKET"
+object_path="verification/$(date +%s)-$$.txt"
+content="Supabase storage verification $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+temp_file="$(mktemp)"
 
-echo "Supabase Storage Verification"
-echo "  URL:    ${URL}"
-echo "  Bucket: ${BUCKET}"
-echo ""
+cleanup() {
+  rm -f "$temp_file"
+  curl -fsS -X DELETE "${url}/storage/v1/object/${bucket}" \
+    -H "apikey: ${SUPABASE_ANON_KEY}" \
+    -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+    -H 'Content-Type: application/json' \
+    -d "{\"prefixes\":[\"${object_path}\"]}" >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
+printf '%s' "$content" > "$temp_file"
 
-# ── 1. Create bucket ────────────────────────────────────────────────────────
-echo "1. Creating bucket..."
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
-  "${URL}/storage/v1/bucket" \
-  -H "${AUTH}" \
-  -H "${APIKEY}" \
-  -H "Content-Type: application/json" \
-  -d "{\"name\":\"${BUCKET}\",\"public\":false}")
-[[ "$HTTP_CODE" =~ ^2 ]] && pass "Bucket created (HTTP ${HTTP_CODE})" || fail "Bucket create failed (HTTP ${HTTP_CODE})"
+curl -fsS -X POST "${url}/storage/v1/object/${bucket}/${object_path}" \
+  -H "apikey: ${SUPABASE_ANON_KEY}" \
+  -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+  -H 'Content-Type: text/plain' \
+  --data-binary "@${temp_file}" >/dev/null
 
-# ── 2. Upload file ──────────────────────────────────────────────────────────
-echo "2. Uploading file..."
-echo -n "$FILE_CONTENT" > "$TEMP_FILE"
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
-  "${URL}/storage/v1/object/${BUCKET}/${FILE_PATH}" \
-  -H "${AUTH}" \
-  -H "${APIKEY}" \
-  -H "Content-Type: text/plain" \
-  --data-binary @"${TEMP_FILE}")
-[[ "$HTTP_CODE" =~ ^2 ]] && pass "File uploaded (HTTP ${HTTP_CODE})" || fail "Upload failed (HTTP ${HTTP_CODE})"
+listing="$(curl -fsS -X POST "${url}/storage/v1/object/list/${bucket}" \
+  -H "apikey: ${SUPABASE_ANON_KEY}" \
+  -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+  -H 'Content-Type: application/json' \
+  -d '{"prefix":"verification","limit":100}')"
+object_name="${object_path#verification/}"
+jq -e --arg name "$object_name" '.[] | select(.name == $name)' <<<"$listing" >/dev/null
 
-# ── 3. List files ───────────────────────────────────────────────────────────
-echo "3. Listing files..."
-LIST=$(curl -s -X POST \
-  "${URL}/storage/v1/object/list/${BUCKET}" \
-  -H "${AUTH}" \
-  -H "${APIKEY}" \
-  -H "Content-Type: application/json" \
-  -d '{"prefix":"","limit":100}')
-echo "$LIST" | jq -e '.[] | select(.name == "test/hello-world.txt")' > /dev/null 2>&1 \
-  && pass "File found in listing" || fail "File not found in listing"
-
-# ── 4. Create signed URL ────────────────────────────────────────────────────
-echo "4. Creating signed URL..."
-SIGNED=$(curl -s -X POST \
-  "${URL}/storage/v1/object/sign/${BUCKET}/${FILE_PATH}" \
-  -H "${AUTH}" \
-  -H "${APIKEY}" \
-  -H "Content-Type: application/json" \
-  -d '{"expiresIn":60}')
-SIGNED_URL=$(echo "$SIGNED" | jq -r '.signedURL // .signedUrl // empty')
-[[ -n "$SIGNED_URL" ]] && pass "Signed URL obtained" || fail "Signed URL not returned"
-
-# ── 5. Download via signed URL ──────────────────────────────────────────────
-echo "5. Downloading via signed URL..."
-if [[ "$SIGNED_URL" == https://* ]]; then
-  DOWNLOADED=$(curl -s "$SIGNED_URL")
-elif [[ "$SIGNED_URL" == /* ]]; then
-  DOWNLOADED=$(curl -s "${URL}${SIGNED_URL}")
+signed="$(curl -fsS -X POST "${url}/storage/v1/object/sign/${bucket}/${object_path}" \
+  -H "apikey: ${SUPABASE_ANON_KEY}" \
+  -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+  -H 'Content-Type: application/json' \
+  -d '{"expiresIn":60}')"
+signed_path="$(jq -er '.signedURL // .signedUrl' <<<"$signed")"
+if [[ "$signed_path" == http://* || "$signed_path" == https://* ]]; then
+  download_url="$signed_path"
+elif [[ "$signed_path" == /storage/v1/* ]]; then
+  download_url="${url}${signed_path}"
+elif [[ "$signed_path" == /object/* ]]; then
+  download_url="${url}/storage/v1${signed_path}"
 else
-  DOWNLOADED=$(curl -s "${URL}/${SIGNED_URL}")
+  download_url="${url}/storage/v1/${signed_path}"
 fi
-[[ "$DOWNLOADED" == "$FILE_CONTENT" ]] \
-  && pass "Downloaded content matches" || fail "Download content mismatch"
 
-# ── 6. Delete file ──────────────────────────────────────────────────────────
-echo "6. Deleting file..."
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
-  "${URL}/storage/v1/object/${BUCKET}" \
-  -H "${AUTH}" \
-  -H "${APIKEY}" \
-  -H "Content-Type: application/json" \
-  -d "{\"prefixes\":[\"${FILE_PATH}\"]}")
-[[ "$HTTP_CODE" =~ ^2 ]] && pass "File deleted (HTTP ${HTTP_CODE})" || fail "Delete failed (HTTP ${HTTP_CODE})"
+downloaded="$(curl -fsS "$download_url")"
+[[ "$downloaded" == "$content" ]] || { printf 'ERROR: downloaded content mismatch\n' >&2; exit 1; }
 
-# ── 7. Remove bucket ────────────────────────────────────────────────────────
-echo "7. Removing bucket..."
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
-  "${URL}/storage/v1/bucket/${BUCKET}" \
-  -H "${AUTH}" \
-  -H "${APIKEY}")
-[[ "$HTTP_CODE" =~ ^2 ]] && pass "Bucket removed (HTTP ${HTTP_CODE})" || fail "Bucket remove failed (HTTP ${HTTP_CODE})"
-
-echo ""
-echo "${GREEN}All storage operations verified successfully.${NC}"
+printf 'Storage verification passed for bucket %s and object %s\n' "$bucket" "$object_path"

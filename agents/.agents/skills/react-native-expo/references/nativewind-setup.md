@@ -1,5 +1,21 @@
 # NativeWind v4 Setup Reference
 
+## Contents
+
+- [Required Files](#required-files)
+- [1. global.css](#1-globalcss)
+- [2. tailwind.config.js](#2-tailwindconfigjs)
+- [3. babel.config.js](#3-babelconfigjs)
+- [4. metro.config.js](#4-metroconfigjs)
+- [5. nativewind-env.d.ts](#5-nativewind-envdts)
+- [6. Root Layout Import](#6-root-layout-import)
+- [className on RN Components](#classname-on-rn-components)
+- [Dark Mode](#dark-mode)
+- [Responsive Breakpoints](#responsive-breakpoints)
+- [State Variants](#state-variants)
+- [Common Mobile Patterns](#common-mobile-patterns)
+- [Troubleshooting](#troubleshooting)
+
 ## Required Files
 
 | File | Purpose |

@@ -1,200 +1,45 @@
 ---
 name: websocket-testing
-description: "Test WebSocket connections, message framing, reconnection patterns, and real-time communication. Use when testing real-time APIs, WebSocket endpoints, message brokers, or any bidirectional communication."
+description: Test WebSocket connection, authentication, framing, messaging, disconnect, reconnection, timeout, ordering, and subscription behavior. Use for bidirectional APIs or clients whose correctness depends on WebSocket lifecycle and delivery semantics.
 ---
 
 # WebSocket Testing
 
-Test WebSocket connections, message handling, and real-time communication patterns.
+Verify observable protocol behavior with bounded commands. A successful connection alone does not prove messaging, heartbeat, or reconnection correctness.
 
-## Quick Start
+## Preflight
 
-```bash
-# Test WebSocket connection with wscat
-wscat -c wss://api.example.com/ws
+- Confirm the URL, subprotocol, authentication method, and expected message schema from local configuration.
+- Prefer headers or cookies for credentials. Use query tokens only when the client protocol requires them, and account for URL logging.
+- Verify `wscat` or `websocat` is installed before selecting examples.
 
-# Test with websocat
-websocat wss://api.example.com/ws
-```
+## Workflow
 
-## Tools
-
-| Tool | Purpose |
-|------|---------|
-| wscat | CLI WebSocket client |
-| websocat | Rust-based WebSocket tool |
-| Python websockets | Programmatic testing |
-
-## Core Workflow
-
-### 1. Basic Connection Test
+1. Connect with a bounded timeout and expected subprotocol.
+2. Send one uniquely correlated message.
+3. Assert the corresponding response or durable side effect.
+4. Test malformed, unauthorized, and unsupported messages.
+5. Force a disconnect and observe the actual application client's reconnect delay, subscription restoration, and duplicate handling.
+6. Verify close codes, ordering guarantees, heartbeat behavior, and cleanup.
 
 ```bash
-# Connect and verify
-wscat -c wss://api.example.com/ws
-# Connected (press ctrl-c to exit)
+printf '%s\n' '{"type":"ping","id":"case-123"}' |
+  websocat -n1 -H="Authorization: Bearer ${TEST_TOKEN}" "${WS_URL}"
 ```
 
-### 2. Message Testing
+Use a project-native test when reconnect logic lives inside an SDK or application client. Reopening a CLI connection repeatedly is not a reconnection test.
 
-```bash
-# Send message and expect response
-echo '{"type":"ping"}' | websocat wss://api.example.com/ws
-```
+## Assertions
 
-### 3. Python Test Script
+- Bound every receive with a timeout.
+- Correlate request and response IDs.
+- Verify pong or application heartbeat data rather than sleeping and declaring success.
+- Check duplicate delivery and idempotency after reconnect.
+- Confirm subscriptions are restored once, not multiplied.
+- Inspect close code and reason for expected server shutdowns.
 
-```python
-import asyncio
-import websockets
-import json
+## Guardrails
 
-async def test_websocket():
-    uri = "wss://api.example.com/ws"
-    async with websockets.connect(uri) as ws:
-        # Send message
-        await ws.send(json.dumps({"type": "subscribe", "channel": "updates"}))
-        
-        # Receive response
-        response = await ws.recv()
-        data = json.loads(response)
-        print(f"Received: {data}")
-        
-        # Assert response
-        assert "type" in data
-        print("Test passed!")
-
-asyncio.run(test_websocket())
-```
-
-### 4. Connection Lifecycle
-
-```python
-import asyncio
-import websockets
-
-async def test_lifecycle():
-    uri = "wss://api.example.com/ws"
-    
-    # Connect
-    ws = await websockets.connect(uri)
-    print("Connected")
-    
-    # Send/Receive
-    await ws.send('{"action":"hello"}')
-    response = await asyncio.wait_for(ws.recv(), timeout=5)
-    print(f"Response: {response}")
-    
-    # Close
-    await ws.close()
-    print("Closed")
-
-asyncio.run(test_lifecycle())
-```
-
-### 5. Reconnection Test
-
-```python
-import asyncio
-import websockets
-
-async def test_reconnect():
-    uri = "wss://api.example.com/ws"
-    
-    for attempt in range(3):
-        try:
-            ws = await websockets.connect(uri, ping_interval=None)
-            print(f"Attempt {attempt + 1}: Connected")
-            await ws.close()
-        except Exception as e:
-            print(f"Attempt {attempt + 1}: Failed - {e}")
-        
-        await asyncio.sleep(1)
-
-asyncio.run(test_reconnect())
-```
-
-## Advanced Patterns
-
-### Authentication
-
-```python
-async def test_auth_websocket():
-    uri = "wss://api.example.com/ws?token=YOUR_TOKEN"
-    async with websockets.connect(uri) as ws:
-        await ws.send('{"action":"auth"}')
-        response = await ws.recv()
-        data = json.loads(response)
-        assert data.get("authenticated") == True
-
-asyncio.run(test_auth_websocket())
-```
-
-### Ping/Pong
-
-```python
-async def test_ping_pong():
-    uri = "wss://api.example.com/ws"
-    async with websockets.connect(uri, ping_interval=5) as ws:
-        # Server should respond to pings
-        await asyncio.sleep(6)
-        print("Ping/Pong working")
-
-asyncio.run(test_ping_pong())
-```
-
-### Message Framing
-
-```bash
-# Send binary message
-echo -n '{"data":"test"}' | websocat --binary wss://api.example.com/ws
-```
-
-### Subscribe/Unsubscribe
-
-```python
-async def test_subscribe():
-    uri = "wss://api.example.com/ws"
-    async with websockets.connect(uri) as ws:
-        # Subscribe
-        await ws.send(json.dumps({
-            "action": "subscribe",
-            "channels": ["events", "updates"]
-        }))
-        
-        # Receive multiple messages
-        for _ in range(5):
-            msg = await asyncio.wait_for(ws.recv(), timeout=10)
-            print(f"Received: {msg}")
-        
-        # Unsubscribe
-        await ws.send(json.dumps({
-            "action": "unsubscribe",
-            "channels": ["events"]
-        }))
-
-asyncio.run(test_subscribe())
-```
-
-## Testing Strategy
-
-| Test Type | What to Test |
-|-----------|--------------|
-| Connection | Connect, disconnect, error handling |
-| Authentication | Token-based, headers, cookies |
-| Messages | Send, receive, framing |
-| Subscriptions | Subscribe, unsubscribe, events |
-| Reconnection | Auto-reconnect, exponential backoff |
-| Error Cases | Invalid messages, timeouts |
-
-## Common Issues
-
-- **Connection refused**: Server not running or wrong port
-- **SSL errors**: Use `wss://` not `ws://` for TLS
-- **Timeout**: Check firewall, add timeout to tests
-- **Message order**: Use sequence numbers in messages
-
-## References
-
-- [websockets Python library](https://websockets.readthedocs.io/)
-- [WebSocket Protocol](https://www.rfc-editor.org/rfc/rfc6455)
+- Never print access tokens or complete authenticated URLs.
+- Do not disable TLS verification outside an explicitly isolated local environment.
+- Distinguish WebSocket protocol behavior from broker delivery guarantees.

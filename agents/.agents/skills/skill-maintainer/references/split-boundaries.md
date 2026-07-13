@@ -10,7 +10,7 @@ Keep `ai-native-workflow` unified for runtime verification because its playbooks
 
 - treat the app as a language-agnostic system under test
 - verify behavior across stable boundaries such as HTTP, DOM, CLI, queues, and databases
-- use one universal toolchain (`hurl`, `agent-browser`, native DB clients, Docker, env-native Faker, queue CLIs)
+- complement repository-native tests with boundary tools such as Hurl, `agent-browser`, native DB clients, Docker, and queue CLIs when they add distinct evidence
 
 That shared systems-operator model is the reason the runtime playbooks stay together instead of splitting into separate per-protocol skills.
 

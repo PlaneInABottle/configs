@@ -1,190 +1,100 @@
 # Supabase Edge Functions
 
-- [Function anatomy](#function-anatomy)
-- [Shared libraries](#shared-libraries)
-- [Local development](#local-development)
-- [Deploy](#deploy)
-- [Secrets management](#secrets-management)
-- [JWT verification](#jwt-verification)
-- [Using @supabase/server](#using-supabaseserver)
-- [Response helpers](#response-helpers)
-- [CORS headers](#cors-headers)
+## Contents
 
-## Function anatomy
+- [Structure](#structure)
+- [Local Development](#local-development)
+- [Authentication](#authentication)
+- [Database Access](#database-access)
+- [CORS](#cors)
+- [Secrets](#secrets)
+- [Deployment](#deployment)
 
-Basic Deno serverless function under `supabase/functions/`:
+## Structure
+
+Keep each function under `supabase/functions/<name>/index.ts` and reusable code under `_shared/`.
 
 ```typescript
-// supabase/functions/hello-world/index.ts
 Deno.serve(async (req) => {
-  const { name } = await req.json();
-  return new Response(JSON.stringify({ message: `Hello ${name}!` }), {
-    headers: { "Content-Type": "application/json" },
-  });
-});
-```
-
-Each function lives in its own directory (`supabase/functions/<name>/index.ts`) and gets deployed independently.
-
-## Shared libraries
-
-Place common code in `supabase/functions/_shared/` and import via relative paths:
-
-```typescript
-// supabase/functions/_shared/transform.ts
-export function validate(data: any): boolean {
-  return data !== null && typeof data === "object";
-}
-```
-
-```typescript
-// supabase/functions/process-data/index.ts
-import { validate } from "../_shared/transform.ts";
-
-Deno.serve(async (req) => {
+  if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
   const body = await req.json();
-  if (!validate(body)) {
-    return new Response(JSON.stringify({ error: "Invalid payload" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-  return new Response(JSON.stringify({ ok: true }), {
-    headers: { "Content-Type": "application/json" },
-  });
+  return Response.json({ received: body });
 });
 ```
 
-The `_shared/` directory is not deployed as a function — it is only available as an import target. Keep shared types, validators, and utilities here.
+Validate input before using it and avoid returning raw internal errors.
 
-## Local development
-
-```bash
-supabase functions serve                                 # serve all functions
-supabase functions serve hello-world                     # serve a single function
-supabase functions serve --env-file .env.local           # load environment variables
-supabase functions serve --no-verify-jwt                 # disable JWT verification
-supabase functions serve --inspect                       # debug with Chrome DevTools
-```
-
-Make sure the local Supabase stack is started first: `supabase start`.
-
-## Deploy
+## Local Development
 
 ```bash
-supabase functions deploy hello-world                    # deploy a single function
-supabase functions deploy hello-world --no-verify-jwt    # skip JWT for webhooks
+supabase start
+supabase functions serve hello-world --env-file ./supabase/.env.local
 ```
 
-Deployments are linked to the linked Supabase project. Use `supabase link --project-ref <ref>` first if not already linked.
+Keep JWT verification enabled unless the handler implements and tests an alternative authentication mechanism. Test through the same headers and payload shape used in production.
 
-## Secrets management
+## Authentication
 
-Secrets are environment variables injected into every function at runtime:
-
-```bash
-supabase secrets set MY_API_KEY=value                    # set a single secret
-supabase secrets set --env-file ./supabase/.env.local    # bulk from file
-supabase secrets list                                    # list all secret names
-supabase secrets delete MY_API_KEY                       # delete a secret
-```
-
-All secrets are exposed to all functions in the project. Use `--env-file` for local overrides without deploying secrets.
-
-## JWT verification
-
-By default, every function verifies the incoming JWT. The platform validates the token before the handler runs.
+For user-authenticated functions, read the bearer token and ask Supabase Auth for the user:
 
 ```typescript
-Deno.serve(async (req) => {
-  // Authorization: Bearer <token>
-  const authHeader = req.headers.get("Authorization");
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 
-  // JWT is verified automatically — handler only reaches here for valid tokens
-  // Use @supabase/server to extract the authenticated user
-});
-```
-
-Pass `--no-verify-jwt` during deploy for webhook endpoints (Stripe, Clerk, etc.) where the caller provides its own signature instead of a Supabase JWT:
-
-```bash
-supabase functions deploy stripe-webhook --no-verify-jwt
-```
-
-## Using @supabase/server
-
-`npm:@supabase/server` provides a `withSupabase` wrapper for database access with service-role privileges:
-
-```typescript
-import { withSupabase } from "npm:@supabase/server";
-
-interface Row {
-  id: string;
-  title: string;
+const authHeader = req.headers.get('Authorization');
+if (!authHeader?.startsWith('Bearer ')) {
+  return Response.json({ error: 'Unauthorized' }, { status: 401 });
 }
 
-export const fetch = withSupabase(
-  { auth: "secret:my-secret" },
-  async (_req: Request, ctx) => {
-    const { data } = await ctx.supabaseAdmin
-      .from("posts")
-      .select("*")
-      .returns<Row[]>();
-
-    return Response.json(data);
-  },
+const admin = createClient(
+  Deno.env.get('SUPABASE_URL')!,
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
 );
+const { data: { user }, error } = await admin.auth.getUser(
+  authHeader.slice('Bearer '.length),
+);
+if (error || !user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 ```
 
-The `auth` option accepts:
-- `secret:<name>` — uses a secret stored via `supabase secrets set` as the Supabase service-role key
-- `service-role` — uses the project's built-in `service_role` key (set during `supabase link`)
+Webhook endpoints may disable gateway JWT verification only when they verify the provider signature before processing the body. Record that decision in `supabase/config.toml` or the reviewed deployment configuration rather than relying on an ad hoc command flag.
 
-`ctx.supabaseAdmin` is a pre-authenticated Supabase client with full row-level access (bypasses RLS). Use it sparingly and never expose it to end users.
+## Database Access
 
-## Response helpers
+- Use a user-scoped client when RLS should apply.
+- Use the service-role key only in trusted server code after explicit authorization.
+- Select only required columns and handle Supabase errors before returning.
+- Do not use undocumented wrapper packages as a default pattern.
 
-```typescript
-// JSON success
-return new Response(JSON.stringify({ data: results }), {
-  status: 200,
-  headers: { "Content-Type": "application/json" },
-});
+## CORS
 
-// JSON error
-return new Response(JSON.stringify({ error: "Not found" }), {
-  status: 404,
-  headers: { "Content-Type": "application/json" },
-});
-
-// No content
-return new Response(null, { status: 204 });
-```
-
-Always set `Content-Type: application/json` for JSON responses. Always return a meaningful HTTP status code.
-
-## CORS headers
-
-For functions called from browser clients, set CORS headers in every response:
+Browser-callable functions must handle `OPTIONS` and include CORS headers on success and error responses.
 
 ```typescript
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, content-type",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+const cors = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, content-type, x-client-info, apikey',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-Deno.serve(async (req) => {
-  // Handle preflight
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
-
-  const data = { ok: true };
-  return new Response(JSON.stringify(data), {
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
-});
+if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
 ```
 
-Centralize `corsHeaders` in a `_shared/cors.ts` file when multiple functions need it.
+Restrict origins when the deployment has a known browser origin.
+
+## Secrets
+
+```bash
+supabase secrets set --env-file ./supabase/.env.production
+supabase secrets list
+```
+
+- Ensure the environment file is ignored and access-controlled.
+- Do not place values directly in examples, shell history, logs, or error responses.
+- `secrets list` should be used only to verify names and metadata, not values.
+
+## Deployment
+
+```bash
+supabase functions deploy hello-world
+```
+
+Before deployment, confirm the linked project, authentication mode, environment variables, and local test result. Verify current CLI flags with `supabase functions deploy --help` instead of copying version-sensitive flags.

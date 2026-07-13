@@ -1,35 +1,33 @@
 ---
 name: ai-native-workflow
-description: Comprehensive guide for AI-managed development workflows and language-agnostic system operations. MANDATORY for any feature implementation, API creation, UI development, debugging, or testing. Defines the universal toolchain (Hurl, Faker, Docker, agent-browser, Maestro) used to execute and verify code without relying on language-specific frameworks like pytest or Jest.
+description: Coordinate runtime setup and boundary-level verification for feature implementation, debugging, and testing. Use when work spans application processes, HTTP APIs, databases, browser or mobile UI, queues, containers, or multiple verification layers. Complement rather than replace the repository's existing test framework.
 license: MIT
 ---
 
 # AI-Native Workflow: The Systems Operator Paradigm
 
-A true AI agent does not tie its tooling to the application's language (e.g., using `pytest` for Python or `Jest` for Node). Instead, the AI acts as a **Systems Operator**, treating the application as a language-agnostic *System Under Test (SUT)*. 
-
-You must interact with the application across standard boundaries (HTTP, SQL, DOM, CLI) using a universal toolkit of free, isolated, scriptable CLI tools.
+Treat the application as a system with several observable boundaries. Use repository-native tests for logic and established integration coverage, then add boundary-level checks when they provide evidence the existing suite cannot.
 
 ## The Universal Agent Toolkit
 
-When verifying your implementations, **never** default to writing language-specific test suites. Generic requests for testing MUST use the following universal tools based on the system boundary:
+Choose tools from local project conventions first. Add the following tools when their boundary matches the behavior under test:
 
 | Boundary | Universal Tool | Agent Action |
 |---|---|---|
 | **Infrastructure** | **Docker Compose** | Standardizes "start/stop/reset". Follow YAGNI: only add auxiliary services (Redis, Mailpit) when explicitly needed. |
-| **Data Generation** | **Env-Native Faker** | Use environment-native scripting (e.g., Python `faker`, Node `faker`) to generate deterministic JSON, test fixtures, or DB payloads. Data generation scripts MUST ONLY output standard formats (JSON/SQL/CSV) to stdout. They MUST NOT contain network requests, database connections, or test assertions. All outputs must be piped to the Universal Toolkit (e.g., `.hurl`, `psql`). |
+| **Data Generation** | **Env-Native Faker** | Generate deterministic fixtures in the project's normal language or fixture system. Keep standalone generators focused on data generation. |
 | **Dependencies** | **json-server / Prism** | Spin up instant fake APIs to mock 3rd party dependencies. Use environment variables to swap real URLs for local fakes. |
 | **Network / API** | **Network Boundaries** | Use `hurl` for REST/GraphQL, `grpcurl` for gRPC, and `wscat` for WebSockets. |
 | **External APIs** | **`api-discovery` skill** | Find and select reliable public APIs for your needs. Maps dev tasks to APIs (weather, geocoding, email validation, etc.). |
 | **Interface (Web/CLI)** | **`agent-browser`** | Use `agent-browser` as an Interactive REPL for Web UIs. For CLI apps, use standard Unix streams (`stdout/stderr`) or `expect` scripts. |
 | **Interface (Mobile)** | **`maestro mcp`** | Use `maestro mcp` to directly control iOS/Android simulators — tap, input text, inspect hierarchy, screenshot. For the full skill, load `maestro-testing`. |
-| **Persistence / DB** | **Native Clients** | Bypass the app layer. Use native datastore clients (`psql`, `mongosh`, `sqlite3`, `redis-cli`) directly to assert state changes. If a native CLI client is unavailable, write a minimalist, single-file headless script to execute the query and print JSON to stdout. Do not write assertions inside this script; pipe the stdout to `jq` or `grep`. |
+| **Persistence / DB** | **Native Clients** | Inspect state with `psql`, `mongosh`, `sqlite3`, or `redis-cli` when direct state evidence matters. Do not expose secret values in output. |
 | **Async / Events** | **`redis-cli` / `rpk`** | Inject messages directly into queues and verify worker side-effects. |
 | **Media / Files** | **`pexels-media` skill** | Download real, valid binary fixtures for upload testing. Never pass corrupted mock bytes. |
 
-### The "Iterative Bash" Pattern
-Because you have a persistent terminal, build complex assertions iteratively. Use bash pipes to extract state rather than writing custom parsing scripts.
-*(e.g., `curl -sSf localhost:8025/api | jq | grep "token="`)*
+### Iterative verification
+
+Start with the smallest observable check. Add another boundary only when it resolves a real uncertainty. Avoid printing credentials, tokens, decrypted secrets, or full environment values while debugging.
 
 ---
 
@@ -44,7 +42,7 @@ command -v maestro >/dev/null || echo "Install maestro before running mobile pla
 command -v docker >/dev/null || echo "Install Docker before running infrastructure flows"
 ```
 
-If a required binary is missing, stop and install it with your operating system package manager or the tool's official installation instructions before continuing.
+If a required binary is missing, use an existing project tool when possible. Install new global software only when the task requires it and the installation source has been verified.
 
 ---
 
@@ -71,11 +69,11 @@ For exact implementation details, code snippets, and CLI commands for the toolki
 2. **Phase 2: Runtime Knowledge Handoff**
    Keep this skill focused on runtime setup and verification. If session findings turn into repository skill-governance work (for example: auditing overlap, deciding split boundaries, or updating shared skill guidance), hand that work to [`skill-maintainer`](../skill-maintainer/SKILL.md) for boundary decisions and [`skill-creator`](../skill-creator/SKILL.md) for authoring/package mechanics instead of expanding this skill into a governance playbook.
 3. **Phase 3: Implementation & Verification**
-   Build the feature and immediately verify it using the **Universal Toolkit Playbooks** linked above.
+   Build the feature, run affected repository-native tests, and add focused boundary checks where useful.
 4. **Phase 4: Programmatic Operations**
    Ensure you can manage the application programmatically without a human (e.g., manipulating UI state using `agent-browser` for web, `maestro mcp` for mobile).
 5. **Phase 5: Continuous Iteration & Debugging**
-   Run existing unit tests after every code change. Tests are your guardrails. **NEVER write, modify, or append to language-specific integration tests under ANY circumstances. Use pytest/cargo test/Jest ONLY for pure logic unit testing.** (Note: Do not use Jest/pytest to test functions that import web frameworks like Express/FastAPI, ORMs, or rely on I/O. If testing a function requires mocking external modules, database connections, or HTTP clients, it is an integration boundary. Do NOT write a unit test for it; test it end-to-end via `.hurl` or native clients). You MUST use the Universal Toolkit (`.hurl`, `agent-browser`, `psql`) for all new test assertions. During UI changes, run `agent-browser snapshot -i` and screenshot to track visual regressions. Re-snapshot after every navigation. You MUST read the output of `agent-browser snapshot -i` before interacting with ANY UI element; NEVER blindly guess element IDs. Always wait for async data fetching or specific state changes (using `agent-browser wait`) before re-snapshotting. Do not snapshot immediately after a click if a loading state or async mutation is expected.
+   Run the smallest affected test set while iterating, then the broader repository checks required by the change. Add tests in the project's established framework when behavior is testable there. Use Hurl, native clients, `agent-browser`, or Maestro for boundaries that are better verified externally. Inspect the current UI hierarchy before interacting and wait for asynchronous state changes before re-inspecting.
 6. **Phase 6: Teardown**
    Stop managed background processes and clean up temporary runtime state once validation is complete.
 
@@ -94,7 +92,7 @@ PM2 is the **recommended process manager** for running application servers.
 pm2 start npm --name "project" -- run dev    # Start
 pm2 logs project-name                          # View logs
 pm2 restart project-name                       # Restart after changes
-pm2 delete all                                 # Cleanup
+pm2 delete project-name                        # Targeted cleanup
 pm2 install pm2-logrotate                      # Log rotation (one-time)
 ```
 
@@ -123,13 +121,9 @@ For browser-specific semantics, load the `agent-browser` skill.
 Use Maestro MCP for direct device control during mobile feature implementation and debugging.
 
 ```bash
-# Available as MCP tools — no CLI commands needed when configured
-# list_devices  → find available simulator
-# launch_app    → start your app
-# inspect_view_hierarchy → see what's on screen
-# tap_on        → tap elements
-# input_text    → type into fields
-# take_screenshot → capture screen
+# Use the connected MCP interface rather than assuming tool names.
+# Typical sequence: list devices, inspect the screen, run an inline flow,
+# then inspect or capture a screenshot again.
 ```
 
 **During implementation/debugging, use MCP tools interactively on a live device.** Write YAML flows only after the feature is validated, for CI and repeatable regression runs. Load `maestro-testing` skill for full YAML syntax and flow authoring.
@@ -147,7 +141,7 @@ Use Maestro MCP for direct device control during mobile feature implementation a
 
 | Anti-Pattern | Do Instead |
 |---|---|
-| Writing `pytest`/`Jest` for integration tests | Use `.hurl` for APIs, `psql` for DB, `agent-browser` for web UI, `maestro mcp` for mobile UI. Keep the SUT language-agnostic. |
+| Replacing an established test suite with a parallel one | Extend existing tests first; add boundary tools only where they provide distinct evidence. |
 | Writing Maestro YAML flows before validating a feature | Use `maestro mcp` tools interactively during implementation. Write YAML flows only after the feature works on a live device. |
 | Stale browser refs | Always run `agent-browser snapshot -i` after a click/navigation. Refs invalidate on DOM mutation. |
 | Over-engineering Docker | Start with just App + DB. Add Redis/Mailpit only when a specific feature requires it. |

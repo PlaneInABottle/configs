@@ -1,5 +1,12 @@
 # Async Actions and Reactions
 
+## Contents
+
+- [runInAction — The Only Correct Pattern](#runinaction-the-only-correct-pattern)
+- [autorun vs reaction vs when](#autorun-vs-reaction-vs-when)
+- [Disposing Reactions](#disposing-reactions)
+- [Common Async Pitfalls](#common-async-pitfalls)
+
 ## runInAction — The Only Correct Pattern
 
 MobX tracks observable access synchronously. After `await`, the tracking context is lost. **Always** wrap post-await mutations in `runInAction`.

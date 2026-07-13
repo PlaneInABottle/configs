@@ -1,5 +1,13 @@
 # Tailwind v4 + shadcn/ui Theming Architecture
 
+## Contents
+
+- [The Four-Step Pattern](#the-four-step-pattern)
+- [Why This Architecture Works](#why-this-architecture-works)
+- [Common Mistakes](#common-mistakes)
+- [Best Practices](#best-practices)
+- [Official Documentation](#official-documentation)
+
 ## The Four-Step Pattern
 
 Tailwind v4 requires a specific architecture for CSS variable-based theming. This pattern is **mandatory** - skipping or modifying steps will break your theme.
@@ -52,9 +60,7 @@ Tailwind v4 requires a specific architecture for CSS variable-based theming. Thi
 }
 ```
 
-**Critical Rules:**
-- ✅ Reference variables directly: `var(--background)`
-- ❌ Never double-wrap: `hsl(var(--background))` (already has hsl)
+If `--background` stores a complete color such as `oklch(...)` or `hsl(...)`, reference it directly with `var(--background)`. If a legacy variable stores only HSL channels, `hsl(var(--background))` may still be correct; inspect the variable definition before changing wrappers.
 
 ### Step 4: Result - Automatic Dark Mode
 

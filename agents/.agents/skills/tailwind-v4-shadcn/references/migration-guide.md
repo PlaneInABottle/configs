@@ -1,5 +1,19 @@
 # Migration Guide: Hardcoded Colors → CSS Variables
 
+## Contents
+
+- [Overview](#overview)
+- [Semantic Color Mapping](#semantic-color-mapping)
+- [Migration Patterns](#migration-patterns)
+- [Step-by-Step Migration](#step-by-step-migration)
+- [Example: Badge Component](#example-badge-component)
+- [Testing Checklist](#testing-checklist)
+- [Verification Commands](#verification-commands)
+- [Performance Impact](#performance-impact)
+- [Common Pitfalls](#common-pitfalls)
+- [Rollback Plan](#rollback-plan)
+- [Further Customization](#further-customization)
+
 ## Overview
 
 This guide helps you migrate from hardcoded Tailwind colors (`bg-blue-600`) to semantic CSS variables (`bg-primary`).

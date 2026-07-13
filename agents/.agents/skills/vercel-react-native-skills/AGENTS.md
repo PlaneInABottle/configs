@@ -29,7 +29,7 @@ Comprehensive performance optimization guide for React Native applications, desi
    - 2.3 [Keep List Items Lightweight](#23-keep-list-items-lightweight)
    - 2.4 [Optimize List Performance with Stable Object References](#24-optimize-list-performance-with-stable-object-references)
    - 2.5 [Pass Primitives to List Items for Memoization](#25-pass-primitives-to-list-items-for-memoization)
-   - 2.6 [Use a List Virtualizer for Any List](#26-use-a-list-virtualizer-for-any-list)
+   - 2.6 [Virtualize Long or Expensive Lists](#26-virtualize-long-or-expensive-lists)
    - 2.7 [Use Compressed Images in Lists](#27-use-compressed-images-in-lists)
    - 2.8 [Use Item Types for Heterogeneous Lists](#28-use-item-types-for-heterogeneous-lists)
 3. [Animation](#3-animation) — **HIGH**
@@ -298,11 +298,9 @@ automatically and these manual optimizations become less critical.
 
 **Impact: MEDIUM (Fewer re-renders and faster lists)**
 
-When passing callback functions to list items, create a single instance of the
-
-callback at the root of the list. Items should then call it with a unique
-
-identifier.
+When callback identity causes memoized list items to rerender, pass one parent
+handler plus the item identifier. Do not add `useCallback` by default when the
+project uses React Compiler or profiling shows no callback-related cost.
 
 **Incorrect: creates a new callback on each render**
 
@@ -318,21 +316,20 @@ return (
 )
 ```
 
-**Correct: a single function instance passed to each item**
+**Correct: pass the parent handler and item identifier**
 
 ```typescript
-const onPress = useCallback(() => handlePress(item.id), [handlePress, item.id])
-
 return (
   <LegendList
     renderItem={({ item }) => (
-      <Item key={item.id} item={item} onPress={onPress} />
+      <Item id={item.id} item={item} onPress={handlePress} />
     )}
   />
 )
 ```
 
-Reference: [https://example.com](https://example.com)
+The item can call `onPress(id)`. Stabilize `handlePress` only when required by
+the surrounding code or supported by profiling.
 
 ### 2.3 Keep List Items Lightweight
 
@@ -435,13 +432,10 @@ return JSX.
 
 **Impact: CRITICAL (virtualization relies on reference stability)**
 
-Don't map or filter data before passing to virtualized lists. Virtualization
-
-relies on object reference stability to know what changed—new references cause
-
-full re-renders of all visible items. Attempt to prevent frequent renders at the
-
-list-parent level.
+Avoid recreating every item object in a frequently rendering list parent when
+profiling shows it defeats memoization or recycling. Mapping and filtering are
+otherwise normal operations; preserve stable data where it materially reduces
+rerenders.
 
 Where needed, use context selectors within list items.
 
@@ -626,17 +620,13 @@ Primitive props make memoization predictable and effective.
 
 `memo()` or `useCallback()`, but the object references still apply.
 
-### 2.6 Use a List Virtualizer for Any List
+### 2.6 Virtualize Long or Expensive Lists
 
 **Impact: HIGH (reduced memory, faster mounts)**
 
-Use a list virtualizer like LegendList or FlashList instead of ScrollView with
-
-mapped children—even for short lists. Virtualizers only render visible items,
-
-reducing memory usage and mount time. ScrollView renders all children upfront,
-
-which gets expensive quickly.
+Use a list virtualizer like FlatList, LegendList, or FlashList when item count,
+item cost, or profiling shows that rendering every child is expensive. A simple
+ScrollView can remain clearer for small, bounded content.
 
 **Incorrect: ScrollView renders all items at once**
 
@@ -662,7 +652,6 @@ function Feed({ items }: { items: Item[] }) {
   return (
     <LegendList
       data={items}
-      // if you aren't using React Compiler, wrap these with useCallback
       renderItem={({ item }) => <ItemCard item={item} />}
       keyExtractor={(item) => item.id}
       estimatedItemSize={80}
@@ -681,7 +670,6 @@ function Feed({ items }: { items: Item[] }) {
   return (
     <FlashList
       data={items}
-      // if you aren't using React Compiler, wrap these with useCallback
       renderItem={({ item }) => <ItemCard item={item} />}
       keyExtractor={(item) => item.id}
     />
@@ -689,9 +677,8 @@ function Feed({ items }: { items: Item[] }) {
 }
 ```
 
-Benefits apply to any screen with scrollable content—profiles, settings, feeds,
-
-search results. Default to virtualization.
+Consider virtualization for long or expensive profiles, settings, feeds, and
+search results. Keep small bounded content simple.
 
 ### 2.7 Use Compressed Images in Lists
 
@@ -1170,11 +1157,9 @@ JS-based alternatives.
 
 **Impact: HIGH (native performance, platform-appropriate UI)**
 
-Always use native navigators instead of JS-based ones. Native navigators use
-
-platform APIs (UINavigationController on iOS, Fragment on Android) for better
-
-performance and native behavior.
+Prefer native navigators when platform behavior and transition performance are
+important, while preserving the project's established navigator unless a
+measured problem or product requirement justifies migration.
 
 **For stacks:** Use `@react-navigation/native-stack` or expo-router's default
 
@@ -1443,7 +1428,7 @@ source changes, not just on initial render.
 type Props = { fallbackEnabled: boolean }
 
 function Toggle({ fallbackEnabled }: Props) {
-  const [enabled, setEnabled] = useState(defaultEnabled)
+  const [enabled, setEnabled] = useState(fallbackEnabled)
   // If fallbackEnabled changes, state is stale
   // State mixes user intent with default value
 
@@ -1458,9 +1443,9 @@ type Props = { fallbackEnabled: boolean }
 
 function Toggle({ fallbackEnabled }: Props) {
   const [_enabled, setEnabled] = useState<boolean | undefined>(undefined)
-  const enabled = _enabled ?? defaultEnabled
+  const enabled = _enabled ?? fallbackEnabled
   // undefined = user hasn't touched it, falls back to prop
-  // If defaultEnabled changes, component reflects it
+  // If fallbackEnabled changes, component reflects it
   // Once user interacts, their choice persists
 
   return <Switch value={enabled} onValueChange={setEnabled} />
@@ -1863,7 +1848,7 @@ Use functional setState to compare—don't read state directly in the callback.
 
 Follow these styling patterns for cleaner, more consistent React Native code.
 
-**Always use `borderCurve: 'continuous'` with `borderRadius`:**
+**Use `borderCurve: 'continuous'` when iOS-style continuous corners fit and the target versions support it:**
 
 **Use `gap` instead of margin for spacing between elements:**
 
@@ -2461,9 +2446,9 @@ accessibility out of the box.
 
 **Impact: LOW (modern API, more flexible)**
 
-Never use `TouchableOpacity` or `TouchableHighlight`. Use `Pressable` from
-
-`react-native` or `react-native-gesture-handler` instead.
+Prefer `Pressable` for new interaction components because it exposes richer
+press state. Preserve existing Touchable components when migration adds no
+material value.
 
 **Incorrect: legacy Touchable components**
 

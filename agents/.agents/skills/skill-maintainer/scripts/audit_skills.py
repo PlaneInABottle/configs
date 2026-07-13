@@ -86,12 +86,24 @@ def has_trigger_duplication_heading(content: str) -> bool:
         if not match:
             continue
         heading = normalize_heading(match.group(2))
-        tokens = set(heading.split())
-        if "skill" not in tokens:
-            continue
-        if "when" in tokens and ("use" in tokens or "load" in tokens or "applies" in tokens):
+        if heading in {
+            "when to use",
+            "when to apply",
+            "when to load",
+            "when to use this skill",
+            "when this skill applies",
+            "triggers",
+        }:
             return True
-        if "triggers" in tokens:
+    return False
+
+
+def has_contents_section(content: str) -> bool:
+    for raw_line in content.splitlines():
+        match = HEADING_RE.match(raw_line)
+        if not match:
+            continue
+        if normalize_heading(match.group(2)) in {"contents", "table of contents"}:
             return True
     return False
 
@@ -107,6 +119,10 @@ def reference_paths(skill_dir: Path) -> list[Path]:
     return sorted(path for path in references_dir.rglob("*") if path.is_file())
 
 
+def markdown_paths(skill_dir: Path) -> list[Path]:
+    return sorted(path for path in skill_dir.rglob("*.md") if path.is_file())
+
+
 def find_size_warnings(skill_dir: Path) -> list[str]:
     warnings: list[str] = []
     skill_md = skill_dir / "SKILL.md"
@@ -120,7 +136,8 @@ def find_size_warnings(skill_dir: Path) -> list[str]:
         if reference.suffix.lower() != ".md":
             continue
         ref_lines = line_count(reference)
-        if ref_lines > REFERENCE_LINE_WARN:
+        content = reference.read_text(encoding="utf-8")
+        if ref_lines > REFERENCE_LINE_WARN and not has_contents_section(content):
             warnings.append(
                 f"{reference.relative_to(skill_dir)} is {ref_lines} lines; add a table of contents or split it (warn threshold {REFERENCE_LINE_WARN})"
             )
@@ -150,9 +167,11 @@ def audit_skill_dir(skill_dir: Path, validator_path: Path) -> SkillAudit:
         return audit
 
     content = skill_md.read_text(encoding="utf-8")
-    missing_links = find_missing_local_links(skill_md, content)
-    for target in missing_links:
-        audit.errors.append(f"missing linked local reference: {target}")
+    for markdown in markdown_paths(skill_dir):
+        markdown_content = markdown.read_text(encoding="utf-8")
+        for target in find_missing_local_links(markdown, markdown_content):
+            relative = markdown.relative_to(skill_dir)
+            audit.errors.append(f"{relative}: missing linked local reference: {target}")
 
     if has_trigger_duplication_heading(content):
         audit.errors.append("body-level trigger duplication heading detected")

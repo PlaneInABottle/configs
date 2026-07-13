@@ -1,5 +1,12 @@
 # Expo Push Setup Reference
 
+## Contents
+
+- [app.json Plugin Config](#appjson-plugin-config)
+- [Android](#android)
+- [iOS](#ios)
+- [EAS Credential Requirements](#eas-credential-requirements)
+
 ## app.json Plugin Config
 
 ```json

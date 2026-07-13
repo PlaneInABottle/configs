@@ -17,13 +17,9 @@ A practical, opinionated system for designing polished interfaces. Use this file
 
 **Foundation:** Great UI comes from systems, not talent. Use constrained scales for spacing, typography, color, and shadows. Start with more whitespace than you think you need.
 
-## Scoring
-
-**Goal: 10/10.** Score designs from 0-10 based on the seven principles below. Always report the score and the top changes needed to reach 10/10.
-
 ## The Refactoring UI Framework
 
-Use these seven principles for every UI:
+Use these principles as heuristics. Preserve an existing design system and depart from the defaults when product context or accessibility requires it.
 
 ### 1. Visual Hierarchy
 
@@ -35,7 +31,7 @@ Detailed patterns and examples: [FOUNDATION_PRINCIPLES.md](references/FOUNDATION
 
 ### 2. Spacing & Sizing
 
-Use a constrained spacing scale; never invent random values.
+Prefer the project's constrained spacing scale over unrelated one-off values.
 - Default scale: 4, 8, 16, 24, 32, 48, 64.
 - Keep spacing **between groups** larger than spacing **within groups**.
 - Constrain widths (`~65ch` text blocks, ~300-500px forms).

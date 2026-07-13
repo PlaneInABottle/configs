@@ -1,5 +1,16 @@
 # EAS Build Profiles Reference
 
+## Contents
+
+- [eas.json Structure](#easjson-structure)
+- [Profile Options](#profile-options)
+- [Development Profile](#development-profile)
+- [Preview Profile](#preview-profile)
+- [Production Profile](#production-profile)
+- [Resource Classes](#resource-classes)
+- [Caching](#caching)
+- [Per-Profile Environment Variables](#per-profile-environment-variables)
+
 ## eas.json Structure
 
 ```json

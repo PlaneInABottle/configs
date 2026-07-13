@@ -57,12 +57,9 @@ pnpm add -D tw-animate-css
 
 ## 5) Build fails with `tailwind.config.ts`
 
-**Cause**: v4 setup still includes v3 config.
+**Cause**: The legacy config is loaded implicitly or contains options incompatible with the current setup.
 
-**Fix**:
-```bash
-rm tailwind.config.ts
-```
+**Fix**: Identify whether the project still needs the config. Load it explicitly with `@config` while migrating supported settings, or remove it only after verifying no plugins, presets, content sources, or theme values depend on it.
 
 ## 6) `@theme inline` in multi-theme setups
 

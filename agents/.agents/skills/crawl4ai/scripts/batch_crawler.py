@@ -21,6 +21,7 @@ except ImportError:
     print(f"ℹ️  Crawl4AI {MIN_CRAWL4AI_VERSION}+ required")
 
 from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
+from crawl4ai.async_dispatcher import MemoryAdaptiveDispatcher
 
 async def crawl_batch(urls: List[str], max_concurrent: int = 5):
     """
@@ -49,11 +50,11 @@ async def crawl_batch(urls: List[str], max_concurrent: int = 5):
     failed = []
 
     async with AsyncWebCrawler(config=browser_config) as crawler:
-        # Use arun_many for efficient batch processing
+        dispatcher = MemoryAdaptiveDispatcher(max_session_permit=max_concurrent)
         batch_results = await crawler.arun_many(
             urls=urls,
             config=crawler_config,
-            max_concurrent=max_concurrent
+            dispatcher=dispatcher,
         )
 
         for result in batch_results:
@@ -124,7 +125,7 @@ async def crawl_with_extraction(urls: List[str], schema_file: str = None):
         # Default schema for general content
         schema = {
             "name": "content",
-            "selector": "body",
+            "baseSelector": "body",
             "fields": [
                 {"name": "headings", "selector": "h1, h2, h3", "type": "text", "all": True},
                 {"name": "paragraphs", "selector": "p", "type": "text", "all": True},
@@ -142,10 +143,11 @@ async def crawl_with_extraction(urls: List[str], schema_file: str = None):
     extracted_data = []
 
     async with AsyncWebCrawler() as crawler:
+        dispatcher = MemoryAdaptiveDispatcher(max_session_permit=5)
         results = await crawler.arun_many(
             urls=urls,
             config=crawler_config,
-            max_concurrent=5
+            dispatcher=dispatcher,
         )
 
         for result in results:

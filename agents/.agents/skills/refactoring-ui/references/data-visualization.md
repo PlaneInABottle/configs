@@ -1,5 +1,19 @@
 # Data Visualization Design
 
+## Contents
+
+- [Chart Selection](#chart-selection)
+- [Bar Charts](#bar-charts)
+- [Line Charts](#line-charts)
+- [Pie Charts](#pie-charts)
+- [Color in Data Visualization](#color-in-data-visualization)
+- [Tables](#tables)
+- [Dashboard Layout](#dashboard-layout)
+- [Chart Annotations](#chart-annotations)
+- [Accessibility in Data Viz](#accessibility-in-data-viz)
+- [Common Mistakes](#common-mistakes)
+- [Quick Reference](#quick-reference)
+
 Practical guide to designing charts, tables, and data displays that communicate clearly.
 
 ## Chart Selection

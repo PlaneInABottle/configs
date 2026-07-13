@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# setup-maestro.sh — Check and install Maestro CLI, verify mobile dev tools.
+# setup-maestro.sh — Check Maestro CLI and mobile development tools.
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -17,16 +17,8 @@ check_maestro() {
   if command -v maestro &>/dev/null; then
     info "Maestro is installed: $(maestro --version 2>/dev/null || echo 'version unknown')"
   else
-    warn "Maestro not found. Installing..."
-    curl -Ls "https://get.maestro.mobile" | bash
-    # Add to PATH for current session
-    export PATH="$HOME/.maestro/bin:$PATH"
-    if command -v maestro &>/dev/null; then
-      info "Maestro installed successfully: $(maestro --version 2>/dev/null)"
-    else
-      error "Maestro installation failed. Try manually: https://maestro.mobile.dev/getting-started/installing-maestro"
-      exit 1
-    fi
+    error "Maestro is not installed. Verify the current installation instructions at https://docs.maestro.dev before installing it."
+    exit 1
   fi
 }
 

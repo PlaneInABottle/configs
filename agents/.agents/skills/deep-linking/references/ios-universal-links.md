@@ -1,5 +1,13 @@
 # iOS Universal Links — Configuration Reference
 
+## Contents
+
+- [AASA File](#aasa-file)
+- [Associated Domains Entitlement](#associated-domains-entitlement)
+- [Xcode Project Configuration](#xcode-project-configuration)
+- [Testing](#testing)
+- [Common Pitfalls](#common-pitfalls)
+
 ## AASA File
 
 Host at `https://yourdomain.com/.well-known/apple-app-site-association`. Must be served over HTTPS with `Content-Type: application/json` and no redirect.

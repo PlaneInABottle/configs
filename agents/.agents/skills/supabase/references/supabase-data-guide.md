@@ -1,5 +1,20 @@
 # Supabase Data Guide
 
+## Contents
+
+- [CRUD Operations](#crud-operations)
+- [Filters](#filters)
+- [Pagination](#pagination)
+- [Joins (Embedded Relations)](#joins-embedded-relations)
+- [Row Level Security (RLS) Policies](#row-level-security-rls-policies)
+- [TypeScript Types from Schema](#typescript-types-from-schema)
+- [Error Handling Pattern](#error-handling-pattern)
+- [Row Count (no data returned)](#row-count-no-data-returned)
+- [Database Functions (RPC)](#database-functions-rpc)
+- [GraphQL (pg_graphql)](#graphql-pg_graphql)
+- [Vault (Secrets Management)](#vault-secrets-management)
+- [Common Error Codes](#common-error-codes)
+
 ## CRUD Operations
 
 ```typescript
@@ -295,51 +310,17 @@ The Vault extension stores encrypted secrets that only the database can decrypt.
 CREATE EXTENSION IF NOT EXISTS "vault";
 ```
 
-**Create a secret:**
-```sql
-SELECT vault.create_secret('sk-api-key-xxx', 'stripe_secret_key', 'Stripe key for webhooks');
--- Returns UUID: "c9b00867-ca8b-44fc-a81d-d20b8169be17"
-```
+Create and update Vault secrets through a trusted SQL session or migration without placing values in committed files or shell history. Consult current Supabase Vault documentation for the active function signatures.
 
-**Read a decrypted secret:**
+Verify metadata without selecting decrypted values:
+
 ```sql
-SELECT name, decrypted_secret FROM vault.decrypted_secrets
+SELECT id, name, description, created_at, updated_at
+FROM vault.secrets
 WHERE name = 'stripe_secret_key';
 ```
 
-**Use in a database function:**
-```sql
-CREATE FUNCTION call_stripe_api(payload jsonb) RETURNS jsonb
-LANGUAGE plpgsql
-SECURITY DEFINER
-AS $$
-DECLARE
-  api_key text;
-  result jsonb;
-BEGIN
-  SELECT decrypted_secret INTO api_key
-  FROM vault.decrypted_secrets WHERE name = 'stripe_secret_key';
-
-  SELECT net.http_post(
-    url := 'https://api.stripe.com/v1/charges',
-    headers := jsonb_build_object('Authorization', 'Bearer ' || api_key),
-    body := payload
-  ) INTO result;
-
-  RETURN result;
-END;
-$$;
-```
-
-**Update a secret:**
-```sql
-SELECT vault.update_secret('<uuid>', 'new-key-value', 'stripe_secret_key');
-```
-
-**AI-native verification with psql:**
-```bash
-psql "$SUPABASE_DB_URL" -c "SELECT name, decrypted_secret FROM vault.decrypted_secrets;"
-```
+Functions that consume decrypted values must remain server-side, use a fixed `search_path`, schema-qualify referenced objects, and avoid returning or logging the secret. Verify the function's observable result rather than querying `vault.decrypted_secrets` directly.
 
 ## Common Error Codes
 

@@ -1,250 +1,42 @@
 ---
 name: cicd-pipeline
-description: "Create, configure, and debug CI/CD pipelines for GitHub Actions and GitLab CI. Use when setting up automated builds, tests, deployments, continuous integration, continuous deployment, or fixing broken pipelines, failed deployments, or workflow errors."
+description: Create, change, review, or debug GitHub Actions and GitLab CI pipelines. Use for automated builds, tests, artifacts, releases, deployments, permissions, caching, environments, concurrency, or failed workflow diagnosis.
 ---
 
 # CI/CD Pipeline
 
-Create and manage CI/CD pipelines using GitHub Actions and GitLab CI.
+Extend the repository's existing pipeline and conventions before introducing a new workflow. Check current provider documentation for action versions and syntax because hosted images and actions change independently of this skill.
 
-## Quick Start
+## Workflow
 
-## GitHub Actions
+1. Read existing workflow files, package scripts, deployment docs, and branch protections.
+2. Reproduce the failing command locally when feasible.
+3. Define the minimum event, permissions, jobs, artifacts, and environment required.
+4. Pin runtime versions and third-party dependencies according to repository policy.
+5. Add concurrency and cancellation where duplicate runs waste resources or race deployments.
+6. Validate syntax, run local commands, and inspect provider logs before retrying.
 
-### Basic CI Workflow
+## Security Defaults
 
-```yaml
-name: CI
+- Declare least-privilege workflow permissions; use `contents: read` unless more is required.
+- Keep secrets in provider secret stores and pass them only to the step that needs them.
+- Do not expose secrets to untrusted pull-request code or print complete environment values.
+- Prefer commit-SHA pinning for third-party actions in security-sensitive repositories; use trusted major tags only when repository policy permits.
+- Protect deployment environments with provider approvals and branch rules.
+- Use short-lived identity federation instead of long-lived cloud keys when supported.
 
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
+## Reliability Defaults
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run tests
-        run: npm test
-      
-      - name: Build
-        run: npm run build
-```
+- Use lockfile-based installs such as `npm ci` when applicable.
+- Key caches from lockfiles and never treat a cache as an artifact.
+- Upload diagnostics with bounded retention when failures need investigation.
+- Make deployment jobs depend on required build and test jobs.
+- Add `timeout-minutes` and provider-equivalent limits to potentially hanging jobs.
+- Prefer GitLab `rules` for new pipelines while preserving existing `only/except` usage unless intentionally migrating it.
 
-### Matrix Testing
+## Debugging
 
-```yaml
-jobs:
-  test:
-    strategy:
-      matrix:
-        node-version: [18, 20, 22]
-        operating-system: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.operating-system }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm test
-```
-
-### Deployment Workflow
-
-```yaml
-name: Deploy
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Deploy to production
-        env:
-          API_TOKEN: ${{ secrets.API_TOKEN }}
-        run: |
-          echo "Deploying..."
-          # Add deployment commands
-```
-
-### Artifact & Cache
-
-```yaml
-steps:
-  - uses: actions/checkout@v4
-  
-  - name: Cache dependencies
-    uses: actions/cache@v4
-    with:
-      path: ~/.npm
-      key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-      restore-keys: |
-        ${{ runner.os }}-npm-
-  
-  - name: Upload artifact
-    uses: actions/upload-artifact@v4
-    with:
-      name: build-${{ github.sha }}
-      path: dist/
-```
-
-### Secrets & Environment
-
-```yaml
-steps:
-  - name: Deploy
-    env:
-      API_KEY: ${{ secrets.API_KEY }}
-    run: deploy.sh
-    
-# Use environments for protection
-# .github/workflows/deploy.yml references environment: production
-```
-
-## GitLab CI
-
-### Basic Pipeline
-
-```yaml
-stages:
-  - test
-  - build
-  - deploy
-
-test:
-  stage: test
-  image: node:20
-  script:
-    - npm ci
-    - npm test
-  artifacts:
-    reports:
-      junit: junit.xml
-
-build:
-  stage: build
-  image: node:20
-  script:
-    - npm ci
-    - npm run build
-  artifacts:
-    paths:
-      - dist/
-
-deploy:
-  stage: deploy
-  script:
-    - echo "Deploying..."
-  only:
-    - main
-```
-
-### Multiple Environments
-
-```yaml
-deploy_staging:
-  stage: deploy
-  script: echo "Deploy to staging"
-  environment:
-    name: staging
-    url: https://staging.example.com
-  only:
-    - develop
-
-deploy_production:
-  stage: deploy
-  script: echo "Deploy to production"
-  environment:
-    name: production
-    url: https://example.com
-  only:
-    - main
-```
-
-### Matrix Jobs
-
-```yaml
-test:
-  script: npm test
-  parallel:
-    matrix:
-      - NODE_VERSION: [18, 20, 22]
-        OS: [ubuntu, windows]
-```
-
-## Common Patterns
-
-### Run Tests & Lint
-
-```yaml
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run lint
-      
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm test
-```
-
-### Conditional Execution
-
-```yaml
-on:
-  push:
-    paths:
-      - 'src/**'
-      - 'package.json'
-      - '.github/workflows/**'
-```
-
-### Manual Approval
-
-```yaml
-deploy:
-  stage: deploy
-  when: manual
-  script: echo "Deploying..."
-```
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Job not running | Check `on` trigger conditions |
-| Permission errors | Add proper `permissions:` or check secrets |
-| Timeout | Increase `timeout-minutes` |
-| Cache miss | Verify cache key pattern |
-| Action not found | Check action version exists |
-
-## References
-
-- [GitHub Actions Docs](https://docs.github.com/en/actions)
-- [GitLab CI Docs](https://docs.gitlab.com/ee/ci/)
+- Inspect the exact failed step and complete error before changing configuration.
+- Check event filters, permissions, environment protection, runner availability, and secret scope.
+- Retry only transient failures; fix deterministic failures first.
+- Avoid broad pipeline rewrites while diagnosing one broken job.

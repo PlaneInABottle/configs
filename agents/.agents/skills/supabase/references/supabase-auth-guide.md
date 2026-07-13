@@ -1,5 +1,16 @@
 # Supabase Auth Guide
 
+## Contents
+
+- [Email / Password](#email-password)
+- [OAuth Providers](#oauth-providers)
+- [Magic Link (Passwordless)](#magic-link-passwordless)
+- [Password Reset](#password-reset)
+- [Session Management](#session-management)
+- [Custom Storage Adapter (React Native)](#custom-storage-adapter-react-native)
+- [Adding to `AccessToken` for API Calls](#adding-to-accesstoken-for-api-calls)
+- [GoTrue Admin API (Service Role)](#gotrue-admin-api-service-role)
+
 ## Email / Password
 
 ```typescript
@@ -18,8 +29,8 @@ const { data, error } = await supabase.auth.signInWithPassword({
   password: 'secureP@ss123',
 });
 
-// Sign out (global revokes all refresh tokens)
-await supabase.auth.signOut({ scope: 'local' }); // local | global
+// Sign out this client. Use scope: 'global' only when every session should be revoked.
+await supabase.auth.signOut({ scope: 'local' });
 ```
 
 ## OAuth Providers
@@ -51,7 +62,7 @@ const { data, error } = await supabase.auth.signInWithOAuth({
 
 **Dashboard setup:** Requires Apple Developer account. Configure App ID, Services ID, and private key. Set redirect URL `https://<project>.supabase.co/auth/v1/callback`.
 
-### Mobile Redirect URLs
+### Mobile PKCE Redirect
 
 For OAuth and magic link on native, register a custom URL scheme in `app.json`:
 
@@ -63,27 +74,30 @@ For OAuth and magic link on native, register a custom URL scheme in `app.json`:
 }
 ```
 
-Handle the incoming URL with `expo-linking`:
+Build the redirect URI from app configuration, open the provider URL in a secure browser session, then exchange the returned authorization code exactly once:
 
 ```typescript
+import 'react-native-url-polyfill/auto';
 import * as Linking from 'expo-linking';
-import { useEffect } from 'react';
+import * as WebBrowser from 'expo-web-browser';
 
-export function useAuthRedirectListener() {
-  useEffect(() => {
-    const sub = Linking.addEventListener('url', async ({ url }) => {
-      const { params } = Linking.parse(url);
-      if (params?.access_token) {
-        await supabase.auth.setSession({
-          access_token: params.access_token as string,
-          refresh_token: params.refresh_token as string,
-        });
-      }
-    });
-    return () => sub.remove();
-  }, []);
+const redirectTo = Linking.createURL('auth/callback');
+const { data, error } = await supabase.auth.signInWithOAuth({
+  provider: 'google',
+  options: { redirectTo, skipBrowserRedirect: true },
+});
+if (error || !data.url) throw error ?? new Error('OAuth URL missing');
+
+const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
+if (result.type === 'success') {
+  const code = new URL(result.url).searchParams.get('code');
+  if (!code) throw new Error('OAuth code missing');
+  const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+  if (exchangeError) throw exchangeError;
 }
 ```
+
+If the router receives callbacks instead of `openAuthSessionAsync`, handle both initial and already-running URLs through the project's established route or linking subscription. Do not combine this PKCE flow with fragment access-token parsing.
 
 ## Magic Link (Passwordless)
 
@@ -96,8 +110,8 @@ const { error } = await supabase.auth.signInWithOtp({
   },
 });
 
-// User clicks link → arrives at redirect URL with token
-// Use setSession above to complete the flow
+// Complete the callback using the token-hash or PKCE flow documented for the
+// project's current Supabase Auth settings. Do not assume fragment tokens.
 ```
 
 ## Password Reset
@@ -153,22 +167,19 @@ subscription.unsubscribe();
 
 ## Custom Storage Adapter (React Native)
 
-Use `expo-secure-store` instead of the default `localStorage`:
+Provide a React Native-compatible storage adapter. Supabase sessions may exceed platform secure-store value limits, so do not use a naive SecureStore adapter for arbitrary session JSON.
 
 ```typescript
-import * as SecureStore from 'expo-secure-store';
-import { createClient } from '@supabase/supabase-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createClient, processLock } from '@supabase/supabase-js';
 
 const supabase = createClient(url, anonKey, {
   auth: {
-    storage: {
-      getItem: (key) => SecureStore.getItemAsync(key),
-      setItem: (key, value) => SecureStore.setItemAsync(key, value),
-      removeItem: (key) => SecureStore.deleteItemAsync(key),
-    },
+    storage: AsyncStorage,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,
+    lock: processLock,
   },
 });
 ```

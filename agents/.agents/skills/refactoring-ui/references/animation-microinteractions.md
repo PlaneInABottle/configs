@@ -1,5 +1,17 @@
 # Animation & Microinteractions
 
+## Contents
+
+- [The Purpose of Animation](#the-purpose-of-animation)
+- [Timing & Duration](#timing-duration)
+- [Easing Functions](#easing-functions)
+- [Common Animation Patterns](#common-animation-patterns)
+- [Loading States](#loading-states)
+- [Microinteractions](#microinteractions)
+- [Accessibility Considerations](#accessibility-considerations)
+- [Performance Guidelines](#performance-guidelines)
+- [Animation Checklist](#animation-checklist)
+
 Guidelines for when and how to animate UI elements effectively.
 
 ## The Purpose of Animation

@@ -1,5 +1,14 @@
 # Phase Checklists — Detailed Breakdowns
 
+## Contents
+
+- [Phase 1: Runtime Setup Analysis](#phase-1-runtime-setup-analysis)
+- [Phase 2: Environment Bootstrapping](#phase-2-environment-bootstrapping)
+- [Phase 3: Implementation & Verification (The Universal Toolkit)](#phase-3-implementation-verification-the-universal-toolkit)
+- [Phase 4: Programmatic Operations](#phase-4-programmatic-operations)
+- [Phase 5: Continuous Iteration](#phase-5-continuous-iteration)
+- [Phase 6: Teardown](#phase-6-teardown)
+
 Detailed guidance for each phase of the AI-native workflow. Use alongside the main [SKILL.md](../SKILL.md).
 
 ---
@@ -112,12 +121,12 @@ Services must survive session boundaries.
 
 ## Phase 3: Implementation & Verification (The Universal Toolkit)
 
-Once the environment is running, NEVER write language-specific integration tests under ANY circumstances. Use the Universal Playbooks.
+Once the environment is running, extend the repository's established test suite and add boundary checks where they provide distinct evidence. Do not create a parallel testing stack without a concrete need.
 
 ### Step 3.1 — Verify via Universal Boundaries
-1. **Mock Dependencies:** Spin up WireMock or Prism if the feature requires external APIs (See `../playbooks/mocking-dependencies.md`).
-2. **Inject State:** Generate specific deterministic payloads using environment-native Faker scripts, and pipe them directly into the API or DB (See `../playbooks/universal-data-generation.md`).
-3. **Execute & Assert:** Use `.hurl` to trigger the network boundary (See `../playbooks/api-contract-testing.md`), or use native datastore clients to assert persistence changes directly. 
+1. **Mock Dependencies:** Reuse the project's existing fake or mock boundary. Add WireMock or Prism only when the feature requires an external API fake (see `../playbooks/mocking-dependencies.md`).
+2. **Inject State:** Use existing fixtures or generate deterministic payloads when needed (see `../playbooks/universal-data-generation.md`).
+3. **Execute & Assert:** Run affected project tests, then use Hurl or native datastore clients for external boundary evidence where useful.
 
 ### Step 3.2 — Interactive Interface Verification
 If the application has a UI, verify it headlessly:
@@ -161,10 +170,10 @@ If a flow needs deeper protocol-specific coverage, use the relevant playbook ins
 
 ### Test-Driven Development Cycle (Revised for AI)
 
-1. **Implement Core Logic:** Write pure functions/methods.
-2. **Unit Test Pure Logic:** Use the language's native runner (`pytest`, `Jest`, `cargo test`) **ONLY** for pure, isolated unit logic. 
-3. **Implement Boundaries:** Expose the logic via HTTP/gRPC/CLI.
-4. **Integration Verification:** NEVER write, modify, or append to `pytest` or `Jest` files for API/Database testing. NEVER use, write, or modify Cypress, Playwright, or React Testing Library (RTL) test scripts. All UI testing MUST be done interactively via `agent-browser` against the running dev server. You MUST use `.hurl`, `agent-browser`, or database injection to verify the integration.
+1. **Implement Core Logic:** Keep the change focused and consistent with the repository architecture.
+2. **Run Native Tests:** Use the project's established unit, component, and integration suites for behavior they already own.
+3. **Implement Boundaries:** Expose or update HTTP, gRPC, CLI, worker, or UI boundaries as required.
+4. **Add Boundary Evidence:** Use Hurl, native datastore inspection, `agent-browser`, or Maestro when an external check adds coverage that the project suite does not provide.
 
 ### Robust Debugging Workflow
 
@@ -182,6 +191,6 @@ curl --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf htt
 ## Phase 6: Teardown
 Never leave background processes or unmanaged state running indefinitely.
 
-- PM2 app servers: `pm2 delete all` or `pm2 delete <app-name>`
+- PM2 app servers: `pm2 delete <app-name>`
 - Docker services: `docker compose down`
-- Both combined: `pm2 delete all && docker compose down`
+- Both combined: delete the named PM2 process, then run `docker compose down` for the current project

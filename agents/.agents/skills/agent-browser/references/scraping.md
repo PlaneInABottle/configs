@@ -1,5 +1,15 @@
 # Web Scraping with agent-browser
 
+## Contents
+
+- [When to Use agent-browser for Scraping](#when-to-use-agent-browser-for-scraping)
+- [Basic Scraping Workflow](#basic-scraping-workflow)
+- [Data Extraction Techniques](#data-extraction-techniques)
+- [Important Considerations](#important-considerations)
+- [Scaling to Multiple Pages](#scaling-to-multiple-pages)
+- [Limitations Compared to HTTP Scrapers](#limitations-compared-to-http-scrapers)
+- [See Also](#see-also)
+
 agent-browser can function as a browser-based scraper/crawler, offering advantages over traditional HTTP scrapers for certain use cases.
 
 ## When to Use agent-browser for Scraping

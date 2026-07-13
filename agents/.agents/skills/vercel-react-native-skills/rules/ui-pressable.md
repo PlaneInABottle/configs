@@ -7,8 +7,9 @@ tags: ui, pressable, touchable, gestures
 
 ## Use Pressable Instead of Touchable Components
 
-Never use `TouchableOpacity` or `TouchableHighlight`. Use `Pressable` from
-`react-native` or `react-native-gesture-handler` instead.
+Prefer `Pressable` for new interaction components because it exposes richer
+press state. Preserve existing Touchable components when migration adds no
+material value.
 
 **Incorrect (legacy Touchable components):**
 

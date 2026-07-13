@@ -15,7 +15,7 @@ CLI-based video editing using FFmpeg for cuts, effects, transitions, audio, zoom
 
 ## Core principles
 
-- FFmpeg does everything MoviePy does (MoviePy is just a Python wrapper).
+- Prefer direct FFmpeg commands for deterministic media transforms; use a higher-level library when its composition API materially simplifies application code.
 - Use `-vf` for video filters, `-af` for audio filters.
 - Chain filters with commas (`,`) for sequential, semicolons (`;`) for complex graphs.
 - Use `-c:v` and `-c:a` to specify codecs (copy, libx264, aac, etc.).

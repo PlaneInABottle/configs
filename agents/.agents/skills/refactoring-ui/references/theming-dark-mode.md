@@ -1,5 +1,18 @@
 # Theming & Dark Mode Design
 
+## Contents
+
+- [Dark Mode Philosophy](#dark-mode-philosophy)
+- [Dark Mode Color Principles](#dark-mode-color-principles)
+- [Building a Dark Mode Palette](#building-a-dark-mode-palette)
+- [Implementation Strategies](#implementation-strategies)
+- [Component Considerations](#component-considerations)
+- [Testing Dark Mode](#testing-dark-mode)
+- [Theme Toggle UI](#theme-toggle-ui)
+- [Advanced: Multiple Themes](#advanced-multiple-themes)
+- [Common Mistakes](#common-mistakes)
+- [Quick Reference](#quick-reference)
+
 Creating effective color themes and implementing dark mode correctly.
 
 ## Dark Mode Philosophy

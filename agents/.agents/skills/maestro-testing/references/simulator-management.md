@@ -1,5 +1,12 @@
 # Simulator & Emulator Management
 
+## Contents
+
+- [Xcode Simulator CLI (`xcrun simctl`)](#xcode-simulator-cli-xcrun-simctl)
+- [Android Emulator CLI](#android-emulator-cli)
+- [Parallel Testing](#parallel-testing)
+- [Helper Functions](#helper-functions)
+
 CLI reference for managing iOS simulators and Android emulators for Maestro tests.
 
 ## Xcode Simulator CLI (`xcrun simctl`)

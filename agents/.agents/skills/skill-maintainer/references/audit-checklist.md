@@ -13,7 +13,7 @@
 ## Structural checks
 
 - Confirm every immediate skill directory contains `SKILL.md`.
-- Confirm every local file linked from `SKILL.md` exists before treating the skill as ready.
+- Confirm every local file linked from any skill Markdown file exists before treating the skill as ready.
 - Run the shared validator on each skill to catch frontmatter drift before reviewing prose.
 - Flag body headings that duplicate trigger guidance such as `When to Use This Skill`; trigger rules belong in frontmatter `description`.
 - Warn when `SKILL.md` grows beyond the local progressive-disclosure budget or a reference file grows large enough to need its own table of contents.

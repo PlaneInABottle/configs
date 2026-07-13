@@ -1,143 +1,48 @@
 # EAS Credentials Management
 
-## Auto-Managed Credentials (Recommended)
+## Contents
 
-EAS can generate and manage all signing credentials automatically.
+- [Default Strategy](#default-strategy)
+- [iOS](#ios)
+- [Android](#android)
+- [Submission Credentials](#submission-credentials)
+- [Rotation](#rotation)
 
-```bash
-# First build triggers auto-credential flow
-eas build --profile production --platform ios
+## Default Strategy
 
-# Or explicitly manage credentials
-eas credentials
-```
-
-**How it works:**
-1. EAS generates a distribution certificate (iOS) or keystore (Android)
-2. Credentials are stored encrypted on EAS servers
-3. Subsequent builds reuse stored credentials automatically
-4. Team members with access can build without sharing files manually
-
-## iOS Credentials
-
-### Requirements
-
-- Apple Developer Program membership ($99/year)
-- Apple ID with 2FA enabled
-- App-specific password (for submission)
-
-### Provisioning Profiles
-
-EAS auto-generates:
-- **Distribution certificate** — signs the app binary
-- **Provisioning profile** — links certificate + App ID + devices
+Prefer EAS-managed build credentials unless the project has a documented reason to manage files itself.
 
 ```bash
-# View managed iOS credentials
-eas credentials --platform ios
-
-# Push local credentials to EAS
-eas credentials --platform ios --push
-
-# Remove and regenerate credentials
-eas credentials --platform ios --clear
+npx eas-cli@latest credentials
 ```
 
-### Manual iOS Setup
+Use the interactive command and current `--help` output. Do not rely on historical `--push` or `--clear` flags without confirming they exist in the installed CLI.
 
-If auto-management fails or you need enterprise signing:
+## iOS
 
-1. Create an App ID in Apple Developer portal
-2. Create a distribution certificate (.p12)
-3. Create a provisioning profile (.mobileprovision)
-4. Upload via `eas credentials --platform ios --push`
+EAS can manage distribution certificates and provisioning profiles through the Apple Developer account. Before changing them:
 
-## Android Credentials
+1. Confirm the bundle identifier and Apple team.
+2. Inspect which profile and certificate active builds use.
+3. Coordinate revocation because certificates may sign multiple applications.
+4. Never commit `.p12`, `.mobileprovision`, passwords, or exports.
 
-### Keystore
+## Android
 
-EAS auto-generates a keystore on first Android build.
+Keep the upload keystore backed up and access-controlled. Google Play App Signing and the local upload key have different roles; do not rotate either without checking the store configuration and recovery process.
 
-```bash
-# View managed Android credentials
-eas credentials --platform android
+Never commit keystores, aliases, or passwords. Use the current EAS credential workflow or a reviewed `credentials.json` excluded from version control.
 
-# Use an existing keystore
-eas credentials --platform android --push
-```
+## Submission Credentials
 
-**Important:** Google Play signs apps with Play App Signing. The upload key (keystore) is only used to upload — Google re-signs with its own key.
+Prefer short-lived or managed authentication where supported. If Google Play requires a service-account JSON file, store it in the CI or EAS secret system and materialize it only for the submission step. Do not base64-encode and print it in shell commands.
 
-### Google Play Service Account
+Keep Apple account identifiers and store app IDs in environment configuration when the project needs them; keep passwords and private keys in secret storage.
 
-Required for automated submission to Google Play.
+## Rotation
 
-1. Go to Google Play Console → Setup → API access
-2. Link a Google Cloud project
-3. Create a service account with **Release Manager** role
-4. Download the JSON key file
-5. Store securely:
-
-```bash
-# Store as EAS environment variable
-eas env:create --name GOOGLE_SERVICE_ACCOUNT_KEY --value "$(cat service-account.json | base64)" --environment production --visibility sensitive
-```
-
-Reference in `eas.json` submit profile:
-
-```json
-{
-  "submit": {
-    "production": {
-      "android": {
-        "serviceAccountKeyPath": "./google-service-account.json",
-        "track": "internal"
-      }
-    }
-  }
-}
-```
-
-## Sharing Credentials Across a Team
-
-### EAS-Managed Sharing
-
-All team members with Expo project access automatically use the same credentials — no file exchange needed.
-
-```bash
-# Team member logs in and builds
-eas login
-eas build --profile production --platform ios
-```
-
-EAS pulls the stored credentials transparently.
-
-### Manual Sharing (Not Recommended)
-
-If you must share credentials outside EAS:
-
-- **iOS**: Export .p12 certificate + provisioning profile
-- **Android**: Share keystore file + passwords securely (never commit to git)
-
-## Credential Rotation
-
-### iOS
-
-Certificates expire annually. EAS detects expiration and prompts regeneration:
-
-```bash
-eas credentials --platform ios
-# Select "Remove certificate and generate new one"
-```
-
-### Android
-
-Keystores don't expire, but rotate if compromised:
-
-```bash
-# Generate new keystore
-eas credentials --platform android
-# Select "Remove keystore and generate new one"
-```
-
-**Warning:** Rotating an Android keystore changes your upload key. You must update the key in Google Play Console to match.
+1. Identify every build or app using the credential.
+2. Create and validate the replacement before revoking the old credential.
+3. Run a non-production build or submission.
+4. Revoke only after the replacement is confirmed.
+5. Update the team's recovery documentation without recording secret values.

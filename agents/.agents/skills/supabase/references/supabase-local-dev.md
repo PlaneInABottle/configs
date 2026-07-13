@@ -88,11 +88,11 @@ supabase migration new create_profiles
 # Apply pending migrations to the local database
 supabase migration up
 
-# Reset the local database — drops all data, re-runs all migrations,
-# and applies seed data
+# After confirming `supabase status` identifies a disposable local stack,
+# reset the local database. This drops all local data.
 supabase db reset
 
-# Push local migrations to the linked remote project
+# Inspect the linked project before any remote push.
 supabase db push
 
 # Preview changes without applying them

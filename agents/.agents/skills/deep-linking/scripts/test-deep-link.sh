@@ -15,7 +15,7 @@ URL="$1"
 
 # Detect iOS simulator
 if command -v xcrun &>/dev/null; then
-  BOOTED_SIM=$(xcrun simctl list devices booted 2>/dev/null | grep -o '[0-9A-F-]\{36\}' | head -1)
+  BOOTED_SIM=$(xcrun simctl list devices booted 2>/dev/null | grep -o '[0-9A-F-]\{36\}' | head -1 || true)
   if [ -n "$BOOTED_SIM" ]; then
     echo "[iOS] Opening deep link on booted simulator: $URL"
     xcrun simctl openurl booted "$URL"
