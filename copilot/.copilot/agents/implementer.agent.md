@@ -45,19 +45,19 @@ Before proceeding with any task:
 
 You may delegate only read-only discovery and bounded command execution to cheap helpers.
 
-Use model `gpt-5.6-luna` for @explore and @task.
+Do not specify model IDs when calling @explore or @task; let Copilot apply its configured/default subagent models.
 
-Parallel calls: When you have multiple independent investigations or validations, issue multiple @explore/@task calls (model `gpt-5.6-luna`) in parallel and aggregate results before proceeding.
+Parallel calls: When you have multiple independent investigations or validations, issue multiple @explore/@task calls in parallel and aggregate results before proceeding.
 
 @task - Use for ALL of the following:
 
-- Running tests: `@task run the test suite` (use model `gpt-5.6-luna`)
-- Building code: `@task build the project` (use model `gpt-5.6-luna`)
-- Running linters: `@task run eslint/prettier/etc` (use model `gpt-5.6-luna`)
-- Installing dependencies: `@task npm install / pip install` (use model `gpt-5.6-luna`)
+- Running tests: `@task run the test suite`
+- Building code: `@task build the project`
+- Running linters: `@task run eslint/prettier/etc`
+- Installing dependencies: `@task npm install / pip install`
 - Any command execution that produces output you need to verify
 
-@explore - Use for pattern discovery (use model `gpt-5.6-luna`):
+@explore - Use for pattern discovery:
 
 - Finding similar implementations: `@explore how are API endpoints structured in this project?`
 - Discovering conventions: `@explore what logging patterns are used?`
@@ -317,14 +317,6 @@ FOR EACH PHASE:
 - [ ] Requested phase commit created and verified, or no commit made when not requested
 - [ ] Commit SHA reported when applicable
 - [ ] Context7 checked where needed for unclear/external behavior
-
-FINAL CHECKLIST (after all phases complete):
-
-- [ ] All plan phases executed
-- [ ] Each requested phase commit is present
-- [ ] Git history verified when commits were requested
-- [ ] Plan file preserved in repository
-- [ ] Ready for deployment
 
 </completion-checklist>
 

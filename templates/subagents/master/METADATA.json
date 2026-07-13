@@ -53,15 +53,12 @@
         "use the built-in explorer agent to": "use the built-in `explorer` agent to",
         "Use the built-in worker agent to": "Use the built-in `worker` agent to",
         "use the built-in worker agent to": "use the built-in `worker` agent to",
-        "the built-in worker agent should": "the built-in `worker` agent should",
-        " (model `gpt-5.6-terra`)": "",
-        " (model `gpt-5.6-luna`)": ""
+        "the built-in worker agent should": "the built-in `worker` agent should"
       }
     },
     "opencode": {
       "text_replacements": {
         "ask_user": "question",
-        " (model `gpt-5.6-terra`)": "",
         "@task": "@general"
       }
     },

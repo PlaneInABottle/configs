@@ -54,7 +54,7 @@ Action Checklist (Before ANY action):
 
 <!-- SECTION:copilot_subagent_commands:START:copilot -->
 **SUB-AGENT COMMANDS:**
-- Every agent may use @explore for read-only discovery and @task for bounded command execution. Use `gpt-5.6-luna` for these cheap helpers.
+- Every agent may use @explore for read-only discovery and @task for bounded command execution. Do not specify model IDs when spawning them; let Copilot apply its configured/default subagent models.
 - Only @coordinator may invoke @planner, @analyzer, or @implementer.
 
 <!-- SECTION:copilot_subagent_commands:END -->
@@ -359,7 +359,7 @@ When possible, continue the same helper session for the same workstream. Prefer 
 
 <!-- SECTION:subagent_model_copilot:START:copilot -->
 ### Subagent Model Usage
-Every agent may call @explore and @task with model `gpt-5.6-luna`. Only @coordinator may call @planner, @analyzer, or @implementer, using model `gpt-5.6-terra`.
+Every agent may call @explore and @task. Only @coordinator may call @planner, @analyzer, or @implementer. Do not specify model IDs in subagent prompts; let Copilot apply its configured/default models.
 
 Coordinator may parallelize heavy role agents only across strictly independent workstreams. Other agents may parallelize only cheap helper calls.
 

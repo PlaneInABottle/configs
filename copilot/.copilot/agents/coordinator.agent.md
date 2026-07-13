@@ -167,7 +167,7 @@ Every subagent command must include:
 6) File/path constraints
 7) Expected output format (status, evidence, artifacts)
 8) Reviewable edit requirement: instruct @implementer to keep edits coherent, scoped, and easy to validate
-Model policy: gpt-5.6-terra for @planner/@implementer/@analyzer, gpt-5.6-luna for @explore/@task.
+Model policy: Do not specify model IDs in delegation prompts; let Copilot apply its configured/default subagent models.
 </subagent-command-requirements>
 
 <agent-command-checklists>

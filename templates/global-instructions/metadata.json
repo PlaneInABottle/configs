@@ -15,8 +15,7 @@
         "1. Use `ask_user` to clarify ambiguity": "1. Ask the user directly in the conversation to clarify ambiguity",
         "@explore": "the built-in `explorer` agent",
         "@task": "the built-in `worker` agent",
-        "@general": "the built-in `worker` agent",
-        " (model `gpt-5.6-terra`)": ""
+        "@general": "the built-in `worker` agent"
       }
     },
     "opencode": {
@@ -24,8 +23,7 @@
       "target_file": "opencode/.config/opencode/OPENCODE.md",
       "description": "Opencode primary system instructions (no header required)",
       "text_replacements": {
-        "ask_user": "question",
-        " (model `gpt-5.6-terra`)": ""
+        "ask_user": "question"
       }
     },
     "copilot": {
@@ -37,10 +35,7 @@
     "claude": {
       "requires_header": false,
       "target_file": "claude/.claude/CLAUDE.md",
-      "description": "Claude desktop app instructions (no header required)",
-      "text_replacements": {
-        " (model `gpt-5.6-terra`)": ""
-      }
+      "description": "Claude desktop app instructions (no header required)"
     },
     "gemini": {
       "requires_header": false,
@@ -51,8 +46,7 @@
         "@planner": "planner",
         "@implementer": "implementer",
         "@explore": "explore",
-        "@task": "task",
-        " (model `gpt-5.6-terra`)": ""
+        "@task": "task"
       },
       "notes": "Gemini uses plain agent names without @ prefix. Text replacements handle this automatically."
     }

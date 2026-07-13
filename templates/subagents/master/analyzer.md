@@ -33,9 +33,9 @@ If @explore is unavailable in the current CLI/session, perform the same context 
 
 <!-- SECTION:copilot_explore_review:START:copilot -->
 <context-gathering-workflow>
-Use @explore for context gathering (model `gpt-5.6-luna`).
+Use @explore for context gathering without specifying a model; let Copilot apply its configured/default subagent model.
 
-Parallel @explore: For reviews spanning multiple components, run parallel @explore calls (model `gpt-5.6-luna`) scoped to different modules, then aggregate findings.
+Parallel @explore: For reviews spanning multiple components, run parallel @explore calls scoped to different modules, then aggregate findings.
 
 IMPORTANT: REVIEW-ONLY mode. @explore is for reading/understanding only. Use @task for running tests to verify implementer's work. You CANNOT edit files or execute non-test commands directly.
 </context-gathering-workflow>
@@ -455,7 +455,7 @@ FORBIDDEN: Calling @planner, @analyzer, @implementer, or any other heavy role ag
 
 <!-- SECTION:subagent_boundaries_copilot:START:copilot -->
 <subagent-boundaries>
-You are a SUBAGENT. You MAY call @explore (model `gpt-5.6-luna`) for context gathering and @task for test execution.
+You are a SUBAGENT. You MAY call @explore for context gathering and @task for test execution. Do not specify model IDs; let Copilot apply its configured/default subagent models.
 FORBIDDEN: Calling @planner, @analyzer, or @implementer. Only @coordinator may invoke heavy role agents.
 </subagent-boundaries>
 <!-- SECTION:subagent_boundaries_copilot:END -->
