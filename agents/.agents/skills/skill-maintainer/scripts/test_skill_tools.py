@@ -5,7 +5,11 @@ import unittest
 from pathlib import Path
 
 from add_reference_tocs import add_contents
-from audit_skills import find_size_warnings, has_trigger_duplication_heading
+from audit_skills import (
+    find_operator_contract_issues,
+    find_size_warnings,
+    has_trigger_duplication_heading,
+)
 
 
 class SkillToolTests(unittest.TestCase):
@@ -30,6 +34,40 @@ class SkillToolTests(unittest.TestCase):
         assert updated is not None
         self.assertIn("- [Real Heading](#real-heading)", updated)
         self.assertNotIn("- [Not a heading]", updated)
+
+    def test_operator_contract_accepts_complete_skill(self) -> None:
+        headings = "\n".join(
+            f"## {heading}"
+            for heading in (
+                "Preflight",
+                "Discovery",
+                "Execute",
+                "Evidence",
+                "Recovery",
+                "Cleanup",
+                "Stop Conditions",
+                "Destructive Boundaries",
+            )
+        )
+        content = (
+            "---\nname: example\ndescription: example\n"
+            "metadata:\n  mode: operator\n  risk: medium\n"
+            "  evidence: required\n  cleanup: required\n---\n"
+            f"{headings}\n"
+        )
+        self.assertEqual(find_operator_contract_issues(content), [])
+
+    def test_operator_contract_reports_metadata_and_heading_gaps(self) -> None:
+        content = (
+            "---\nname: example\ndescription: example\n"
+            "metadata:\n  mode: operator\n  risk: unknown\n---\n"
+            "## Preflight\n"
+        )
+        issues = find_operator_contract_issues(content)
+        self.assertIn("operator metadata.risk must be one of: low, medium, high", issues)
+        self.assertIn("operator metadata.evidence must be 'required'", issues)
+        self.assertIn("operator metadata.cleanup must be 'required'", issues)
+        self.assertTrue(any(issue.startswith("operator contract missing headings:") for issue in issues))
 
 
 if __name__ == "__main__":

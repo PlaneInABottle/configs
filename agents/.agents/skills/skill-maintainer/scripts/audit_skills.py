@@ -10,11 +10,25 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import yaml
+
 MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 FRONTMATTER_RE = re.compile(r"^---\n.*?\n---\n?", re.DOTALL)
+FRONTMATTER_CAPTURE_RE = re.compile(r"^---\n(.*?)\n---\n?", re.DOTALL)
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
 SKILL_MD_LINE_WARN = 500
 REFERENCE_LINE_WARN = 100
+OPERATOR_HEADINGS = {
+    "preflight",
+    "discovery",
+    "execute",
+    "evidence",
+    "recovery",
+    "cleanup",
+    "stop conditions",
+    "destructive boundaries",
+}
+OPERATOR_RISKS = {"low", "medium", "high"}
 
 
 @dataclass
@@ -43,6 +57,17 @@ def discover_skill_dirs(skills_root: Path) -> list[Path]:
 
 def strip_frontmatter(markdown: str) -> str:
     return FRONTMATTER_RE.sub("", markdown, count=1)
+
+
+def parse_frontmatter(markdown: str) -> dict:
+    match = FRONTMATTER_CAPTURE_RE.match(markdown)
+    if not match:
+        return {}
+    try:
+        parsed = yaml.safe_load(match.group(1))
+    except yaml.YAMLError:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
 
 
 def normalize_heading(text: str) -> str:
@@ -106,6 +131,35 @@ def has_contents_section(content: str) -> bool:
         if normalize_heading(match.group(2)) in {"contents", "table of contents"}:
             return True
     return False
+
+
+def heading_names(content: str) -> set[str]:
+    headings: set[str] = set()
+    for raw_line in strip_frontmatter(content).splitlines():
+        match = HEADING_RE.match(raw_line)
+        if match:
+            headings.add(normalize_heading(match.group(2)))
+    return headings
+
+
+def find_operator_contract_issues(content: str) -> list[str]:
+    frontmatter = parse_frontmatter(content)
+    metadata = frontmatter.get("metadata")
+    if not isinstance(metadata, dict) or metadata.get("mode") != "operator":
+        return []
+
+    issues: list[str] = []
+    if metadata.get("risk") not in OPERATOR_RISKS:
+        issues.append("operator metadata.risk must be one of: low, medium, high")
+    if metadata.get("evidence") != "required":
+        issues.append("operator metadata.evidence must be 'required'")
+    if metadata.get("cleanup") != "required":
+        issues.append("operator metadata.cleanup must be 'required'")
+
+    missing_headings = sorted(OPERATOR_HEADINGS - heading_names(content))
+    if missing_headings:
+        issues.append(f"operator contract missing headings: {', '.join(missing_headings)}")
+    return issues
 
 
 def line_count(path: Path) -> int:
@@ -175,6 +229,8 @@ def audit_skill_dir(skill_dir: Path, validator_path: Path) -> SkillAudit:
 
     if has_trigger_duplication_heading(content):
         audit.errors.append("body-level trigger duplication heading detected")
+
+    audit.errors.extend(find_operator_contract_issues(content))
 
     valid, message = run_quick_validate(skill_dir, validator_path)
     if not valid:

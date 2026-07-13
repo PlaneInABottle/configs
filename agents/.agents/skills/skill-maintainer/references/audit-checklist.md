@@ -17,6 +17,7 @@
 - Run the shared validator on each skill to catch frontmatter drift before reviewing prose.
 - Flag body headings that duplicate trigger guidance such as `When to Use This Skill`; trigger rules belong in frontmatter `description`.
 - Warn when `SKILL.md` grows beyond the local progressive-disclosure budget or a reference file grows large enough to need its own table of contents.
+- For a skill declaring `metadata.mode: operator`, require `risk` (`low`, `medium`, or `high`), `evidence: required`, `cleanup: required`, and operational sections for Preflight, Discovery, Execute, Evidence, Recovery, Cleanup, Stop Conditions, and Destructive Boundaries.
 
 ## Content quality checks
 
@@ -25,6 +26,7 @@
 - Look for contradictory instructions across skill files and validator-backed tooling. Prefer shipped scripts as the authority when prose disagrees.
 - Verify examples, commands, and linked sibling files still match the repository layout.
 - Record whether the skill is focused on one concern or has started to absorb unrelated workflow guidance.
+- Confirm operator sections specify bounded execution and observable results rather than merely listing tools or example commands.
 
 ## Claim validation
 

@@ -1,135 +1,55 @@
-# Best Practices & Anti-Patterns
+# Runtime Evidence Practices
 
 ## Contents
 
-- [Core Principles](#core-principles)
-- [Universal Verification Patterns](#universal-verification-patterns)
-- [Headless Runtime Operations](#headless-runtime-operations)
-- [Anti-Patterns — Extended](#anti-patterns-extended)
+- [Evidence depth](#evidence-depth)
+- [Project knowledge](#project-knowledge)
+- [Runtime operations](#runtime-operations)
+- [Recovery discipline](#recovery-discipline)
+- [Anti-patterns](#anti-patterns)
 
-Extended guidance for AI-native development workflows. Use alongside the main [SKILL.md](../SKILL.md).
+## Evidence depth
 
----
+Use the shallowest layer that proves the criterion:
 
-## Core Principles
+1. Existing unit or component test for local logic.
+2. Existing integration test for established boundaries.
+3. Protocol or UI operator for externally observable behavior.
+4. Direct datastore, log, metric, or trace evidence when the earlier layers cannot prove the side effect or failure cause.
 
-### Test Continuously (The AI Pyramid)
+Do not count multiple assertions over the same mocked path as independent evidence. Do not add a new testing framework when the repository already has an adequate one.
 
-AI agents move fast. Tests are the guardrails, but you must use the right tools:
+## Project knowledge
 
-- **Repository-native tests after code changes.** Run and extend the affected framework suite for logic or integration behavior it already owns.
-- **Boundary checks when they add evidence.** Use Hurl, native clients, `agent-browser`, or Maestro for externally observable behavior that is awkward or incomplete in the existing suite.
-- **Fix broken tests immediately.** A failing test is a signal, not noise.
-- **Reference the Playbooks:** See `../playbooks/api-contract-testing.md` and `../playbooks/universal-data-generation.md` for proper testing patterns.
+Treat project instructions as a durable operational contract, not a session notebook. Persist only commands and safety facts that were verified during real work. Never persist secrets, tokens, PIDs, container IDs, temporary ports, or guesses.
 
-### Inspect State
+Treat executable repository configuration as a correction signal. When an instruction conflicts with a manifest, Compose file, or CI workflow, verify the executable source and update the instruction only if project onboarding is in scope.
 
-When something doesn't work, inspect rather than guess:
+Use `.agents/project-capabilities.yaml` only when machine-readable topology pays for its maintenance cost, such as a monorepo, several services/datastores, web plus mobile surfaces, or repeated multi-agent sessions.
 
-- Read the actual error output.
-- **Check Background Logs:** If a background Docker service (like a DB, `json-server`, or Prism mock) is failing, always run `docker logs --tail 50 <container_name>` to see why.
-- Use Universal Tools to see real entity state (e.g., query Postgres directly instead of assuming the ORM failed).
-- Enable verbose/debug logging during investigation.
-- Compare expected vs. actual output at each step.
+## Runtime operations
 
-### Iterate Rapidly
+- Prefer repository health/readiness endpoints over log parsing.
+- Bound network calls, receive loops, polling, and log capture.
+- Use named PM2 processes for application servers only when PM2 matches project policy.
+- Use targeted Docker Compose services and project-scoped teardown.
+- Preserve baseline state and use unique fixture identifiers.
+- Never dump process environments, authenticated URLs, or complete configuration while diagnosing.
 
-AI-native development compresses the loop:
+## Recovery discipline
 
-```
-Traditional:  Plan → Implement → Test → Debug → Deploy  (hours/days)
-AI-Native:    Intent → Implement → Assert via Boundaries → Fix  (minutes)
-```
+A retry is justified only after changing a hypothesis, configuration, fixture, implementation, or external condition. Record the failure class and the new discriminating check. After two failed focused attempts in one class, stop that branch and report the evidence instead of widening changes blindly.
 
-Leverage this speed:
-- Small, focused changes over large batches.
-- Assert immediately after each change using Universal Playbooks.
-- Commit working increments frequently.
+## Anti-patterns
 
-### Capture Runtime Findings During Development
-
-Don't wait until "done":
-- **After debugging:** Document the failure mode and resolution in runtime notes.
-- **After integration:** Document API patterns and gotchas in the relevant playbook or reference.
-- **After onboarding a tool:** Document setup, configuration, and common operations needed to run or verify the system.
-- **If those findings become repository-level skill guidance:** Hand the authoring and governance work to `skill-maintainer` / `skill-creator` instead of expanding this runtime reference into a skill-management workflow.
-
----
-
-## Universal Verification Patterns
-
-Always use language-agnostic tools to verify system state.
-
-| Pattern | Playbook Reference | When to Use |
-|---------|-------------------|-------------|
-| **API Contract Testing** | `../playbooks/api-contract-testing.md` | Verifying REST/GraphQL endpoints using `.hurl`. |
-| **Universal Data Generation** | `../playbooks/universal-data-generation.md` | Injecting deterministic seeds directly into DBs or Queues. |
-| **Dependency Mocking** | `../playbooks/mocking-dependencies.md` | Faking 3rd party APIs with `json-server` or `Prism`. |
-| **Media File Handling** | `../playbooks/media-file-handling.md` | Sourcing binary fixtures and mocking S3 via MinIO. |
-
----
-
-## Headless Runtime Operations
-
-When executing commands autonomously, agents must use robust patterns:
-
-### Process Management (PM2)
-
-**PM2 is the recommended process manager** for application servers. It handles PID tracking, log rotation, and crash recovery automatically.
-
-```bash
-# Start app server
-pm2 start npm --name "project" -- run dev
-
-# View logs
-pm2 logs project
-
-# Stop
-pm2 stop project
-
-# Restart after code changes
-pm2 restart project
-
-# Install log rotation
-pm2 install pm2-logrotate
-```
-
-### Fallback: Bash Patterns
-
-Only use bash for quick experiments. For reliable process management, use PM2.
-
-- **Strict Output Redirection & PID Tracking:** When running application servers in the background using standard bash (fallback only), `&` is not enough. You must prevent stdout from corrupting the tool response, and you must track the PID to prevent port exhaustion (Zombie processes). **Use PM2 instead of: `npm run dev > .app.log 2>&1 & echo $! > .app.pid`**
-- **Strict Bash Pipelines:** Bash pipelines like `curl | jq | cut` will silently swallow errors if a middle command fails. Always prefix multi-step bash commands with `set -euo pipefail` to ensure fail-fast behavior.
-- **Headless Polling Loops:** Never assume a service starts instantly. Never use a single `curl` or a manual bash `while` loop. Always use `curl`'s built-in retry flags:
-  ```bash
-  curl --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 30 -sSf http://localhost:3000/health > /dev/null
-  ```
-- **Fail-Fast Network Calls:** Always use `curl -sSf`. The `-f` ensures HTTP 500s result in a bash error, rather than silently passing garbage data down a pipeline.
-
----
-
-## Anti-Patterns — Extended
-
-### Assuming Runtime Works
-**Harm:** Silent failures, wasted debugging time.
-**Fix:** Verify every service after startup with headless polling loops.
-
-### Hanging Bash Commands
-**Harm:** Agent tool calls timeout and break the session.
-**Fix:** Never run `find` or `du` on directories without excluding `node_modules`, `.venv`, or `.git`. 
-
-### Using Attached Shells for Servers
-**Harm:** Services die when AI session ends, or `stdout` streams infinitely and breaks the JSON parser.
-**Fix:** Use **PM2** for app servers (`pm2 start npm -- run dev`) or Docker's `-d` for databases.
-
-### Log Parsing for Health Checks
-**Harm:** Fragile, slow, format-dependent.
-**Fix:** Expose standard readiness probes. `curl -sSf` > grepping logs.
-
-### Guessing Instead of Analyzing
-**Harm:** Incorrect assumptions compound into larger failures.
-**Fix:** Spawn agents to investigate and report facts before deciding.
-
-### Writing Pytest for Integration
-**Harm:** Traps the AI in brittle, language-specific syntax that is hard to maintain.
-**Fix:** Follow the Universal Toolkit. Use `.hurl` or `agent-browser`. 
+| Anti-pattern | Replace with |
+|---|---|
+| Guessing start or test commands | Current verified project instructions; escalate to sourced discovery only when needed |
+| Starting every Compose service | Only services required by acceptance evidence |
+| Declaring success from exit code alone | Expected-versus-observed evidence |
+| Grepping logs as a health check | Bounded readiness boundary |
+| Retrying unchanged commands | Classified recovery with a changed hypothesis |
+| Rewriting all agent instructions from discovery output | Minimal patch of durable verified facts through `project-onboarding` |
+| Loading every related skill | Capability-map selection for affected surfaces |
+| Leaving app processes or fixtures behind | Targeted cleanup plus cleanup verification |
+| Hiding blocked checks | Explicit `UNVERIFIED` criterion |

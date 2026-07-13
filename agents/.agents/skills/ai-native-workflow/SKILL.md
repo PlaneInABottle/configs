@@ -1,153 +1,110 @@
 ---
 name: ai-native-workflow
-description: Coordinate runtime setup and boundary-level verification for feature implementation, debugging, and testing. Use when work spans application processes, HTTP APIs, databases, browser or mobile UI, queues, containers, or multiple verification layers. Complement rather than replace the repository's existing test framework.
+description: Coordinate project discovery, runtime setup, bounded recovery, and evidence-based completion across application processes, APIs, databases, UI, queues, containers, releases, migrations, or multiple verification layers. Use when work requires fresh runtime knowledge, process or service coordination, cross-boundary verification, or evidence beyond a self-contained repository-native test loop; do not load for routine scoped changes with current canonical commands.
 license: MIT
+metadata:
+  mode: orchestrator
+  evidence: required
 ---
 
-# AI-Native Workflow: The Systems Operator Paradigm
+# AI-Native Workflow
 
-Treat the application as a system with several observable boundaries. Use repository-native tests for logic and established integration coverage, then add boundary-level checks when they provide evidence the existing suite cannot.
+Own the runtime and evidence control loop. Let project instructions define durable local facts, domain skills define technology-specific implementation, and operator skills execute boundary checks.
 
-## The Universal Agent Toolkit
+## Phase 0: Discover Before Changing Code
 
-Choose tools from local project conventions first. Add the following tools when their boundary matches the behavior under test:
+1. Read the nearest applicable project instruction files. Prefer the most local file for scoped work.
+2. Decide whether those verified local facts are sufficient for the scoped task. If canonical commands are current and the change is self-contained, use them directly and skip repository-wide discovery.
+3. Run [`scripts/discover_project.py`](scripts/discover_project.py) only when runtime knowledge is missing, stale, or contradictory; a documented command fails; topology changed; the task crosses services/boundaries; or runtime evidence genuinely requires fresh discovery. The script is read-only and reports sourced but unverified candidates:
 
-| Boundary | Universal Tool | Agent Action |
-|---|---|---|
-| **Infrastructure** | **Docker Compose** | Standardizes "start/stop/reset". Follow YAGNI: only add auxiliary services (Redis, Mailpit) when explicitly needed. |
-| **Data Generation** | **Env-Native Faker** | Generate deterministic fixtures in the project's normal language or fixture system. Keep standalone generators focused on data generation. |
-| **Dependencies** | **json-server / Prism** | Spin up instant fake APIs to mock 3rd party dependencies. Use environment variables to swap real URLs for local fakes. |
-| **Network / API** | **Network Boundaries** | Use `hurl` for REST/GraphQL, `grpcurl` for gRPC, and `wscat` for WebSockets. |
-| **External APIs** | **`api-discovery` skill** | Find and select reliable public APIs for your needs. Maps dev tasks to APIs (weather, geocoding, email validation, etc.). |
-| **Interface (Web/CLI)** | **`agent-browser`** | Use `agent-browser` as an Interactive REPL for Web UIs. For CLI apps, use standard Unix streams (`stdout/stderr`) or `expect` scripts. |
-| **Interface (Mobile)** | **`maestro mcp`** | Use `maestro mcp` to directly control iOS/Android simulators — tap, input text, inspect hierarchy, screenshot. For the full skill, load `maestro-testing`. |
-| **Persistence / DB** | **Native Clients** | Inspect state with `psql`, `mongosh`, `sqlite3`, or `redis-cli` when direct state evidence matters. Do not expose secret values in output. |
-| **Async / Events** | **`redis-cli` / `rpk`** | Inject messages directly into queues and verify worker side-effects. |
-| **Media / Files** | **`pexels-media` skill** | Download real, valid binary fixtures for upload testing. Never pass corrupted mock bytes. |
+   ```bash
+   python3 <ai-native-workflow-skill-dir>/scripts/discover_project.py . --pretty
+   ```
 
-### Iterative verification
+4. If `.agents/project-capabilities.yaml` is relevant, treat it as a cache, not unquestioned truth. Compare its `source_fingerprint` only when discovery runs.
+5. Verify only the commands and services needed by the task against their cited manifest, Compose, CI, or instruction source.
+6. Identify affected surfaces and load the smallest matching set from the capability map below.
 
-Start with the smallest observable check. Add another boundary only when it resolves a real uncertainty. Avoid printing credentials, tokens, decrypted secrets, or full environment values while debugging.
+Do not persist discovery output during normal feature work. Use `project-onboarding` only when the task explicitly asks to make the repository agent-ready, create/update agent instructions, or create a durable capability profile.
 
----
+Phase 0 may end after reading current scoped instructions. Do not run repository-wide heuristics merely because a code change is substantial.
 
-## Required Binary Checks
+## Capability Map
 
-Before following a playbook, verify the required CLI tools are installed and on `PATH`.
-
-```bash
-command -v hurl >/dev/null || echo "Install hurl before running API or GraphQL playbooks"
-command -v agent-browser >/dev/null || echo "Install agent-browser before running UI playbooks"
-command -v maestro >/dev/null || echo "Install maestro before running mobile playbooks"
-command -v docker >/dev/null || echo "Install Docker before running infrastructure flows"
-```
-
-If a required binary is missing, use an existing project tool when possible. Install new global software only when the task requires it and the installation source has been verified.
-
----
-
-## Action-Oriented Playbooks
-
-For exact implementation details, code snippets, and CLI commands for the toolkit above, reference the following playbooks:
-
-- [playbooks/api-contract-testing.md](playbooks/api-contract-testing.md) (REST: auth, file uploads, webhooks, negative testing)
-- [playbooks/graphql-testing.md](playbooks/graphql-testing.md) (GraphQL queries, mutations, variables)
-- [playbooks/websocket-testing.md](playbooks/websocket-testing.md) (WebSocket connection, messaging, auth)
-- [playbooks/load-testing.md](playbooks/load-testing.md) (hey, k6, wrk for performance testing)
-- [playbooks/debugging-profiling.md](playbooks/debugging-profiling.md) (Logs, remote debug, CPU/memory profiling)
-- [playbooks/universal-data-generation.md](playbooks/universal-data-generation.md) (Faker.js, Python Faker for test data)
-- [playbooks/mocking-dependencies.md](playbooks/mocking-dependencies.md) (JSON-Server, Prism, Wiremock)
-- [playbooks/media-file-handling.md](playbooks/media-file-handling.md) (Pexels, MinIO S3 mocking)
-- **`api-discovery` skill** - Find and select reliable public APIs for weather, geocoding, email validation, etc.
-
----
-
-## The 6 Phases of AI-Managed Development
-
-1. **Phase 1: Runtime Setup Analysis (YAGNI Infrastructure)**
-   Determine the optimal dev environment. Prefer a **Hybrid** approach: Docker for stateful services (DB), native execution for app code (fast HMR). Keep `docker-compose.yml` minimal. Only add what you need.
-2. **Phase 2: Runtime Knowledge Handoff**
-   Keep this skill focused on runtime setup and verification. If session findings turn into repository skill-governance work (for example: auditing overlap, deciding split boundaries, or updating shared skill guidance), hand that work to [`skill-maintainer`](../skill-maintainer/SKILL.md) for boundary decisions and [`skill-creator`](../skill-creator/SKILL.md) for authoring/package mechanics instead of expanding this skill into a governance playbook.
-3. **Phase 3: Implementation & Verification**
-   Build the feature, run affected repository-native tests, and add focused boundary checks where useful.
-4. **Phase 4: Programmatic Operations**
-   Ensure you can manage the application programmatically without a human (e.g., manipulating UI state using `agent-browser` for web, `maestro mcp` for mobile).
-5. **Phase 5: Continuous Iteration & Debugging**
-   Run the smallest affected test set while iterating, then the broader repository checks required by the change. Add tests in the project's established framework when behavior is testable there. Use Hurl, native clients, `agent-browser`, or Maestro for boundaries that are better verified externally. Inspect the current UI hierarchy before interacting and wait for asynchronous state changes before re-inspecting.
-6. **Phase 6: Teardown**
-   Stop managed background processes and clean up temporary runtime state once validation is complete.
-
-*(For detailed, step-by-step checklists for each phase, see `references/phase-checklists.md`)*
-
----
-
-## PM2 Process Management
-
-PM2 is the **recommended process manager** for running application servers. 
-
-**Prerequisite:** `npm install -g pm2`
-
-**Essential commands:**
-```bash
-pm2 start npm --name "project" -- run dev    # Start
-pm2 logs project-name                          # View logs
-pm2 restart project-name                       # Restart after changes
-pm2 delete project-name                        # Targeted cleanup
-pm2 install pm2-logrotate                      # Log rotation (one-time)
-```
-
-For detailed PM2 operations, load the `pm2-runtime-operator` skill.
-
----
-
-## Interactive UI Verification
-
-### Web (`agent-browser`)
-
-Use `agent-browser` for fast UI feedback during implementation.
-
-```bash
-pm2 start npm --name "myapp" -- run dev
-agent-browser open http://localhost:3000/login
-agent-browser snapshot -i
-agent-browser fill @e1 "$TEST_USER"
-agent-browser click @e2
-```
-
-For browser-specific semantics, load the `agent-browser` skill.
-
-### Mobile (`maestro mcp`)
-
-Use Maestro MCP for direct device control during mobile feature implementation and debugging.
-
-```bash
-# Use the connected MCP interface rather than assuming tool names.
-# Typical sequence: list devices, inspect the screen, run an inline flow,
-# then inspect or capture a screenshot again.
-```
-
-**During implementation/debugging, use MCP tools interactively on a live device.** Write YAML flows only after the feature is validated, for CI and repeatable regression runs. Load `maestro-testing` skill for full YAML syntax and flow authoring.
-
----
-
-## Best Practices & Anti-Patterns
-
-| Practice | Why / How |
+| Detected work or surface | Load |
 |---|---|
-| **Use Environment Variables** | Swap real external services with local CLI fakes (e.g. `STRIPE_URL=http://localhost:4010`) |
-| **Health Checks > Logs** | Always prefer querying an HTTP health endpoint over fragile bash `grep`s of container logs. |
-| **Background Processes** | Use **PM2** for app servers (Node, Python, etc.). Use Docker for databases. |
-| **Skill-First** | Check available skills *before* implementing. Load every matching skill and combine their guidance. |
+| REST/OpenAPI behavior | `api-contract-testing` |
+| GraphQL behavior | [GraphQL playbook](playbooks/graphql-testing.md) |
+| WebSocket lifecycle | `websocket-testing` |
+| Queue or background worker | `async-worker-testing` |
+| Direct persisted-state evidence | `native-datastore-verifier` |
+| Schema migration or data backfill | `database-migration-testing` plus the datastore/domain skill |
+| Captured email | `mailpit-email-testing` |
+| Web UI interaction | `agent-browser` |
+| Web or mobile screenshot comparison | `visual-regression-testing` plus `agent-browser` or `maestro-testing` |
+| Mobile UI interaction | `maestro-testing` |
+| Supabase boundary | `supabase` and the matching operator skill |
+| Expo implementation | `react-native-expo`; add `expo-eas-build`, `deep-linking`, or `react-native-push` only when affected |
+| Runtime logs, health, metrics, or profiling | `runtime-observability`; add `pm2-runtime-operator` for PM2 process operations |
+| Load or performance criteria | `load-testing` |
+| Dependency upgrade | `dependency-upgrade-operator` |
+| Release, deployment, or rollback | `release-operator`; add `cicd-pipeline` only for pipeline work |
+| Deterministic security checks | `security-baseline-verifier` plus boundary-specific skills |
+| External public API selection | `api-discovery` |
+| External dependency fake | [Dependency mocking playbook](playbooks/mocking-dependencies.md) |
+| Generated fixture data | [Data generation playbook](playbooks/universal-data-generation.md) |
+| Binary media fixture | [Media handling playbook](playbooks/media-file-handling.md) |
 
-| Anti-Pattern | Do Instead |
-|---|---|
-| Replacing an established test suite with a parallel one | Extend existing tests first; add boundary tools only where they provide distinct evidence. |
-| Writing Maestro YAML flows before validating a feature | Use `maestro mcp` tools interactively during implementation. Write YAML flows only after the feature works on a live device. |
-| Stale browser refs | Always run `agent-browser snapshot -i` after a click/navigation. Refs invalidate on DOM mutation. |
-| Over-engineering Docker | Start with just App + DB. Add Redis/Mailpit only when a specific feature requires it. |
-| Creating monolithic skills | Adhere to "One skill per concern". |
+Do not load every possible skill. Load only those needed to implement or verify an affected acceptance criterion.
 
----
+## Define Evidence
 
-See [references/phase-checklists.md](references/phase-checklists.md) for granular breakdowns of the 6 phases.
-See [references/best-practices.md](references/best-practices.md) for extended guidance and testing pyramids.
+Before implementation, translate each acceptance criterion into a checkable evidence row:
+
+| Criterion | Evidence source | Expected observation | Cleanup | Status |
+|---|---|---|---|---|
+| Concrete user-visible or system behavior | Native test, API, UI, datastore, worker, log, or artifact | Exact status/state/threshold | Fixture/process cleanup | Pending |
+
+Use repository-native tests first for logic and established integration behavior. Add a boundary check only when it resolves a real remaining uncertainty. Record an explicit `UNVERIFIED` status when a criterion cannot be observed.
+
+## Closed Control Loop
+
+1. **Discover** — Read current scoped facts, run discovery only under the Phase 0 conditions, and select skills.
+2. **Define evidence** — Build the criterion-to-evidence matrix and note destructive boundaries.
+3. **Prepare runtime** — Start only required services using canonical commands; use PM2 for application servers and Docker for stateful infrastructure when those match project instructions. Prove readiness with a bounded health check.
+4. **Execute** — Make the smallest change for the active criterion. Preserve unrelated worktree state.
+5. **Verify** — Run affected native tests, then the selected boundary operators. Capture expected versus observed behavior.
+6. **Recover** — Classify the failure and make at most two focused recovery attempts for that failure class. Re-run the smallest discriminating check after each attempt.
+7. **Review** — Inspect the diff, security impact, migrations, logs, generated artifacts, and cleanup status. Run broader canonical checks proportional to risk.
+8. **Close** — Remove only processes and fixtures created for the task. Report verified, failed, and unverified criteria separately.
+
+## Recovery and Stop Rules
+
+Classify failures as discovery/configuration, runtime unavailable, fixture/state, implementation, assertion/contract, environment/tooling, or external dependency. Do not spend a recovery attempt repeating the same command without a changed hypothesis or condition.
+
+Stop and report the last evidence when:
+
+- two focused recovery attempts for the same failure class have failed;
+- the next action would cross an unapproved production or destructive boundary;
+- required credentials, external access, or a material product decision is missing;
+- repository instructions conflict and local executable configuration cannot resolve the conflict safely;
+- cleanup ownership is unclear and continuing could damage unrelated state.
+
+## Evidence Result
+
+Return operator evidence in this shape:
+
+```text
+Criterion: <acceptance criterion>
+Surface: <native test | API | UI | datastore | worker | runtime | artifact>
+Action: <bounded command or interaction>
+Expected: <specific observation>
+Observed: <specific observation, sanitized>
+Recovery: <0/2, 1/2, or 2/2 and failure class>
+Cleanup: <completed | not needed | blocked>
+Result: VERIFIED | FAILED | UNVERIFIED
+```
+
+Completion requires evidence for every requested criterion, successful proportional repository checks, no unresolved unsafe side effects, and explicit disclosure of anything not verified.
+
+Read [phase checklists](references/phase-checklists.md) while executing the loop. Read [best practices](references/best-practices.md) when choosing evidence depth or diagnosing workflow anti-patterns.

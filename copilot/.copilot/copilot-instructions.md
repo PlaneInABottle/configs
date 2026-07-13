@@ -37,6 +37,18 @@ Python: When running Python scripts via bash, always use `python3` instead of `p
 
 You are authorized to read environment variables from `.env` files or shell configuration (e.g., `~/.zshrc`, `~/.bashrc`) when needed. Never disclose secret values in responses, logs, commits, or generated artifacts; redact them from displayed output.
 
+## Project Runtime Gate
+
+Before implementation, debugging, testing, release, migration, or dependency work:
+
+1. Read the nearest project-local agent instructions (`AGENTS.md`, `CLAUDE.md`, `OPENCODE.md`, `GEMINI.md`, or repository equivalents). Treat verified project commands and constraints as higher priority than global examples.
+2. Load `ai-native-workflow` and run Phase 0 discovery only when runtime knowledge is missing, stale, or contradictory; the task crosses services or verification boundaries; or completion genuinely requires starting or inspecting application processes, datastores, queues, containers, browser/mobile UI, releases, migrations, load, or runtime observability.
+3. For a self-contained change with current canonical commands and repository-native verification, skip repository-wide discovery and load only the directly matching domain/operator skills.
+4. Define acceptance evidence proportional to the change: repository-native tests first, then boundary checks only when they add distinct confidence.
+5. Use bounded recovery attempts, preserve unrelated state, clean up processes and fixtures, and report any unverified acceptance criterion explicitly.
+
+Project instructions should contain durable, verified commands and safety boundaries only. Do not persist secrets, tokens, PIDs, temporary ports, or other session-specific state in instruction files.
+
 **TODO REQUIREMENT:** For complex tasks (multi-step, multiple files, or unclear scope), create a todo checklist using `update_todo` tool. Break down the task into clear, trackable items. Update as you work.
 
 Skip for: single-file edits, simple questions, quick fixes, or clearly-scoped 1-step tasks.
@@ -99,11 +111,11 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 
 | Task Type | Action |
 |-----------|--------|
-| Debug failing tests | Load `ai-native-workflow` skill (testing sections) |
+| Debug failing tests | Load `ai-native-workflow` only when runtime setup or cross-boundary evidence is needed |
 | API changes / contract testing | Load `api-contract-testing` skill |
 | API discovery for development | Load `api-discovery` skill |
 | Code review / code quality | Review directly unless you are the coordinator agent |
-| Frontend/UI development | Load `ai-native-workflow` skill (frontend testing sections) |
+| Frontend/UI development | Load `ai-native-workflow` when browser/runtime evidence is needed |
 | New screen or page | Load `refactoring-ui` + `ai-native-workflow` skills |
 | UI layout or component composition | Load `refactoring-ui` skill |
 | Design system component | Load `refactoring-ui` skill |
@@ -111,10 +123,17 @@ ask_user: Use for interactive clarification questions; never ask in plain text.
 | Responsive design | Load `refactoring-ui` skill |
 | Button placement or action hierarchy | Load `refactoring-ui` skill |
 | Browser automation / E2E testing | Load `agent-browser` skill |
-| Visual regression / UI validation | Load `agent-browser` + `ai-native-workflow` skills |
+| Visual regression / UI validation | Load `visual-regression-testing` + `agent-browser` or `maestro-testing` + `ai-native-workflow` skills |
+| Load / performance testing | Load `load-testing` + `ai-native-workflow` skills |
+| Runtime diagnostics / profiling | Load `runtime-observability` + `ai-native-workflow` skills |
+| Database migration | Load `database-migration-testing` + `ai-native-workflow` skills |
+| Dependency upgrade | Load `dependency-upgrade-operator` + `ai-native-workflow` skills |
+| Release / deployment / rollback | Load `release-operator` + `ai-native-workflow` skills |
+| Security baseline verification | Load `security-baseline-verifier` + `ai-native-workflow` skills |
+| Project agent onboarding / AGENTS.md | Load `project-onboarding` + `ai-native-workflow` skills |
 | Async worker / queue testing | Load `async-worker-testing` skill |
 | WebSocket / real-time testing | Load `websocket-testing` skill |
-| Component testing (React, Vue, etc.) | Load `ai-native-workflow` skill |
+| Component testing (React, Vue, etc.) | Load `ai-native-workflow` only when runtime or multiple verification boundaries are involved |
 | New project setup / workflow design | Load `ai-native-workflow` skill |
 | Multiple concerns | Load ALL matching skills, combine guidance |
 
