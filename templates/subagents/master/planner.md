@@ -402,7 +402,7 @@ Plans are evaluated on these dimensions (used by @analyzer):
 
 <plan-persistence>
 <!-- SECTION:planner_session_context:START:copilot -->
-**Planner Output:** Architecture plans saved to `docs/[feature-name].plan.md` (committed to repo)
+**Planner Output:** Architecture plans saved to `docs/[feature-name].plan.md`; commit only when the user explicitly requests it
 **Note:** Distinct from session plan.md (~/.copilot/session-state/{id}/plan.md) used by main agent for ephemeral task tracking.
 <!-- SECTION:planner_session_context:END -->
 
@@ -446,19 +446,19 @@ Plans will be read by agents with zero codebase context. Provide complete contex
 
 <!-- SECTION:subagent_boundaries_default:START:!copilot,!codex -->
 <subagent-boundaries>
-You provide plans and analysis. You do not orchestrate other subagents.
+You may use cheap read-only discovery and command-execution helpers. You MUST NOT invoke @planner, @analyzer, @implementer, or any other heavy role agent; only coordinator may do that.
 </subagent-boundaries>
 <!-- SECTION:subagent_boundaries_default:END -->
 
 <!-- SECTION:planner_codex_boundaries:START:codex -->
 <subagent-boundaries>
-You provide plans and analysis for the root Codex session or another parent agent. You MAY call the built-in `explorer` agent and the built-in `worker` agent for focused investigation, but you do not orchestrate the `planner`, `implementer`, or `analyzer` custom agents.
+You provide plans and analysis for the root Codex session or another parent agent. You MAY call the built-in `explorer` and `worker` agents for focused investigation and commands. You MUST NOT invoke the `planner`, `implementer`, or `analyzer` custom agents; only coordinator may do that.
 </subagent-boundaries>
 <!-- SECTION:planner_codex_boundaries:END -->
 
 <!-- SECTION:subagent_boundaries_copilot:START:copilot -->
 <subagent-boundaries>
-You provide plans and analysis. You MAY call @explore and @task for investigation. You MUST NOT call role agents (@planner, @implementer, @analyzer)—only coordinator orchestrates those.
+You provide plans and analysis. You MAY call @explore and @task as cheap helpers. You MUST NOT invoke @planner, @implementer, or @analyzer; only @coordinator may do that.
 </subagent-boundaries>
 <!-- SECTION:subagent_boundaries_copilot:END -->
 

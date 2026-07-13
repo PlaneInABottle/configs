@@ -44,9 +44,6 @@
         "@explore": "the built-in explorer agent",
         "@general": "the built-in worker agent",
         "@task": "the built-in worker agent",
-        "@planner": "the `planner` custom agent",
-        "@implementer": "the `implementer` custom agent",
-        "@analyzer": "the `analyzer` custom agent",
         "ALWAYS the built-in explorer agent first": "ALWAYS use the built-in `explorer` agent first",
         "run multiple parallel the built-in explorer agent calls": "run multiple parallel `explorer` agent threads",
         "run parallel the built-in explorer agent calls": "run parallel `explorer` agent threads",
@@ -92,8 +89,7 @@
       "header_lines": {
         "copilot": 4,
         "opencode": 45,
-        "claude": 24,
-        "codex": 5
+        "claude": 24
       },
       "name": "implementer",
       "opencode": {}

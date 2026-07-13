@@ -162,15 +162,7 @@ description: "..."
 
 ### Codex Format
 
-```toml
-name = "planner"
-description = "Software architect that creates detailed implementation plans without writing code..."
-developer_instructions = """
-<content from master template>
-"""
-```
-
-Codex custom agents are generated as standalone TOML files under `codex/.codex/agents/`. Codex auto-discovers these files from `~/.codex/agents/` because `~/.codex` is symlinked to this repo's `codex/.codex` on this machine.
+Codex currently uses only its built-in `explorer` and `worker` helpers. No heavy role agents are generated because this configuration has no coordinator agent.
 
 ### Opencode Format
 
@@ -292,7 +284,7 @@ Custom sections per role ensure maximum clarity and usability.
 
 ✅ **Multi-System Support:**
 - **Copilot**: planner, analyzer, implementer, coordinator
-- **Codex**: planner, analyzer, implementer
+- **Codex**: no generated heavy role agents; built-in explorer and worker only
 - **Opencode**: planner, analyzer, implementer, coordinator, challenger
 - **Claude**: planner, analyzer, implementer
 

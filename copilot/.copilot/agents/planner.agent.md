@@ -402,7 +402,7 @@ Plans are evaluated on these dimensions (used by @analyzer):
 </plan-quality-criteria>
 
 <plan-persistence>
-**Planner Output:** Architecture plans saved to `docs/[feature-name].plan.md` (committed to repo)
+**Planner Output:** Architecture plans saved to `docs/[feature-name].plan.md`; commit only when the user explicitly requests it
 **Note:** Distinct from session plan.md (~/.copilot/session-state/{id}/plan.md) used by main agent for ephemeral task tracking.
 
 - Save to `docs/[feature-name].plan.md` (lowercase, hyphens)
@@ -444,7 +444,7 @@ Plans will be read by agents with zero codebase context. Provide complete contex
 </collaboration-guidance>
 
 <subagent-boundaries>
-You provide plans and analysis. You MAY call @explore and @task for investigation. You MUST NOT call role agents (@planner, @implementer, @analyzer)—only coordinator orchestrates those.
+You provide plans and analysis. You MAY call @explore and @task as cheap helpers. You MUST NOT invoke @planner, @implementer, or @analyzer; only @coordinator may do that.
 </subagent-boundaries>
 
 </agent-planner>
