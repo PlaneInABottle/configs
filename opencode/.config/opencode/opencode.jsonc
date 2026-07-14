@@ -173,6 +173,24 @@
     "livekit-docs-mcp_*": "allow",
   },
   "agent": {
+    "plan": {
+      "permission": {
+        "task": {
+          "*": "deny",
+          "general": "allow",
+          "explore": "allow"
+        }
+      }
+    },
+    "build": {
+      "permission": {
+        "task": {
+          "*": "deny",
+          "general": "allow",
+          "explore": "allow"
+        }
+      }
+    },
     "general": {
       "model": "opencode-go/deepseek-v4-flash",
       "reasoningEffort": "max",
