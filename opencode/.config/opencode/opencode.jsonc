@@ -189,6 +189,10 @@
         "question": "deny"
       }
     },
+    "compaction": {
+      "model": "opencode-go/deepseek-v4-flash",
+      "reasoningEffort": "max",
+    }
   },
   "mcp": {
     "context7": {
