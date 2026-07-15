@@ -185,6 +185,52 @@ Follow Docker's current official Raspberry Pi OS instructions and verify the dev
 
 ---
 
+## Interim Linux Desktop Application Server
+
+Use this pattern when a normal Linux workstation must temporarily host a multi-process application without surrendering its desktop role.
+
+### Runtime split
+
+- Keep stateful PostgreSQL, Redis, and similar dependencies in Docker with named volumes.
+- Run stateless application roles with the repository's existing supervisor, such as systemd or PM2, when they must share one checked-out codebase and native toolchains.
+- Bind application, database, metrics, health, and supervisor interfaces to loopback. Expose only a reviewed reverse proxy or tunnel.
+- Give each role a stable name, bounded restart policy, graceful shutdown timeout, memory ceiling, and boot-time retry delay.
+- Verify supervisor and container startup ordering. A user service becoming `active` does not prove the database containers are healthy yet.
+
+Docker Desktop can support an interim workstation server when the user explicitly wants to retain it, but native Docker Engine is usually simpler for unattended Linux operation. With Docker Desktop, verify its user service, login persistence or user lingering, resource cap, container restart policy, and actual post-reboot recovery.
+
+### Data and secret isolation
+
+- Use external named volumes for active server data when accidental `compose down -v` deletion must be prevented. Create and inspect them explicitly before first start.
+- Pass each container only the environment keys it needs. Do not attach a complete application `.env` to PostgreSQL or Redis merely for interpolation convenience.
+- Use an ignored mode-`600` production override and a reviewed wrapper when multiple dotenv files need deterministic precedence. Never print full environment files during diagnostics.
+- Back up databases in a native restorable format, validate the backup, copy it off the host, and perform a disposable restore drill before relying on it.
+- Treat Redis as ephemeral only after confirming it is not carrying durable queues or irreplaceable state.
+
+### Workstation-safe firewalling
+
+A default-deny inbound firewall normally preserves browsing, downloads, Git, video calls, and other outbound workstation use because outbound and established return traffic remain allowed. It can block LAN-initiated features such as phone-to-PC testing, casting/discovery, file sharing, game streaming, and remote desktop. Add narrow source/port rules for required features instead of broadly trusting the LAN.
+
+Before changing firewall rules, verify the current access path and alternative recovery. For private administration over Tailscale, confirm `tailscale0` exists before allowing SSH only on that interface. Do not infer firewall effectiveness from connecting to the host's LAN address from the same host; test the boundary from a second device.
+
+When a desktop PolicyKit agent is available, use `pkexec <specific-command>` for a narrowly scoped root action and let the trusted graphical dialog collect the password. A terminal-scoped `sudo -v` cache generally does not transfer to a separate non-interactive agent process. Never request the password through chat or stdin, and never grant passwordless sudo to a script the unprivileged user can edit.
+
+### Publication gate
+
+Before public traffic, require all of the following:
+
+- DNS points to the intended ingress and TLS succeeds for the final hostname.
+- Router or tunnel exposure is limited to the reviewed ingress; database, app, metrics, and administration ports remain private.
+- Real outbound integrations such as SMTP and object storage are configured when the application depends on them.
+- Stateful backups are encrypted as needed, stored off-machine, monitored, and restore-tested.
+- Application, worker, queue, database, and health checks recover after a controlled reboot.
+- Required tests, dependency/secret scans, and deployment checks pass on the exact release commit.
+- Power, thermals, disk space, battery or UPS condition, and network reliability are appropriate for unattended use.
+
+Do not call a host “safe” or “production-ready” merely because its local health endpoint responds. Report application readiness, public-ingress readiness, data durability, host hardening, and hardware reliability separately.
+
+---
+
 ## Networking & External Access
 
 ### Cloudflare Tunnel (Recommended)
@@ -330,7 +376,7 @@ Tier 2 (Docker) ──rsync──► Tier 3 (NAS) ──rsync──► Tier 4 (C
 ### Networking Issues
 - Check firewall: `sudo ufw status`
 - Verify port forwarding on router
-- Use `netstat -tulpn` to check listening ports
+- Use `ss -ltnup` to check listening ports and confirm private services bind to loopback
 
 ### Performance
 - Monitor with Portainer or `docker stats`
