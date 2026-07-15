@@ -6,6 +6,7 @@ Login flows, auth-state reuse, OAuth, and manual verification patterns.
 
 ## Contents
 
+- [Attach to a Normal Chrome Login](#attach-to-a-normal-chrome-login)
 - [Basic Login Flow](#basic-login-flow)
 - [Reuse Auth with Explicit State Files](#reuse-auth-with-explicit-state-files)
 - [Reuse Auth with --session-name](#reuse-auth-with---session-name)
@@ -15,6 +16,38 @@ Login flows, auth-state reuse, OAuth, and manual verification patterns.
 - [Cookie-Based Auth](#cookie-based-auth)
 - [Token Refresh Handling](#token-refresh-handling)
 - [Security Best Practices](#security-best-practices)
+
+## Attach to a Normal Chrome Login
+
+Use this fallback when an identity provider rejects the automation-launched browser, including errors
+such as “This browser or app may not be secure.” Do not add stealth or automation-concealment flags.
+
+1. Close the rejected `agent-browser` session.
+2. Start standard Chrome with a dedicated profile and a localhost-only debugging port. Follow any
+   host requirement to manage the long-lived Chrome process.
+
+   ```bash
+   google-chrome \
+     --remote-debugging-address=127.0.0.1 \
+     --remote-debugging-port=9222 \
+     --user-data-dir=/absolute/path/to/dedicated-profile \
+     https://app.example.com/login
+   ```
+
+3. Let the human enter credentials and complete 2FA in that Chrome window before attaching the
+   agent.
+4. Attach to the running browser, inspect its tabs, and snapshot the already authenticated target.
+
+   ```bash
+   agent-browser --session authenticated connect 9222
+   agent-browser --session authenticated tab list
+   # Select the target once if it is not already active, then re-snapshot.
+   agent-browser --session authenticated snapshot -i
+   ```
+
+Prefer direct `connect` while Chrome remains open. Save browser state only when restart persistence is
+required because exported state can contain session tokens. A remote-debugging port grants full local
+browser control; bind it to localhost, use it only on a trusted machine, and stop Chrome when finished.
 
 ## Basic Login Flow
 

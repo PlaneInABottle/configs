@@ -121,6 +121,11 @@ agent-browser snapshot -i
 
 `--headed` only makes the browser visible. It does **not** replace `--session-name` or `state save/load`.
 
+If an identity provider rejects an automation-launched browser (for example, “This browser or app
+may not be secure”), do not retry with concealment flags. Read
+[references/authentication.md](references/authentication.md) and use its normal-Chrome/CDP login
+fallback: let the human authenticate in standard Chrome, then attach `agent-browser` afterward.
+
 ## Automation Boundaries
 
 Respect site terms, authentication controls, robots policies, and rate limits. Do not add global browser flags intended to conceal automation. If a site blocks an automated login, use a supported API, an approved manual headed flow, or the site's documented test environment instead of claiming one Chromium flag provides reliable bypass behavior.

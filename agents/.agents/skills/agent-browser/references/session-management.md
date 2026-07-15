@@ -14,6 +14,7 @@ Choose the right isolation and persistence mode for `agent-browser`.
 - [Close and Persistence Semantics](#close-and-persistence-semantics)
 - [Persistence Paths and Cleanup](#persistence-paths-and-cleanup)
 - [Headed Debugging Guidance](#headed-debugging-guidance)
+- [Recover a Stuck CDP Attachment](#recover-a-stuck-cdp-attachment)
 - [Common Patterns](#common-patterns)
 - [Best Practices](#best-practices)
 
@@ -190,7 +191,45 @@ Keep these semantics separate:
 - `--profile` controls a persistent browser profile directory.
 - `--session-name` and `state save/load` control persistence.
 
-No additional headed-mode daemon-reuse caveat was locally verified during this documentation update, so this file intentionally avoids stronger claims.
+`--headed` does not promise that the browser will remain behind other desktop windows, and the local
+CLI currently documents no separate no-focus flag. Explicit tab selection can activate the target and
+raise a headed Chrome window. When Chrome should stay visible without repeatedly stealing focus:
+
+1. Select the automation tab once.
+2. Avoid issuing `tab <id>` before every command.
+3. Continue `snapshot`, `get`, `click`, and `fill` operations against the already selected target.
+4. Verify desktop focus behavior locally when it is important.
+
+In a verified X11 session, explicit tab selection raised Chrome, while `get title` against the already
+selected target left the desktop's active window unchanged. Treat that as environment-specific
+evidence rather than a cross-platform guarantee.
+
+## Recover a Stuck CDP Attachment
+
+When commands against an attached normal Chrome stop responding, preserve the authenticated browser
+first. A blocked named `agent-browser` session does not by itself prove that Chrome or its debugging
+port has failed.
+
+1. Confirm the localhost debugging endpoint still responds without printing page data:
+
+   ```bash
+   curl --fail --silent http://127.0.0.1:9222/json/version >/dev/null
+   ```
+
+2. Stop only the stuck CLI invocation if it is still running. Do not close or restart the attached
+   Chrome merely to clear the client session.
+3. Attach under a fresh live-session name, list the existing tabs, select the target once, and take a
+   new snapshot:
+
+   ```bash
+   agent-browser --session recovered --cdp 9222 tab list
+   agent-browser --session recovered --cdp 9222 tab t2
+   agent-browser --session recovered --cdp 9222 snapshot -i
+   ```
+
+This recovery was locally verified after one attached session blocked during navigation while Chrome
+and its localhost CDP endpoint remained healthy. Treat tab IDs as connection-local and rediscover them
+after reattaching.
 
 ## Common Patterns
 
