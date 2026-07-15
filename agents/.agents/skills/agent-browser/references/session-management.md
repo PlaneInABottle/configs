@@ -14,6 +14,7 @@ Choose the right isolation and persistence mode for `agent-browser`.
 - [Close and Persistence Semantics](#close-and-persistence-semantics)
 - [Persistence Paths and Cleanup](#persistence-paths-and-cleanup)
 - [Headed Debugging Guidance](#headed-debugging-guidance)
+- [Operate a Shared Headed Chrome Safely](#operate-a-shared-headed-chrome-safely)
 - [Recover a Stuck CDP Attachment](#recover-a-stuck-cdp-attachment)
 - [Common Patterns](#common-patterns)
 - [Best Practices](#best-practices)
@@ -204,6 +205,36 @@ In a verified X11 session, explicit tab selection raised Chrome, while `get titl
 selected target left the desktop's active window unchanged. Treat that as environment-specific
 evidence rather than a cross-platform guarantee.
 
+## Operate a Shared Headed Chrome Safely
+
+Use this loop when the human keeps normal Chrome visible and may interact with it while automation is
+running.
+
+1. Attach with a dedicated live-session name and list tabs.
+2. Select the intended tab once. Repeated tab selection can raise Chrome and steal desktop focus.
+3. Leave the window size and viewport as the human arranged them unless the task explicitly requires
+   a change. Store-console forms do not benefit from mobile emulation.
+4. Immediately before every mutation, verify the URL and create a new interactive snapshot:
+
+   ```bash
+   agent-browser --session store-console --cdp 9222 get url
+   agent-browser --session store-console --cdp 9222 snapshot -i
+   ```
+
+5. Inspect current values before filling so existing user work is preserved. Use only refs from that
+   snapshot.
+6. After a click, fill, save, modal, navigation, or possible human interaction, discard old refs and
+   re-snapshot. Treat accidental clicks as shared-state changes, not as reliable intent.
+7. Save one logical section at a time. Verify success using post-save status, retained field values,
+   absence of validation errors, and reload/read-back when the consequence matters.
+8. Stop before a consequential boundary that lacks explicit authorization, even when its button is
+   enabled. Examples include publishing a declaration, adding for review, submitting, starting a
+   rollout, releasing, deleting, or accepting a legal agreement.
+
+Tab IDs and refs belong to the current attachment. Rediscover both after reattaching. When another
+tab must be inspected, switch once, snapshot it, and continue there instead of selecting it before
+every operation.
+
 ## Recover a Stuck CDP Attachment
 
 When commands against an attached normal Chrome stop responding, preserve the authenticated browser
@@ -230,6 +261,13 @@ port has failed.
 This recovery was locally verified after one attached session blocked during navigation while Chrome
 and its localhost CDP endpoint remained healthy. Treat tab IDs as connection-local and rediscover them
 after reattaching.
+
+If the new client session works but one page target remains stale, preserve the authenticated browser:
+
+1. Read the stale tab's URL and identify its exact tab ID.
+2. Open that URL in a fresh labeled tab and verify it loads.
+3. Close only the verified stale tab with `tab close <id>` if cleanup is needed.
+4. Never use browser-wide `close --all` as page-tab recovery.
 
 ## Common Patterns
 

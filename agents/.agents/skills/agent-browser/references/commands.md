@@ -18,6 +18,7 @@ Reference for commonly used `agent-browser` syntax that was re-checked against l
 - [Semantic Locators](#semantic-locators)
 - [Cookies](#cookies)
 - [State and Session Commands](#state-and-session-commands)
+- [Tabs](#tabs)
 - [Browser Settings](#browser-settings)
 - [Debugging](#debugging)
 - [Global Options](#global-options)
@@ -205,6 +206,21 @@ Use these four persistence mechanisms intentionally:
 
 For behavior details, persistence paths, cleanup, and close semantics, read [session-management.md](session-management.md).
 
+## Tabs
+
+```bash
+agent-browser tab list                         # List tabs and their IDs
+agent-browser tab new https://example.com      # Open a new tab
+agent-browser tab new --label docs https://example.com
+agent-browser tab t2                           # Select by ID
+agent-browser tab docs                         # Select by label
+agent-browser tab close t2                     # Close only the named tab
+```
+
+Tab IDs are stable and not reused within one live session. Rediscover them after creating a fresh
+session or CDP attachment. In a headed shared browser, select the target once because repeated tab
+switching can raise the window.
+
 ## Browser Settings
 
 ```bash
@@ -223,6 +239,7 @@ agent-browser set media light reduced-motion  # Multiple media settings
 ```bash
 agent-browser --headed open example.com   # Show browser window for debugging
 agent-browser --cdp 9222 snapshot         # Connect via a Chrome DevTools Protocol port
+agent-browser --auto-connect snapshot     # Discover and attach to a running Chrome
 agent-browser highlight @e1               # Highlight element
 agent-browser console                     # View console messages
 agent-browser console --clear             # Clear console messages
@@ -245,6 +262,7 @@ agent-browser --json ...                     # Output as JSON
 agent-browser --headed ...                   # Show browser window
 agent-browser --full ...                     # Full-page screenshot shortcut
 agent-browser --cdp <port> ...               # Connect via Chrome DevTools Protocol
+agent-browser --auto-connect ...              # Discover and connect to a running Chrome
 agent-browser -p <provider> ...              # Browser provider (--provider)
 agent-browser --proxy <url> ...              # Use a proxy server
 agent-browser --headers <json> ...           # Extra HTTP headers
@@ -265,4 +283,5 @@ AGENT_BROWSER_SESSION             # Default isolated session name
 AGENT_BROWSER_SESSION_NAME        # Default CLI-managed persistence name
 AGENT_BROWSER_ENCRYPTION_KEY      # 64-char hex key for AES-256-GCM state encryption
 AGENT_BROWSER_STATE_EXPIRE_DAYS   # Auto-delete states older than N days (default: 30)
+AGENT_BROWSER_AUTO_CONNECT        # Auto-discover and connect to a running Chrome
 ```

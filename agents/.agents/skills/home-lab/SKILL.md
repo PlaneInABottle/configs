@@ -1,6 +1,6 @@
 ---
 name: home-lab
-description: "Transform old devices (phones, tablets, computers) into self-hosted servers running useful Docker services. Use when: repurposing old Android phones/tablets as home servers, setting up a home lab with multiple devices, setting up a home lab with Docker containers, asking about self-hosted alternatives to cloud services, guidance on hardware for home lab, running services like media server, photo backup, ad blocker, or understanding how different hardware devices work together."
+description: "Transform old devices and Linux workstations into secure self-hosted servers. Use when repurposing phones, tablets, or computers; setting up Docker or multi-process application hosts; planning storage, backups, firewalling, and reboot recovery; publishing applications through Cloudflare Tunnel and DNS; configuring R2; selecting home-lab hardware; or operating common self-hosted services."
 ---
 
 # Home Lab Skill
@@ -233,36 +233,17 @@ Do not call a host “safe” or “production-ready” merely because its local
 
 ## Networking & External Access
 
-### Cloudflare Tunnel (Recommended)
-Expose services to internet without port forwarding.
+### Cloudflare publication
 
-```bash
-# Install cloudflared
-curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -o cloudflared
-chmod +x cloudflared
+Prefer a stable named Cloudflare Tunnel for a public web application when avoiding router port forwarding and hiding the origin address from public DNS are requirements. Keep the origin on loopback, use a final catch-all `404` ingress rule, install the connector as a boot-managed service, and verify both the local origin and final public hostname.
 
-# Authenticate
-cloudflared tunnel login
+Use the correct Cloudflare interface:
 
-# Create tunnel
-cloudflared tunnel create my-home-lab
+- `cloudflared` manages Tunnel connectors, named tunnels, ingress rules, and tunnel DNS routes.
+- Wrangler manages Cloudflare developer products such as R2 and Workers; it is not a general DNS administration CLI.
+- Use scoped Cloudflare API tokens or the Terraform provider for repeatable DNS and account configuration.
 
-# Configure services
-# Edit ~/.cloudflared/config.yml
-```
-
-**config.yml example:**
-```yaml
-tunnel: your-tunnel-id
-credentials-file: /path/to/credentials.json
-
-ingress:
-  - hostname: jellyfin.yourdomain.com
-    service: http://localhost:8096
-  - hostname: homeassistant.yourdomain.com
-    service: http://localhost:8123
-  - service: http_status:404
-```
+Read [`references/cloudflare-publication.md`](references/cloudflare-publication.md) before changing nameservers, DNS records, Tunnel credentials, or R2 storage. It contains the safe migration order, CLI commands, credential boundaries, service setup, and verification checklist.
 
 ### Port Forwarding (Alternative)
 Forward ports on router to home server:
@@ -281,6 +262,7 @@ Read the following reference files based on what you need:
 - **Hardware recommendations & configs**: [`references/hardware-recommendations.md`](references/hardware-recommendations.md)
 - **Service catalog (all categories)**: [`references/services-overview.md`](references/services-overview.md)
 - **Service placement guide**: [`references/placement-guide.md`](references/placement-guide.md)
+- **Cloudflare Tunnel, DNS, CLI, and R2**: [`references/cloudflare-publication.md`](references/cloudflare-publication.md)
 
 ---
 

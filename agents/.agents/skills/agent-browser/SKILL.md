@@ -65,6 +65,10 @@ agent-browser screenshot
 - Re-snapshot after navigation, modal opens, async mutations, or any DOM change.
 - Prefer refs over handwritten selectors for day-to-day interaction.
 - In headed/manual flows, re-snapshot after the human finishes interacting.
+- In a human-shared attached Chrome, verify the current URL and take a fresh snapshot immediately
+  before every mutation; the active tab or form state may have changed between commands.
+- Before clicking a save, publish, submit, review, rollout, or delete control, identify its surrounding
+  section and verify that the exact mutation is authorized.
 
 ## Choose the Right Persistence Mode
 
@@ -125,6 +129,10 @@ If an identity provider rejects an automation-launched browser (for example, “
 may not be secure”), do not retry with concealment flags. Read
 [references/authentication.md](references/authentication.md) and use its normal-Chrome/CDP login
 fallback: let the human authenticate in standard Chrome, then attach `agent-browser` afterward.
+
+For long-lived shared headed sessions, also follow the focus, accidental-click,
+mutation-verification, and recovery loop in
+[references/session-management.md](references/session-management.md).
 
 ## Automation Boundaries
 

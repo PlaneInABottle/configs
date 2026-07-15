@@ -45,9 +45,20 @@ such as “This browser or app may not be secure.” Do not add stealth or autom
    agent-browser --session authenticated snapshot -i
    ```
 
+   Direct per-command attachment is also supported and is convenient while Chrome remains open:
+
+   ```bash
+   agent-browser --session authenticated --cdp 9222 tab list
+   agent-browser --session authenticated --cdp 9222 snapshot -i
+   ```
+
 Prefer direct `connect` while Chrome remains open. Save browser state only when restart persistence is
 required because exported state can contain session tokens. A remote-debugging port grants full local
 browser control; bind it to localhost, use it only on a trusted machine, and stop Chrome when finished.
+When a human and the agent share the visible window, follow
+[Operate a Shared Headed Chrome Safely](session-management.md#operate-a-shared-headed-chrome-safely)
+before changing form state. Prefer the explicit dedicated port over `--auto-connect` when multiple
+Chrome instances may exist.
 
 ## Basic Login Flow
 
