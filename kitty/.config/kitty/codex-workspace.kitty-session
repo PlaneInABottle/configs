@@ -1,0 +1,37 @@
+new_tab Chat Priv
+layout grid
+cd /home/mirza/Documents/Projects/chat-priv
+launch --title "Chat Priv Codex" /home/mirza/configs/scripts/codex-tmux-attach.sh kozmo-codex /home/mirza/Documents/Projects/chat-priv 019f5c38-eecc-73e1-825f-e6d5cdeb98d4
+launch --title "Chat Priv Neovim" --cwd /home/mirza/Documents/Projects/chat-priv /snap/bin/nvim
+
+new_tab Mobile
+layout grid
+cd /home/mirza/Documents/Projects
+launch --title "Mobile Codex" /home/mirza/configs/scripts/codex-tmux-attach.sh mobile-codex /home/mirza/Documents/Projects 019f647f-704a-76f1-a6e3-521c4b7543e7
+launch --title "Fitness Neovim" --cwd /home/mirza/Documents/Projects/fitnessMobileApp /snap/bin/nvim
+
+new_tab Video
+layout fat
+cd /home/mirza/Documents/Projects/videoCreation
+launch --title "Video Codex" /home/mirza/configs/scripts/codex-tmux-attach.sh video-codex /home/mirza/Documents/Projects/videoCreation 019f55cb-ff27-7891-a90f-f32dfe2d979d
+
+new_tab Hermes
+layout fat
+cd /home/mirza
+launch --title "Hermes" /home/mirza/.local/bin/hermes --resume 20260713_194753_0122ff
+
+new_tab Home Servers
+layout fat
+cd /home/mirza/Documents/Projects/home-servers
+launch --title "Home Servers Codex" /home/mirza/configs/scripts/codex-tmux-attach.sh home-server-codex /home/mirza/Documents/Projects/home-servers 019f661a-ed2b-74a0-bb07-01e106f26864
+focus
+
+new_tab Anki
+layout fat
+cd /home/mirza/Documents/Projects/ankiDecks
+launch --title "Anki Codex" /home/mirza/configs/scripts/codex-tmux-attach.sh codex-anki /home/mirza/Documents/Projects/ankiDecks 019f6482-ddb4-7db2-9546-b184c5de7e3f
+
+new_tab Configs
+layout fat
+cd /home/mirza/configs
+launch --title "Configs Neovim" /snap/bin/nvim

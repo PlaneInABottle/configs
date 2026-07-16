@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Codex Workspace
+Comment=Restore the persistent Kitty, tmux, Codex, Neovim, and Hermes workspace
+Exec=/home/mirza/configs/scripts/start-kitty-workspace.sh
+Terminal=false
+StartupNotify=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=3
