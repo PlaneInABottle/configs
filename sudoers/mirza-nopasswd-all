@@ -1,0 +1,3 @@
+# WARNING: sudoers cannot scope this rule to Codex parent processes.
+# Every process running as the mirza account receives passwordless full root.
+mirza ALL=(ALL:ALL) NOPASSWD: ALL
