@@ -2,6 +2,21 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
+if vim.fn.has("mac") == 1 then
+  local system_open = vim.ui.open
+
+  vim.ui.open = function(path, opts)
+    local is_uri = path:match("^%a[%w+.-]*:") ~= nil
+    local is_directory = not is_uri and vim.fn.isdirectory(vim.fs.normalize(path)) == 1
+
+    if not is_uri and not is_directory and not (opts and opts.cmd) then
+      opts = vim.tbl_extend("force", opts or {}, { cmd = { "open", "-a", "TextEdit" } })
+    end
+
+    return system_open(path, opts)
+  end
+end
+
 vim.g.lazyvim_python_lsp = "pyright"
 vim.g.lazyvim_python_ruff = "ruff"
 
